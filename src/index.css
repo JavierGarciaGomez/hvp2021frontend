@@ -142,13 +142,20 @@ code {
   display: flex;
   width: 100%;
 }
+/* Sidebar */
+.sidebar{
+  background-color: white;
+  
+}
 
 .dashboard-main{
   flex: 4;
-  background-color: var(--main-color);
+  background-color: rgb(235, 229, 229);
+  
 }
 
-/* Sidebar */
-.sidebar{
-  background-color: var(--secondary-color);
+/* HomeDashPage */
+
+.homeDashPage{
+  margin-top: 10px;
 }
