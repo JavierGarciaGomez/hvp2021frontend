@@ -29,19 +29,26 @@
   border-radius: 5px;
 }
 
-.newUserGender > input {
-  margin-top: 15px;
-}
-
-.newUserGender > label {
-  margin: 10px;
-  font-size: 18px;
+.newUserRadio label {
+  margin-right: 15px;
+  margin-left: 5px;
   color: #555;
 }
 
 .newUserSelect {
   height: 40px;
   border-radius: 5px;
+}
+
+.newUser__suggestion {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.newUser__sugestion__sug {
+  font-size: 14px;
+  color: red;
+  font-weight: 900;
 }
 
 .newUserButton {
@@ -54,4 +61,8 @@
   border-radius: 10px;
   margin-top: 30px;
   cursor: pointer;
+}
+
+.radio__group {
+  display: inline-block;
 }

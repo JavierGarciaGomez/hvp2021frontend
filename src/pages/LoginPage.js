@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { InputGroup } from "../components/ui/InputGroup";
 import { useForm } from "../hooks/useForm";
-import { InputGroup } from "../ui/InputGroup";
 
 export const LoginPage = () => {
   //   TODO
