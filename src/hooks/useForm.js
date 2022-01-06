@@ -10,6 +10,12 @@ export const useForm = (initialState = {}) => {
   };
 
   const handleInputChange = ({ target }) => {
+    if (target.type === "checkbox") {
+      return setValues({
+        ...values,
+        [target.name]: target.checked,
+      });
+    }
     setValues({
       ...values,
       [target.name]: target.value,
