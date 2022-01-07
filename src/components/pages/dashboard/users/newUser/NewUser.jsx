@@ -8,6 +8,10 @@ import { useDispatch } from "react-redux";
 
 import "./newUser.css";
 import { useState } from "react";
+import { startRegister } from "../../../../../actions/collaboratorActions";
+import Swal from "sweetalert2";
+import { uploadImg } from "../../../../../helpers/uploadImg";
+import { generateRandomString } from "../../../../../helpers/utilites";
 
 export const initialState = {
   first_name: "Fátima Lucía",
@@ -23,12 +27,39 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function NewUser() {
   const [values, handleInputChange, reset] = useForm(initialState);
+  const [imgUrl, setimgUrl] = useState(initialState);
+
+  console.log("imgUrl", imgUrl);
 
   const dispatch = useDispatch();
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(values);
+
+    if (imgUrl) {
+      values.imgUrl = imgUrl;
+    }
+    values.accessCode = generateRandomString(6);
+    console.log("estos son los valores", values);
+    startRegister(values);
+    Swal.fire({
+      icon: "success",
+      title: `Usuario ${values.col_code} creado con éxito. El código de acceso es: ${values.accessCode}`,
+      showConfirmButton: true,
+    });
+  };
+
+  const handlePictureUpload = (e) => {
+    e.preventDefault();
+    document.querySelector("#fileSelector").click();
+  };
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      const tempImgUrl = await uploadImg(file);
+      setimgUrl(tempImgUrl);
+    }
   };
 
   return (
@@ -139,7 +170,25 @@ export default function NewUser() {
           />
         </div>
 
-        <button className="newUserButton">Create</button>
+        <div className="newUserItem">
+          <input
+            type="file"
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+            id="fileSelector"
+            name="file"
+          />
+
+          <div>
+            <button className="btn btn-secondary" onClick={handlePictureUpload}>
+              Cargar imagen
+            </button>
+          </div>
+        </div>
+
+        <button className="newUserButton" type="submit">
+          Create
+        </button>
       </form>
     </div>
   );

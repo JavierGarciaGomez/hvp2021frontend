@@ -34,7 +34,7 @@ export const genderTypes = {
 };
 
 export const roleTypes = {
-  admin: "Adminstrador",
+  admin: "Administrador",
   manager: "Gerente",
   collaborator: "Colaborador",
   user: "User",
