@@ -3,15 +3,31 @@
 import { types } from "../types/types";
 
 const initialState = {
-  // TODO
-  active: true,
-  // checking: true,
-  //   uid: null,
-  //   name: null,
+  collaborators: [
+    // {
+    //   id: new Date().getTime(),
+    //   title: "Mi primer evento",
+    //   start: moment().toDate(),
+    //   end: moment().add(2, "hours").toDate(),
+    //   bgcolor: "#fafafa",
+    //   notes: "Una nota del evento",
+    //   user: {
+    //     uid: 123,
+    //     name: "JGG",
+    //   },
+    // },
+  ],
+  activeCollaborator: null,
 };
 
 export const collaboratorReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.collaboratorsLoaded:
+      return {
+        ...state,
+        collaborators: [...action.payload],
+      };
+
     case types.authLogin:
       return {
         ...state,

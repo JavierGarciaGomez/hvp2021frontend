@@ -3,7 +3,7 @@
 // import { types } from "../../../hvp2021backend/types/types";
 import Swal from "sweetalert2";
 import { fetchSinToken } from "../helpers/fetch";
-import { genderTypes, roleTypes } from "../types/types";
+import { genderTypes, roleTypes, types } from "../types/types";
 // import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 // import { eventLogout } from "./eventActions";
 // import { eventLogout } from "./events";
@@ -27,6 +27,35 @@ import { genderTypes, roleTypes } from "../types/types";
 //     }
 //   };
 // };
+
+// 2022-01-07
+export const collaboratorsStartLoading = () => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchSinToken("collaborators");
+      const body = await resp.json();
+
+      if (body.ok) {
+        console.log("collaborators start loading", body.collaborators);
+        dispatch(collaboratorsLoaded(body.collaborators));
+        // event.id = body.evento.id;
+        // event.user = { _id: uid, name };
+        // dispatch(eventAddNew(event));
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+const collaboratorsLoaded = (collaborators) => {
+  console.log("collaborators loaded", collaborators);
+  return {
+    type: types.collaboratorsLoaded,
+    payload: collaborators,
+  };
+};
 
 // 369
 export const startRegister = async (data) => {

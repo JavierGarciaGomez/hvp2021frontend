@@ -6,10 +6,11 @@ import {
   PhoneAndroid,
   Publish,
 } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./collaborator.css";
 
 export default function Collaborator() {
+  console.log("this are the params", useParams());
   return (
     <div className="collaborator">
       <div className="collaboratorTitleContainer">
