@@ -49,6 +49,12 @@ export const Sidebar = () => {
                 Users
               </li>
             </Link>
+            <Link to="/dashboard/collaborators" className="link">
+              <li className="sidebarListItem">
+                <PermIdentity className="sidebarIcon" />
+                Colaboradores
+              </li>
+            </Link>
             <Link to="/products" className="link">
               <li className="sidebarListItem">
                 <Storefront className="sidebarIcon" />
