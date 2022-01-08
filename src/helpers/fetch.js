@@ -3,7 +3,7 @@ const baseUrl = process.env.REACT_APP_API_URL;
 // 368
 const fetchSinToken = (endpoint, data, method = "GET") => {
   const url = `${baseUrl}/${endpoint}`;
-  console.log("FETCH, esta es la url", process.env);
+  console.log("FETCH, esta es la url", url);
 
   if (method === "GET") {
     return fetch(url);

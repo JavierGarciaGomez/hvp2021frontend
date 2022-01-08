@@ -95,7 +95,7 @@ export default function Collaborators() {
         return (
           <>
             <Link to={`${params.row._id}`}>
-              <button className="collaboratorsEdit">Edit</button>
+              <button className="collaboratorsEdit">Show</button>
             </Link>
           </>
         );
@@ -110,7 +110,8 @@ export default function Collaborators() {
           rows={data}
           disableSelectionOnClick
           columns={columns}
-          pageSize={8}
+          rowsPerPageOptions={[5, 10, 20]}
+          pageSize={10}
           checkboxSelection
         />
       </div>

@@ -49,6 +49,38 @@ export const collaboratorsStartLoading = () => {
   };
 };
 
+export const collaboratorStartSetActive = (id) => {
+  console.log("COLLABORATOR ACTIONS. Collaborator start set active", id);
+  return async (dispatch) => {
+    try {
+      const resp = await fetchSinToken(`collaborators/${id}`, {
+        collaboratorId: id,
+      });
+
+      const body = await resp.json();
+
+      if (body.ok) {
+        const collaborator = body.collaborator;
+        console.log("mis fecth", collaborator);
+        dispatch(collaboratorSetActive(collaborator));
+      }
+      console.log("COLLABORATOR ACTIONS. Collaborator finish set active");
+    } catch (error) {
+      console.log(error);
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+const collaboratorSetActive = (collaborator) => {
+  console.log("COLLABORATOR ACTIONS. Collaborator set active");
+
+  return {
+    type: types.collaboratorSetActive,
+    payload: collaborator,
+  };
+};
+
 const collaboratorsLoaded = (collaborators) => {
   console.log("collaborators loaded", collaborators);
   return {
@@ -117,3 +149,29 @@ export const startRegister = async (data) => {
 // };
 
 // const logout = () => ({ type: types.authLogout });
+
+export const collaboratorStartUpdate = (collaborator) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchSinToken(
+        `events/${collaborator.id}`,
+        collaborator,
+        "PUT"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        // dispatch(eventUpdate(event));
+      } else {
+        Swal.fire("error", body.msg, "error");
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+const eventUpdate = (event) => ({
+  type: types.eventUpdate,
+  payload: event,
+});

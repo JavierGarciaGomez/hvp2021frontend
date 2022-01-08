@@ -28,9 +28,7 @@ const label = { inputProps: { "aria-label": "Switch demo" } };
 
 export default function NewCollaborator() {
   const [values, handleInputChange, reset] = useForm(initialState);
-  const [imgUrl, setimgUrl] = useState(initialState);
-
-  console.log("imgUrl", imgUrl);
+  const [imgUrl, setimgUrl] = useState(null);
 
   const dispatch = useDispatch();
 

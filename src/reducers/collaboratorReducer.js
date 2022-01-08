@@ -28,6 +28,12 @@ export const collaboratorReducer = (state = initialState, action) => {
         collaborators: [...action.payload],
       };
 
+    case types.collaboratorSetActive:
+      return {
+        ...state,
+        activeCollaborator: action.payload,
+      };
+
     case types.authLogin:
       return {
         ...state,

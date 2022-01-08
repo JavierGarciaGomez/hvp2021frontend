@@ -3,6 +3,7 @@ export const types = {
   // collaborator
   collaboratorCreateNew: "[collaborator] Add New",
   collaboratorsLoaded: "[collaborator] loaded",
+  collaboratorSetActive: "[collaborator] Set Active",
 
   /*
   uiOpenModal: "[ui] Open modal",
