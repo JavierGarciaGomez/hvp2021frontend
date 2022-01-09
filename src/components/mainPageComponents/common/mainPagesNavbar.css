@@ -1,0 +1,54 @@
+.navbar {
+  background-color: var(--primaryColor) !important;
+}
+
+.img-container {
+  max-height: 100%;
+}
+.navbar a img {
+  max-height: 50px;
+}
+
+.navbar-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.custom-navbar a {
+  color: white;
+  font-size: 1.5em;
+  font-weight: bolder;
+  width: 100%;
+  display: block;
+  text-align: center;
+  margin: 0em;
+  padding: 0.25em 0;
+  transition: background-color 0.5s ease-in-out;
+}
+
+.custom-navbar a:hover {
+  background-color: var(--primaryColor);
+}
+
+@media (min-width: 768px) {
+  .custom-navbar {
+    flex-direction: row;
+    height: 10vh;
+    position: fixed;
+    z-index: 1;
+  }
+
+  .custom-navbar a {
+    font-size: 1.5em;
+    padding: 1rem 0;
+  }
+
+  a.logo {
+    width: 100%;
+  }
+
+  .custom-navbar .logo {
+    padding: 0;
+    margin: 0;
+  }
+}

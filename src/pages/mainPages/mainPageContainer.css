@@ -1,0 +1,964 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+
+:root {
+  --primaryColor: #5583a7;
+  --secondaryColor: white;
+  --primaryDarkColor: #acd1ec;
+  --terciaryColor: #7aaffa;
+
+  --primaryFont: "Lato";
+  --secondaryFont: "Russo One";
+  --fontPTSans: "PT Sans";
+  --orange: #fe4918;
+  --darkGrey: #353535;
+}
+
+body {
+  background-color: var(--custom-lightblue);
+  margin: 0;
+  font-family: var(--primaryFont);
+}
+
+.seccion {
+  padding: 2rem 0;
+}
+
+.seccion p {
+  font-size: 1.2em;
+  text-align: center;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--primaryFont);
+  margin: 0;
+}
+
+h2 {
+  font-size: 2.4em;
+  text-align: center;
+}
+
+h3 {
+  font-size: 1.5em;
+  font-family: var(--fontPTSans);
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.button {
+  background-color: var(--primaryDarkColor);
+  padding: 0.5rem 3rem;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  display: inline-block;
+  margin-right: 0;
+}
+
+.button:hover {
+  background-color: #8a1e00;
+}
+
+.section-title {
+  margin: 5rem 2rem;
+  color: var(--secondaryColor);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem;
+}
+
+.icon-container {
+  flex-basis: 10%;
+  max-height: 100%;
+}
+
+.section-title h2 {
+  margin: 0 2rem;
+}
+
+/* UTILITIES */
+
+section {
+  margin: 4rem auto;
+}
+
+.container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.contenedor {
+  width: 95%;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .contenedor {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+.parallax::before {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left center;
+  background-attachment: fixed;
+  -webkit-filter: brightness(0.7);
+  filter: brightness(0.7);
+}
+
+.btn-primaryBG {
+  color: var(--primaryDarkColor);
+  background-color: var(--secondaryColor);
+  border-color: var(--secondaryColor);
+}
+
+.btn-primaryBG:hover {
+  color: var(--secondaryColor);
+  background-color: var(--primaryDarkColor);
+}
+
+/* HEADER */
+.main-header {
+  position: relative;
+  /* background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(../img/morgana.jpg); */
+  background: url("../../../public/assets/imgs/morgana.jpg");
+  background-position: left center;
+  background-size: cover;
+  height: 100vh;
+}
+
+.main-header::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.header-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.socialNav {
+  position: relative;
+  top: 4rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.socialNav a {
+  color: white;
+  margin: 0 0.5em;
+}
+
+.socialNav a:hover {
+  color: var(--primaryColor);
+  margin: 0 0.5em;
+}
+
+.main-header h1 {
+  margin: 0;
+  top: 4rem;
+  position: relative;
+  font-family: "Fredoka One", cursive;
+  color: white;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.main-header h2 {
+  display: block;
+  font-family: var(--fontPTSans);
+  max-width: 70%;
+  margin: 8em 1em auto auto;
+  position: relative;
+  font-weight: 400;
+  color: white;
+  text-align: right;
+  font-size: 2rem;
+  /* change*/
+}
+
+.blue-text {
+  color: var(--secondaryColor);
+  font-weight: bolder;
+}
+
+@media (min-width: 768px) {
+  .main-header {
+    background-position: center center;
+  }
+
+  .main-header h1 {
+    display: block;
+    max-width: 85%;
+    margin: 0 auto;
+    font-size: 5rem;
+  }
+
+  .main-header h2 {
+    bottom: 6rem;
+    margin: 5em 1em auto auto;
+    font-size: 3rem;
+  }
+}
+
+/* ************************************************************************************************ */
+/* CHARACTERISTICS */
+/* ************************************************************************************************ */
+
+.characteristics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.characteristic {
+  background-color: var(--terciaryColor);
+  border-radius: 10%;
+  flex: 0 0 calc(60% - 1rem);
+  margin: 1rem auto;
+}
+
+.characteristic img {
+  display: block;
+  height: 10rem;
+  margin: 2em auto;
+}
+
+.characteristic h3 {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-family: var(--secondaryFont);
+  color: var(--primaryColor);
+}
+
+.characteristic p {
+  margin: 1rem 0;
+  text-align: center;
+  color: var(--primaryDarkColor);
+  font-size: 1.2rem;
+}
+
+@media (min-width: 768px) {
+  .characteristic {
+    flex: 0 0 calc(25% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* CHARACTERISTICS */
+/* ************************************************************************************************ */
+
+.characteristics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.characteristic {
+  background-color: var(--terciaryColor);
+  border-radius: 10%;
+  flex: 0 0 calc(60% - 1rem);
+  margin: 1rem auto;
+}
+
+.characteristic img {
+  display: block;
+  height: 10rem;
+  margin: 2em auto;
+}
+
+.characteristic h3 {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+  font-family: var(--secondaryFont);
+  color: var(--primaryColor);
+}
+
+.characteristic p {
+  margin: 1rem 0;
+  text-align: center;
+  color: var(--primaryDarkColor);
+  font-size: 1.2rem;
+}
+
+@media (min-width: 768px) {
+  .characteristic {
+    flex: 0 0 calc(25% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* PROMO */
+/* ************************************************************************************************ */
+.mainPages__container__style2 {
+  background-color: var(--custom-cyan);
+}
+
+.light-background {
+  background-color: var(--primaryColor);
+  padding: 1em 0;
+}
+
+.carousel {
+  margin: 0 auto;
+}
+
+.carousel img {
+  margin: 0 auto;
+  height: 90vh;
+  width: auto;
+}
+
+.img-container {
+  width: 70%;
+  margin: 3em auto;
+}
+
+/* ************************************************************************************************ */
+/* US */
+/* ************************************************************************************************ */
+
+.collaborators {
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.collaborator {
+  border: solid 2px var(--secondaryColor);
+  border-radius: 10%;
+  margin: 1rem 0;
+  flex: 0 0 calc(50% - 1rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.collaborator img {
+  filter: gray;
+  filter: grayscale();
+  transition: all 0.5s ease-in-out;
+}
+
+.collaborator p {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1rem 0.5rem;
+  margin: 0;
+  color: white;
+
+  font-size: 1rem;
+  text-align: left;
+  font-family: var(--primaryFont);
+  transition: all 0.5s ease-in-out;
+}
+
+.collaborator p .position {
+  color: cyan;
+  font-weight: bold;
+}
+
+.collaborator:hover img {
+  filter: grayscale(0);
+  transform: scale(1.2);
+}
+
+.collaborator:hover p {
+  bottom: -6rem;
+  opacity: 0;
+}
+
+@media (min-width: 768px) {
+  .collaborator {
+    flex: 0 0 calc(33% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* SERVICES */
+/* ************************************************************************************************ */
+
+.services {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.service {
+  flex: 0 0 calc(50% - 1rem);
+}
+
+.service img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.service p {
+  margin: 0;
+  margin-bottom: 3rem;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 5vw;
+  background-color: var(--secondaryColor);
+  color: var(--primaryDarkColor);
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .service {
+    flex: 0 0 calc(33.33% - 1rem);
+  }
+
+  .service p {
+    font-size: 1.5rem;
+  }
+}
+
+/* ************************************************************************************************ */
+/* CONTACTO */
+/* ************************************************************************************************ */
+
+#mapa {
+  min-height: 33em;
+  border: 10px var(--secondaryColor) solid;
+  z-index: 0;
+}
+
+.branches {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.branch {
+  margin: 1em auto;
+  padding: 1rem;
+  flex: 0 0 calc(70% - 1rem);
+  background-color: var(--terciaryColor);
+  text-align: center;
+  width: 100%;
+  font-size: 1.25em;
+}
+
+.branch h3 {
+  background-color: var(--primaryDarkColor);
+  color: var(--secondaryColor);
+}
+
+.branch i {
+  color: green;
+}
+
+@media (min-width: 768px) {
+  .branch {
+    padding: 1rem;
+    flex: 0 0 calc(33.33% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* FOOTER */
+/* ************************************************************************************************ */
+.site-footer {
+  background-color: #acd1ec;
+  color: white;
+  padding: 0.66em;
+  text-align: center;
+}
+
+#social-ul {
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+
+#social-ul i {
+  color: white;
+  font-size: 2em;
+}
+
+#social-ul i:hover {
+  color: var(--maincolor);
+}
+
+@media (min-width: 768px) {
+  #social-ul {
+    display: flex;
+    justify-content: center;
+  }
+
+  #social-ul i {
+    padding: 0 1em;
+  }
+}
+
+/* ************************************************************************************************ */
+/* ADVISES PAGE */
+/* ************************************************************************************************ */
+
+/* Bottom section */
+.blog-post {
+  display: flex;
+  justify-content: space-between;
+  margin: 3em 0;
+  background-color: var(--secondaryColor);
+  align-items: center;
+  padding: 0.5em;
+}
+
+.blog-img {
+  flex-basis: 40%;
+}
+
+.text-post {
+  flex-basis: calc(60% - 3rem);
+  text-align: justify;
+}
+
+.text-post h4 {
+  text-transform: uppercase;
+  margin: 0 0;
+  line-height: 1.4;
+}
+
+.text-post a {
+  color: var(--primaryDarkColor);
+  text-decoration: none;
+}
+
+.text-post h4,
+.text-post p {
+  color: var(--primaryColor);
+}
+
+.text-post h4::after {
+  content: "";
+  display: block;
+  width: 15rem;
+  height: 0.5rem;
+  background-color: var(--primaryColor);
+  margin-top: 1rem;
+}
+
+.text-post span {
+  color: white;
+}
+
+.carousel iframe {
+  margin: auto auto;
+  width: 100%;
+  height: 90vh;
+}
+
+/* ************************************************************************************************ */
+/* SERVICES PAGE */
+/* ************************************************************************************************ */
+
+.service-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.service-item {
+  flex-basis: calc(100% - 1rem);
+  padding: 0.5em;
+  border-radius: 5%;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.service-item .service-image {
+  text-align: center;
+  flex-basis: calc(100% - 1rem);
+}
+
+.service-item .service-content {
+  flex-basis: calc(100% - 1rem);
+}
+
+.service-content h3 {
+  margin-top: 0.5rem 0;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 3vw;
+}
+
+.service-content p {
+  text-align: justify;
+}
+
+.primary {
+  background-color: var(--primaryDarkColor);
+  color: var(--secondaryColor);
+}
+
+.secondary {
+  background-color: var(--secondaryColor);
+  color: var(--primaryDarkColor);
+}
+
+@media (min-width: 768px) {
+  .service-list {
+    justify-content: space-around;
+  }
+
+  .service-item {
+    flex-basis: calc(50% - 1rem);
+  }
+
+  .service-item .service-image {
+    flex-basis: calc(50% - 1rem);
+  }
+
+  .service-item .service-content {
+    flex-basis: calc(50% - 1rem);
+  }
+
+  .service-content h3 {
+    font-size: 1.8vw;
+  }
+}
+
+/* ************************************************************************************************ */
+/* TEAM PAGE */
+/* ************************************************************************************************ */
+
+.team-item {
+  text-align: center;
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 5px solid var(--secondaryColor);
+  border-radius: 5%;
+}
+
+.team-item h3 {
+  text-transform: uppercase;
+  font-family: var(--secondaryFont);
+}
+
+.team-item h4 {
+  font-family: var(--fontPTSans);
+  font-style: italic;
+  font-size: 2rem;
+}
+
+.team-content {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-content div {
+  flex: 0 0 calc(80% - 1rem);
+  text-align: center;
+  margin: 0 auto;
+}
+
+.team-content .team-text {
+  text-align: justify;
+}
+
+@media (min-width: 768px) {
+  .team-content div {
+    flex: 0 0 calc(50% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* COMPANY */
+/* ************************************************************************************************ */
+
+.video-wrapper {
+  display: flex;
+  justify-content: center;
+
+  margin: 0 auto;
+}
+
+.video {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-text h3 {
+  color: var(--secondaryColor);
+  width: 75%;
+  margin: 0.5rem auto;
+  font-size: 2rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+
+.section-text p {
+  color: var(--secondaryColor);
+  width: 75%;
+  margin: 0.5rem auto;
+  font-size: 1.5rem;
+  text-align: justify;
+}
+
+/* ************************************************************************************************ */
+/* SPECIFIC PAGES */
+/* ************************************************************************************************ */
+
+.service-only-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-only-image {
+  width: 95%;
+  text-align: center;
+  font-size: 30px;
+  float: none;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.service-only-image img {
+  margin: auto;
+}
+
+.service-only-text {
+  color: var(--secondaryColor);
+  font-size: 1.25rem;
+  text-align: justify;
+}
+
+@media (min-width: 768px) {
+  .service-only-container {
+    display: block;
+  }
+
+  .service-only-image {
+    width: 50%;
+    float: left;
+    padding: 0 2rem 2rem 0;
+  }
+}
+
+.list {
+  display: inline-block;
+  list-style: square;
+  padding-left: 1rem;
+  margin-left: 1rem;
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+/*
+* Hide only visually, but have it available for screen readers:
+* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+*
+* 1. For long content, line feeds are not interpreted as spaces and small width
+*    causes content to wrap 1 word per line:
+*    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+*/
+
+.sr-only {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  /* 1 */
+}
+
+/*
+* Extends the .sr-only class to allow the element
+* to be focusable when navigated to via the keyboard:
+* https://www.drupal.org/node/897638
+*/
+
+.sr-only.focusable:active,
+.sr-only.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  white-space: inherit;
+  width: auto;
+}
+
+/*
+* Hide visually and from screen readers, but maintain layout
+*/
+
+.invisible {
+  visibility: hidden;
+}
+
+/*
+* Clearfix: contain floats
+*
+* For modern browsers
+* 1. The space content is one way to avoid an Opera bug when the
+*    `contenteditable` attribute is included anywhere else in the document.
+*    Otherwise it causes space to appear at the top and bottom of elements
+*    that receive the `clearfix` class.
+* 2. The use of `table` rather than `block` is only necessary if using
+*    `:before` to contain the top-margins of child elements.
+*/
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+  /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+  (-webkit-min-device-pixel-ratio: 1.25),
+  (min-resolution: 1.25dppx),
+  (min-resolution: 120dpi) {
+  /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid the additional HTTP request:
+   https://www.phpied.com/delay-loading-your-print-css/
+   ========================================================================== */
+
+@media print {
+  *,
+  *:before,
+  *:after {
+    background: transparent !important;
+    color: #000 !important;
+    /* Black prints faster */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+     * Don't show links that are fragment identifiers,
+     * or use the `javascript:` pseudo protocol
+     */
+  a[href^="#"]:after,
+  a[href^="javascript:"]:after {
+    content: "";
+  }
+
+  pre {
+    white-space: pre-wrap !important;
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  /*
+     * Printing Tables:
+     * https://web.archive.org/web/20180815150934/http://css-discuss.incutio.com/wiki/Printing_Tables
+     */
+  thead {
+    display: table-header-group;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}

@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { InputGroup } from "../../components/ui/InputGroup";
-import { useForm } from "../../hooks/useForm";
+import { InputGroup } from "../../../components/ui/InputGroup";
+import { useForm } from "../../../hooks/useForm";
+import "../auth.css";
 
 export const LoginPage = () => {
   //   TODO
