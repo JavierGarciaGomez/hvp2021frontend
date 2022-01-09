@@ -5,13 +5,13 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import { Topbar } from "../components/topbar/Topbar";
 import { Sidebar } from "../components/sidebar/Sidebar";
-import { HomeDashPage } from "../components/pages/dashboard/home/HomeDashPage";
-import UserList from "../components/pages/dashboard/userList/UserList";
-import User from "../components/pages/dashboard/user/User";
-import NewUser from "../components/pages/dashboard/users/newUser/NewUser";
-import Collaborators from "../components/pages/dashboard/collaborators/Collaborators";
-import NewCollaborator from "../components/pages/dashboard/collaborators/NewCollaborator";
-import Collaborator from "../components/pages/dashboard/collaborators/Collaborator";
+import { HomeDashPage } from "../pages/dashboard/home/HomeDashPage";
+import NewUser from "../pages/dashboard/users/newUser/NewUser";
+import User from "../pages/dashboard/user/User";
+import UserList from "../pages/dashboard/userList/UserList";
+import Collaborators from "../pages/dashboard/collaborators/Collaborators";
+import NewCollaborator from "../pages/dashboard/collaborators/NewCollaborator";
+import Collaborator from "../pages/dashboard/collaborators/Collaborator";
 
 export const DashboardRoutes = () => {
   return (

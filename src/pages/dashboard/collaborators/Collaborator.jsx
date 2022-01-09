@@ -16,13 +16,15 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+
 import {
-  collaboratorStartSetActive,
   collaboratorStartUpdate,
-} from "../../../../actions/collaboratorActions";
-import { capitalizeFirstLetter } from "../../../../helpers/formatHelpers";
-import { useForm } from "../../../../hooks/useForm";
-import { genderTypes, roleTypes } from "../../../../types/types";
+  collaboratorStartSetActive,
+} from "../../../actions/collaboratorActions";
+import { capitalizeFirstLetter } from "../../../helpers/formatHelpers";
+import { uploadImg } from "../../../helpers/uploadImg";
+import { useForm } from "../../../hooks/useForm";
+import { genderTypes, roleTypes } from "../../../types/types";
 
 import "./collaborator.css";
 
@@ -66,14 +68,17 @@ export default function Collaborator() {
 
   const handlePictureUpload = (e) => {
     e.preventDefault();
-    document.querySelector("#fileSelector").click();
+    console.log("HOLAAA");
+    document.querySelector("#file").click();
+    console.log("he");
   };
   const handleFileChange = async (e) => {
+    e.preventDefault();
     const file = e.target.files[0];
     console.log(file);
     if (file) {
-      // const tempImgUrl = await uploadImg(file);
-      // setimgUrl(tempImgUrl);
+      const tempImgUrl = await uploadImg(file);
+      setimgUrl(tempImgUrl);
     }
   };
 
@@ -168,7 +173,7 @@ export default function Collaborator() {
           </div>
           <div className="collaboratorUpdate">
             <span className="collaboratorUpdateTitle">Edit</span>
-            <form className="collaboratorUpdateForm" onClick={handleSubmit}>
+            <form className="collaboratorUpdateForm" onSubmit={handleSubmit}>
               <div className="collaboratorUpdateLeft">
                 <div className="collaboratorUpdateItem">
                   <label>Nombre (s)</label>
@@ -282,11 +287,23 @@ export default function Collaborator() {
                     alt=""
                   />
                   <label htmlFor="file">
-                    <Publish className="collaboratorUpdateIcon" />
+                    <Publish
+                      className="collaboratorUpdateIcon"
+                      onClick={handlePictureUpload}
+                      type="button"
+                    />
                   </label>
-                  <input type="file" id="file" style={{ display: "none" }} />
+                  <input
+                    type="file"
+                    id="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                    name="file"
+                  />
                 </div>
-                <button className="collaboratorUpdateButton">Update</button>
+                <button className="collaboratorUpdateButton" type="submit">
+                  Update
+                </button>
               </div>
             </form>
           </div>

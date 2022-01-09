@@ -34,6 +34,12 @@ export const collaboratorReducer = (state = initialState, action) => {
         activeCollaborator: action.payload,
       };
 
+    case types.collaboratorUpdate:
+      return {
+        ...state,
+        activeCollaborator: action.payload,
+      };
+
     case types.authLogin:
       return {
         ...state,

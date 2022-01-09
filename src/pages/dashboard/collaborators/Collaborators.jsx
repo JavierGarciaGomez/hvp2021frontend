@@ -4,9 +4,10 @@ import { DeleteOutline } from "@material-ui/icons";
 
 import { Link } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
-import { userRows } from "../../../../data/dummyData";
+
 import { useDispatch, useSelector } from "react-redux";
-import { collaboratorsStartLoading } from "../../../../actions/collaboratorActions";
+import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
+import { userRows } from "../../../data/dummyData";
 
 export default function Collaborators() {
   const dispatch = useDispatch();
@@ -105,7 +106,7 @@ export default function Collaborators() {
 
   return (
     <Fragment>
-      <div style={{ height: 400, width: "100%" }}>
+      {/* <div style={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={data}
           disableSelectionOnClick
@@ -114,8 +115,9 @@ export default function Collaborators() {
           pageSize={10}
           checkboxSelection
         />
-      </div>
-      <div style={{ height: "100%", width: "100%" }}>
+      </div> */}
+      <h1 className="text-center m-4">Colaboradores</h1>
+      <div style={{ height: "70vh", width: "100%" }}>
         <DataGrid
           rows={collaborators}
           disableSelectionOnClick

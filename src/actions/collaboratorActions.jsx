@@ -151,17 +151,18 @@ export const startRegister = async (data) => {
 // const logout = () => ({ type: types.authLogout });
 
 export const collaboratorStartUpdate = (collaborator) => {
+  console.log("COLLABORATOR ACTIONS. START UPDATE", collaborator);
   return async (dispatch) => {
     try {
       const resp = await fetchSinToken(
-        `events/${collaborator.id}`,
+        `collaborators/${collaborator._id}`,
         collaborator,
         "PUT"
       );
       const body = await resp.json();
 
       if (body.ok) {
-        // dispatch(eventUpdate(event));
+        dispatch(collaboratorUpdate(collaborator));
       } else {
         Swal.fire("error", body.msg, "error");
       }
@@ -171,7 +172,7 @@ export const collaboratorStartUpdate = (collaborator) => {
   };
 };
 
-const eventUpdate = (event) => ({
-  type: types.eventUpdate,
-  payload: event,
+const collaboratorUpdate = (collaborator) => ({
+  type: types.collaboratorUpdate,
+  payload: collaborator,
 });

@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { InputGroup } from "../components/ui/InputGroup";
-import { useForm } from "../hooks/useForm";
+import { InputGroup } from "../../components/ui/InputGroup";
+import { useForm } from "../../hooks/useForm";
 
 export const LoginPage = () => {
   //   TODO
@@ -9,7 +9,7 @@ export const LoginPage = () => {
     e.preventDefault();
   };
 
-  const [values, handleInputChange, reset] = useForm({
+  const { values, handleInputChange, reset } = useForm({
     email: "",
     password: "",
   });

@@ -1,11 +1,8 @@
 import Switch from "@mui/material/Switch";
 import { useDispatch } from "react-redux";
-
-import "./newCollaborator.css";
+import "./newUser.css";
 import { useState } from "react";
-
 import Swal from "sweetalert2";
-
 import { capitalizeFirstLetter } from "../../../../helpers/formatHelpers";
 import { suggestCodeIdea } from "../../../../helpers/misc";
 import { useForm } from "../../../../hooks/useForm";
@@ -26,9 +23,11 @@ export const initialState = {
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 
-export default function NewCollaborator() {
+export default function NewUser() {
   const [values, handleInputChange, reset] = useForm(initialState);
-  const [imgUrl, setimgUrl] = useState(null);
+  const [imgUrl, setimgUrl] = useState(initialState);
+
+  console.log("imgUrl", imgUrl);
 
   const dispatch = useDispatch();
 
@@ -62,10 +61,10 @@ export default function NewCollaborator() {
   };
 
   return (
-    <div className="newCollaborator">
-      <h1 className="newCollaboratorTitle">Nuevo colaborador</h1>
-      <form className="newCollaboratorForm" onSubmit={submitHandler}>
-        <div className="newCollaboratorItem">
+    <div className="newUser">
+      <h1 className="newUserTitle">Nuevo colaborador</h1>
+      <form className="newUserForm" onSubmit={submitHandler}>
+        <div className="newUserItem">
           <label>Nombre (s):</label>
           <input
             type="text"
@@ -74,7 +73,7 @@ export default function NewCollaborator() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <label>Apellidos:</label>
           <input
             type="text"
@@ -84,12 +83,12 @@ export default function NewCollaborator() {
           />
         </div>
 
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <div className="d-flex mb-2 align-items-baseline">
             <label>Código de tres letras:</label>
-            <div className="newCollaborator__suggestion">
+            <div className="newUser__suggestion">
               Suggestion:{" "}
-              <span className="newCollaborator__sugestion__sug">
+              <span className="newUser__sugestion__sug">
                 {suggestCodeIdea(values.first_name, values.last_name)}
               </span>{" "}
             </div>
@@ -103,7 +102,7 @@ export default function NewCollaborator() {
           />
         </div>
 
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <label>Número identificador:</label>
           <input
             type="number"
@@ -112,9 +111,9 @@ export default function NewCollaborator() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <label>Género</label>
-          <div className="newCollaboratorRadio">
+          <div className="newUserRadio">
             {Object.keys(genderTypes).map((key) => {
               return (
                 <div className="radio__group" key={key}>
@@ -135,9 +134,9 @@ export default function NewCollaborator() {
           </div>
         </div>
 
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <label>Rol</label>
-          <div className="newCollaboratorRadio">
+          <div className="newUserRadio">
             {Object.keys(roleTypes).map((key) => {
               return (
                 <div className="radio__group" key={key}>
@@ -158,7 +157,7 @@ export default function NewCollaborator() {
           </div>
         </div>
 
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <label>Activo</label>
           <Switch
             // checked={values.isActive}
@@ -169,7 +168,7 @@ export default function NewCollaborator() {
           />
         </div>
 
-        <div className="newCollaboratorItem">
+        <div className="newUserItem">
           <input
             type="file"
             style={{ display: "none" }}
@@ -185,7 +184,7 @@ export default function NewCollaborator() {
           </div>
         </div>
 
-        <button className="newCollaboratorButton" type="submit">
+        <button className="newUserButton" type="submit">
           Create
         </button>
       </form>

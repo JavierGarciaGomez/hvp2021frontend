@@ -1,10 +1,10 @@
 import React from "react";
-import { userData } from "../../../../data/dummyData";
+import { Chart } from "../../../components/chart/Chart";
+import { FeaturedInfo } from "../../../components/featuredInfo/FeaturedInfo";
+import { WidgetLarge } from "../../../components/widgetLarge/WidgetLarge";
+import { WidgetSmall } from "../../../components/widgetSmall/WidgetSmall";
+import { userData } from "../../../data/dummyData";
 
-import { Chart } from "../../../chart/Chart";
-import { FeaturedInfo } from "../../../featuredInfo/FeaturedInfo";
-import { WidgetLarge } from "../../../widgetLarge/WidgetLarge";
-import { WidgetSmall } from "../../../widgetSmall/WidgetSmall";
 import "./homeDashPage.css";
 
 export const HomeDashPage = () => {

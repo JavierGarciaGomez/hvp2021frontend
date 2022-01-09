@@ -1,17 +1,18 @@
-import { capitalizeFirstLetter } from "../../../../../helpers/formatHelpers";
-import { suggestCodeIdea } from "../../../../../helpers/misc";
-import { useForm } from "../../../../../hooks/useForm";
-import { genderTypes, roleTypes } from "../../../../../types/types";
-import { InputGroup } from "../../../../ui/InputGroup";
 import Switch from "@mui/material/Switch";
 import { useDispatch } from "react-redux";
 
-import "./newUser.css";
+import "./newCollaborator.css";
 import { useState } from "react";
-import { startRegister } from "../../../../../actions/collaboratorActions";
+
 import Swal from "sweetalert2";
-import { uploadImg } from "../../../../../helpers/uploadImg";
-import { generateRandomString } from "../../../../../helpers/utilites";
+
+import { generateRandomString } from "../../../helpers/utilites";
+import { uploadImg } from "../../../helpers/uploadImg";
+import { startRegister } from "../../../actions/collaboratorActions";
+import { genderTypes, roleTypes } from "../../../types/types";
+import { useForm } from "../../../hooks/useForm";
+import { suggestCodeIdea } from "../../../helpers/misc";
+import { capitalizeFirstLetter } from "../../../helpers/formatHelpers";
 
 export const initialState = {
   first_name: "Fátima Lucía",
@@ -25,11 +26,9 @@ export const initialState = {
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 
-export default function NewUser() {
-  const [values, handleInputChange, reset] = useForm(initialState);
-  const [imgUrl, setimgUrl] = useState(initialState);
-
-  console.log("imgUrl", imgUrl);
+export default function NewCollaborator() {
+  const { values, handleInputChange, reset } = useForm(initialState);
+  const [imgUrl, setimgUrl] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -63,10 +62,10 @@ export default function NewUser() {
   };
 
   return (
-    <div className="newUser">
-      <h1 className="newUserTitle">Nuevo colaborador</h1>
-      <form className="newUserForm" onSubmit={submitHandler}>
-        <div className="newUserItem">
+    <div className="newCollaborator">
+      <h1 className="newCollaboratorTitle">Nuevo colaborador</h1>
+      <form className="newCollaboratorForm" onSubmit={submitHandler}>
+        <div className="newCollaboratorItem">
           <label>Nombre (s):</label>
           <input
             type="text"
@@ -75,7 +74,7 @@ export default function NewUser() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <label>Apellidos:</label>
           <input
             type="text"
@@ -85,12 +84,12 @@ export default function NewUser() {
           />
         </div>
 
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <div className="d-flex mb-2 align-items-baseline">
             <label>Código de tres letras:</label>
-            <div className="newUser__suggestion">
+            <div className="newCollaborator__suggestion">
               Suggestion:{" "}
-              <span className="newUser__sugestion__sug">
+              <span className="newCollaborator__sugestion__sug">
                 {suggestCodeIdea(values.first_name, values.last_name)}
               </span>{" "}
             </div>
@@ -104,7 +103,7 @@ export default function NewUser() {
           />
         </div>
 
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <label>Número identificador:</label>
           <input
             type="number"
@@ -113,9 +112,9 @@ export default function NewUser() {
             onChange={handleInputChange}
           />
         </div>
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <label>Género</label>
-          <div className="newUserRadio">
+          <div className="newCollaboratorRadio">
             {Object.keys(genderTypes).map((key) => {
               return (
                 <div className="radio__group" key={key}>
@@ -136,9 +135,9 @@ export default function NewUser() {
           </div>
         </div>
 
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <label>Rol</label>
-          <div className="newUserRadio">
+          <div className="newCollaboratorRadio">
             {Object.keys(roleTypes).map((key) => {
               return (
                 <div className="radio__group" key={key}>
@@ -159,7 +158,7 @@ export default function NewUser() {
           </div>
         </div>
 
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <label>Activo</label>
           <Switch
             // checked={values.isActive}
@@ -170,7 +169,7 @@ export default function NewUser() {
           />
         </div>
 
-        <div className="newUserItem">
+        <div className="newCollaboratorItem">
           <input
             type="file"
             style={{ display: "none" }}
@@ -186,7 +185,7 @@ export default function NewUser() {
           </div>
         </div>
 
-        <button className="newUserButton" type="submit">
+        <button className="newCollaboratorButton" type="submit">
           Create
         </button>
       </form>
