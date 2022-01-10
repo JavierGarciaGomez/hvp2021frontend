@@ -3,7 +3,10 @@ import { Route, Routes } from "react-router-dom";
 import { MainPagesNavbar } from "../components/mainPageComponents/common/MainPagesNavbar";
 import { MainPageIndex } from "../pages/mainPages/index/MainPageIndex";
 import { MainPagesAdvices } from "../pages/mainPages/MainPagesAdvices";
+import { MainPagesCompany } from "../pages/mainPages/MainPagesCompay";
+import { MainPagesContact } from "../pages/mainPages/MainPagesContact";
 import { MainPagesServices } from "../pages/mainPages/MainPagesServices";
+import { MainPagesTeam } from "../pages/mainPages/MainPagesTeam";
 
 import "./mainPageRouter.css";
 import { MainPageServicesRouter } from "./MainPagesServicesRouter";
@@ -14,6 +17,9 @@ export const MainPageRouter = () => {
       <Route path="*" element={<MainPageIndex />} />
       <Route path="advices" element={<MainPagesAdvices />} />
       <Route path="services/*" element={<MainPageServicesRouter />} />
+      <Route path="team" element={<MainPagesTeam />} />
+      <Route path="company" element={<MainPagesCompany />} />
+      <Route path="contact" element={<MainPagesContact />} />
       {/* <Route path="users" element={<UserList />} />
           <Route path="users/newUser" element={<NewUser />} />
           <Route path="users/:userId" element={<User />} />

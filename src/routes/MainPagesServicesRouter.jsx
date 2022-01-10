@@ -191,7 +191,7 @@ export const MainPageServicesRouter = () => {
                 </p>
                 <p>Registrar a su ejemplar tiene como finalidad:</p>
 
-                <ul class="list">
+                <ul className="list">
                   <li>Dar valor a las crias</li>
                   <li>
                     Conocer quién es el criador, el propietario y la línea de
@@ -280,24 +280,22 @@ export const MainPageServicesRouter = () => {
                 </p>
 
                 <p>
-                  {" "}
                   Es importante partir de una consulta de la hembra a reproducir
                   para que a través de una citología se determine el momento
                   ideal para inocular el semen del reproductor, por lo general
                   el servicio de inseminación incluye 3 visitas que constan cada
                   una en:
                 </p>
-                <p>
-                  <ul class="list">
-                    <li>Revisión del macho y de la hembra</li>
-                    <li>Citología vaginal</li>
-                    <li>Recolección del semen</li>
-                    <li>Espermatobioscopia (valoración del semen)</li>
-                    <li>
-                      Inseminación artificial (inoculación vaginal del semen)
-                    </li>
-                  </ul>
-                </p>
+
+                <ul className="list">
+                  <li>Revisión del macho y de la hembra</li>
+                  <li>Citología vaginal</li>
+                  <li>Recolección del semen</li>
+                  <li>Espermatobioscopia (valoración del semen)</li>
+                  <li>
+                    Inseminación artificial (inoculación vaginal del semen)
+                  </li>
+                </ul>
 
                 <p>
                   Esta técnica permite que hembras muy nerviosas y dominantes,

@@ -95,31 +95,50 @@ export const MainPagesNavbar = () => {
                         Cirugía de cataratas
                       </NavLink>
                     </li>
-                    {/* <li><a class="dropdown-item" href="consultas.html">Consultas</a></li>
-                <li><a class="dropdown-item" href="laboratorio.html">Laboratorio</a></li>
-                <li><a class="dropdown-item" href="cirugias.html">Cirugías</a></li>
-                <li><a class="dropdown-item" href="pedig.html">Registro de camadas FCM</a></li>
-                <li><a class="dropdown-item" href="insemin.html">Inseminación artificial</a></li>
-                <li><a class="dropdown-item" href="cataratas.html">Cirugía de cataratas</a></li> */}
                   </ul>
                 </div>
               </li>
               <li className="nav-item">
                 {/* <a class="nav-link" href="team.html">Equipo</a> */}
-                <a className="nav-link" href="#">
+                <NavLink
+                  className={({ isActive }) =>
+                    `nav-item nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="team"
+                >
                   Equipo
-                </a>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <NavLink
+                  className={({ isActive }) =>
+                    `nav-item nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="company"
+                >
                   Empresa
-                </a>
+                </NavLink>
                 {/* <a class="nav-link" href="company.html">Empresa</a> */}
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="contact.html">
+                <NavLink
+                  className={({ isActive }) =>
+                    `nav-item nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="contact"
+                >
                   Contacto
-                </a>
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink
+                  className={({ isActive }) =>
+                    `nav-item nav-link ${isActive ? "active" : ""}`
+                  }
+                  to="auth"
+                >
+                  Acceso
+                </NavLink>
               </li>
             </ul>
           </div>
