@@ -85,9 +85,12 @@ export default function Collaborators() {
         );
       },
     },
-    { field: "first_name", headerName: "Nombre", width: 150 },
-    { field: "last_name", headerName: "Apellidos", width: 150 },
-    { field: "role", headerName: "Rol", width: 150 },
+    { field: "first_name", headerName: "Nombre", width: 120 },
+    { field: "last_name", headerName: "Apellidos", width: 120 },
+    { field: "position", headerName: "Posición", width: 120 },
+    { field: "role", headerName: "Rol", width: 120 },
+    { field: "isActive", headerName: "Activo", width: 120 },
+    { field: "isRegistered", headerName: "Registrado", width: 120 },
     {
       field: "action",
       headerName: "Action",

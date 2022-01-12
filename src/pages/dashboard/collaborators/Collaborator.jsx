@@ -1,14 +1,17 @@
+import { EmojiPeople, Http } from "@material-ui/icons";
 import {
   BadgeOutlined,
   Numbers,
   TransgenderOutlined,
   CalendarToday,
+  KeyOutlined,
   LocationSearching,
   MailOutline,
   PermIdentity,
   PhoneAndroid,
   Publish,
   ToggleOnOutlined,
+  HowToRegOutlined,
 } from "@mui/icons-material";
 import Switch from "@mui/material/Switch";
 
@@ -24,7 +27,7 @@ import {
 import { capitalizeFirstLetter } from "../../../helpers/formatHelpers";
 import { uploadImg } from "../../../helpers/uploadImg";
 import { useForm } from "../../../hooks/useForm";
-import { genderTypes, roleTypes } from "../../../types/types";
+import { genderTypes, positionTypes, roleTypes } from "../../../types/types";
 
 import "./collaborator.css";
 
@@ -103,8 +106,7 @@ export default function Collaborator() {
                   {activeCollaborator.first_name} {activeCollaborator.last_name}
                 </span>
                 <span className="collaboratorShowUserTitle">
-                  {/* TODO */}
-                  Puesto pendiente
+                  {activeCollaborator.position}
                 </span>
               </div>
             </div>
@@ -148,27 +150,74 @@ export default function Collaborator() {
                 </span>
               </div>
 
+              {/* TODO */}
+              {!activeCollaborator.isRegistered && (
+                <div className="collaboratorShowInfo">
+                  <KeyOutlined className="collaboratorShowIcon" />
+                  <span className="collaboratorShowInfoTitle">
+                    {activeCollaborator.accessCode}
+                  </span>
+                </div>
+              )}
+
               <div className="collaboratorShowInfo">
-                <CalendarToday className="collaboratorShowIcon" />
-                <span className="collaboratorShowInfoTitle">10.12.1999</span>
+                <HowToRegOutlined className="collaboratorShowIcon" />
+                <span
+                  className={`collaboratorShowInfoTitle ${
+                    activeCollaborator.isRegistered
+                      ? "text-success"
+                      : "text-danger"
+                  }`}
+                >
+                  {activeCollaborator.isRegistered
+                    ? "Registrado"
+                    : "Sin registrar"}
+                </span>
               </div>
-              <span className="collaboratorShowTitle">Contact Details</span>
-              <div className="collaboratorShowInfo">
-                <PhoneAndroid className="collaboratorShowIcon" />
-                <span className="collaboratorShowInfoTitle">+1 123 456 67</span>
-              </div>
+
               <div className="collaboratorShowInfo">
                 <MailOutline className="collaboratorShowIcon" />
                 <span className="collaboratorShowInfoTitle">
-                  annabeck99@gmail.com
+                  {activeCollaborator.email}
                 </span>
+              </div>
+
+              <div className="collaboratorShowInfo">
+                <Http className="collaboratorShowIcon" />
+                <span
+                  className={`collaboratorShowInfoTitle ${
+                    activeCollaborator.isDisplayedWeb
+                      ? "text-success"
+                      : "text-danger"
+                  }`}
+                >
+                  {activeCollaborator.isDisplayedWeb
+                    ? "En la web"
+                    : "Oculto de la web"}
+                </span>
+              </div>
+
+              <span className="collaboratorShowTitle">Contact Details</span>
+              <div className="collaboratorShowInfo">
+                <CalendarToday className="collaboratorShowIcon" />
+                <span className="collaboratorShowInfoTitle">PENDIENTE</span>
               </div>
               <div className="collaboratorShowInfo">
-                <LocationSearching className="collaboratorShowIcon" />
-                <span className="collaboratorShowInfoTitle">
-                  New York | USA
-                </span>
+                <PhoneAndroid className="collaboratorShowIcon" />
+                <span className="collaboratorShowInfoTitle">PENDIENTE</span>
               </div>
+
+              <div className="collaboratorShowInfo">
+                <LocationSearching className="collaboratorShowIcon" />
+                <span className="collaboratorShowInfoTitle">PENDIENTE</span>
+              </div>
+            </div>
+
+            <div className="collaboratorShowInfo">
+              <EmojiPeople className="collaboratorShowIcon" />
+              <span className="collaboratorShowInfoTitle">
+                {activeCollaborator.textPresentation}
+              </span>
             </div>
           </div>
           <div className="collaboratorUpdate">
@@ -195,6 +244,29 @@ export default function Collaborator() {
                     value={values.last_name}
                     onChange={handleInputChange}
                   />
+                </div>
+
+                <div className="collaboratorUpdateItem">
+                  <label>Posición</label>
+                  <div className="newCollaboratorRadio">
+                    {Object.keys(positionTypes).map((key) => {
+                      return (
+                        <div className="radio__group" key={key}>
+                          <input
+                            type="radio"
+                            name="position"
+                            id={key}
+                            value={positionTypes[key]}
+                            checked={values.position === positionTypes[key]}
+                            onChange={handleInputChange}
+                          />
+                          <label htmlFor={key}>
+                            {capitalizeFirstLetter(positionTypes[key])}
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="collaboratorUpdateItem">
@@ -255,27 +327,23 @@ export default function Collaborator() {
                 </div>
 
                 <div className="collaboratorUpdateItem">
-                  <label>Email</label>
-                  <input
-                    type="text"
-                    placeholder="annabeck99@gmail.com"
-                    className="collaboratorUpdateInput"
+                  <label>Se muestra en la web</label>
+                  <Switch
+                    // checked={values.isActive}
+                    checked={values.isDisplayedWeb}
+                    onChange={handleInputChange}
+                    name="isDisplayedWeb"
+                    inputProps={{ "aria-label": "controlled" }}
                   />
                 </div>
+
                 <div className="collaboratorUpdateItem">
-                  <label>Phone</label>
-                  <input
-                    type="text"
-                    placeholder="+1 123 456 67"
-                    className="collaboratorUpdateInput"
-                  />
-                </div>
-                <div className="collaboratorUpdateItem">
-                  <label>Address</label>
-                  <input
-                    type="text"
-                    placeholder="New York | USA"
-                    className="collaboratorUpdateInput"
+                  <label>Texto de presentación en la web:</label>
+                  <textarea
+                    className="collaboratorUpdateInputTextArea"
+                    name="textPresentation"
+                    value={values.textPresentation}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>

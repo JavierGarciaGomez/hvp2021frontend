@@ -119,6 +119,14 @@
   border-bottom: 1px solid gray;
 }
 
+.collaboratorUpdateInputTextArea {
+  width: 90%;
+  height: 300px;
+
+  border: none;
+  background-color: rgb(221, 221, 221);
+}
+
 .collaboratorUpdateRight {
   display: flex;
   flex-direction: column;

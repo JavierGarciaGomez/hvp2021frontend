@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import { generateRandomString } from "../../../helpers/utilites";
 import { uploadImg } from "../../../helpers/uploadImg";
 import { startRegister } from "../../../actions/collaboratorActions";
-import { genderTypes, roleTypes } from "../../../types/types";
+import { genderTypes, positionTypes, roleTypes } from "../../../types/types";
 import { useForm } from "../../../hooks/useForm";
 import { suggestCodeIdea } from "../../../helpers/misc";
 import { capitalizeFirstLetter } from "../../../helpers/formatHelpers";
@@ -22,6 +22,7 @@ export const initialState = {
   col_numId: "67",
   gender: genderTypes.female,
   isActive: true,
+  position: positionTypes.assistantB,
 };
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
@@ -112,6 +113,30 @@ export default function NewCollaborator() {
             onChange={handleInputChange}
           />
         </div>
+
+        <div className="newCollaboratorItem">
+          <label>Puesto de trabajo</label>
+          <div className="newCollaboratorRadio">
+            {Object.keys(positionTypes).map((key) => {
+              return (
+                <div className="radio__group" key={key}>
+                  <input
+                    type="radio"
+                    name="position"
+                    id={key}
+                    value={positionTypes[key]}
+                    checked={values.position === positionTypes[key]}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor={key}>
+                    {capitalizeFirstLetter(positionTypes[key])}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="newCollaboratorItem">
           <label>Género</label>
           <div className="newCollaboratorRadio">

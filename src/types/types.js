@@ -43,3 +43,13 @@ export const roleTypes = {
   user: "User",
   guest: "Invitado",
 };
+
+export const positionTypes = {
+  medicalDirector: "Director médico",
+  adminDirector: "Director administrativo",
+  veterinaryA: "Veterinario A",
+  veterinaryB: "Veterinario B",
+  assistantA: "Asistente veterinario A",
+  assistantB: "Asistente veterinario B",
+  receptionist: "Recepcionista",
+};
