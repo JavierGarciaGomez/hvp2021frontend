@@ -135,7 +135,7 @@ export const MainPagesNavbar = () => {
                   className={({ isActive }) =>
                     `nav-item nav-link ${isActive ? "active" : ""}`
                   }
-                  to="auth"
+                  to="auth/login"
                 >
                   Acceso
                 </NavLink>

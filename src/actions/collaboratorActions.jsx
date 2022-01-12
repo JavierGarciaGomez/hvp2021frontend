@@ -29,7 +29,7 @@ import { genderTypes, roleTypes, types } from "../types/types";
 // };
 
 // 2022-01-07
-export const collaboratorsStartLoading = () => {
+export const collaboratorsStartLoading = ({ data }) => {
   return async (dispatch) => {
     try {
       const resp = await fetchSinToken("collaborators");
@@ -90,7 +90,7 @@ const collaboratorsLoaded = (collaborators) => {
 };
 
 // 369
-export const startRegister = async (data) => {
+export const collaboratorStartCreate = async (data) => {
   console.log("START REGISTER");
 
   const resp = await fetchSinToken("collaborators/create", data, "POST");
@@ -107,6 +107,64 @@ export const startRegister = async (data) => {
   } else {
     Swal.fire("Error", body.msg, "error");
   }
+};
+
+export const collaboratorStartLogin = (data) => {
+  return async (dispatch) => {
+    const resp = await fetchSinToken("collaborators/", { ...data }, "POST");
+    const body = await resp.json();
+    console.log("collaboratorActions, body: ", body);
+    if (body.ok) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Login exitoso",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      // localStorage.setItem("token", body.token);
+      // localStorage.setItem("token-init-date", new Date().getTime());
+      // dispatch(
+      //   login({
+      //     uid: body.uid,
+      //     name: body.name,
+      //   })
+      // );
+    } else {
+      Swal.fire("Error", body.msg, "error");
+    }
+  };
+};
+
+export const collaboratorStartRegister = (data) => {
+  return async (dispatch) => {
+    const resp = await fetchSinToken(
+      "collaborators/register",
+      { ...data },
+      "PATCH"
+    );
+    const body = await resp.json();
+    console.log("collaboratorActions, body: ", body);
+    if (body.ok) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Colaborador actualizado correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      // localStorage.setItem("token", body.token);
+      // localStorage.setItem("token-init-date", new Date().getTime());
+      // dispatch(
+      //   login({
+      //     uid: body.uid,
+      //     name: body.name,
+      //   })
+      // );
+    } else {
+      Swal.fire("Error", body.msg, "error");
+    }
+  };
 };
 
 // 363

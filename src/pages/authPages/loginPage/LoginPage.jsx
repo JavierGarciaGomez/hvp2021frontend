@@ -1,38 +1,45 @@
 import React, { Fragment } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { collaboratorStartLogin } from "../../../actions/collaboratorActions";
 import { InputGroup } from "../../../components/ui/InputGroup";
 import { useForm } from "../../../hooks/useForm";
 import "../auth.css";
 
 export const LoginPage = () => {
+  const dispatch = useDispatch();
+  // 369
+  const { values, handleInputChange } = useForm({
+    email: "jgg@mail.com",
+    password: "secret",
+  });
+
+  const { email, password } = values;
+
   //   TODO
   const handleGoogleLogin = (e) => {
     e.preventDefault();
   };
 
-  const { values, handleInputChange, reset } = useForm({
-    email: "",
-    password: "",
-  });
-
   // TODO
-  const loginHandler = (e) => {
-    console.log(values);
+  const handleLogin = (e) => {
     e.preventDefault();
+    console.log(email, password);
+    dispatch(collaboratorStartLogin({ email, password }));
   };
 
   return (
     <Fragment>
       <div className="auth__main">
         <div className="auth__box-container">
-          <form onSubmit={loginHandler}>
+          <form onSubmit={handleLogin}>
             <h3 className="auth__title">Login</h3>
             <InputGroup
               label="Correo electrónico"
               type="email"
               placeholder="Ingresa tu email"
               name="email"
-              value={values.email}
+              value={email}
               onChange={handleInputChange}
             />
             <InputGroup
@@ -40,7 +47,7 @@ export const LoginPage = () => {
               type="password"
               placeholder="Ingresa tu contraseña"
               name="password"
-              value={values.password}
+              value={password}
               onChange={handleInputChange}
             />
 

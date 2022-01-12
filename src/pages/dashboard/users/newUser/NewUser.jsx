@@ -7,7 +7,10 @@ import { capitalizeFirstLetter } from "../../../../helpers/formatHelpers";
 import { suggestCodeIdea } from "../../../../helpers/misc";
 import { useForm } from "../../../../hooks/useForm";
 import { genderTypes, roleTypes } from "../../../../types/types";
-import { startRegister } from "../../../../actions/collaboratorActions";
+import {
+  collaboratorStartCreate,
+  startRegister,
+} from "../../../../actions/collaboratorActions";
 import { uploadImg } from "../../../../helpers/uploadImg";
 import { generateRandomString } from "../../../../helpers/utilites";
 
@@ -39,7 +42,7 @@ export default function NewUser() {
     }
     values.accessCode = generateRandomString(6);
     console.log("estos son los valores", values);
-    startRegister(values);
+    collaboratorStartCreate(values);
     Swal.fire({
       icon: "success",
       title: `Usuario ${values.col_code} creado con éxito. El código de acceso es: ${values.accessCode}`,

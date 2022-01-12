@@ -8,11 +8,12 @@ import Swal from "sweetalert2";
 
 import { generateRandomString } from "../../../helpers/utilites";
 import { uploadImg } from "../../../helpers/uploadImg";
-import { startRegister } from "../../../actions/collaboratorActions";
+
 import { genderTypes, positionTypes, roleTypes } from "../../../types/types";
 import { useForm } from "../../../hooks/useForm";
 import { suggestCodeIdea } from "../../../helpers/misc";
 import { capitalizeFirstLetter } from "../../../helpers/formatHelpers";
+import { collaboratorStartCreate } from "../../../actions/collaboratorActions";
 
 export const initialState = {
   first_name: "Fátima Lucía",
@@ -41,7 +42,7 @@ export default function NewCollaborator() {
     }
     values.accessCode = generateRandomString(6);
     console.log("estos son los valores", values);
-    startRegister(values);
+    collaboratorStartCreate(values);
     Swal.fire({
       icon: "success",
       title: `Usuario ${values.col_code} creado con éxito. El código de acceso es: ${values.accessCode}`,
