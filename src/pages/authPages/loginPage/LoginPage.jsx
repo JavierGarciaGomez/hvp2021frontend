@@ -1,20 +1,27 @@
-import React, { Fragment } from "react";
-import { useDispatch } from "react-redux";
+import React, { Fragment, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { collaboratorStartLogin } from "../../../actions/collaboratorActions";
 import { InputGroup } from "../../../components/ui/InputGroup";
 import { useForm } from "../../../hooks/useForm";
+import { useNavigate } from "react-router-dom";
 import "../auth.css";
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
   // 369
   const { values, handleInputChange } = useForm({
-    email: "jgg@mail.com",
+    email: "javieron.garcia@gmail.com",
     password: "secret",
   });
 
   const { email, password } = values;
+
+  useEffect(() => {
+    if (isAuthenticated) navigate("/dashboard", { replace: true });
+  }, [isAuthenticated]);
 
   //   TODO
   const handleGoogleLogin = (e) => {
@@ -25,6 +32,7 @@ export const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     console.log(email, password);
+
     dispatch(collaboratorStartLogin({ email, password }));
   };
 

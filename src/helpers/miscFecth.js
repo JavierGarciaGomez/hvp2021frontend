@@ -20,3 +20,21 @@ export const getCollaboratorbyId = (id) => {
     }
   };
 };
+
+export const getCollaboratorbyIdBis = async (id) => {
+  try {
+    const resp = await fetchSinToken(`collaborators/${id}`, {
+      collaboratorId: id,
+    });
+
+    const body = await resp.json();
+
+    if (body.ok) {
+      const collaborator = body.collaborator;
+
+      return collaborator;
+    }
+  } catch (error) {
+    Swal.fire("error", error, "error");
+  }
+};

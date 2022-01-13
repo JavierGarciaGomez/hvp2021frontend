@@ -4,6 +4,7 @@
 import Swal from "sweetalert2";
 import { fetchSinToken } from "../helpers/fetch";
 import { genderTypes, roleTypes, types } from "../types/types";
+import { authLogin } from "./authActions";
 // import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 // import { eventLogout } from "./eventActions";
 // import { eventLogout } from "./events";
@@ -29,9 +30,10 @@ import { genderTypes, roleTypes, types } from "../types/types";
 // };
 
 // 2022-01-07
-export const collaboratorsStartLoading = ({ data }) => {
+export const collaboratorsStartLoading = () => {
   return async (dispatch) => {
     try {
+      dispatch(collaboratorsIsLoading());
       const resp = await fetchSinToken("collaborators");
       const body = await resp.json();
 
@@ -48,6 +50,14 @@ export const collaboratorsStartLoading = ({ data }) => {
     }
   };
 };
+
+const collaboratorsIsLoading = () => ({
+  type: types.collaboratorIsLoading,
+});
+
+const collaboratorsFinishedLoading = () => ({
+  type: types.collaboratorFinishedLoading,
+});
 
 export const collaboratorStartSetActive = (id) => {
   console.log("COLLABORATOR ACTIONS. Collaborator start set active", id);
@@ -113,7 +123,7 @@ export const collaboratorStartLogin = (data) => {
   return async (dispatch) => {
     const resp = await fetchSinToken("collaborators/", { ...data }, "POST");
     const body = await resp.json();
-    console.log("collaboratorActions, body: ", body);
+
     if (body.ok) {
       Swal.fire({
         position: "top-end",
@@ -122,14 +132,17 @@ export const collaboratorStartLogin = (data) => {
         showConfirmButton: false,
         timer: 1500,
       });
-      // localStorage.setItem("token", body.token);
-      // localStorage.setItem("token-init-date", new Date().getTime());
-      // dispatch(
-      //   login({
-      //     uid: body.uid,
-      //     name: body.name,
-      //   })
-      // );
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+
+      const { uid, col_code, role } = body;
+      dispatch(
+        authLogin({
+          uid,
+          col_code,
+          role,
+        })
+      );
     } else {
       Swal.fire("Error", body.msg, "error");
     }

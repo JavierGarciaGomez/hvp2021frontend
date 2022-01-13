@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./sidebar.css";
 import {
   AttachMoney,
@@ -15,8 +15,20 @@ import {
   WorkOutline,
 } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { roleTypes } from "../../types/types";
 
 export const Sidebar = () => {
+  const { role } = useSelector((state) => state.auth);
+  const [isAuthorized, setisAuthorized] = useState(false);
+
+  useEffect(() => {
+    if (role === roleTypes.admin) {
+      setisAuthorized(true);
+    }
+  }, [role]);
+
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -29,11 +41,13 @@ export const Sidebar = () => {
                 Home
               </li>
             </Link>
+            {isAuthorized && (
+              <li className="sidebarListItem">
+                <Timeline className="sidebarIcon" />
+                Analytics
+              </li>
+            )}
 
-            <li className="sidebarListItem">
-              <Timeline className="sidebarIcon" />
-              Analytics
-            </li>
             <li className="sidebarListItem">
               <TrendingUp className="sidebarIcon" />
               Sales

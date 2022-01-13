@@ -18,6 +18,7 @@ const initialState = {
     // },
   ],
   activeCollaborator: null,
+  isLoading: true,
 };
 
 export const collaboratorReducer = (state = initialState, action) => {
@@ -26,6 +27,7 @@ export const collaboratorReducer = (state = initialState, action) => {
       return {
         ...state,
         collaborators: [...action.payload],
+        isLoading: false,
       };
 
     case types.collaboratorSetActive:
@@ -40,22 +42,16 @@ export const collaboratorReducer = (state = initialState, action) => {
         activeCollaborator: action.payload,
       };
 
-    case types.authLogin:
+    case types.collaboratorIsLoading:
       return {
         ...state,
-        ...action.payload,
-        checking: false,
+        isLoading: true,
       };
 
-    case types.authCheckingFinish:
+    case types.collaboratorFinishedLoading:
       return {
         ...state,
-        checking: false,
-      };
-
-    case types.authLogout:
-      return {
-        checking: false,
+        isLoading: false,
       };
 
     default:

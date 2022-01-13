@@ -1,10 +1,16 @@
 // 318
 export const types = {
   // collaborator
-  collaboratorCreateNew: "[collaborator] Add New",
+  collaboratorCreateNew: "[collaborator] add new",
   collaboratorsLoaded: "[collaborator] loaded",
-  collaboratorSetActive: "[collaborator] Set Active",
-  collaboratorUpdate: "[collaborator] Update",
+  collaboratorSetActive: "[collaborator] set active",
+  collaboratorUpdate: "[collaborator] update",
+  collaboratorIsLoading: "[collaborator] is loading",
+  collaboratorFinishedLoading: "[collaborator] finished loading",
+
+  authLogin: "[auth] login",
+  authCheckingFinish: "[auth] finish checking login state",
+  authLogout: "[auth] logout",
 
   /*
   uiOpenModal: "[ui] Open modal",
@@ -24,7 +30,7 @@ export const types = {
   authLogin: "[auth] Login",
   authStartRegister: "[auth] Start Register",
   authStartStartTokenRenew: "[auth] Start token renew",
-  authLogout: "[auth] Logout",
+  
   */
 };
 
@@ -52,4 +58,5 @@ export const positionTypes = {
   assistantA: "Asistente veterinario A",
   assistantB: "Asistente veterinario B",
   receptionist: "Recepcionista",
+  consultant: "Asesor",
 };

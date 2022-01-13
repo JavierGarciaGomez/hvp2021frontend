@@ -1,12 +1,31 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { MainPagesSectionHeader } from "../../../components/mainPageComponents/MainPagesSectionHeader";
 import { useScript } from "../../../hooks/useScript";
 import { MainPageHeader } from "./MainPageHeader";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useDispatch, useSelector } from "react-redux";
+import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
+import { CircularProgress } from "@material-ui/core";
+import { sortCollaborators, sortCollection } from "../../../helpers/utilites";
 
 const position = [21.019557, -89.613934];
 
 export const MainPageIndex = () => {
+  const dispatch = useDispatch();
+  const { collaborators, isLoading } = useSelector(
+    (state) => state.collaborator
+  );
+  const [sortedCollaborators, setsortedCollaborators] = useState([]);
+
+  useEffect(() => {
+    dispatch(collaboratorsStartLoading());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setsortedCollaborators(sortCollection(collaborators));
+    console.log("hapy sorting", sortedCollaborators);
+  }, [collaborators]);
+
   return (
     <Fragment>
       <MainPageHeader />
@@ -155,9 +174,37 @@ export const MainPageIndex = () => {
         <section>
           <MainPagesSectionHeader title="Quiénes somos" />
 
-          <div className="collaborators">
-            <div className="collaborator">
+          <div className="mainPages__collaborators">
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              sortedCollaborators.map((collaborator) => {
+                return (
+                  <div
+                    className="mainPages__collaborator"
+                    key={collaborator._id}
+                  >
+                    <img
+                      className="mainPages_collaboratorImg"
+                      src={collaborator.imgUrl}
+                      alt="colaborador"
+                    />
+                    <div className="coll-name">
+                      <p>
+                        {`${collaborator.first_name} ${collaborator.last_name} `}
+                        <span className="position">
+                          {collaborator.position}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+            <div className="mainPages__collaborator">
               <img
+                className="main"
                 src="assets/imgs/mainPage/collaborators/RGL.png"
                 alt="colaborador"
               />
@@ -168,7 +215,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/ADG.png"
                 alt="colaborador"
@@ -180,7 +227,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/AAA.png"
                 alt="colaborador"
@@ -191,7 +238,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/NDC.png"
                 alt="colaborador"
@@ -202,7 +249,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/MAT.png"
                 alt="colaborador"
@@ -213,7 +260,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/LFP.png"
                 alt="colaborador"
@@ -224,7 +271,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/JLP.png"
                 alt="colaborador"
@@ -235,7 +282,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/IFP.png"
                 alt="colaborador"
@@ -246,7 +293,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/ANV.png"
                 alt="colaborador"
@@ -257,7 +304,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/SDI.png"
                 alt="colaborador"
@@ -268,7 +315,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/SCP.png"
                 alt="colaborador"
@@ -280,7 +327,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/ACB.png"
                 alt="colaborador"
@@ -291,7 +338,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/OMH.png"
                 alt="colaborador"
@@ -302,7 +349,7 @@ export const MainPageIndex = () => {
                 </p>
               </div>
             </div>
-            <div className="collaborator">
+            <div className="mainPages__collaborator">
               <img
                 src="assets/imgs/mainPage/collaborators/FDC.png"
                 alt="colaborador"

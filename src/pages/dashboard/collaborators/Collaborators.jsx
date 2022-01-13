@@ -8,17 +8,19 @@ import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
 import { userRows } from "../../../data/dummyData";
+import { CircularProgress } from "@material-ui/core";
 
 export default function Collaborators() {
   const dispatch = useDispatch();
 
+  const [data, setData] = useState(userRows);
+  const { collaborators, isLoading } = useSelector(
+    (state) => state.collaborator
+  );
+
   useEffect(() => {
     dispatch(collaboratorsStartLoading());
   }, [dispatch]);
-
-  const [data, setData] = useState(userRows);
-  const { collaborators } = useSelector((state) => state.collaborator);
-  console.log("getting state from redux", collaborators);
 
   const handleDelete = (id) => {
     setData((prevData) => prevData.filter((item) => item.id !== id));
@@ -106,6 +108,8 @@ export default function Collaborators() {
       },
     },
   ];
+
+  if (isLoading) return <CircularProgress />;
 
   return (
     <Fragment>
