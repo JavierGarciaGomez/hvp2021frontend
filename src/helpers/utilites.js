@@ -41,8 +41,9 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
   // sort function
   const sortByPosition = (a, b) => {
     if (a.position == b.position) {
+      console.log("empezamos", a.col_numId, b.col_numId);
       // If the elements both have the same `position`,
-      return a.col_num_id.localeCompare(b.col_num_id); // Compare the elements by id number.
+      return a.col_numId - b.col_numId; // Compare the elements by id number.
     } else {
       // Otherwise,
       return sortOrder.indexOf(a.position) - sortOrder.indexOf(b.position); // Substract indexes, If element `a` comes first in the array, the returned value will be negative, resulting in it being sorted before `b`, and vice versa.
@@ -64,4 +65,28 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
 
 const getValuesFromObject = (object) => {
   return Object.values(object);
+};
+
+// export const convertPlainTextToHtml = (text = "") => {
+//   let newText = "<div><p>";
+//   let lines = text.split("\n\n");
+//   lines.forEach((element) => {
+//     newText = newText.concat(element);
+//     newText = newText.concat("</p><p>");
+//   });
+//   newText = newText.concat("</p></div>");
+
+//   const parser = new DOMParser();
+
+//   return ReactHtml;
+// };
+
+export const getTextAsJSX = (text = "") => {
+  const JSXtoReturn =
+    text &&
+    text.split("\n").map((i, key) => {
+      return <p key={key}>{i}</p>;
+    });
+
+  return JSXtoReturn;
 };

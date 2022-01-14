@@ -22,8 +22,10 @@ export const MainPageIndex = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setsortedCollaborators(sortCollection(collaborators));
-    console.log("hapy sorting", sortedCollaborators);
+    console.log("colos", collaborators);
+    if (collaborators.length > 0) {
+      setsortedCollaborators(sortCollection(collaborators));
+    }
   }, [collaborators]);
 
   return (
@@ -201,165 +203,6 @@ export const MainPageIndex = () => {
                 );
               })
             )}
-
-            <div className="mainPages__collaborator">
-              <img
-                className="main"
-                src="assets/imgs/mainPage/collaborators/RGL.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Rafael García{" "}
-                  <span className="position">Director médico</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/ADG.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Adriana García{" "}
-                  <span className="position">Directora admninistrativa</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/AAA.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Adrián Aguilar <span className="position">Gerente</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/NDC.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Néstor Delgado <span className="position">Veterinario</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/MAT.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Lulú Avendaño <span className="position">Veterinaria</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/LFP.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Anahí Fuentes <span className="position">Veterinaria</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/JLP.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  José Luis López <span className="position">Veterinaria</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/IFP.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Larissa Franco <span className="position">Asistente</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/ANV.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Andrés Nah <span className="position">Asistente</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/SDI.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Saraí Delgado <span className="position">Asistente</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/SCP.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Silvia Colmenares{" "}
-                  <span className="position">Recepcionista</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/ACB.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Atziri Caamal <span className="position">Recepcionista</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/OMH.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Óscar Moo <span className="position">Recepcionista</span>
-                </p>
-              </div>
-            </div>
-            <div className="mainPages__collaborator">
-              <img
-                src="assets/imgs/mainPage/collaborators/FDC.png"
-                alt="colaborador"
-              />
-              <div className="coll-name">
-                <p>
-                  Felipe Dávalos <span className="position">Recepcionista</span>
-                </p>
-              </div>
-            </div>
           </div>
         </section>
       </div>
