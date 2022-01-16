@@ -12,9 +12,11 @@ export const authLogin = (user) => ({ type: types.authLogin, payload: user });
 
 export const startChecking = () => {
   console.log("start checking");
+
   return async (dispatch) => {
     const resp = await fetchConToken("collaborators/renew");
     const body = await resp.json();
+    console.log("this is body", body);
     if (body.ok) {
       localStorage.setItem("token", body.token);
       localStorage.setItem("token-init-date", new Date().getTime());
