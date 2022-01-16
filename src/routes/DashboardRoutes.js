@@ -12,7 +12,7 @@ import UserList from "../pages/dashboard/userList/UserList";
 import Collaborators from "../pages/dashboard/collaborators/Collaborators";
 import NewCollaborator from "../pages/dashboard/collaborators/NewCollaborator";
 import Collaborator from "../pages/dashboard/collaborators/Collaborator";
-import { CleanUpsPage } from "../pages/dashboard/cleanUps/CleanUpsPage";
+import { CleanUpsLayoutPage } from "../pages/dashboard/cleanUps/CleanUpsLayout";
 
 export const DashboardRoutes = () => {
   return (
@@ -40,7 +40,7 @@ export const DashboardRoutes = () => {
               path="collaborators/:collaboratorId"
               element={<Collaborator />}
             />
-            <Route path="cleanups" element={<CleanUpsPage />} />
+            <Route path="cleanups/*" element={<CleanUpsLayoutPage />} />
 
             {/* Cleanups */}
             <Route path="*" element={<Navigate to="home" />} />

@@ -14,7 +14,7 @@ import {
   getIdOrEmpty,
 } from "../../../helpers/utilites";
 
-export const CleanUpsPage = () => {
+export const CleanUpsUrban = () => {
   const dispatch = useDispatch();
   const [formattedDailyCleanups, setformattedDailyCleanups] = useState([]);
 
@@ -140,7 +140,21 @@ export const CleanUpsPage = () => {
 
   return (
     <Fragment>
-      <h1 className="text-center m-4">Control de limpieza diario</h1>
+      <div className="container border-top border-primary">
+        <div className="row d-flex justify-content-center m-3">
+          <div className="col-8 text-center fs-3">
+            Control de limpieza Profunda
+          </div>
+          <div className="col-4 text-start">
+            <Link to="/dashboard/cleanups/addNewDeepCleaning">
+              <button type="button" class="btn btn-secondary mx-2">
+                Agregar limpieza profunda
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+      <h3 className="text-center m-3 fs-3">Control de limpieza diario</h3>
       <div style={{ height: "50vh", width: "100%" }}>
         <DataGrid
           rows={formattedDailyCleanups}
