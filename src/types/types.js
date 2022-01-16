@@ -12,6 +12,9 @@ export const types = {
   authCheckingFinish: "[auth] finish checking login state",
   authLogout: "[auth] logout",
 
+  dailyCleanUpsIsLoading: "[cleanUps] daily clean ups is loading",
+  dailyCleanUpsLoaded: "[cleanUps] daily clean ups loaded",
+
   /*
   uiOpenModal: "[ui] Open modal",
   uiCloseModal: "[ui] Close modal",
@@ -59,4 +62,10 @@ export const positionTypes = {
   assistantB: "Asistente veterinario B",
   receptionist: "Recepcionista",
   consultant: "Asesor",
+};
+
+export const dailyCleanUpActions = {
+  addCleaner: "addCleaner",
+  addSupervisor: "addSupervisor",
+  addComment: "addComment",
 };

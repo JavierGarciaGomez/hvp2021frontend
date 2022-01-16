@@ -12,6 +12,7 @@ import UserList from "../pages/dashboard/userList/UserList";
 import Collaborators from "../pages/dashboard/collaborators/Collaborators";
 import NewCollaborator from "../pages/dashboard/collaborators/NewCollaborator";
 import Collaborator from "../pages/dashboard/collaborators/Collaborator";
+import { CleanUpsPage } from "../pages/dashboard/cleanUps/CleanUpsPage";
 
 export const DashboardRoutes = () => {
   return (
@@ -22,11 +23,14 @@ export const DashboardRoutes = () => {
         <Sidebar />
         <div className="dashboard-main">
           <Routes>
+            {/* HOME */}
             <Route path="home" element={<HomeDashPage />} />
+
             <Route path="users" element={<UserList />} />
             <Route path="users/newUser" element={<NewUser />} />
             <Route path="users/:userId" element={<User />} />
 
+            {/* Collaborators */}
             <Route path="collaborators" element={<Collaborators />} />
             <Route
               path="collaborators/newCollaborator"
@@ -36,6 +40,9 @@ export const DashboardRoutes = () => {
               path="collaborators/:collaboratorId"
               element={<Collaborator />}
             />
+            <Route path="cleanups" element={<CleanUpsPage />} />
+
+            {/* Cleanups */}
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>
         </div>

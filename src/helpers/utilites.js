@@ -1,4 +1,5 @@
 import { positionTypes } from "../types/types";
+import dayjs from "dayjs";
 
 export const generateRandomString = (length = 4) => {
   const chars =
@@ -89,4 +90,22 @@ export const getTextAsJSX = (text = "") => {
     });
 
   return JSXtoReturn;
+};
+
+export const convertCollectionDatesToString = (collection = []) => {
+  collection.map((item) => {
+    item.date = getSimplifiedStringDate(item.date);
+
+    return { ...item };
+  });
+  return collection;
+};
+
+export const getSimplifiedStringDate = (date = new Date()) => {
+  return dayjs(date).format("DD/MM/YYYY");
+};
+
+export const getIdOrEmpty = (object) => {
+  console.log("cleaner", object);
+  return "hola";
 };
