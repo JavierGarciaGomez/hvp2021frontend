@@ -6,6 +6,7 @@ const initialState = {
   dailyCleanUps: [],
   deepCleanUps: [],
   activeDailyCleanUp: null,
+  activeDeepCleanUp: null,
 
   isLoadingDailyCleanUps: true,
   isLoadingDeepCleanUps: true,
@@ -20,7 +21,6 @@ export const cleanUpsReducer = (state = initialState, action) => {
       };
 
     case types.dailyCleanUpsLoaded:
-      console.log("action", action);
       return {
         ...state,
         dailyCleanUps: [...action.payload],
@@ -34,11 +34,16 @@ export const cleanUpsReducer = (state = initialState, action) => {
       };
 
     case types.deepCleanUpsLoaded:
-      console.log("action aca estamo", action);
       return {
         ...state,
         deepCleanUps: [...action.payload],
         isLoadingDeepCleanUps: false,
+      };
+
+    case types.deepCleanUpsSetActive:
+      return {
+        ...state,
+        activeDeepCleanUp: action.payload,
       };
 
     default:

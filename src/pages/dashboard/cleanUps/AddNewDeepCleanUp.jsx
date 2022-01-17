@@ -14,7 +14,7 @@ Object.keys(deepCleanUpActivities).map((key) => {
   initialState[key] = false;
 });
 
-export const AddNewDeepCleaning = () => {
+export const AddNewDeepCleanup = () => {
   const { branch } = useParams();
 
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ export const AddNewDeepCleaning = () => {
         data.activities.push(key);
       }
     });
-    console.log("esta es la data", data);
+
     await dispatch(deepCleanUpCreate(data));
     navigate(-1);
   };

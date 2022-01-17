@@ -129,14 +129,11 @@ export const CleanUpsBranch = () => {
   ];
 
   const handleClean = (id) => {
-    console.log(id);
     dispatch(dailyCleanUpsAddCleaner(id));
     dispatch(dailyCleanUpsStartLoading());
   };
 
-  const handleSupervise = (id) => {
-    console.log(id);
-  };
+  const handleSupervise = (id) => {};
 
   // TODO
   // if (isLoadingDailyCleanUps) return <CircularProgress />;

@@ -1,7 +1,7 @@
 import { DataGrid } from "@material-ui/data-grid";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
 import {
   convertCollectionDatesToString,
@@ -33,6 +33,20 @@ export const DeepCleanUpsTable = ({
 
   const columns = [
     { field: "date", headerName: "Fecha", width: 120 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 50,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`${params.id}`}>
+              <button className="btn btn-success btn-sm">Ver</button>
+            </Link>
+          </>
+        );
+      },
+    },
     {
       field: "cleaners",
       headerName: "Realizado",
@@ -89,14 +103,16 @@ export const DeepCleanUpsTable = ({
   ];
 
   return (
-    <div style={{ height: "50vh", width: "100%" }}>
+    <div style={{ height: "300px", width: "100%" }}>
       <DataGrid
         rows={formattedDeepCleanUps}
         disableSelectionOnClick
         columns={columns}
         pageSize={50}
         checkboxSelection
-        getRowId={(row) => row._id}
+        getRowId={(row) => {
+          return row._id;
+        }}
         rowHeight={40}
       />
     </div>

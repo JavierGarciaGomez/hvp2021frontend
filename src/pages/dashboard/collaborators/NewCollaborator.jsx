@@ -41,7 +41,7 @@ export default function NewCollaborator() {
       values.imgUrl = imgUrl;
     }
     values.accessCode = generateRandomString(6);
-    console.log("estos son los valores", values);
+
     collaboratorStartCreate(values);
     Swal.fire({
       icon: "success",
@@ -56,7 +56,7 @@ export default function NewCollaborator() {
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
+
     if (file) {
       const tempImgUrl = await uploadImg(file);
       setimgUrl(tempImgUrl);

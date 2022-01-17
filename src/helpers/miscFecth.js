@@ -12,7 +12,7 @@ export const getCollaboratorbyId = (id) => {
 
       if (body.ok) {
         const collaborator = body.collaborator;
-        console.log("mis fecth", collaborator);
+
         return collaborator;
       }
     } catch (error) {

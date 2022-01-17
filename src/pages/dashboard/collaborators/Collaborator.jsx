@@ -65,7 +65,6 @@ export default function Collaborator() {
   // TODO
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values);
 
     if (imgUrl) {
       values.imgUrl = imgUrl;
@@ -85,14 +84,13 @@ export default function Collaborator() {
 
   const handlePictureUpload = (e) => {
     e.preventDefault();
-    console.log("HOLAAA");
+
     document.querySelector("#file").click();
-    console.log("he");
   };
   const handleFileChange = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    console.log(file);
+
     if (file) {
       const tempImgUrl = await uploadImg(file);
       setimgUrl(tempImgUrl);

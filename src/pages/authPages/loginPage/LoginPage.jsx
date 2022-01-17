@@ -31,7 +31,6 @@ export const LoginPage = () => {
   // TODO
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log(email, password);
 
     dispatch(collaboratorStartLogin({ email, password }));
   };

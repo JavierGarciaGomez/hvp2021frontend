@@ -11,7 +11,6 @@ export const dailyCleanUpsStartLoading = (branch) => {
       );
       const body = await resp.json();
       if (body.ok) {
-        console.log("cleanupsactions body", body);
         dispatch(dailyCleanUpsLoaded(body.dailyCleanUps));
       }
     } catch (error) {
@@ -25,7 +24,6 @@ const dailyCleanUpsIsLoading = () => ({
 });
 
 const dailyCleanUpsLoaded = (dailyCleanUps) => {
-  console.log("im here", dailyCleanUps);
   return {
     type: types.dailyCleanUpsLoaded,
     payload: dailyCleanUps,
@@ -79,7 +77,35 @@ export const deepCleanUpCreate = (data) => {
         timer: 2000,
       });
     } catch (error) {
-      console.log(error);
+      return Swal.fire("Error", error.message, "error");
+    }
+  };
+};
+
+export const deepCleanUpUpdate = (branch, id, data) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(
+        `cleanups/deep/${branch}/${id}`,
+        data,
+        "PUT"
+      );
+      const body = await resp.json();
+      if (body.ok) {
+        return Swal.fire({
+          icon: "success",
+          title: "Actualización exitosa",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      return Swal.fire({
+        icon: "error",
+        title: body.msg,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } catch (error) {
       return Swal.fire("Error", error.message, "error");
     }
   };
@@ -93,11 +119,9 @@ export const deepCleanUpsStartLoading = (branch) => {
       const resp = await fetchConToken(`cleanups/deep/${branch}`);
       const body = await resp.json();
       if (body.ok) {
-        console.log("cleanupsactions body", body);
         dispatch(deepCleanUpsLoaded(body.deepCleanUps));
       }
     } catch (error) {
-      console.log(error);
       Swal.fire("error", error.message, "error");
     }
   };
@@ -113,3 +137,27 @@ const deepCleanUpsLoaded = (deepCleanUps) => {
     payload: deepCleanUps,
   };
 };
+
+export const deepCleanUpStartSetActive = (branch, id) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(`cleanups/deep/${branch}/${id}`);
+
+      const body = await resp.json();
+
+      if (body.ok) {
+        const deepCleanUp = body.deepCleanUp;
+
+        dispatch(deepCleanUpSetActive(deepCleanUp));
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+const deepCleanUpSetActive = (deepCleanUp) => ({
+  type: types.deepCleanUpsSetActive,
+  payload: deepCleanUp,
+});

@@ -1,14 +1,9 @@
 import React, { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
-import { MainPagesNavbar } from "../components/mainPageComponents/common/MainPagesNavbar";
-import { AddNewDeepCleaning } from "../pages/dashboard/cleanUps/AddNewDeepCleaning";
+
+import { AddNewDeepCleanup } from "../pages/dashboard/cleanUps/AddNewDeepCleanUp";
 import { CleanUpsBranch } from "../pages/dashboard/cleanUps/CleanUpsBranch";
-import { MainPageIndex } from "../pages/mainPages/index/MainPageIndex";
-import { MainPagesAdvices } from "../pages/mainPages/MainPagesAdvices";
-import { MainPagesCompany } from "../pages/mainPages/MainPagesCompay";
-import { MainPagesContact } from "../pages/mainPages/MainPagesContact";
-import { MainPagesServices } from "../pages/mainPages/MainPagesServices";
-import { MainPagesTeam } from "../pages/mainPages/MainPagesTeam";
+import { DeepCleanUpShow } from "../pages/dashboard/cleanUps/DeepCleanUpShow";
 
 import "./mainPageRouter.css";
 import { MainPageServicesRouter } from "./MainPagesServicesRouter";
@@ -20,8 +15,9 @@ export const CleanUpsRouter = () => {
       <Route path=":branch" element={<CleanUpsBranch />} />
       <Route
         path=":branch/addNewDeepCleaning"
-        element={<AddNewDeepCleaning />}
+        element={<AddNewDeepCleanup />}
       />
+      <Route path=":branch/:deepCleanUpId" element={<DeepCleanUpShow />} />
       {/* <Route path="services/*" element={<MainPageServicesRouter />} />
       <Route path="team" element={<MainPagesTeam />} />
       <Route path="company" element={<MainPagesCompany />} />

@@ -22,7 +22,6 @@ export const MainPageIndex = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("colos", collaborators);
     if (collaborators.length > 0) {
       setsortedCollaborators(sortCollection(collaborators));
     }

@@ -38,7 +38,6 @@ export const collaboratorsStartLoading = () => {
       const body = await resp.json();
 
       if (body.ok) {
-        console.log("collaborators start loading", body.collaborators);
         dispatch(collaboratorsLoaded(body.collaborators));
         // event.id = body.evento.id;
         // event.user = { _id: uid, name };
@@ -60,7 +59,6 @@ const collaboratorsFinishedLoading = () => ({
 });
 
 export const collaboratorStartSetActive = (id) => {
-  console.log("COLLABORATOR ACTIONS. Collaborator start set active", id);
   return async (dispatch) => {
     try {
       const resp = await fetchSinToken(`collaborators/${id}`, {
@@ -71,10 +69,9 @@ export const collaboratorStartSetActive = (id) => {
 
       if (body.ok) {
         const collaborator = body.collaborator;
-        console.log("mis fecth", collaborator);
+
         dispatch(collaboratorSetActive(collaborator));
       }
-      console.log("COLLABORATOR ACTIONS. Collaborator finish set active");
     } catch (error) {
       console.log(error);
       Swal.fire("error", "error", "error");
@@ -83,8 +80,6 @@ export const collaboratorStartSetActive = (id) => {
 };
 
 const collaboratorSetActive = (collaborator) => {
-  console.log("COLLABORATOR ACTIONS. Collaborator set active");
-
   return {
     type: types.collaboratorSetActive,
     payload: collaborator,
@@ -92,7 +87,6 @@ const collaboratorSetActive = (collaborator) => {
 };
 
 const collaboratorsLoaded = (collaborators) => {
-  console.log("collaborators loaded", collaborators);
   return {
     type: types.collaboratorsLoaded,
     payload: collaborators,
@@ -101,8 +95,6 @@ const collaboratorsLoaded = (collaborators) => {
 
 // 369
 export const collaboratorStartCreate = async (data) => {
-  console.log("START REGISTER");
-
   const resp = await fetchSinToken("collaborators/create", data, "POST");
   const body = await resp.json();
   if (body.ok) {
@@ -157,7 +149,7 @@ export const collaboratorStartRegister = (data) => {
       "PATCH"
     );
     const body = await resp.json();
-    console.log("collaboratorActions, body: ", body);
+
     if (body.ok) {
       Swal.fire({
         position: "top-end",
@@ -222,7 +214,6 @@ export const collaboratorStartRegister = (data) => {
 // const logout = () => ({ type: types.authLogout });
 
 export const collaboratorStartUpdate = (collaborator) => {
-  console.log("COLLABORATOR ACTIONS. START UPDATE", collaborator);
   return async (dispatch) => {
     try {
       const resp = await fetchSinToken(

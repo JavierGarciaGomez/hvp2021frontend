@@ -30,8 +30,6 @@ export default function NewUser() {
   const [values, handleInputChange, reset] = useForm(initialState);
   const [imgUrl, setimgUrl] = useState(initialState);
 
-  console.log("imgUrl", imgUrl);
-
   const dispatch = useDispatch();
 
   const submitHandler = (e) => {
@@ -41,7 +39,7 @@ export default function NewUser() {
       values.imgUrl = imgUrl;
     }
     values.accessCode = generateRandomString(6);
-    console.log("estos son los valores", values);
+
     collaboratorStartCreate(values);
     Swal.fire({
       icon: "success",
@@ -56,7 +54,7 @@ export default function NewUser() {
   };
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
+
     if (file) {
       const tempImgUrl = await uploadImg(file);
       setimgUrl(tempImgUrl);

@@ -44,7 +44,6 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
   // sort function
   const sortByPosition = (a, b) => {
     if (a.position == b.position) {
-      console.log("empezamos", a.col_numId, b.col_numId);
       // If the elements both have the same `position`,
       return a.col_numId - b.col_numId; // Compare the elements by id number.
     } else {
@@ -60,8 +59,6 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
   const filteredCollection = collection.filter(
     (collaborator) => collaborator.isDisplayedWeb
   );
-
-  console.log("esta es el filtered", filteredCollection);
 
   return filteredCollection.sort(compareFunction);
 };
@@ -95,13 +92,12 @@ export const getTextAsJSX = (text = "") => {
 };
 
 export const convertCollectionDatesToString = (collection = []) => {
-  console.log("esta es la coleccion", collection);
   collection.map((item) => {
     item.date = getSimplifiedStringDate(item.date);
 
     return { ...item };
   });
-  console.log("esta es la coleccion que regresaré", collection);
+
   return collection;
 };
 
@@ -110,7 +106,6 @@ export const getSimplifiedStringDate = (date = new Date()) => {
 };
 
 export const getIdOrEmpty = (object) => {
-  console.log("cleaner", object);
   return "hola";
 };
 
@@ -120,7 +115,6 @@ export const getAColumn = (field, headerName, width, property) => {
     headerName,
     width,
     renderCell: (params) => {
-      console.log("estos son los params.row", params.row.activities[property]);
       return (
         <Fragment>
           {params.row.activities[property] ? <Check /> : <Clear />}

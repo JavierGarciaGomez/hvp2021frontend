@@ -17,6 +17,7 @@ export const types = {
 
   deepCleanUpsIsLoading: "[cleanUps] deep cleanups is loading",
   deepCleanUpsLoaded: "[cleanUps] deep cleanups loaded",
+  deepCleanUpsSetActive: "[deepCleanUps] set active",
 
   /*
   uiOpenModal: "[ui] Open modal",
