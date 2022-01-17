@@ -26,12 +26,11 @@ export const CleanUpsBranch = () => {
   );
 
   useEffect(() => {
-    dispatch(dailyCleanUpsStartLoading(branch));
+    // dispatch(dailyCleanUpsStartLoading(branch));
   }, [dispatch]);
 
   useEffect(() => {
-    setformattedDailyCleanups(convertCollectionDatesToString(dailyCleanUps));
-    console.log("loading or not", isLoadingDailyCleanUps);
+    // setformattedDailyCleanups(convertCollectionDatesToString(dailyCleanUps));
   }, [dailyCleanUps]);
 
   const columns = [

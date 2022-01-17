@@ -90,10 +90,7 @@ export const deepCleanUpsStartLoading = (branch) => {
   return async (dispatch) => {
     try {
       dispatch(deepCleanUpsIsLoading());
-      const data = {
-        branch,
-      };
-      const resp = await fetchConToken(`cleanups/deep/${branch}`, data, "POST");
+      const resp = await fetchConToken(`cleanups/deep/${branch}`);
       const body = await resp.json();
       if (body.ok) {
         console.log("cleanupsactions body", body);

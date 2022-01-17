@@ -3,7 +3,11 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
-import { convertCollectionDatesToString } from "../../../../helpers/utilites";
+import {
+  convertCollectionDatesToString,
+  getAColumn,
+} from "../../../../helpers/utilites";
+import { deepCleanUpActivities } from "../../../../types/types";
 
 export const DeepCleanUpsTable = ({
   formattedDailyCleanups,
@@ -25,15 +29,13 @@ export const DeepCleanUpsTable = ({
 
   useEffect(() => {
     setformattedDeepCleanUps(convertCollectionDatesToString(deepCleanUps));
-    console.log("esto recibí", formattedDeepCleanUps);
   }, [deepCleanUps]);
 
   const columns = [
     { field: "date", headerName: "Fecha", width: 120 },
-
     {
       field: "cleaners",
-      headerName: "Orden",
+      headerName: "Realizado",
       width: 120,
       renderCell: (params) => {
         return (
@@ -50,181 +52,14 @@ export const DeepCleanUpsTable = ({
                 );
               })}
             </div>
-            {/* <div className="d-flex align-items-center">
-                <img className="collaboratorsImg" src="" alt="" />
-                {getIdOrEmpty(params.row)}
-              </div> */}
           </Fragment>
         );
       },
     },
-    {
-      field: "waste",
-      headerName: "Desechos",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.cleaners.map((cleaner, index) => {
-                return (
-                  <img
-                    className="collaboratorsImg"
-                    src={cleaner.cleaner?.imgUrl}
-                    alt=""
-                    key={cleaner.cleaner?.imgUrl}
-                  />
-                );
-              })}
-            </div>
-            {/* <div className="d-flex align-items-center">
-                  <img className="collaboratorsImg" src="" alt="" />
-                  {getIdOrEmpty(params.row)}
-                </div> */}
-          </Fragment>
-        );
-      },
-    },
-    {
-      field: "equipment",
-      headerName: "Equipo",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.cleaners.map((cleaner, index) => {
-                return (
-                  <img
-                    className="collaboratorsImg"
-                    src={cleaner.cleaner?.imgUrl}
-                    alt=""
-                    key={cleaner.cleaner?.imgUrl}
-                  />
-                );
-              })}
-            </div>
-            {/* <div className="d-flex align-items-center">
-                    <img className="collaboratorsImg" src="" alt="" />
-                    {getIdOrEmpty(params.row)}
-                  </div> */}
-          </Fragment>
-        );
-      },
-    },
-    {
-      field: "cages",
-      headerName: "Jaulas",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.cleaners.map((cleaner, index) => {
-                return (
-                  <img
-                    className="collaboratorsImg"
-                    src={cleaner.cleaner?.imgUrl}
-                    alt=""
-                    key={cleaner.cleaner?.imgUrl}
-                  />
-                );
-              })}
-            </div>
-            {/* <div className="d-flex align-items-center">
-                    <img className="collaboratorsImg" src="" alt="" />
-                    {getIdOrEmpty(params.row)}
-                  </div> */}
-          </Fragment>
-        );
-      },
-    },
-    {
-      field: "lol",
-      headerName: "Gavetas",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.cleaners.map((cleaner, index) => {
-                return (
-                  <img
-                    className="collaboratorsImg"
-                    src={cleaner.cleaner?.imgUrl}
-                    alt=""
-                    key={cleaner.cleaner?.imgUrl}
-                  />
-                );
-              })}
-            </div>
-            {/* <div className="d-flex align-items-center">
-                    <img className="collaboratorsImg" src="" alt="" />
-                    {getIdOrEmpty(params.row)}
-                  </div> */}
-          </Fragment>
-        );
-      },
-    },
-    {
-      field: "ref",
-      headerName: "Refrigerador",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.cleaners.map((cleaner, index) => {
-                return (
-                  <img
-                    className="collaboratorsImg"
-                    src={cleaner.cleaner?.imgUrl}
-                    alt=""
-                    key={cleaner.cleaner?.imgUrl}
-                  />
-                );
-              })}
-            </div>
-            {/* <div className="d-flex align-items-center">
-                      <img className="collaboratorsImg" src="" alt="" />
-                      {getIdOrEmpty(params.row)}
-                    </div> */}
-          </Fragment>
-        );
-      },
-    },
-    {
-      field: "limp",
-      headerName: "General",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.cleaners.map((cleaner, index) => {
-                return (
-                  <img
-                    className="collaboratorsImg"
-                    src={cleaner.cleaner?.imgUrl}
-                    alt=""
-                    key={cleaner.cleaner?.imgUrl}
-                  />
-                );
-              })}
-            </div>
-            {/* <div className="d-flex align-items-center">
-                        <img className="collaboratorsImg" src="" alt="" />
-                        {getIdOrEmpty(params.row)}
-                      </div> */}
-          </Fragment>
-        );
-      },
-    },
-
     {
       field: "supervisors",
       headerName: "Supervisado",
-      width: 200,
+      width: 120,
       renderCell: (params) => {
         return (
           <Fragment>
@@ -235,7 +70,7 @@ export const DeepCleanUpsTable = ({
                     className="collaboratorsImg"
                     src={supervisor.supervisor?.imgUrl}
                     alt=""
-                    key={supervisor.supervisor?._id}
+                    key={supervisor.supervisor?.imgUrl}
                   />
                 );
               })}
@@ -244,51 +79,19 @@ export const DeepCleanUpsTable = ({
         );
       },
     },
-    {
-      field: "comments",
-      headerName: "Comentarios",
-      width: 400,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.comments.map((comment, index) => {
-                return <div>{comment?.comment} </div>;
-              })}
-            </div>
-          </Fragment>
-        );
-      },
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 250,
-      renderCell: (params) => {
-        return (
-          <>
-            <button
-              className="btn btn-primary btn-sm me-1"
-              onClick={() => handleClean(params.id)}
-            >
-              Realicé
-            </button>
 
-            <button
-              className="btn btn-secondary btn-sm"
-              onClick={() => handleSupervise(params.id)}
-            >
-              Supervisé
-            </button>
-          </>
-        );
-      },
-    },
+    getAColumn("correctOrder", "Orden", 120, "correctOrder"),
+    getAColumn("wasteDisposal", "Desechos", 120, "wasteDisposal"),
+    getAColumn("cleanedEquipment", "Equipamiento", 120, "cleanedEquipment"),
+    getAColumn("cleanedCages", "Jaulas", 120, "cleanedCages"),
+    getAColumn("cleanedDrawers", "Gavetas", 120, "cleanedDrawers"),
+    getAColumn("everyAreaCleaned", "Áreas", 120, "cleanedDrawers"),
   ];
+
   return (
     <div style={{ height: "50vh", width: "100%" }}>
       <DataGrid
-        rows={formattedDailyCleanups}
+        rows={formattedDeepCleanUps}
         disableSelectionOnClick
         columns={columns}
         pageSize={50}

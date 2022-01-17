@@ -1,5 +1,7 @@
 import { positionTypes } from "../types/types";
 import dayjs from "dayjs";
+import { Fragment } from "react";
+import { Check, Clear } from "@material-ui/icons";
 
 export const generateRandomString = (length = 4) => {
   const chars =
@@ -110,4 +112,20 @@ export const getSimplifiedStringDate = (date = new Date()) => {
 export const getIdOrEmpty = (object) => {
   console.log("cleaner", object);
   return "hola";
+};
+
+export const getAColumn = (field, headerName, width, property) => {
+  return {
+    field,
+    headerName,
+    width,
+    renderCell: (params) => {
+      console.log("estos son los params.row", params.row.activities[property]);
+      return (
+        <Fragment>
+          {params.row.activities[property] ? <Check /> : <Clear />}
+        </Fragment>
+      );
+    },
+  };
 };

@@ -22,12 +22,12 @@ export const AddNewDeepCleaning = () => {
 
   const { values, handleInputChange } = useForm(initialState);
   const [iscleaner, setiscleaner] = useState(false);
-  const [isupervisor, setisupervisor] = useState(false);
+  const [issupervisor, setissupervisor] = useState(false);
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
-    if (!iscleaner && !isupervisor) {
+    if (!iscleaner && !issupervisor) {
       return Swal.fire({
         icon: "error",
         title: "Debes marcar una actividad de limpieza o de supervisión",
@@ -39,7 +39,7 @@ export const AddNewDeepCleaning = () => {
     const data = {
       branch,
       iscleaner,
-      isupervisor,
+      issupervisor,
       activities: [],
       comment: values.comment,
     };
@@ -76,15 +76,15 @@ export const AddNewDeepCleaning = () => {
             <div className="col-8">Supervisión</div>
             <div className="col-4">
               <Switch
-                checked={isupervisor}
-                onChange={() => setisupervisor((prevState) => !prevState)}
+                checked={issupervisor}
+                onChange={() => setissupervisor((prevState) => !prevState)}
               />
             </div>
           </div>
         </div>
       </div>
 
-      {isupervisor && (
+      {issupervisor && (
         <Fragment>
           <div className="p-2 fw-bold">Actividades supervisadas</div>
           {/* participation container */}
