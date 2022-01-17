@@ -69,3 +69,13 @@ export const dailyCleanUpActions = {
   addSupervisor: "addSupervisor",
   addComment: "addComment",
 };
+
+export const deepCleanUpActivities = {
+  correctOrder: "Orden conforme a los lineamientos",
+  wasteDisposal: "Objetos inservibles y residuos desechados",
+  cleanedEquipment: "Equipamiento limpiado",
+  cleanedCages: "Jaulas limpias",
+  cleanedDrawers: "Gavetas limpias y bien acomodadas",
+  cleanedRefigerator: "Refrigerador limpio y sin residuos o sobrantes",
+  everyAreaCleaned: "Limpieza y orden completa de todas las áreas",
+};

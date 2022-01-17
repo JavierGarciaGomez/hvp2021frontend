@@ -14,19 +14,19 @@ export const CleanUpsLayoutPage = () => {
         <h3 className="text-center py-1 fs-4">Últimos registros</h3>
         {/* TODO */}
         <div className="container-sm d-flex justify-content-center py-1">
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary mx-2">
+          <div className="btn-group" role="group" aria-label="Basic example">
+            <button type="button" className="btn btn-primary mx-2">
               General
             </button>
             <Link to="Urban">
-              <button type="button" class="btn btn-primary mx-2">
+              <button type="button" className="btn btn-primary mx-2">
                 Urban
               </button>
             </Link>
-            <button type="button" class="btn btn-primary mx-2">
+            <button type="button" className="btn btn-primary mx-2">
               The Harbor
             </button>
-            <button type="button" class="btn btn-primary mx-2">
+            <button type="button" className="btn btn-primary mx-2">
               Montejo
             </button>
           </div>

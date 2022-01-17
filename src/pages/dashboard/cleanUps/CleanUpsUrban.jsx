@@ -147,7 +147,7 @@ export const CleanUpsUrban = () => {
           </div>
           <div className="col-4 text-start">
             <Link to="/dashboard/cleanups/addNewDeepCleaning">
-              <button type="button" class="btn btn-secondary mx-2">
+              <button type="button" className="btn btn-secondary mx-2">
                 Agregar limpieza profunda
               </button>
             </Link>

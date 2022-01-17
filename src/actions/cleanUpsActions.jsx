@@ -58,3 +58,29 @@ export const dailyCleanUpsAddCleaner = (cleanUpId) => {
     }
   };
 };
+
+export const deepCleanUpCreate = (data) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken("cleanups/deep/createNew", data, "POST");
+      const body = await resp.json();
+      if (body.ok) {
+        return Swal.fire({
+          icon: "success",
+          title: "Registro exitoso",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+      return Swal.fire({
+        icon: "error",
+        title: body.msg,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+      return Swal.fire("Error", error.message, "error");
+    }
+  };
+};
