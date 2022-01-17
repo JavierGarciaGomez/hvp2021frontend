@@ -1,10 +1,13 @@
 import { Switch } from "@mui/material";
-import React from "react";
+import React, { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+
 import { deepCleanUpCreate } from "../../../actions/cleanUpsActions";
 import { useForm } from "../../../hooks/useForm";
 import { deepCleanUpActivities } from "../../../types/types";
+import querystring from "query-string";
+import Swal from "sweetalert2";
 
 const initialState = {};
 Object.keys(deepCleanUpActivities).map((key) => {
@@ -12,17 +15,31 @@ Object.keys(deepCleanUpActivities).map((key) => {
 });
 
 export const AddNewDeepCleaning = () => {
-  const branch = "Urban";
+  const { branch } = useParams();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { values, handleInputChange } = useForm(initialState);
+  const [iscleaner, setiscleaner] = useState(false);
+  const [isupervisor, setisupervisor] = useState(false);
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
+    if (!iscleaner && !isupervisor) {
+      return Swal.fire({
+        icon: "error",
+        title: "Debes marcar una actividad de limpieza o de supervisión",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    }
+
     const data = {
       branch,
+      iscleaner,
+      isupervisor,
       activities: [],
       comment: values.comment,
     };
@@ -42,43 +59,72 @@ export const AddNewDeepCleaning = () => {
         Agregar nueva limpieza profunda en{" "}
         <span className="fw-bold text-info">{branch}</span>
       </h4>
-      <form onSubmit={handleSubmit}>
-        <div className="row d-flex flex-wrap">
-          {Object.keys(deepCleanUpActivities).map((key) => {
-            return (
-              <div
-                key={key}
-                className="col-12 col-md-6 d-flex p-2 align-items-center"
-              >
-                <div className="col-8">{deepCleanUpActivities[key]}</div>
-                <div className="col-4">
-                  <Switch
-                    checked={values[key]}
-                    onChange={handleInputChange}
-                    name={key}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="col-12 py-2">
-          <div className="form-label">Comentarios</div>
-          <textarea
-            className="form-control"
-            id="exampleFormControlTextarea1"
-            rows="2"
-            name="comment"
-            value={values.comment}
-            onChange={handleInputChange}
-          ></textarea>
-        </div>
 
-        <button className="btn btn-success col-12" type="onSubmit">
-          Crear nuevo registro
-        </button>
-      </form>
+      <div className="border border-primary">
+        <div className="p-2 fw-bold">Selecciona tu participación</div>
+        <div className="d-flex flex-wrap">
+          <div className="col-12 col-md-6 d-flex p-2 align-items-center">
+            <div className="col-8">Limpieza</div>
+            <div className="col-4">
+              <Switch
+                checked={iscleaner}
+                onChange={() => setiscleaner((prevState) => !prevState)}
+              />
+            </div>
+          </div>
+          <div className="col-12 col-md-6 d-flex p-2 align-items-center">
+            <div className="col-8">Supervisión</div>
+            <div className="col-4">
+              <Switch
+                checked={isupervisor}
+                onChange={() => setisupervisor((prevState) => !prevState)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {isupervisor && (
+        <Fragment>
+          <div className="p-2 fw-bold">Actividades supervisadas</div>
+          {/* participation container */}
+
+          <div className="d-flex flex-wrap">
+            {Object.keys(deepCleanUpActivities).map((key) => {
+              return (
+                <div
+                  key={key}
+                  className="col-12 col-md-6 d-flex p-2 align-items-center"
+                >
+                  <div className="col-8">{deepCleanUpActivities[key]}</div>
+                  <div className="col-4">
+                    <Switch
+                      checked={values[key]}
+                      onChange={handleInputChange}
+                      name={key}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="col-12 py-2">
+            <div className="form-label">Comentarios</div>
+            <textarea
+              className="form-control"
+              id="exampleFormControlTextarea1"
+              rows="2"
+              name="comment"
+              value={values.comment}
+              onChange={handleInputChange}
+            ></textarea>
+          </div>
+        </Fragment>
+      )}
+      <button className="btn btn-success col-12 m-2" onClick={handleSubmit}>
+        Crear nuevo registro
+      </button>
     </div>
   );
 };

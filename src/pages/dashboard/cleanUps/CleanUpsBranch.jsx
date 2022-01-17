@@ -4,7 +4,7 @@ import { DeleteOutline } from "@material-ui/icons";
 import React, { Fragment, useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   dailyCleanUpsAddCleaner,
   dailyCleanUpsStartLoading,
@@ -15,7 +15,9 @@ import {
 } from "../../../helpers/utilites";
 import { DeepCleanUpsTable } from "./components/DeepCleanUpsTable";
 
-export const CleanUpsUrban = () => {
+export const CleanUpsBranch = () => {
+  const { branch } = useParams();
+
   const dispatch = useDispatch();
   const [formattedDailyCleanups, setformattedDailyCleanups] = useState([]);
 
@@ -24,7 +26,7 @@ export const CleanUpsUrban = () => {
   );
 
   useEffect(() => {
-    dispatch(dailyCleanUpsStartLoading());
+    dispatch(dailyCleanUpsStartLoading(branch));
   }, [dispatch]);
 
   useEffect(() => {
@@ -137,7 +139,8 @@ export const CleanUpsUrban = () => {
     console.log(id);
   };
 
-  if (isLoadingDailyCleanUps) return <CircularProgress />;
+  // TODO
+  // if (isLoadingDailyCleanUps) return <CircularProgress />;
 
   return (
     <Fragment>
@@ -147,7 +150,7 @@ export const CleanUpsUrban = () => {
             Control de limpieza Profunda
           </div>
           <div className="col-4 text-start">
-            <Link to="/dashboard/cleanups/addNewDeepCleaning">
+            <Link to="addNewDeepCleaning">
               <button type="button" className="btn btn-secondary mx-2">
                 Agregar limpieza profunda
               </button>
@@ -161,7 +164,7 @@ export const CleanUpsUrban = () => {
         />
       </div>
       <h3 className="text-center m-3 fs-3">Control de limpieza diario</h3>
-      <div style={{ height: "50vh", width: "100%" }}>
+      {/* <div style={{ height: "50vh", width: "100%" }}>
         <DataGrid
           rows={formattedDailyCleanups}
           disableSelectionOnClick
@@ -171,7 +174,7 @@ export const CleanUpsUrban = () => {
           getRowId={(row) => row._id}
           rowHeight={40}
         />
-      </div>
+      </div> */}
     </Fragment>
   );
 };

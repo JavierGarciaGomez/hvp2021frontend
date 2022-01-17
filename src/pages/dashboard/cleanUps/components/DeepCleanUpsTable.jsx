@@ -1,6 +1,7 @@
 import { DataGrid } from "@material-ui/data-grid";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
 import { convertCollectionDatesToString } from "../../../../helpers/utilites";
 
@@ -9,6 +10,8 @@ export const DeepCleanUpsTable = ({
   handleClean,
   handleSupervise,
 }) => {
+  const { branch } = useParams();
+
   const dispatch = useDispatch();
   const [formattedDeepCleanUps, setformattedDeepCleanUps] = useState([]);
 
@@ -16,7 +19,6 @@ export const DeepCleanUpsTable = ({
     (state) => state.cleanups
   );
 
-  const branch = "Urban";
   useEffect(() => {
     dispatch(deepCleanUpsStartLoading(branch));
   }, [dispatch]);

@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MainPagesNavbar } from "../components/mainPageComponents/common/MainPagesNavbar";
 import { AddNewDeepCleaning } from "../pages/dashboard/cleanUps/AddNewDeepCleaning";
-import { CleanUpsUrban } from "../pages/dashboard/cleanUps/CleanUpsUrban";
+import { CleanUpsBranch } from "../pages/dashboard/cleanUps/CleanUpsBranch";
 import { MainPageIndex } from "../pages/mainPages/index/MainPageIndex";
 import { MainPagesAdvices } from "../pages/mainPages/MainPagesAdvices";
 import { MainPagesCompany } from "../pages/mainPages/MainPagesCompay";
@@ -17,8 +17,11 @@ export const CleanUpsRouter = () => {
   return (
     <Routes>
       {/* <Route path="*" element={<MainPageIndex />} /> */}
-      <Route path="Urban" element={<CleanUpsUrban />} />
-      <Route path="addNewDeepCleaning" element={<AddNewDeepCleaning />} />
+      <Route path=":branch" element={<CleanUpsBranch />} />
+      <Route
+        path=":branch/addNewDeepCleaning"
+        element={<AddNewDeepCleaning />}
+      />
       {/* <Route path="services/*" element={<MainPageServicesRouter />} />
       <Route path="team" element={<MainPagesTeam />} />
       <Route path="company" element={<MainPagesCompany />} />

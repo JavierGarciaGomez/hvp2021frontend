@@ -2,12 +2,12 @@ import Swal from "sweetalert2";
 import { fetchConToken } from "../helpers/fetch";
 import { dailyCleanUpActions, types } from "../types/types";
 
-export const dailyCleanUpsStartLoading = () => {
+export const dailyCleanUpsStartLoading = (branch) => {
   return async (dispatch) => {
     try {
       dispatch(dailyCleanUpsIsLoading());
       const resp = await fetchConToken(
-        "cleanups/daily/checkCleanUpsAndGenerate"
+        `cleanups/daily/checkCleanUpsAndGenerate/${branch}`
       );
       const body = await resp.json();
       if (body.ok) {
@@ -93,7 +93,7 @@ export const deepCleanUpsStartLoading = (branch) => {
       const data = {
         branch,
       };
-      const resp = await fetchConToken("cleanups/deep/", data, "POST");
+      const resp = await fetchConToken(`cleanups/deep/${branch}`, data, "POST");
       const body = await resp.json();
       if (body.ok) {
         console.log("cleanupsactions body", body);
