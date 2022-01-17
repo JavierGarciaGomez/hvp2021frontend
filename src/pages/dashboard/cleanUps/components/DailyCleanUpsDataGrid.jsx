@@ -1,36 +1,45 @@
-import React, { Fragment, useEffect } from "react";
-import { useState } from "react";
+import { CircularProgress } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
   dailyCleanUpsAddCleaner,
   dailyCleanUpsStartLoading,
-} from "../../../actions/cleanUpsActions";
-import { DailyCleanUpsDataGrid } from "./components/DailyCleanUpsDataGrid";
-import { DeepCleanUpsDataGrid } from "./components/DeepCleanUpsDataGrid";
+} from "../../../../actions/cleanUpsActions";
+import { convertCollectionDatesToString } from "../../../../helpers/utilites";
 
-export const CleanUpsBranch = () => {
+export const DailyCleanUpsDataGrid = () => {
+  const { branch } = useParams();
   const dispatch = useDispatch();
-
   const { dailyCleanUps, isLoadingDailyCleanUps } = useSelector(
     (state) => state.cleanups
   );
+  // this state uses a slightly change of the cleanups changing its date form
+  const [formattedDailyCleanUps, setformattedDailyCleanUps] = useState([]);
 
   useEffect(() => {
-    // dispatch(dailyCleanUpsStartLoading(branch));
-  }, [dispatch]);
+    dispatch(dailyCleanUpsStartLoading(branch));
+  }, [dispatch, branch]);
 
   useEffect(() => {
-    // setformattedDailyCleanups(convertCollectionDatesToString(dailyCleanUps));
+    setformattedDailyCleanUps(convertCollectionDatesToString(dailyCleanUps));
   }, [dailyCleanUps]);
 
+  const handleClean = (id) => {
+    dispatch(dailyCleanUpsAddCleaner(id));
+    dispatch(dailyCleanUpsStartLoading());
+  };
+
+  const handleSupervise = (id) => {};
+
   const columns = [
-    { field: "date", headerName: "Fecha", width: 120 },
-    { field: "branch", headerName: "Branch", width: 100 },
+    { field: "date", headerName: "Fecha", flex: 1 },
+
     {
       field: "cleaners",
       headerName: "Realizado",
-      width: 200,
+      flex: 1,
       renderCell: (params) => {
         return (
           <Fragment>
@@ -57,7 +66,7 @@ export const CleanUpsBranch = () => {
     {
       field: "supervisors",
       headerName: "Supervisado",
-      width: 200,
+      flex: 1,
       renderCell: (params) => {
         return (
           <Fragment>
@@ -80,7 +89,7 @@ export const CleanUpsBranch = () => {
     {
       field: "comments",
       headerName: "Comentarios",
-      width: 400,
+      flex: 3,
       renderCell: (params) => {
         return (
           <Fragment>
@@ -96,7 +105,7 @@ export const CleanUpsBranch = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 250,
+      flex: 2,
       renderCell: (params) => {
         return (
           <>
@@ -119,52 +128,26 @@ export const CleanUpsBranch = () => {
     },
   ];
 
-  const handleClean = (id) => {
-    dispatch(dailyCleanUpsAddCleaner(id));
-    dispatch(dailyCleanUpsStartLoading());
-  };
+  if (isLoadingDailyCleanUps) {
+    return <CircularProgress />;
+  }
 
-  const handleSupervise = (id) => {};
-
-  // TODO
-  // if (isLoadingDailyCleanUps) return <CircularProgress />;
-
+  if (formattedDailyCleanUps.length === 0) {
+    return <p>No hay registros</p>;
+  }
   return (
-    <Fragment>
-      <div className="container border-top border-primary">
-        <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-6 text-center fs-3">
-            Control de limpieza profunda
-          </div>
-          <div className="col-4 text-start">
-            <Link to="addNewDeepCleaning">
-              <button type="button" className="btn btn-secondary mx-2">
-                Agregar limpieza profunda
-              </button>
-            </Link>
-          </div>
-        </div>
-        <DeepCleanUpsDataGrid />
-        <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-12 text-center fs-3">
-            Control de limpieza diario
-          </div>
-        </div>
-        <DailyCleanUpsDataGrid />
-      </div>
-
-      <h3 className="text-center m-3 fs-3">Control de limpieza diario</h3>
-      {/* <div style={{ height: "50vh", width: "100%" }}>
-        <DataGrid
-          rows={formattedDailyCleanups}
-          disableSelectionOnClick
-          columns={columns}
-          pageSize={50}
-          checkboxSelection
-          getRowId={(row) => row._id}
-          rowHeight={40}
-        />
-      </div> */}
-    </Fragment>
+    <div style={{ height: "300px", width: "100%" }}>
+      <DataGrid
+        rows={formattedDailyCleanUps}
+        disableSelectionOnClick
+        columns={columns}
+        pageSize={50}
+        checkboxSelection
+        getRowId={(row) => {
+          return row._id;
+        }}
+        rowHeight={40}
+      />
+    </div>
   );
 };

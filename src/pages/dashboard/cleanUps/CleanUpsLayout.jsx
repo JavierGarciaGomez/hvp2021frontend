@@ -23,12 +23,16 @@ export const CleanUpsLayoutPage = () => {
                 Urban
               </button>
             </Link>
-            <button type="button" className="btn btn-primary mx-2">
-              The Harbor
-            </button>
-            <button type="button" className="btn btn-primary mx-2">
-              Montejo
-            </button>
+            <Link to="Harbor">
+              <button type="button" className="btn btn-primary mx-2">
+                The Harbor
+              </button>
+            </Link>
+            <Link to="Montejo">
+              <button type="button" className="btn btn-primary mx-2">
+                Montejo
+              </button>
+            </Link>
           </div>
         </div>
       </div>

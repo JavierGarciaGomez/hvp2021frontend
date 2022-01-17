@@ -6,9 +6,7 @@ export const dailyCleanUpsStartLoading = (branch) => {
   return async (dispatch) => {
     try {
       dispatch(dailyCleanUpsIsLoading());
-      const resp = await fetchConToken(
-        `cleanups/daily/checkCleanUpsAndGenerate/${branch}`
-      );
+      const resp = await fetchConToken(`cleanups/daily/${branch}`);
       const body = await resp.json();
       if (body.ok) {
         dispatch(dailyCleanUpsLoaded(body.dailyCleanUps));

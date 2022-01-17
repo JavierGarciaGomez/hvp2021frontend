@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,11 +10,7 @@ import {
 } from "../../../../helpers/utilites";
 import { deepCleanUpActivities } from "../../../../types/types";
 
-export const DeepCleanUpsTable = ({
-  formattedDailyCleanups,
-  handleClean,
-  handleSupervise,
-}) => {
+export const DeepCleanUpsDataGrid = () => {
   const { branch } = useParams();
 
   const dispatch = useDispatch();
@@ -25,7 +22,7 @@ export const DeepCleanUpsTable = ({
 
   useEffect(() => {
     dispatch(deepCleanUpsStartLoading(branch));
-  }, [dispatch]);
+  }, [dispatch, branch]);
 
   useEffect(() => {
     setformattedDeepCleanUps(convertCollectionDatesToString(deepCleanUps));
@@ -102,6 +99,13 @@ export const DeepCleanUpsTable = ({
     getAColumn("everyAreaCleaned", "Áreas", 120, "cleanedDrawers"),
   ];
 
+  if (isLoadingDeepCleanUps) {
+    return <CircularProgress />;
+  }
+
+  if (formattedDeepCleanUps.length === 0) {
+    return <p>No hay registros</p>;
+  }
   return (
     <div style={{ height: "300px", width: "100%" }}>
       <DataGrid
