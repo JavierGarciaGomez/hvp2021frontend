@@ -13,6 +13,7 @@ import {
   convertCollectionDatesToString,
   getIdOrEmpty,
 } from "../../../helpers/utilites";
+import { DeepCleanUpsTable } from "./components/DeepCleanUpsTable";
 
 export const CleanUpsUrban = () => {
   const dispatch = useDispatch();
@@ -141,8 +142,8 @@ export const CleanUpsUrban = () => {
   return (
     <Fragment>
       <div className="container border-top border-primary">
-        <div className="row d-flex justify-content-center m-3">
-          <div className="col-8 text-center fs-3">
+        <div className="row d-flex justify-content-center m-3 align-self-center">
+          <div className="col-6 text-center fs-3">
             Control de limpieza Profunda
           </div>
           <div className="col-4 text-start">
@@ -153,6 +154,11 @@ export const CleanUpsUrban = () => {
             </Link>
           </div>
         </div>
+        <DeepCleanUpsTable
+          formattedDailyCleanups={formattedDailyCleanups}
+          handleClean={handleClean}
+          handleSupervise={handleSupervise}
+        />
       </div>
       <h3 className="text-center m-3 fs-3">Control de limpieza diario</h3>
       <div style={{ height: "50vh", width: "100%" }}>

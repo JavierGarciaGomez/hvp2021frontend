@@ -93,11 +93,13 @@ export const getTextAsJSX = (text = "") => {
 };
 
 export const convertCollectionDatesToString = (collection = []) => {
+  console.log("esta es la coleccion", collection);
   collection.map((item) => {
     item.date = getSimplifiedStringDate(item.date);
 
     return { ...item };
   });
+  console.log("esta es la coleccion que regresaré", collection);
   return collection;
 };
 

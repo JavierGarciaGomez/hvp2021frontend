@@ -84,3 +84,35 @@ export const deepCleanUpCreate = (data) => {
     }
   };
 };
+
+// todo redesign this to be ge get sending string
+export const deepCleanUpsStartLoading = (branch) => {
+  return async (dispatch) => {
+    try {
+      dispatch(deepCleanUpsIsLoading());
+      const data = {
+        branch,
+      };
+      const resp = await fetchConToken("cleanups/deep/", data, "POST");
+      const body = await resp.json();
+      if (body.ok) {
+        console.log("cleanupsactions body", body);
+        dispatch(deepCleanUpsLoaded(body.deepCleanUps));
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire("error", error.message, "error");
+    }
+  };
+};
+
+const deepCleanUpsIsLoading = () => ({
+  type: types.deepCleanUpsIsLoading,
+});
+
+const deepCleanUpsLoaded = (deepCleanUps) => {
+  return {
+    type: types.deepCleanUpsLoaded,
+    payload: deepCleanUps,
+  };
+};

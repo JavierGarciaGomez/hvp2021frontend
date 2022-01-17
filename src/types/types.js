@@ -12,8 +12,11 @@ export const types = {
   authCheckingFinish: "[auth] finish checking login state",
   authLogout: "[auth] logout",
 
-  dailyCleanUpsIsLoading: "[cleanUps] daily clean ups is loading",
-  dailyCleanUpsLoaded: "[cleanUps] daily clean ups loaded",
+  dailyCleanUpsIsLoading: "[cleanUps] daily cleanups is loading",
+  dailyCleanUpsLoaded: "[cleanUps] daily cleanups loaded",
+
+  deepCleanUpsIsLoading: "[cleanUps] deep cleanups is loading",
+  deepCleanUpsLoaded: "[cleanUps] deep cleanups loaded",
 
   /*
   uiOpenModal: "[ui] Open modal",
