@@ -28,20 +28,25 @@ const dailyCleanUpsLoaded = (dailyCleanUps) => {
   };
 };
 
-export const dailyCleanUpsAddCleaner = (cleanUpId) => {
+export const updateDailyCleanUp = (dailyCleanUpId, branch, data) => {
   return async (dispatch) => {
     try {
-      const data = { cleanUpId, action: dailyCleanUpActions.addCleaner };
-      const resp = await fetchConToken("cleanups/daily/", data, "PATCH");
+      const resp = await fetchConToken(
+        `cleanups/daily/${branch}/${dailyCleanUpId}`,
+        data,
+        "PATCH"
+      );
       const body = await resp.json();
 
       if (body.ok) {
-        return Swal.fire({
+        Swal.fire({
           icon: "success",
-          title: "Registro exitoso",
+          title: "Actualización exitosa",
           showConfirmButton: false,
-          timer: 1000,
+          timer: 1500,
         });
+
+        return dispatch(dailyCleanUpsStartLoading(branch));
 
         // dispatch(collaboratorsLoaded(body.collaborators));
         // event.id = body.evento.id;

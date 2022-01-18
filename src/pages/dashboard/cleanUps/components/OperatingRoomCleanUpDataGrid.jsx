@@ -10,23 +10,27 @@ import {
 } from "../../../../helpers/utilites";
 import { deepCleanUpActivities } from "../../../../types/types";
 
-export const DeepCleanUpsDataGrid = () => {
+export const OperatingRoomCleanUpDataGrid = () => {
   const { branch } = useParams();
 
   const dispatch = useDispatch();
-  const [formattedDeepCleanUps, setformattedDeepCleanUps] = useState([]);
+  const [formattedOperRoomCleanUps, setformattedOperRoomCleanUps] = useState(
+    []
+  );
 
-  const { deepCleanUps, isLoadingDeepCleanUps } = useSelector(
+  const { operatingRoomCleanUps, isLoadingOperatingRoomCleanUps } = useSelector(
     (state) => state.cleanups
   );
 
   useEffect(() => {
-    dispatch(deepCleanUpsStartLoading(branch));
+    dispatch(osa(branch));
   }, [dispatch, branch]);
 
   useEffect(() => {
-    setformattedDeepCleanUps(convertCollectionDatesToString(deepCleanUps));
-  }, [deepCleanUps]);
+    setformattedOperRoomCleanUps(
+      convertCollectionDatesToString(operatingRoomCleanUps)
+    );
+  }, [operatingRoomCleanUps]);
 
   const columns = [
     { field: "date", headerName: "Fecha", flex: 1 },
@@ -99,11 +103,11 @@ export const DeepCleanUpsDataGrid = () => {
     getAColumn("everyAreaCleaned", "Áreas", 1, "cleanedDrawers"),
   ];
 
-  if (isLoadingDeepCleanUps) {
+  if (isLoadingOperatingRoomCleanUps) {
     return <CircularProgress />;
   }
 
-  if (formattedDeepCleanUps.length === 0) {
+  if (formattedOperRoomCleanUps.length === 0) {
     return <p>No hay registros</p>;
   }
   return (

@@ -109,11 +109,11 @@ export const getIdOrEmpty = (object) => {
   return "hola";
 };
 
-export const getAColumn = (field, headerName, width, property) => {
+export const getAColumn = (field, headerName, flex, property) => {
   return {
     field,
     headerName,
-    width,
+    flex,
     renderCell: (params) => {
       return (
         <Fragment>

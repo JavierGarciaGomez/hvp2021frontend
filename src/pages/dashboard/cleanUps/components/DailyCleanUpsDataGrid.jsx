@@ -4,10 +4,11 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import {
-  dailyCleanUpsAddCleaner,
+  updateDailyCleanUp,
   dailyCleanUpsStartLoading,
 } from "../../../../actions/cleanUpsActions";
 import { convertCollectionDatesToString } from "../../../../helpers/utilites";
+import { dailyCleanUpActions } from "../../../../types/types";
 
 export const DailyCleanUpsDataGrid = () => {
   const { branch } = useParams();
@@ -27,11 +28,14 @@ export const DailyCleanUpsDataGrid = () => {
   }, [dailyCleanUps]);
 
   const handleClean = (id) => {
-    dispatch(dailyCleanUpsAddCleaner(id));
-    dispatch(dailyCleanUpsStartLoading());
+    const data = { action: dailyCleanUpActions.addCleaner };
+    dispatch(updateDailyCleanUp(id, branch, data));
   };
 
-  const handleSupervise = (id) => {};
+  const handleSupervise = (id) => {
+    const data = { action: dailyCleanUpActions.addSupervisor };
+    dispatch(updateDailyCleanUp(id, branch, data));
+  };
 
   const columns = [
     { field: "date", headerName: "Fecha", flex: 1 },
@@ -86,22 +90,22 @@ export const DailyCleanUpsDataGrid = () => {
         );
       },
     },
-    {
-      field: "comments",
-      headerName: "Comentarios",
-      flex: 3,
-      renderCell: (params) => {
-        return (
-          <Fragment>
-            <div className="d-flex align-items-center">
-              {params.row.comments.map((comment, index) => {
-                return <div>{comment?.comment} </div>;
-              })}
-            </div>
-          </Fragment>
-        );
-      },
-    },
+    // {
+    //   field: "comments",
+    //   headerName: "Comentarios",
+    //   flex: 3,
+    //   renderCell: (params) => {
+    //     return (
+    //       <Fragment>
+    //         <div className="d-flex align-items-center">
+    //           {params.row.comments.map((comment, index) => {
+    //             return <div>{comment?.comment} </div>;
+    //           })}
+    //         </div>
+    //       </Fragment>
+    //     );
+    //   },
+    // },
     {
       field: "action",
       headerName: "Action",
@@ -136,13 +140,12 @@ export const DailyCleanUpsDataGrid = () => {
     return <p>No hay registros</p>;
   }
   return (
-    <div style={{ height: "300px", width: "100%" }}>
+    <div style={{ height: "400px", width: "100%" }}>
       <DataGrid
         rows={formattedDailyCleanUps}
         disableSelectionOnClick
         columns={columns}
-        pageSize={50}
-        checkboxSelection
+        pageSize={7}
         getRowId={(row) => {
           return row._id;
         }}
