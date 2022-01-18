@@ -12,11 +12,11 @@ export const RegisterPage = () => {
   const dispatch = useDispatch();
   // 369
   const { values: formRegisterValues, handleInputChange } = useForm({
-    email: "jgg@mail.com",
-    col_code: "JGG",
-    password1: "secret",
-    password2: "secret",
-    accessCode: "secre",
+    email: "",
+    col_code: "",
+    password1: "",
+    password2: "",
+    accessCode: "",
   });
 
   const { email, col_code, password1, password2, accessCode } =

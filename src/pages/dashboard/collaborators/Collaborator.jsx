@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import Switch from "@mui/material/Switch";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -36,6 +36,7 @@ export default function Collaborator() {
   const dispatch = useDispatch();
   const [isAuthorized, setisAuthorized] = useState(false);
   const { uid, role } = useSelector((state) => state.auth);
+  const [isManager, setisManager] = useState(false);
   const { collaboratorId } = useParams();
   const navigate = useNavigate();
 
@@ -50,8 +51,15 @@ export default function Collaborator() {
   }, []);
 
   useEffect(() => {
-    if (uid === collaboratorId || role === roleTypes.admin) {
+    if (
+      uid === collaboratorId ||
+      role === roleTypes.admin ||
+      role === roleTypes.manager
+    ) {
       setisAuthorized(true);
+    }
+    if (role === roleTypes.admin || role === roleTypes.manager) {
+      setisManager(true);
     }
   }, [uid]);
 
@@ -71,15 +79,6 @@ export default function Collaborator() {
     }
 
     dispatch(collaboratorStartUpdate(values));
-    // Swal.fire({
-    //   icon: "success",
-    //   title: `Usuario ${values.col_code} creado con éxito. El código de acceso es: ${values.accessCode}`,
-    //   showConfirmButton: true,
-    // });
-  };
-
-  const returnLastPage = () => {
-    navigate(-1);
   };
 
   const handlePictureUpload = (e) => {
@@ -243,122 +242,129 @@ export default function Collaborator() {
             </span>
           </div>
         </div>
+
         <div className="collaboratorUpdate">
-          <span className="collaboratorUpdateTitle">Edit</span>
+          <span className="collaboratorUpdateTitle">
+            Actualiza la información
+          </span>
           <form className="collaboratorUpdateForm" onSubmit={handleSubmit}>
             <div className="collaboratorUpdateLeft">
-              <div className="collaboratorUpdateItem">
-                <label>Nombre (s)</label>
-                <input
-                  type="text"
-                  className="collaboratorUpdateInput"
-                  name="first_name"
-                  value={values.first_name}
-                  onChange={handleInputChange}
-                />
-              </div>
+              {isManager && (
+                <Fragment>
+                  <div className="collaboratorUpdateItem">
+                    <label>Nombre (s)</label>
+                    <input
+                      type="text"
+                      className="collaboratorUpdateInput"
+                      name="first_name"
+                      value={values.first_name}
+                      onChange={handleInputChange}
+                    />
+                  </div>
 
-              <div className="collaboratorUpdateItem">
-                <label>Apellidos:</label>
-                <input
-                  className="collaboratorUpdateInput"
-                  type="text"
-                  name="last_name"
-                  value={values.last_name}
-                  onChange={handleInputChange}
-                />
-              </div>
+                  <div className="collaboratorUpdateItem">
+                    <label>Apellidos:</label>
+                    <input
+                      className="collaboratorUpdateInput"
+                      type="text"
+                      name="last_name"
+                      value={values.last_name}
+                      onChange={handleInputChange}
+                    />
+                  </div>
 
-              <div className="collaboratorUpdateItem">
-                <label>Posición</label>
-                <div className="newCollaboratorRadio">
-                  {Object.keys(positionTypes).map((key) => {
-                    return (
-                      <div className="radio__group" key={key}>
-                        <input
-                          type="radio"
-                          name="position"
-                          id={key}
-                          value={positionTypes[key]}
-                          checked={values.position === positionTypes[key]}
-                          onChange={handleInputChange}
-                        />
-                        <label htmlFor={key}>
-                          {capitalizeFirstLetter(positionTypes[key])}
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                  <div className="collaboratorUpdateItem">
+                    <label>Posición</label>
+                    <div className="newCollaboratorRadio">
+                      {Object.keys(positionTypes).map((key) => {
+                        return (
+                          <div className="radio__group" key={key}>
+                            <input
+                              type="radio"
+                              name="position"
+                              id={key}
+                              value={positionTypes[key]}
+                              checked={values.position === positionTypes[key]}
+                              onChange={handleInputChange}
+                            />
+                            <label htmlFor={key}>
+                              {capitalizeFirstLetter(positionTypes[key])}
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-              <div className="collaboratorUpdateItem">
-                <label>Género</label>
-                <div className="newCollaboratorRadio">
-                  {Object.keys(genderTypes).map((key) => {
-                    return (
-                      <div className="radio__group" key={key}>
-                        <input
-                          type="radio"
-                          name="gender"
-                          id={key}
-                          value={genderTypes[key]}
-                          checked={values.gender === genderTypes[key]}
-                          onChange={handleInputChange}
-                        />
-                        <label htmlFor={key}>
-                          {capitalizeFirstLetter(genderTypes[key])}
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                  <div className="collaboratorUpdateItem">
+                    <label>Género</label>
+                    <div className="newCollaboratorRadio">
+                      {Object.keys(genderTypes).map((key) => {
+                        return (
+                          <div className="radio__group" key={key}>
+                            <input
+                              type="radio"
+                              name="gender"
+                              id={key}
+                              value={genderTypes[key]}
+                              checked={values.gender === genderTypes[key]}
+                              onChange={handleInputChange}
+                            />
+                            <label htmlFor={key}>
+                              {capitalizeFirstLetter(genderTypes[key])}
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-              <div className="collaboratorUpdateItem">
-                <label>Rol</label>
-                <div className="newCollaboratorRadio">
-                  {Object.keys(roleTypes).map((key) => {
-                    return (
-                      <div className="radio__group" key={key}>
-                        <input
-                          type="radio"
-                          name="role"
-                          id={key}
-                          value={roleTypes[key]}
-                          checked={values.role === roleTypes[key]}
-                          onChange={handleInputChange}
-                        />
-                        <label htmlFor={key}>
-                          {capitalizeFirstLetter(roleTypes[key])}
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                  <div className="collaboratorUpdateItem">
+                    <label>Rol</label>
+                    <div className="newCollaboratorRadio">
+                      {Object.keys(roleTypes).map((key) => {
+                        return (
+                          <div className="radio__group" key={key}>
+                            <input
+                              type="radio"
+                              name="role"
+                              id={key}
+                              value={roleTypes[key]}
+                              checked={values.role === roleTypes[key]}
+                              onChange={handleInputChange}
+                            />
+                            <label htmlFor={key}>
+                              {capitalizeFirstLetter(roleTypes[key])}
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-              <div className="collaboratorUpdateItem">
-                <label>Activo</label>
-                <Switch
-                  // checked={values.isActive}
-                  checked={values.isActive}
-                  onChange={handleInputChange}
-                  name="isActive"
-                  inputProps={{ "aria-label": "controlled" }}
-                />
-              </div>
+                  <div className="collaboratorUpdateItem">
+                    <label>Activo</label>
+                    <Switch
+                      // checked={values.isActive}
+                      checked={values.isActive}
+                      onChange={handleInputChange}
+                      name="isActive"
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  </div>
 
-              <div className="collaboratorUpdateItem">
-                <label>Se muestra en la web</label>
-                <Switch
-                  // checked={values.isActive}
-                  checked={values.isDisplayedWeb}
-                  onChange={handleInputChange}
-                  name="isDisplayedWeb"
-                  inputProps={{ "aria-label": "controlled" }}
-                />
-              </div>
+                  <div className="collaboratorUpdateItem">
+                    <label>Se muestra en la web</label>
+                    <Switch
+                      // checked={values.isActive}
+                      checked={values.isDisplayedWeb}
+                      onChange={handleInputChange}
+                      name="isDisplayedWeb"
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  </div>
+                </Fragment>
+              )}
 
               <div className="collaboratorUpdateItem">
                 <label>Texto de presentación en la web:</label>

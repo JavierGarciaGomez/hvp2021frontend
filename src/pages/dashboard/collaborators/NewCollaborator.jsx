@@ -16,11 +16,11 @@ import { capitalizeFirstLetter } from "../../../helpers/formatHelpers";
 import { collaboratorStartCreate } from "../../../actions/collaboratorActions";
 
 export const initialState = {
-  first_name: "Fátima Lucía",
-  last_name: "Caamal Uc",
+  first_name: "",
+  last_name: "",
   role: roleTypes.collaborator,
-  col_code: "FCU",
-  col_numId: "67",
+  col_code: "",
+  col_numId: "",
   gender: genderTypes.female,
   isActive: true,
   position: positionTypes.assistantB,
@@ -43,11 +43,6 @@ export default function NewCollaborator() {
     values.accessCode = generateRandomString(6);
 
     collaboratorStartCreate(values);
-    Swal.fire({
-      icon: "success",
-      title: `Usuario ${values.col_code} creado con éxito. El código de acceso es: ${values.accessCode}`,
-      showConfirmButton: true,
-    });
   };
 
   const handlePictureUpload = (e) => {

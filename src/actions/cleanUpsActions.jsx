@@ -169,7 +169,6 @@ export const operatingRoomCleanUpCreate = (branch) => {
       );
       const body = await resp.json();
       if (body.ok) {
-        console.log(body);
         Swal.fire({
           icon: "success",
           title: "Registro exitoso",
@@ -178,7 +177,7 @@ export const operatingRoomCleanUpCreate = (branch) => {
         });
         // dispatch(deepCleanUpsIsLoading());
         // despachar lo otro
-        return;
+        return dispatch(operatingRoomCleanUpsStartLoading(branch));
       }
       return Swal.fire({
         icon: "error",
@@ -187,8 +186,8 @@ export const operatingRoomCleanUpCreate = (branch) => {
         timer: 2000,
       });
     } catch (error) {
-      console.log(error);
-      return Swal.fire("Error", error.message, "error");
+      Swal.fire("Error", error.message, "error");
+      return dispatch(operatingRoomCleanUpsStartLoading(branch));
     }
   };
 };
@@ -240,7 +239,8 @@ export const updateOperatingRoomCleanUp = (
           showConfirmButton: false,
           timer: 1500,
         });
-        return dispatch(operatingRoomCleanUpsStartLoading(branch));
+        dispatch(operatingRoomCleanUpsStartLoading(branch));
+        return;
       }
       return Swal.fire("Error", body.msg, "error");
     } catch (error) {

@@ -6,12 +6,18 @@ import { Link } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
+import {
+  collaboratorsStartLoading,
+  collaboratorDelete,
+} from "../../../actions/collaboratorActions";
 import { userRows } from "../../../data/dummyData";
 import { CircularProgress } from "@material-ui/core";
+import { roleTypes } from "../../../types/types";
 
 export default function Collaborators() {
   const dispatch = useDispatch();
+  const { role } = useSelector((state) => state.auth);
+  const [isAdmin, setisAdmin] = useState(false);
 
   const [data, setData] = useState(userRows);
   const { collaborators, isLoading } = useSelector(
@@ -20,13 +26,17 @@ export default function Collaborators() {
 
   useEffect(() => {
     dispatch(collaboratorsStartLoading(false));
-  }, [dispatch]);
+    console.log(role, roleTypes.admin);
+    if (role === roleTypes.admin) {
+      setisAdmin(true);
+    }
+  }, [dispatch, role]);
 
   const handleDelete = (id) => {
-    setData((prevData) => prevData.filter((item) => item.id !== id));
+    dispatch(collaboratorDelete(id));
   };
 
-  const columns2 = [
+  const columns = [
     { field: "col_numId", headerName: "IdNum", flex: 1 },
     {
       field: "Collaborator",
@@ -50,13 +60,19 @@ export default function Collaborators() {
     {
       field: "action",
       headerName: "Action",
-      flex: 1,
+      flex: 2,
       renderCell: (params) => {
         return (
           <>
             <Link to={`${params.row._id}`}>
-              <button className="collaboratorsEdit">Show</button>
+              <button className="collaboratorsEdit">Ver</button>
             </Link>
+            {isAdmin && (
+              <DeleteOutline
+                className="collaboratorsDelete"
+                onClick={() => handleDelete(params.id)}
+              />
+            )}
           </>
         );
       },
@@ -78,18 +94,19 @@ export default function Collaborators() {
         />
       </div> */}
       <h1 className="text-center m-4">Colaboradores</h1>
-      <div style={{ height: "80vh", width: "100%" }}>
+      <div style={{ height: "70vh", width: "100%" }}>
         <DataGrid
           rows={collaborators}
           disableSelectionOnClick
-          columns={columns2}
+          columns={columns}
           pageSize={20}
+          rowsPerPageOptions={[20, 50, 100]}
           getRowId={(row) => row._id}
         />
       </div>
       <Link to="newCollaborator">
         <button className="createNewUserButton">
-          Create a new collaborator
+          Crear un nuevo colaborador
         </button>
       </Link>
     </Fragment>

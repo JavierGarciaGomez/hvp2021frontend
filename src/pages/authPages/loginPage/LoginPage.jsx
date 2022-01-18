@@ -13,8 +13,8 @@ export const LoginPage = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   // 369
   const { values, handleInputChange } = useForm({
-    email: "javieron.garcia@gmail.com",
-    password: "secret",
+    email: "",
+    password: "",
   });
 
   const { email, password } = values;
@@ -89,7 +89,7 @@ export const LoginPage = () => {
             </div>
 
             <Link to="/auth/register" className="link">
-              Create new account
+              Registrarme, aun no tengo cuenta
             </Link>
           </form>
         </div>

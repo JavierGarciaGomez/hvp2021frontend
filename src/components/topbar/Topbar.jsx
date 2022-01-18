@@ -4,19 +4,18 @@ import "./topbar.css";
 import { NotificationsNone, Language, Settings } from "@material-ui/icons";
 import { Logout } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getCollaboratorbyId,
-  getCollaboratorbyIdBis,
-} from "../../helpers/miscFecth";
 import { startLogout } from "../../actions/authActions";
+import { useNavigate } from "react-router-dom";
 
 export const Topbar = () => {
   const { uid, imgUrl } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(startLogout());
+    navigate("/");
   };
 
   return (

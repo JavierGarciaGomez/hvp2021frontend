@@ -51,7 +51,7 @@ export const cleanUpsReducer = (state = initialState, action) => {
     case types.operatingRoomCleanUpsIsLoading:
       return {
         ...state,
-        isLoadingDailyCleanUps: true,
+        isLoadingOperatingRoomCleanUps: true,
       };
 
     case types.operatingRoomCleanUpsLoaded:

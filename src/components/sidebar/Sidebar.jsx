@@ -42,28 +42,6 @@ export const Sidebar = () => {
                 Home
               </li>
             </Link>
-            {isAuthorized && (
-              <li className="sidebarListItem">
-                <Timeline className="sidebarIcon" />
-                Analytics
-              </li>
-            )}
-
-            <li className="sidebarListItem">
-              <TrendingUp className="sidebarIcon" />
-              Sales
-            </li>
-          </ul>
-        </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Quick Menu</h3>
-          <ul className="sidebarList">
-            <Link to="/dashboard/users" className="link">
-              <li className="sidebarListItem">
-                <PermIdentity className="sidebarIcon" />
-                Users
-              </li>
-            </Link>
             <Link to="/dashboard/collaborators" className="link">
               <li className="sidebarListItem">
                 <PermIdentity className="sidebarIcon" />
@@ -76,6 +54,29 @@ export const Sidebar = () => {
                 Control de limpieza
               </li>
             </Link>
+          </ul>
+        </div>
+        {/* <div className="sidebarMenu">
+          <h3 className="sidebarTitle">Inactivo</h3>
+          <ul className="sidebarList">
+            {isAuthorized && (
+              <li className="sidebarListItem">
+                <Timeline className="sidebarIcon" />
+                Analytics
+              </li>
+            )}
+
+            <li className="sidebarListItem">
+              <TrendingUp className="sidebarIcon" />
+              Sales
+            </li>
+            <Link to="/dashboard/users" className="link">
+              <li className="sidebarListItem">
+                <PermIdentity className="sidebarIcon" />
+                Users
+              </li>
+            </Link>
+
             <Link to="/products" className="link">
               <li className="sidebarListItem">
                 <Storefront className="sidebarIcon" />
@@ -125,7 +126,7 @@ export const Sidebar = () => {
               Reports
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

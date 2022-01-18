@@ -63,6 +63,7 @@ export const roleTypes = {
 export const positionTypes = {
   medicalDirector: "Director médico",
   adminDirector: "Director administrativo",
+  manager: "Gerente",
   veterinaryA: "Veterinario A",
   veterinaryB: "Veterinario B",
   assistantA: "Asistente veterinario A",

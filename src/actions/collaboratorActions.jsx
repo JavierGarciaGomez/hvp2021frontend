@@ -79,6 +79,7 @@ export const collaboratorStartCreate = async (data) => {
   const resp = await fetchConToken("collaborators/create", data, "POST");
   const body = await resp.json();
   if (body.ok) {
+    console.log("este es el body", body);
     // localStorage.setItem("token", body.token);
     // localStorage.setItem("token-init-date", new Date().getTime());
     // dispatch(
@@ -87,6 +88,11 @@ export const collaboratorStartCreate = async (data) => {
     //     name: body.name,
     //   })
     // );
+    Swal.fire({
+      icon: "success",
+      title: `Usuario ${body.collaborator.col_code} creado con éxito. El código de acceso es: ${body.collaborator.accessCode}`,
+      showConfirmButton: true,
+    });
   } else {
     Swal.fire("Error", body.msg, "error");
   }
@@ -206,9 +212,42 @@ export const collaboratorStartUpdate = (collaborator) => {
         "PUT"
       );
       const body = await resp.json();
+      console.log("este es el ", body);
 
       if (body.ok) {
         dispatch(collaboratorUpdate(collaborator));
+        Swal.fire({
+          icon: "success",
+          title: body.msg,
+          showConfirmButton: true,
+        });
+      } else {
+        Swal.fire("error", body.msg, "error");
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+export const collaboratorDelete = (collaboratorId) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(
+        `collaborators/${collaboratorId}`,
+        {},
+        "DELETE"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Colaborador eliminado correctamente",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        dispatch(collaboratorsStartLoading(false));
       } else {
         Swal.fire("error", body.msg, "error");
       }
