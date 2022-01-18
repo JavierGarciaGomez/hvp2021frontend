@@ -18,7 +18,7 @@ export const MainPageIndex = () => {
   const [sortedCollaborators, setsortedCollaborators] = useState([]);
 
   useEffect(() => {
-    dispatch(collaboratorsStartLoading());
+    dispatch(collaboratorsStartLoading(true));
   }, [dispatch]);
 
   useEffect(() => {

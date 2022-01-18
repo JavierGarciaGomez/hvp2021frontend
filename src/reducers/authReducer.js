@@ -7,6 +7,7 @@ const initialState = {
   uid: null,
   col_code: null,
   role: null,
+  imgUrl: "",
   isAuthenticated: false,
 };
 

@@ -14,15 +14,18 @@ export const startChecking = () => {
   return async (dispatch) => {
     const resp = await fetchConToken("collaborators/renew");
     const body = await resp.json();
-    
+
     if (body.ok) {
       localStorage.setItem("token", body.token);
       localStorage.setItem("token-init-date", new Date().getTime());
+
+      const { uid, col_code, role, imgUrl } = body;
       dispatch(
         authLogin({
-          uid: body.uid,
-          col_code: body.col_code,
-          role: body.role,
+          uid,
+          col_code,
+          role,
+          imgUrl,
         })
       );
     } else {

@@ -1,40 +1,21 @@
 // 367
-// import { fetchSinToken, fetchConToken } from "../helpers/fetch";
-// import { types } from "../../../hvp2021backend/types/types";
 import Swal from "sweetalert2";
-import { fetchSinToken } from "../helpers/fetch";
+import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import { genderTypes, roleTypes, types } from "../types/types";
 import { authLogin } from "./authActions";
-// import { fetchConToken, fetchSinToken } from "../helpers/fetch";
-// import { eventLogout } from "./eventActions";
-// import { eventLogout } from "./events";
 
-// export const startLogin = (email, password) => {
-//   return async (dispatch) => {
-//     const resp = await fetchSinToken("auth", { email, password }, "POST");
-//     const body = await resp.json();
-
-//     if (body.ok) {
-//       localStorage.setItem("token", body.token);
-//       localStorage.setItem("token-init-date", new Date().getTime());
-//       dispatch(
-//         login({
-//           uid: body.uid,
-//           name: body.name,
-//         })
-//       );
-//     } else {
-//       Swal.fire("Error", body.msg, "error");
-//     }
-//   };
-// };
-
-// 2022-01-07
-export const collaboratorsStartLoading = () => {
+export const collaboratorsStartLoading = (isPublic = true) => {
   return async (dispatch) => {
     try {
       dispatch(collaboratorsIsLoading());
-      const resp = await fetchSinToken("collaborators");
+
+      let resp;
+      if (isPublic) {
+        resp = await fetchSinToken("collaborators/getAllForWeb");
+      } else {
+        resp = await fetchConToken("collaborators");
+      }
+
       const body = await resp.json();
 
       if (body.ok) {
@@ -61,7 +42,7 @@ const collaboratorsFinishedLoading = () => ({
 export const collaboratorStartSetActive = (id) => {
   return async (dispatch) => {
     try {
-      const resp = await fetchSinToken(`collaborators/${id}`, {
+      const resp = await fetchConToken(`collaborators/${id}`, {
         collaboratorId: id,
       });
 
@@ -95,7 +76,7 @@ const collaboratorsLoaded = (collaborators) => {
 
 // 369
 export const collaboratorStartCreate = async (data) => {
-  const resp = await fetchSinToken("collaborators/create", data, "POST");
+  const resp = await fetchConToken("collaborators/create", data, "POST");
   const body = await resp.json();
   if (body.ok) {
     // localStorage.setItem("token", body.token);
@@ -116,6 +97,8 @@ export const collaboratorStartLogin = (data) => {
     const resp = await fetchSinToken("collaborators/", { ...data }, "POST");
     const body = await resp.json();
 
+    console.log("start login", body);
+
     if (body.ok) {
       Swal.fire({
         position: "top-end",
@@ -127,12 +110,13 @@ export const collaboratorStartLogin = (data) => {
       localStorage.setItem("token", body.token);
       localStorage.setItem("token-init-date", new Date().getTime());
 
-      const { uid, col_code, role } = body;
+      const { uid, col_code, role, imgUrl } = body;
       dispatch(
         authLogin({
           uid,
           col_code,
           role,
+          imgUrl,
         })
       );
     } else {
@@ -216,7 +200,7 @@ export const collaboratorStartRegister = (data) => {
 export const collaboratorStartUpdate = (collaborator) => {
   return async (dispatch) => {
     try {
-      const resp = await fetchSinToken(
+      const resp = await fetchConToken(
         `collaborators/${collaborator._id}`,
         collaborator,
         "PUT"

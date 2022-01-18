@@ -3,12 +3,12 @@ import { DataGrid } from "@material-ui/data-grid";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
 import {
-  convertCollectionDatesToString,
-  getAColumn,
-} from "../../../../helpers/utilites";
-import { deepCleanUpActivities } from "../../../../types/types";
+  operatingRoomCleanUpsStartLoading,
+  updateOperatingRoomCleanUp,
+} from "../../../../actions/cleanUpsActions";
+import { convertCollectionDatesToString } from "../../../../helpers/utilites";
+import { cleanUpActions } from "../../../../types/types";
 
 export const OperatingRoomCleanUpDataGrid = () => {
   const { branch } = useParams();
@@ -23,7 +23,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
   );
 
   useEffect(() => {
-    dispatch(osa(branch));
+    dispatch(operatingRoomCleanUpsStartLoading(branch));
   }, [dispatch, branch]);
 
   useEffect(() => {
@@ -32,22 +32,19 @@ export const OperatingRoomCleanUpDataGrid = () => {
     );
   }, [operatingRoomCleanUps]);
 
+  const handleClean = (id) => {
+    const data = { action: cleanUpActions.addCleaner };
+    dispatch(updateOperatingRoomCleanUp(id, branch, data));
+  };
+
+  const handleSupervise = (id) => {
+    const data = { action: cleanUpActions.addSupervisor };
+    dispatch(updateOperatingRoomCleanUp(id, branch, data));
+  };
+
   const columns = [
     { field: "date", headerName: "Fecha", flex: 1 },
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`${params.id}`}>
-              <button className="btn btn-success btn-sm">Ver</button>
-            </Link>
-          </>
-        );
-      },
-    },
+
     {
       field: "cleaners",
       headerName: "Realizado",
@@ -67,6 +64,10 @@ export const OperatingRoomCleanUpDataGrid = () => {
                 );
               })}
             </div>
+            {/* <div className="d-flex align-items-center">
+            <img className="collaboratorsImg" src="" alt="" />
+            {getIdOrEmpty(params.row)}
+          </div> */}
           </Fragment>
         );
       },
@@ -85,7 +86,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
                     className="collaboratorsImg"
                     src={supervisor.supervisor?.imgUrl}
                     alt=""
-                    key={supervisor.supervisor?.imgUrl}
+                    key={supervisor.supervisor?._id}
                   />
                 );
               })}
@@ -95,12 +96,30 @@ export const OperatingRoomCleanUpDataGrid = () => {
       },
     },
 
-    getAColumn("correctOrder", "Orden", 1, "correctOrder"),
-    getAColumn("wasteDisposal", "Desechos", 1, "wasteDisposal"),
-    getAColumn("cleanedEquipment", "Equipamiento", 1, "cleanedEquipment"),
-    getAColumn("cleanedCages", "Jaulas", 1, "cleanedCages"),
-    getAColumn("cleanedDrawers", "Gavetas", 1, "cleanedDrawers"),
-    getAColumn("everyAreaCleaned", "Áreas", 1, "cleanedDrawers"),
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 2,
+      renderCell: (params) => {
+        return (
+          <>
+            <button
+              className="btn btn-primary btn-sm me-1"
+              onClick={() => handleClean(params.id)}
+            >
+              Realicé
+            </button>
+
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => handleSupervise(params.id)}
+            >
+              Supervisé
+            </button>
+          </>
+        );
+      },
+    },
   ];
 
   if (isLoadingOperatingRoomCleanUps) {
@@ -113,7 +132,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
   return (
     <div style={{ height: "300px", width: "100%" }}>
       <DataGrid
-        rows={formattedDeepCleanUps}
+        rows={formattedOperRoomCleanUps}
         disableSelectionOnClick
         columns={columns}
         pageSize={5}

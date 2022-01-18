@@ -20,6 +20,7 @@ const fetchSinToken = (endpoint, data, method = "GET") => {
 
 const fetchConToken = (endpoint, data, method = "GET") => {
   const url = `${baseUrl}/${endpoint}`;
+  console.log("FETCH, esta es la url", url);
   const token = localStorage.getItem("token") || "";
   if (method === "GET") {
     return fetch(url, {

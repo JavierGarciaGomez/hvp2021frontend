@@ -19,65 +19,19 @@ export default function Collaborators() {
   );
 
   useEffect(() => {
-    dispatch(collaboratorsStartLoading());
+    dispatch(collaboratorsStartLoading(false));
   }, [dispatch]);
 
   const handleDelete = (id) => {
     setData((prevData) => prevData.filter((item) => item.id !== id));
   };
 
-  const columns = [
-    { field: "id", headerName: "ID", width: 90 },
-    {
-      field: "user",
-      headerName: "User",
-      width: 200,
-      renderCell: (params) => {
-        return (
-          <div className="d-flex align-items-center">
-            <img className="collaboratorsImg" src={params.row.avatar} alt="" />
-            {params.row.username}
-          </div>
-        );
-      },
-    },
-    { field: "email", headerName: "Email", width: 200 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-    },
-    {
-      field: "transaction",
-      headerName: "Transaction Volume",
-      width: 160,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`${params.row.id}`}>
-              <button className="collaboratorsEdit">Edit</button>
-            </Link>
-            <DeleteOutline
-              className="collaboratorsDelete"
-              onClick={() => handleDelete(params.row.id)}
-            />
-          </>
-        );
-      },
-    },
-  ];
-
   const columns2 = [
-    { field: "col_numId", headerName: "IdNum", width: 20 },
+    { field: "col_numId", headerName: "IdNum", flex: 1 },
     {
       field: "Collaborator",
       headerName: "Collaborator",
-      width: 100,
+      flex: 1,
       renderCell: (params) => {
         return (
           <div className="d-flex align-items-center">
@@ -87,16 +41,16 @@ export default function Collaborators() {
         );
       },
     },
-    { field: "first_name", headerName: "Nombre", width: 120 },
-    { field: "last_name", headerName: "Apellidos", width: 120 },
-    { field: "position", headerName: "Posición", width: 120 },
-    { field: "role", headerName: "Rol", width: 120 },
-    { field: "isActive", headerName: "Activo", width: 120 },
-    { field: "isRegistered", headerName: "Registrado", width: 120 },
+    { field: "first_name", headerName: "Nombre", flex: 2 },
+    { field: "last_name", headerName: "Apellidos", flex: 2 },
+    { field: "position", headerName: "Posición", flex: 1 },
+    { field: "role", headerName: "Rol", flex: 1 },
+    { field: "isActive", headerName: "Activo", flex: 1 },
+    { field: "isRegistered", headerName: "Registrado", flex: 1 },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      flex: 1,
       renderCell: (params) => {
         return (
           <>
@@ -124,13 +78,12 @@ export default function Collaborators() {
         />
       </div> */}
       <h1 className="text-center m-4">Colaboradores</h1>
-      <div style={{ height: "70vh", width: "100%" }}>
+      <div style={{ height: "80vh", width: "100%" }}>
         <DataGrid
           rows={collaborators}
           disableSelectionOnClick
           columns={columns2}
-          pageSize={50}
-          checkboxSelection
+          pageSize={20}
           getRowId={(row) => row._id}
         />
       </div>

@@ -56,11 +56,7 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
     compareFunction = sortByPosition;
   }
 
-  const filteredCollection = collection.filter(
-    (collaborator) => collaborator.isDisplayedWeb
-  );
-
-  return filteredCollection.sort(compareFunction);
+  return collection.sort(compareFunction);
 };
 
 const getValuesFromObject = (object) => {

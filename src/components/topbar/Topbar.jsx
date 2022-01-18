@@ -11,14 +11,9 @@ import {
 import { startLogout } from "../../actions/authActions";
 
 export const Topbar = () => {
-  const { uid } = useSelector((state) => state.auth);
-  const [image, setimage] = useState("");
-  const dispatch = useDispatch();
+  const { uid, imgUrl } = useSelector((state) => state.auth);
 
-  useEffect(async () => {
-    const collaborator = await getCollaboratorbyIdBis(uid);
-    setimage(collaborator.imgUrl);
-  }, [uid]);
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(startLogout());
@@ -46,7 +41,7 @@ export const Topbar = () => {
           <div className="topbarIconContainer" onClick={handleLogout}>
             <Logout />
           </div>
-          <img src={image} alt="" className="topAvatar" />
+          <img src={imgUrl} alt="" className="topAvatar" />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import { fetchConToken } from "../helpers/fetch";
-import { dailyCleanUpActions, types } from "../types/types";
+import { cleanUpActions, types } from "../types/types";
 
 export const dailyCleanUpsStartLoading = (branch) => {
   return async (dispatch) => {
@@ -45,13 +45,7 @@ export const updateDailyCleanUp = (dailyCleanUpId, branch, data) => {
           showConfirmButton: false,
           timer: 1500,
         });
-
         return dispatch(dailyCleanUpsStartLoading(branch));
-
-        // dispatch(collaboratorsLoaded(body.collaborators));
-        // event.id = body.evento.id;
-        // event.user = { _id: uid, name };
-        // dispatch(eventAddNew(event));
       }
       return Swal.fire("Error", body.msg, "error");
     } catch (error) {
@@ -164,3 +158,93 @@ const deepCleanUpSetActive = (deepCleanUp) => ({
   type: types.deepCleanUpsSetActive,
   payload: deepCleanUp,
 });
+
+export const operatingRoomCleanUpCreate = (branch) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(
+        `cleanups/operatingRoom/${branch}/createNew`,
+        {},
+        "POST"
+      );
+      const body = await resp.json();
+      if (body.ok) {
+        console.log(body);
+        Swal.fire({
+          icon: "success",
+          title: "Registro exitoso",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        // dispatch(deepCleanUpsIsLoading());
+        // despachar lo otro
+        return;
+      }
+      return Swal.fire({
+        icon: "error",
+        title: body.msg,
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    } catch (error) {
+      console.log(error);
+      return Swal.fire("Error", error.message, "error");
+    }
+  };
+};
+
+export const operatingRoomCleanUpsStartLoading = (branch) => {
+  return async (dispatch) => {
+    try {
+      dispatch(operatingRoomCleanUpsIsLoading());
+      const resp = await fetchConToken(`cleanups/operatingroom/${branch}`);
+      const body = await resp.json();
+      if (body.ok) {
+        dispatch(operatingRoomCleanUpsLoaded(body.operatingRoomCleanUps));
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+const operatingRoomCleanUpsIsLoading = () => ({
+  type: types.operatingRoomCleanUpsIsLoading,
+});
+
+const operatingRoomCleanUpsLoaded = (operatingRoomCleanUps) => {
+  return {
+    type: types.operatingRoomCleanUpsLoaded,
+    payload: operatingRoomCleanUps,
+  };
+};
+
+export const updateOperatingRoomCleanUp = (
+  operatingRoomCleanUpId,
+  branch,
+  data
+) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(
+        `cleanups/operatingroom/${branch}/${operatingRoomCleanUpId}`,
+        data,
+        "PATCH"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Actualización exitosa",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return dispatch(operatingRoomCleanUpsStartLoading(branch));
+      }
+      return Swal.fire("Error", body.msg, "error");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

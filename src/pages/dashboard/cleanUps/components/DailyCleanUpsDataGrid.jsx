@@ -8,7 +8,7 @@ import {
   dailyCleanUpsStartLoading,
 } from "../../../../actions/cleanUpsActions";
 import { convertCollectionDatesToString } from "../../../../helpers/utilites";
-import { dailyCleanUpActions } from "../../../../types/types";
+import { cleanUpActions } from "../../../../types/types";
 
 export const DailyCleanUpsDataGrid = () => {
   const { branch } = useParams();
@@ -28,12 +28,12 @@ export const DailyCleanUpsDataGrid = () => {
   }, [dailyCleanUps]);
 
   const handleClean = (id) => {
-    const data = { action: dailyCleanUpActions.addCleaner };
+    const data = { action: cleanUpActions.addCleaner };
     dispatch(updateDailyCleanUp(id, branch, data));
   };
 
   const handleSupervise = (id) => {
-    const data = { action: dailyCleanUpActions.addSupervisor };
+    const data = { action: cleanUpActions.addSupervisor };
     dispatch(updateDailyCleanUp(id, branch, data));
   };
 
@@ -90,22 +90,7 @@ export const DailyCleanUpsDataGrid = () => {
         );
       },
     },
-    // {
-    //   field: "comments",
-    //   headerName: "Comentarios",
-    //   flex: 3,
-    //   renderCell: (params) => {
-    //     return (
-    //       <Fragment>
-    //         <div className="d-flex align-items-center">
-    //           {params.row.comments.map((comment, index) => {
-    //             return <div>{comment?.comment} </div>;
-    //           })}
-    //         </div>
-    //       </Fragment>
-    //     );
-    //   },
-    // },
+
     {
       field: "action",
       headerName: "Action",

@@ -19,6 +19,9 @@ export const types = {
   deepCleanUpsLoaded: "[cleanUps] deep cleanups loaded",
   deepCleanUpsSetActive: "[deepCleanUps] set active",
 
+  operatingRoomCleanUpsIsLoading: "[cleanups] operating room is loading",
+  operatingRoomCleanUpsLoaded: "[cleanups] operating room cleanups loaded",
+
   /*
   uiOpenModal: "[ui] Open modal",
   uiCloseModal: "[ui] Close modal",
@@ -68,7 +71,7 @@ export const positionTypes = {
   consultant: "Asesor",
 };
 
-export const dailyCleanUpActions = {
+export const cleanUpActions = {
   addCleaner: "addCleaner",
   addSupervisor: "addSupervisor",
   addComment: "addComment",

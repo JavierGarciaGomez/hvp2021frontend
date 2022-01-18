@@ -1,4 +1,4 @@
-import { fetchSinToken } from "./fetch";
+import { fetchConToken, fetchSinToken } from "./fetch";
 import Swal from "sweetalert2";
 
 export const getCollaboratorbyId = (id) => {
@@ -22,19 +22,21 @@ export const getCollaboratorbyId = (id) => {
 };
 
 export const getCollaboratorbyIdBis = async (id) => {
-  try {
-    const resp = await fetchSinToken(`collaborators/${id}`, {
-      collaboratorId: id,
-    });
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(`collaborators/${id}`, {
+        collaboratorId: id,
+      });
 
-    const body = await resp.json();
+      const body = await resp.json();
 
-    if (body.ok) {
-      const collaborator = body.collaborator;
+      if (body.ok) {
+        const collaborator = body.collaborator;
 
-      return collaborator;
+        return collaborator;
+      }
+    } catch (error) {
+      Swal.fire("error", error, "error");
     }
-  } catch (error) {
-    Swal.fire("error", error, "error");
-  }
+  };
 };
