@@ -49,6 +49,8 @@ export const AddNewDeepCleanup = () => {
       }
     });
 
+    console.log("*********************esta es la data", data);
+
     await dispatch(deepCleanUpCreate(data));
     navigate(-1);
   };

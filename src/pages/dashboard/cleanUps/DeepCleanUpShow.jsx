@@ -50,7 +50,7 @@ export const DeepCleanUpShow = () => {
       // set cleaner state
       activeDeepCleanUp.cleaners.forEach((element) => {
         if (element.cleaner === uid) {
-          setissupervisor(true);
+          setiscleaner(true);
         }
       });
       setFullValues(activeDeepCleanUp.activities);
