@@ -1,23 +1,54 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Russo+One&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
 
-:root {
-  --primaryColor: #5583a7;
-  --secondaryColor: white;
-  --primaryDarkColor: #acd1ec;
-  --terciaryColor: #7aaffa;
-
-  --primaryFont: "Lato";
-  --secondaryFont: "Russo One";
-  --fontPTSans: "PT Sans";
-  --orange: #fe4918;
-  --darkGrey: #353535;
+body {
+  background-color: var(--primary-bgColor);
 }
 
-body {
-  background-color: var(--custom-lightblue);
-  margin: 0;
-  font-family: var(--primaryFont);
+/**************************/
+/****REUSABLE COMPONENTS***/
+/**************************/
+
+/***** section ttle *******/
+.mainPages-section__header {
+  padding: 3rem 0rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  align-items: center;
+}
+
+.mainPages-section__img {
+  height: 4.8rem;
+}
+
+.mainPages-section__title {
+  font-size: 4.4rem;
+  color: var(--primary-color-sh-er);
+  font-weight: 600;
+}
+
+/****BELOW 544px (Phones)****/
+@media (max-width: 34em) {
+  .mainPages-section__title {
+    font-size: 3rem;
+  }
+}
+
+/**************************/
+/******** UTILITIES *******/
+/**************************/
+
+.bg-primary--ti-er {
+  background-color: var(--primary-color-ti-er);
+}
+
+.bg-primary--ti-st {
+  background-color: var(--primary-color-ti-st);
+}
+
+.section-pb {
+  padding-bottom: 6rem;
 }
 
 .seccion {
@@ -63,6 +94,11 @@ img {
   max-height: 100%;
 }
 
+.leaflet-container {
+  width: 100wh;
+  height: 100vh;
+}
+
 .button {
   background-color: var(--primaryDarkColor);
   padding: 0.5rem 3rem;
@@ -77,39 +113,16 @@ img {
   background-color: #8a1e00;
 }
 
-.section-title {
-  margin: 5rem 2rem;
-  color: var(--secondaryColor);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 5rem;
-}
-
-.icon-container {
-  flex-basis: 10%;
-  max-height: 100%;
-}
-
-.section-title h2 {
-  margin: 0 2rem;
-}
-
 /* UTILITIES */
 
 section {
-  margin: 4rem auto;
+  /* margin: 4rem auto; */
 }
 
-.container {
+/* .container {
   width: 90%;
   margin: 0 auto;
-}
-
-.contenedor {
-  width: 95%;
-  margin: 0 auto;
-}
+} */
 
 @media (min-width: 768px) {
   .contenedor {
@@ -143,8 +156,10 @@ section {
   background-color: var(--primaryDarkColor);
 }
 
-/* HEADER */
-.main-header {
+/**************************/
+/******** HERO **********/
+/**************************/
+.mainPages-hero {
   position: relative;
   /* background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(../img/morgana.jpg); */
   background: url("../../../public/assets/imgs/morgana.jpg");
@@ -153,7 +168,7 @@ section {
   height: 100vh;
 }
 
-.main-header::before {
+.mainPages-hero::before {
   content: "";
   position: absolute;
   top: 0px;
@@ -163,177 +178,128 @@ section {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.header-content {
+.mainPages-hero--content {
   position: absolute;
-  top: 0;
+  top: 10rem;
   left: 0;
-  bottom: 0;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.socialNav {
-  position: relative;
-  top: 4rem;
-  text-align: center;
-  font-size: 2rem;
-}
-
-.socialNav a {
-  color: white;
-  margin: 0 0.5em;
-}
-
-.socialNav a:hover {
-  color: var(--primaryColor);
-  margin: 0 0.5em;
-}
-
-.main-header h1 {
-  margin: 0;
-  top: 4rem;
-  position: relative;
+.mainPages-hero--heading {
   font-family: "Fredoka One", cursive;
-  color: white;
-  font-size: 2.5rem;
+  color: #fff;
+  letter-spacing: -0.5px;
+  font-size: 5rem;
   text-align: center;
 }
 
-.main-header h2 {
-  display: block;
-  font-family: var(--fontPTSans);
-  max-width: 70%;
-  margin: 8em 1em auto auto;
-  position: relative;
-  font-weight: 400;
+.mainPages-hero--socialNav {
+  font-size: 3rem;
+  margin: 2rem auto;
+}
+
+.mainPages-hero--socialNav a {
+  color: white;
+  margin: 0 0.5em;
+}
+
+.mainPages-hero--socialNav a:hover {
+  color: var(--custom-cyan);
+  margin: 0 0.5em;
+}
+
+.mainPages-hero p {
+  /* display: block; */
+
+  max-width: 60%;
+  margin: 8em 2em auto auto;
   color: white;
   text-align: right;
-  font-size: 2rem;
-  /* change*/
+  font-size: 3rem;
 }
 
-.blue-text {
+/* .blue-text {
   color: var(--secondaryColor);
   font-weight: bolder;
-}
+} */
 
 @media (min-width: 768px) {
-  .main-header {
+  .mainPages-hero {
     background-position: center center;
   }
 
-  .main-header h1 {
-    display: block;
-    max-width: 85%;
-    margin: 0 auto;
-    font-size: 5rem;
-  }
-
-  .main-header h2 {
-    bottom: 6rem;
-    margin: 5em 1em auto auto;
-    font-size: 3rem;
+  .mainPages-hero--heading {
   }
 }
 
 /* ************************************************************************************************ */
-/* CHARACTERISTICS */
+/**************************************** CHARACTERISTICS *******************************************/
 /* ************************************************************************************************ */
 
-.characteristics {
-  display: flex;
-  flex-wrap: wrap;
+.mainPages-sectionChar__characteristics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
   justify-content: space-between;
 }
 
-.characteristic {
-  background-color: var(--terciaryColor);
+.mainPages-sectionChar__characteristic {
   border-radius: 10%;
   flex: 0 0 calc(60% - 1rem);
   margin: 1rem auto;
-}
-
-.characteristic img {
-  display: block;
-  height: 10rem;
-  margin: 2em auto;
-}
-
-.characteristic h3 {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 1.25rem;
-  font-family: var(--secondaryFont);
-  color: var(--primaryColor);
-}
-
-.characteristic p {
-  margin: 1rem 0;
-  text-align: center;
-  color: var(--primaryDarkColor);
-  font-size: 1.2rem;
-}
-
-@media (min-width: 768px) {
-  .characteristic {
-    flex: 0 0 calc(25% - 1rem);
-  }
-}
-
-/* ************************************************************************************************ */
-/* CHARACTERISTICS */
-/* ************************************************************************************************ */
-
-.characteristics {
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
 }
 
-.characteristic {
-  background-color: var(--terciaryColor);
-  border-radius: 10%;
-  flex: 0 0 calc(60% - 1rem);
+.mainPages-sectionChar__characteristic img {
+  display: block;
+  height: 10rem;
   margin: 1rem auto;
 }
 
-.characteristic img {
-  display: block;
-  height: 10rem;
-  margin: 2em auto;
-}
-
-.characteristic h3 {
+.mainPages-sectionChar__char-title {
   text-align: center;
   text-transform: uppercase;
-  font-size: 1.25rem;
-  font-family: var(--secondaryFont);
-  color: var(--primaryColor);
+  font-size: 2rem;
+  color: white;
+  /* color: var(--custom-lightgray); */
+  padding: 0 1rem;
 }
 
-.characteristic p {
-  margin: 1rem 0;
-  text-align: center;
-  color: var(--primaryDarkColor);
-  font-size: 1.2rem;
+.mainPages-sectionChar__char-text {
+  padding: 1rem;
+  color: white;
+  font-size: 1.6rem;
+  line-height: 1.5;
 }
 
-@media (min-width: 768px) {
-  .characteristic {
-    flex: 0 0 calc(25% - 1rem);
+/****BELOW 944px (Tablets)****/
+
+@media (max-width: 59em) {
+  .mainPages-sectionChar__characteristics {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/****BELOW 544px (Phones)****/
+@media (max-width: 34em) {
+  .mainPages-sectionChar__characteristics {
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0 2rem;
+    gap: 2rem;
   }
 }
 
 /* ************************************************************************************************ */
-/* PROMO */
+/**************************************** PROMOTIONS *******************************************/
 /* ************************************************************************************************ */
-.mainPages__container__style2 {
-  background-color: var(--custom-cyan);
-}
-
-.light-background {
-  background-color: var(--primaryColor);
-  padding: 1em 0;
-}
 
 .carousel {
   margin: 0 auto;
@@ -341,13 +307,23 @@ section {
 
 .carousel img {
   margin: 0 auto;
-  height: 90vh;
+  height: 60vh;
   width: auto;
 }
 
 .img-container {
   width: 70%;
   margin: 3em auto;
+}
+
+/****BELOW 944px (Tablets)****/
+
+@media (max-width: 59em) {
+  .carousel img {
+    margin: 0 auto;
+    height: 40vh;
+    width: auto;
+  }
 }
 
 /* ************************************************************************************************ */

@@ -5,7 +5,6 @@ import { AddNewDeepCleanup } from "../pages/dashboard/cleanUps/AddNewDeepCleanUp
 import { CleanUpsBranch } from "../pages/dashboard/cleanUps/CleanUpsBranch";
 import { DeepCleanUpShow } from "../pages/dashboard/cleanUps/DeepCleanUpShow";
 
-import "./mainPageRouter.css";
 import { MainPageServicesRouter } from "./MainPagesServicesRouter";
 
 export const CleanUpsRouter = () => {

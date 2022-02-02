@@ -25,8 +25,8 @@ export const collaboratorsStartLoading = (isPublic = true) => {
         // dispatch(eventAddNew(event));
       }
     } catch (error) {
+      dispatch(collaboratorsFinishedLoading());
       console.log(error);
-      Swal.fire("error", "error", "error");
     }
   };
 };

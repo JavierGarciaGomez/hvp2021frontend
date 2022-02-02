@@ -10,9 +10,9 @@ export const MainPageContainer = () => {
   return (
     <div className="mainPage">
       <MainPagesNavbar />
-      <div className="mainPageContent">
+      <main className="mainPageContent">
         <MainPageRouter />
-      </div>
+      </main>
       <MainPageFooter />
     </div>
   );

@@ -1,11 +1,13 @@
 import React from "react";
 
-export const MainPageHeader = () => {
+export const MainPageHero = () => {
   return (
-    <header className="main-header">
-      <div className="header-content">
-        <h1>Hospital Veterinario Peninsular</h1>
-        <nav className="socialNav">
+    <section className="mainPages-hero">
+      <div className="mainPages-hero--content">
+        <h1 className="mainPages-hero--heading">
+          Hospital Veterinario Peninsular
+        </h1>
+        <nav className="mainPages-hero--socialNav">
           <a
             href="https://www.facebook.com/HospitalVeterinarioPeninsular"
             target="_blank"
@@ -25,11 +27,11 @@ export const MainPageHeader = () => {
             <i className="fab fa-instagram"></i>
           </a>
         </nav>
-        <h2>
+        <p>
           El <span className="blue-text">especialista</span> en cuestión siempre
           es la mejor <span className="blue-text">opción</span>{" "}
-        </h2>
+        </p>
       </div>
-    </header>
+    </section>
   );
 };

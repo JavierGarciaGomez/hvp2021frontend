@@ -6,9 +6,7 @@ import { store } from "./store/store";
 function App() {
   return (
     <Provider store={store}>
-      <div className="app-container">
-        <AppRouter />
-      </div>
+      <AppRouter />
     </Provider>
   );
 }

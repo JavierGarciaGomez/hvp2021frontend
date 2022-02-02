@@ -12,23 +12,29 @@ export const authLogin = (user) => ({ type: types.authLogin, payload: user });
 
 export const startChecking = () => {
   return async (dispatch) => {
-    const resp = await fetchConToken("collaborators/renew");
-    const body = await resp.json();
+    try {
+      console.log("before resp");
+      const resp = await fetchConToken("collaborators/renew");
+      console.log("after resp");
+      const body = await resp.json();
 
-    if (body.ok) {
-      localStorage.setItem("token", body.token);
-      localStorage.setItem("token-init-date", new Date().getTime());
+      if (body.ok) {
+        localStorage.setItem("token", body.token);
+        localStorage.setItem("token-init-date", new Date().getTime());
 
-      const { uid, col_code, role, imgUrl } = body;
-      dispatch(
-        authLogin({
-          uid,
-          col_code,
-          role,
-          imgUrl,
-        })
-      );
-    } else {
+        const { uid, col_code, role, imgUrl } = body;
+        dispatch(
+          authLogin({
+            uid,
+            col_code,
+            role,
+            imgUrl,
+          })
+        );
+      } else {
+        dispatch(checkingFinish());
+      }
+    } catch (error) {
       dispatch(checkingFinish());
     }
   };

@@ -6,6 +6,7 @@ import { startChecking } from "../actions/authActions";
 import { LoginPage } from "../pages/authPages/loginPage/LoginPage";
 import { RegisterPage } from "../pages/authPages/loginPage/RegisterPage";
 import { MainPageContainer } from "../pages/mainPages/MainPageContainer";
+import { TestPage } from "../pages/test/TestPage";
 
 import { DashboardRoutes } from "./DashboardRoutes";
 import { MainPageRouter } from "./MainPageRouter";
@@ -14,6 +15,7 @@ export const AppRouter = () => {
   const dispatch = useDispatch();
   const { checking, isAuthenticated } = useSelector((state) => state.auth);
 
+  console.log("checking now is", checking, isAuthenticated);
   useEffect(() => {
     dispatch(startChecking());
   }, [dispatch, checking]);
@@ -33,6 +35,7 @@ export const AppRouter = () => {
         <Route path="/auth/register" element={<RegisterPage />}></Route>
 
         <Route path="/*" element={<MainPageContainer />}></Route>
+        <Route path="/test" element={<TestPage />}></Route>
 
         {/* <Route path="*" element={<LoginPage />} /> */}
 

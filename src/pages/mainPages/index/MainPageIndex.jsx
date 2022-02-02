@@ -1,12 +1,23 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { MainPagesSectionHeader } from "../../../components/mainPageComponents/MainPagesSectionHeader";
 import { useScript } from "../../../hooks/useScript";
-import { MainPageHeader } from "./MainPageHeader";
+import { MainPageHero } from "./MainPageHero";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import Leaflet from "leaflet";
 import { useDispatch, useSelector } from "react-redux";
 import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
 import { CircularProgress } from "@material-ui/core";
 import { sortCollaborators, sortCollection } from "../../../helpers/utilites";
+import "leaflet/dist/leaflet.css";
+import { CharacteristicCard } from "../components/CharacteristicCard";
+Leaflet.Icon.Default.imagePath = "../node_modules/leaflet";
+
+delete Leaflet.Icon.Default.prototype._getIconUrl;
+Leaflet.Icon.Default.mergeOptions({
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 
 const position = [21.019557, -89.613934];
 
@@ -29,147 +40,113 @@ export const MainPageIndex = () => {
 
   return (
     <Fragment>
-      <MainPageHeader />
+      <MainPageHero />
+      {/* HERO */}
 
-      <div className="container">
-        <section className="characteristics-section">
+      <section className="mainPages-sectionChar bg-primary--ti-st section-pb">
+        <div className="container">
           <MainPagesSectionHeader title="Lo que nos distingue" />
-          <div className="characteristics">
-            <div className="characteristic">
-              <div className="char-img">
-                <img src="assets/imgs/mainPage/char-personal.png" alt="" />
-              </div>
-              <div className="char-title">
-                <h3>Personalizado</h3>
-              </div>
-              <div className="char-text">
-                <p>
-                  El seguimiento que damos cada uno de nuestros pacientes es
-                  personalizado y acorde con sus necesidades.
-                </p>
-              </div>
-            </div>
-            <div className="characteristic">
-              <div className="char-img">
-                <img src="assets/imgs/mainPage/char-experience.png" alt="" />
-              </div>
-              <div className="char-title">
-                <h3>Experiencia</h3>
-              </div>
-              <div className="char-text">
-                <p>
-                  Tenemos 30 años de experiencia en veterinaria, por lo que
-                  somos un referente en Mérida y en todo el sureste.
-                </p>
-              </div>
-            </div>
-            <div className="characteristic">
-              <div className="char-img">
-                <img src="assets/imgs/mainPage/char-specialist.png" alt="" />
-              </div>
-              <div className="char-title">
-                <h3>Especialidad</h3>
-              </div>
-              <div className="char-text">
-                <p>
-                  Nuestros médicos son especializados en oftalmología y
-                  prestamos servicios relacionados en otras especialidades.
-                </p>
-              </div>
-            </div>
-            <div className="characteristic">
-              <div className="char-img">
-                <img src="assets/imgs/mainPage/char-coverage.png" alt="" />
-              </div>
-              <div className="char-title">
-                <h3>Cobertura</h3>
-              </div>
-              <div className="char-text">
-                <p>
-                  Contamos con tres sucursales, todas en las tiendas Petco en la
-                  ciudad de Mérida.
-                </p>
-              </div>
-            </div>
+          <div className="mainPages-sectionChar__characteristics">
+            <CharacteristicCard
+              imgSrc="assets/imgs/mainPage/char-personal.png"
+              title="Personalizado"
+              text="El seguimiento que damos cada uno de nuestros pacientes es personalizado y acorde con sus necesidades."
+            />
+            <CharacteristicCard
+              imgSrc="assets/imgs/mainPage/char-experience.png"
+              title="Experiencia"
+              text="Tenemos 30 años de experiencia en veterinaria, por lo que
+                  somos un referente en Mérida y en todo el sureste."
+            />
+            <CharacteristicCard
+              imgSrc="assets/imgs/mainPage/char-specialist.png"
+              title="Especialidad"
+              text="Nuestros médicos son especializados en oftalmología y
+              prestamos servicios relacionados en otras especialidades."
+            />
+            <CharacteristicCard
+              imgSrc="assets/imgs/mainPage/char-coverage.png"
+              title="Cobertura"
+              text="Contamos con tres sucursales, todas en las tiendas Petco en la
+              ciudad de Mérida."
+            />
           </div>
-        </section>
-      </div>
-
-      <div className="mainPages__container__style2">
-        <div className="container py-1">
-          <section>
-            <MainPagesSectionHeader title="Promociones" />
-            <div
-              id="carouselExampleIndicators"
-              className="carousel slide"
-              data-bs-ride="carousel"
-            >
-              <ol className="carousel-indicators">
-                <li
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="0"
-                  className="active"
-                ></li>
-                <li
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="1"
-                ></li>
-                <li
-                  data-bs-target="#carouselExampleIndicators"
-                  data-bs-slide-to="2"
-                ></li>
-              </ol>
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <img
-                    src="assets/imgs/mainPage/promo/promo1.jpg"
-                    className="d-block"
-                    alt="..."
-                  />
-                </div>
-                <div className="carousel-item">
-                  <img
-                    src="assets/imgs/mainPage/promo/promo2.jpg"
-                    className="d-block"
-                    alt="..."
-                  />
-                </div>
-                <div className="carousel-item">
-                  <img
-                    src="assets/imgs/mainPage/promo/promo3.jpg"
-                    className="d-block"
-                    alt="..."
-                  />
-                </div>
-              </div>
-              <a
-                className="carousel-control-prev"
-                href="#carouselExampleIndicators"
-                role="button"
-                data-bs-slide="prev"
-              >
-                <span
-                  className="carousel-control-prev-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="visually-hidden">Previous</span>
-              </a>
-              <a
-                className="carousel-control-next"
-                href="#carouselExampleIndicators"
-                role="button"
-                data-bs-slide="next"
-              >
-                <span
-                  className="carousel-control-next-icon"
-                  aria-hidden="true"
-                ></span>
-                <span className="visually-hidden">Next</span>
-              </a>
-            </div>
-          </section>
         </div>
-      </div>
+      </section>
+
+      <section className="bg-primary--ti-st section-pb">
+        <div className="container">
+          <MainPagesSectionHeader title="Promociones" />
+          <div
+            id="carouselExampleIndicators"
+            className="carousel slide"
+            data-bs-ride="carousel"
+          >
+            <ol className="carousel-indicators">
+              <li
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="0"
+                className="active"
+              ></li>
+              <li
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="1"
+              ></li>
+              <li
+                data-bs-target="#carouselExampleIndicators"
+                data-bs-slide-to="2"
+              ></li>
+            </ol>
+            <div className="carousel-inner">
+              <div className="carousel-item active">
+                <img
+                  src="assets/imgs/mainPage/promo/promo1.jpg"
+                  className="d-block"
+                  alt="..."
+                />
+              </div>
+              <div className="carousel-item">
+                <img
+                  src="assets/imgs/mainPage/promo/promo2.jpg"
+                  className="d-block"
+                  alt="..."
+                />
+              </div>
+              <div className="carousel-item">
+                <img
+                  src="assets/imgs/mainPage/promo/promo3.jpg"
+                  className="d-block"
+                  alt="..."
+                />
+              </div>
+            </div>
+            <a
+              className="carousel-control-prev"
+              href="#carouselExampleIndicators"
+              role="button"
+              data-bs-slide="prev"
+            >
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Previous</span>
+            </a>
+            <a
+              className="carousel-control-next"
+              href="#carouselExampleIndicators"
+              role="button"
+              data-bs-slide="next"
+            >
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
+              <span className="visually-hidden">Next</span>
+            </a>
+          </div>
+        </div>
+      </section>
 
       <div className="container">
         <section>
@@ -264,6 +241,17 @@ export const MainPageIndex = () => {
 
       <div className="container">
         <div id="mapa">
+          {/* <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={position}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker>
+          </MapContainer> */}
           <MapContainer center={position} zoom={13} scrollWheelZoom={false}>
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -278,6 +266,11 @@ export const MainPageIndex = () => {
             <Marker position={[21.046215, -89.630306]}>
               <Popup>Sucursal The Harbor</Popup>
             </Marker>
+            {/* <Marker position={position}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+              </Popup>
+            </Marker> */}
           </MapContainer>
         </div>
         <div className="branches">

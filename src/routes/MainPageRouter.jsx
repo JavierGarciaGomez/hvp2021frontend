@@ -8,7 +8,6 @@ import { MainPagesContact } from "../pages/mainPages/MainPagesContact";
 import { MainPagesServices } from "../pages/mainPages/MainPagesServices";
 import { MainPagesTeam } from "../pages/mainPages/MainPagesTeam";
 
-import "./mainPageRouter.css";
 import { MainPageServicesRouter } from "./MainPagesServicesRouter";
 
 export const MainPageRouter = () => {
