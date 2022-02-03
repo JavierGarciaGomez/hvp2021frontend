@@ -31,6 +31,21 @@ body {
   background-color: var(--primary-color-sh-er);
 }
 
+.mainPages-button--sm--light,
+.mainPages-button--sm--light:link,
+.mainPages-button--sm--light:visited {
+  padding: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  background-color: var(--primary-color-ti-st);
+  color: var(--primary-color-sh-st);
+}
+
+.mainPages-button--sm--light:hover,
+.mainPages-button--sm--light:active {
+  background-color: var(--primary-color-ti-er);
+}
+
 /***** section ttle *******/
 .mainPages-section__header {
   padding: 3rem 0rem;
@@ -61,6 +76,14 @@ body {
 /******** UTILITIES *******/
 /**************************/
 
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
 .bg-primary--ti-er {
   background-color: var(--primary-color-ti-er);
 }
@@ -75,6 +98,10 @@ body {
 
 .bg-primary--sh-er {
   background-color: var(--primary-color-sh-er);
+}
+
+.border-primary {
+  border: var(--primary-color) 3px solid;
 }
 
 .section-pb {
@@ -187,6 +214,18 @@ section {
 .btn-primaryBG:hover {
   color: var(--secondaryColor);
   background-color: var(--primaryDarkColor);
+}
+
+/**************************/
+/******** NAVBAR **********/
+/**************************/
+
+.navbar a img {
+  max-height: 50px;
+}
+
+.nav-item {
+  margin-right: 1.5rem;
 }
 
 /**************************/
@@ -546,7 +585,9 @@ section {
 }
 
 /* ************************************************************************************************ */
-/**************************************** ADVICES ***************************************************/
+/* ************************************************************************************************ */
+/**************************************** ADVICES PAGE **********************************************/
+/* ************************************************************************************************ */
 /* ************************************************************************************************ */
 
 /* Bottom section */
@@ -597,167 +638,165 @@ section {
 }
 
 /* ************************************************************************************************ */
-/* SERVICES PAGE */
+/* ************************************************************************************************ */
+/**************************************** SERVICES PAGE **********************************************/
+/* ************************************************************************************************ */
 /* ************************************************************************************************ */
 
-.service-list {
+.mp-service__services {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 3rem;
 }
 
-.service-item {
-  flex-basis: calc(100% - 1rem);
-  padding: 0.5em;
-  border-radius: 5%;
-  overflow: hidden;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-  margin: 1rem 0;
-}
+.mp-service__service {
+  color: #fff;
+  flex-basis: calc(50% - 2rem);
 
-.service-item .service-image {
-  text-align: center;
-  flex-basis: calc(100% - 1rem);
-}
-
-.service-item .service-content {
-  flex-basis: calc(100% - 1rem);
-}
-
-.service-content h3 {
-  margin-top: 0.5rem 0;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 3vw;
-}
-
-.service-content p {
-  text-align: justify;
-}
-
-.primary {
-  background-color: var(--primaryDarkColor);
-  color: var(--secondaryColor);
-}
-
-.secondary {
-  background-color: var(--secondaryColor);
-  color: var(--primaryDarkColor);
-}
-
-@media (min-width: 768px) {
-  .service-list {
-    justify-content: space-around;
-  }
-
-  .service-item {
-    flex-basis: calc(50% - 1rem);
-  }
-
-  .service-item .service-image {
-    flex-basis: calc(50% - 1rem);
-  }
-
-  .service-item .service-content {
-    flex-basis: calc(50% - 1rem);
-  }
-
-  .service-content h3 {
-    font-size: 1.8vw;
-  }
-}
-
-/* ************************************************************************************************ */
-/* TEAM PAGE */
-/* ************************************************************************************************ */
-
-.mainPages__team-item {
-  text-align: center;
+  /* flex-basis: calc(100% - 1rem); */
   padding: 1rem;
-  margin: 1rem auto;
-  border: 5px solid var(--secondaryColor);
-  border-radius: 5%;
+  border-radius: 3%;
+  overflow: hidden;
+
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: space-between;
 }
 
-.mainPages__team-item h3 {
+.mp-service__img {
+  text-align: center;
+  flex-basis: calc(50% - 1rem);
+  max-width: 100%;
+  align-self: center;
+}
+
+.mp-service__content {
+  flex-basis: calc(50% - 1rem);
+
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.mp-service__content h3 {
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.5px;
   text-transform: uppercase;
-  font-family: var(--secondaryFont);
+  text-align: center;
 }
 
-.mainPages__team-item h4 {
-  font-family: var(--fontPTSans);
+/****BELOW 944px (Tablets)****/
+@media (max-width: 59em) {
+  .mp-service__service {
+    flex: 0 0 calc(80% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** TEAM PAGE **********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+.mp-team__item {
+  padding: 1rem;
+  margin: 3rem;
+  border-radius: 2%;
+}
+
+.mp-team__header {
+  text-align: center;
+  padding: 2rem;
+}
+.mp-team__item h3 {
+  color: var(--primary-color-sh-st);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.mp-team__item h4 {
   font-style: italic;
   font-size: 2rem;
+  color: #fff;
 }
 
-.mainPages__team-content {
+.mp-team__content {
   display: flex;
-  flex-wrap: wrap;
+  gap: 3rem;
+
   margin: 0 auto;
 
   justify-content: space-between;
   align-items: center;
 }
 
-.mainPages__team-content div {
-  flex: 0 0 calc(80% - 1rem);
-  text-align: center;
-  margin: 0 auto;
+.mp-team__img {
+  flex-basis: 45%;
+}
+.mp-team__img img {
+  max-width: 100%;
+  border-radius: 2%;
 }
 
-.mainPages__team-img img {
-  max-height: 300px;
+.mp-team__text {
+  flex-basis: 55%;
+  line-height: 1.5;
+  font-size: 1.8rem;
+  color: #fff;
 }
 
-.mainPages__team-content .mainPages__team-text {
-  text-align: justify;
-}
-
-@media (min-width: 768px) {
-  .mainPages__team-content div {
-    flex: 0 0 calc(50% - 1rem);
+/****BELOW 944px (Tablets)****/
+@media (max-width: 59em) {
+  .mp-team__content {
+    flex-direction: column;
   }
 }
 
 /* ************************************************************************************************ */
-/* COMPANY */
+/* ************************************************************************************************ */
+/**************************************** COMPANY PAGE **********************************************/
+/* ************************************************************************************************ */
 /* ************************************************************************************************ */
 
-.video-wrapper {
+.mp-video-wrapper {
   display: flex;
   justify-content: center;
-
   margin: 0 auto;
+  padding: 4rem;
 }
 
-.video {
+.mp-company__text {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: var(--primary-color-sh-st);
+  width: 66%;
   margin: 0 auto;
-  text-align: center;
 }
-
-.section-text h3 {
-  color: var(--secondaryColor);
-  width: 75%;
+.mp-company__text h3 {
   margin: 0.5rem auto;
-  font-size: 2rem;
-  font-weight: bolder;
+  font-size: 3.6rem;
+  font-weight: 300;
   text-transform: uppercase;
 }
 
-.section-text p {
-  color: var(--secondaryColor);
-  width: 75%;
-  margin: 0.5rem auto;
-  font-size: 1.5rem;
-  text-align: justify;
+/****BELOW 944px (Tablets)****/
+@media (max-width: 59em) {
+  .mp-company__text {
+    width: 80%;
+  }
 }
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** SERVIECS PAGES ********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
 
-/* ************************************************************************************************ */
-/* SPECIFIC PAGES */
-/* ************************************************************************************************ */
+.mainPages-service-only-page {
+  min-height: 90vh;
+}
 
 .service-only-container {
   display: flex;
@@ -780,8 +819,8 @@ section {
 
 .service-only-text {
   color: var(--secondaryColor);
-  font-size: 1.25rem;
-  text-align: justify;
+  font-size: 1.6rem;
+  line-height: 1.5;
 }
 
 @media (min-width: 768px) {
@@ -796,7 +835,7 @@ section {
   }
 }
 
-.list {
+.service-only-list {
   display: inline-block;
   list-style: square;
   padding-left: 1rem;

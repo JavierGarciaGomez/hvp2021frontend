@@ -5,28 +5,26 @@ import { MainPagesSectionHeader } from "../../../components/mainPageComponents/M
 export const MainPagesServicesModel = ({ sectionTitle, imgName, content }) => {
   const navigate = useNavigate();
   return (
-    <div className="light-background">
+    <section className="mainPages-service-only-page bg-primary--ti-st section-pb section-pt">
       <div className="container">
-        <section>
-          <MainPagesSectionHeader title={sectionTitle} />
+        <MainPagesSectionHeader title={sectionTitle} />
 
-          <div className="service-only-container">
-            <div className="service-only-image">
-              <img src={`assets/imgs/mainPage/services/${imgName}`} alt="" />
-            </div>
-            <div className="service-only-text">{content}</div>
+        <div className="service-only-container">
+          <div className="service-only-image">
+            <img src={`assets/imgs/mainPage/services/${imgName}`} alt="" />
           </div>
-          <div className="return-div">
-            <button
-              type="button"
-              className="btn btn-lg btn-primaryBG"
-              onClick={() => navigate(-1)}
-            >
-              ◀ Regresar
-            </button>{" "}
-          </div>
-        </section>
+          <div className="service-only-text">{content}</div>
+        </div>
+        <div className="return-div">
+          <button
+            type="button"
+            className="mainPages-button"
+            onClick={() => navigate(-1)}
+          >
+            ◀ Regresar
+          </button>{" "}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };

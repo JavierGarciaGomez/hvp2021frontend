@@ -135,21 +135,24 @@ export const MainPageServicesRouter = () => {
                   nuestros pacientes durante el proceso quirúrgico. Tenga Ud. La
                   plena confianza que su mascota está en las mejores manos y que
                   tratamos de tener el nivel tecnológico y de actualización más
-                  avanzado. La áreas de especialización son: Cirugía General,
-                  Estética, Reproductiva o ginecológica (Cesáreas, partos),
-                  Traumatología y Ortopedia, Urológica, Oncológica y
-                  Oftalmológica, con alta experiencia en cataratas con mínima
-                  invasión. Ejemplos de cirugías: General: Cirugía Estética
-                  (Orejas y cola), Tumores cutáneos, heridas en general,
-                  Prolapsos, Hernias, etc. Reproductiva: Ovario histerectomía
-                  (Castración en hembras), Orquiectomía (Castración en machos),
-                  Vasectomía, Cesáreas, etc. Gastrointestinal: Obstrucción
-                  intestinal, por cuerpos extraños, Gastrotomías, Enterotomías,
-                  Anastomosis intestinales, Torsiones intestinales, etc.
-                  Urológica: Cálculos Urinarios, Uretrostomía, Nefrectomías y
-                  Nefrotomías, etc. Traumatología y Ortopedia: Reparación de
-                  Fracturas de los diversos huesos del cuerpo y articulaciones.
-                  Oftalmológica: Defectos en Párpados y Córnea, Cataratas con
+                  avanzado.
+                </p>
+                <p>
+                  La áreas de especialización son: Cirugía General, Estética,
+                  Reproductiva o ginecológica (Cesáreas, partos), Traumatología
+                  y Ortopedia, Urológica, Oncológica y Oftalmológica, con alta
+                  experiencia en cataratas con mínima invasión. Ejemplos de
+                  cirugías: General: Cirugía Estética (Orejas y cola), Tumores
+                  cutáneos, heridas en general, Prolapsos, Hernias, etc.
+                  Reproductiva: Ovario histerectomía (Castración en hembras),
+                  Orquiectomía (Castración en machos), Vasectomía, Cesáreas,
+                  etc. Gastrointestinal: Obstrucción intestinal, por cuerpos
+                  extraños, Gastrotomías, Enterotomías, Anastomosis
+                  intestinales, Torsiones intestinales, etc. Urológica: Cálculos
+                  Urinarios, Uretrostomía, Nefrectomías y Nefrotomías, etc.
+                  Traumatología y Ortopedia: Reparación de Fracturas de los
+                  diversos huesos del cuerpo y articulaciones. Oftalmológica:
+                  Defectos en Párpados y Córnea, Cataratas con
                   Facoemulsificación (una pequeña incisión de 3 mm) con
                   microscopio oftalmológico. Etc. Odontológica: Extracción y
                   limpieza de piezas dentales con equipo ultrasónico, y mucho
@@ -191,7 +194,7 @@ export const MainPageServicesRouter = () => {
                 </p>
                 <p>Registrar a su ejemplar tiene como finalidad:</p>
 
-                <ul className="list">
+                <ul className="service-only-list">
                   <li>Dar valor a las crias</li>
                   <li>
                     Conocer quién es el criador, el propietario y la línea de
@@ -209,13 +212,11 @@ export const MainPageServicesRouter = () => {
                     de nacimiento y como titulo de propiedad y respaldo legal.
                   </li>
                   <li>
-                    {" "}
                     Conocer los datos del ejemplar como son: títulos, nombre del
                     ejemplar, raza o variedad, color, sexo, fecha y lugar de
                     nacimiento, Num. de registro F.C.M, observaciones y
                     calificaciones de displasia.
                   </li>
-                  <li></li>
                 </ul>
 
                 <p>

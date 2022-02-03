@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import "./mainPagesNavbar.css";
 
 export const MainPagesNavbar = () => {
   return (
@@ -22,7 +21,7 @@ export const MainPagesNavbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <ul className="navbar-nav me-auto mb-2 mb-md-0 text-lightgray">
+          <ul className="navbar-nav me-auto mb-md-0 text-white">
             <li className="nav-item">
               <NavLink
                 className={({ isActive }) =>
