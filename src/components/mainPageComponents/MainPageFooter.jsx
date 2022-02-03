@@ -2,9 +2,9 @@ import React from "react";
 
 export const MainPageFooter = () => {
   return (
-    <footer className="site-footer">
+    <footer className="mainPages-site-footer">
       <p>Made by Javier García</p>
-      <div className="social-author">
+      <div className="mainPages-site-footer__social">
         <ul id="social-ul">
           <li>
             <a
