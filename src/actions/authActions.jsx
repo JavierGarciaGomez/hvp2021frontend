@@ -13,9 +13,8 @@ export const authLogin = (user) => ({ type: types.authLogin, payload: user });
 export const startChecking = () => {
   return async (dispatch) => {
     try {
-      console.log("before resp");
       const resp = await fetchConToken("collaborators/renew");
-      console.log("after resp");
+
       const body = await resp.json();
 
       if (body.ok) {

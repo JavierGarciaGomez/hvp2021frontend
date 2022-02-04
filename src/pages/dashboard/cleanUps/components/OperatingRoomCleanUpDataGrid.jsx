@@ -143,6 +143,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
           return row._id;
         }}
         rowHeight={40}
+        rowsPerPageOptions={[5, 50, 100]}
       />
     </div>
   );

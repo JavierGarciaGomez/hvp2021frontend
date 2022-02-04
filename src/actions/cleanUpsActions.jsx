@@ -2,6 +2,29 @@ import Swal from "sweetalert2";
 import { fetchConToken } from "../helpers/fetch";
 import { cleanUpActions, types } from "../types/types";
 
+export const startLoadingLastMonthCleanUps = () => {
+  return async (dispatch) => {
+    try {
+      // dispatch(dailyCleanUpsIsLoading());
+      const resp = await fetchConToken(`cleanups/allLastMonth`);
+      const body = await resp.json();
+
+      if (body.ok) {
+        dispatch(lastMonthCleanUpsLoaded(body.allCleanUps));
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+const lastMonthCleanUpsLoaded = (payload) => {
+  return {
+    type: types.lastMonthCleanUpsLoaded,
+    payload,
+  };
+};
+
 export const dailyCleanUpsStartLoading = (branch) => {
   return async (dispatch) => {
     try {

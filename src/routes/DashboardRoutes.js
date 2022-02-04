@@ -15,6 +15,7 @@ import Collaborator from "../pages/dashboard/collaborators/Collaborator";
 import { CleanUpsLayoutPage } from "../pages/dashboard/cleanUps/CleanUpsLayout";
 import { CreateNewRFC } from "../pages/dashboard/rfc/CreateNewRFC";
 import { EditRFC } from "../pages/dashboard/rfc/EditRFC";
+import "../pages/dashboard/dashboardLayout.css";
 
 export const DashboardRoutes = () => {
   return (

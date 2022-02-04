@@ -4,6 +4,8 @@ import { Route, Routes } from "react-router-dom";
 import { AddNewDeepCleanup } from "../pages/dashboard/cleanUps/AddNewDeepCleanUp";
 import { CleanUpsBranch } from "../pages/dashboard/cleanUps/CleanUpsBranch";
 import { DeepCleanUpShow } from "../pages/dashboard/cleanUps/DeepCleanUpShow";
+import { SummaryCleanUps } from "../pages/dashboard/cleanUps/SummaryCleanUps";
+import { HomeDashPage } from "../pages/dashboard/home/HomeDashPage";
 
 import { MainPageServicesRouter } from "./MainPagesServicesRouter";
 
@@ -11,6 +13,7 @@ export const CleanUpsRouter = () => {
   return (
     <Routes>
       {/* <Route path="*" element={<MainPageIndex />} /> */}
+      <Route path="summary" element={<SummaryCleanUps />} />
       <Route path=":branch" element={<CleanUpsBranch />} />
       <Route
         path=":branch/addNewDeepCleaning"

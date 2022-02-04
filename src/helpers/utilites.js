@@ -2,6 +2,8 @@ import { positionTypes } from "../types/types";
 import dayjs from "dayjs";
 import { Fragment } from "react";
 import { Check, Clear } from "@material-ui/icons";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 export const generateRandomString = (length = 4) => {
   const chars =
@@ -67,7 +69,9 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
     compareFunction = sortByDate;
   }
 
-  return collection.sort(compareFunction);
+  const collectionToSort = [...collection];
+
+  return collectionToSort.sort(compareFunction);
 };
 
 const getValuesFromObject = (object) => {
@@ -136,4 +140,118 @@ export const getAColumn = (field, headerName, flex, property) => {
       );
     },
   };
+};
+
+// *********   CLEANUPS *********************
+export const getBranchesSummary = (lastMonthCleanUps = []) => {
+  const defaultBranchData = {
+    daysCleaned: 0,
+    daysNotCleaned: 0,
+    deepCleanUps: 0,
+    operatingRoomCleanUps: 0,
+  };
+
+  const urban = { ...defaultBranchData, branch: "Urban" };
+  const harbor = { ...defaultBranchData, branch: "Harbor" };
+  const montejo = { ...defaultBranchData, branch: "Montejo" };
+
+  const branchesSummary = [urban, harbor, montejo];
+  // get today utc date
+  const today = dayjs().utc(true).startOf("day");
+
+  lastMonthCleanUps.dailyCleanUps.map((dailyCleanUp) => {
+    // check is is from the last seven days
+    if (today.diff(dailyCleanUp.date, "day") < 7) {
+      // compare branch
+      branchesSummary.forEach((branch) => {
+        if (branch.branch === dailyCleanUp.branch) {
+          // check if there are claners
+          if (dailyCleanUp.cleaners.length > 0) {
+            branch.daysCleaned++;
+          } else {
+            branch.daysNotCleaned++;
+          }
+        }
+      });
+    }
+  });
+
+  lastMonthCleanUps.deepCleanUps.map((deepCleanUp) => {
+    branchesSummary.forEach((branch) => {
+      if (branch.branch === deepCleanUp.branch) {
+        // check if there are claners
+        if (deepCleanUp.cleaners.length > 0) {
+          branch.deepCleanUps++;
+        }
+      }
+    });
+  });
+
+  lastMonthCleanUps.operatingRoomCleanUps.map((entry) => {
+    branchesSummary.forEach((branch) => {
+      if (branch.branch === entry.branch) {
+        // check if there are claners
+        if (entry.cleaners.length > 0) {
+          branch.deepCleanUps++;
+        }
+      }
+    });
+  });
+
+  return branchesSummary;
+};
+
+export const getCollaboratorsCleanUpsSummary = (
+  collaborators,
+  lastMonthCleanUps
+) => {
+  const collaboratorsCleanUpsSummary = [...collaborators];
+  collaborators.forEach((collaborator) => {
+    collaborator.cleanUps = [];
+  });
+
+  fillCollaboratorsCleanUps(
+    lastMonthCleanUps.dailyCleanUps,
+    collaboratorsCleanUpsSummary
+  );
+  fillCollaboratorsCleanUps(
+    lastMonthCleanUps.operatingRoomCleanUps,
+    collaboratorsCleanUpsSummary
+  );
+  fillCollaboratorsCleanUps(
+    lastMonthCleanUps.deepCleanUps,
+    collaboratorsCleanUpsSummary
+  );
+
+  const compare = (a, b) => {
+    console.log(a.cleanUps.length - b.cleanUps.length);
+    return b.cleanUps.length - a.cleanUps.length;
+  };
+
+  const sorted = collaboratorsCleanUpsSummary.sort(compare);
+
+  return sorted;
+};
+
+const fillCollaboratorsCleanUps = (cleanUpsCollection, collaborators) => {
+  cleanUpsCollection.map((cleanUp) => {
+    // check if there are claners
+    if (cleanUp.cleaners.length > 0) {
+      // iterate through cleaners and supervisors
+      cleanUp.cleaners.map((cleaner) => {
+        collaborators.forEach((collaborator) => {
+          if (cleaner.cleaner.col_code === collaborator.col_code) {
+            collaborator.cleanUps.push(cleanUp.date);
+          }
+        });
+      });
+      cleanUp.supervisors.map((element) => {
+        collaborators.forEach((collaborator) => {
+          if (element.supervisor.col_code === collaborator.col_code) {
+            collaborator.cleanUps.push(cleanUp.date);
+          }
+        });
+      });
+    }
+  });
 };

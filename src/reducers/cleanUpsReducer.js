@@ -3,6 +3,7 @@
 import { types } from "../types/types";
 
 const initialState = {
+  lastMonthCleanUps: [],
   dailyCleanUps: [],
   deepCleanUps: [],
   operatingRoomCleanUps: [],
@@ -16,6 +17,12 @@ const initialState = {
 
 export const cleanUpsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.lastMonthCleanUpsLoaded:
+      return {
+        ...state,
+        lastMonthCleanUps: action.payload,
+      };
+
     case types.dailyCleanUpsIsLoading:
       return {
         ...state,

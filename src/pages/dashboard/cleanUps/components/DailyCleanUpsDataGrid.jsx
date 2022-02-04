@@ -27,7 +27,10 @@ export const DailyCleanUpsDataGrid = () => {
   }, [dispatch, branch]);
 
   useEffect(() => {
-    setformattedDailyCleanUps(formatAndOrderCollection(dailyCleanUps));
+    console.log("daily", dailyCleanUps);
+    if (dailyCleanUps.length > 0) {
+      setformattedDailyCleanUps(formatAndOrderCollection(dailyCleanUps));
+    }
   }, [dailyCleanUps]);
 
   const handleClean = (id) => {
@@ -138,6 +141,7 @@ export const DailyCleanUpsDataGrid = () => {
           return row._id;
         }}
         rowHeight={40}
+        rowsPerPageOptions={[7, 50, 100]}
       />
     </div>
   );

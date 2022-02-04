@@ -15,6 +15,11 @@ export const CleanUpsLayoutPage = () => {
         {/* TODO */}
         <div className="container-sm d-flex justify-content-center py-1">
           <div className="btn-group" role="group" aria-label="Basic example">
+            <Link to="Summary">
+              <button type="button" className="btn btn-primary mx-2">
+                Summary
+              </button>
+            </Link>
             <Link to="Urban">
               <button type="button" className="btn btn-primary mx-2">
                 Urban

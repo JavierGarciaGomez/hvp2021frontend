@@ -14,6 +14,9 @@ export const types = {
   authLogout: "[auth] logout",
 
   /************* Cleanups *********/
+
+  lastMonthCleanUpsLoaded: "[cleanUps] last month cleanups loaded",
+
   dailyCleanUpsIsLoading: "[cleanUps] daily cleanups is loading",
   dailyCleanUpsLoaded: "[cleanUps] daily cleanups loaded",
 

@@ -48,7 +48,7 @@ export const Sidebar = () => {
                 Colaboradores
               </li>
             </Link>
-            <Link to="/dashboard/cleanups" className="link">
+            <Link to="/dashboard/cleanups/summary" className="link">
               <li className="sidebarListItem">
                 <CleaningServices className="sidebarIcon" />
                 Control de limpieza
