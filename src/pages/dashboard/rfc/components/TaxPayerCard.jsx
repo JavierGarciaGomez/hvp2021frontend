@@ -1,7 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const TaxPayerCard = ({ taxpayer }) => {
-  const { rfc, name, email, phone, address } = taxpayer;
+  const { _id, rfc, name, email, phone, address, notes } = taxpayer;
   return (
     <div className="col-12 col-md-5 bg-default m-3">
       <div class="card-body">
@@ -25,6 +26,13 @@ export const TaxPayerCard = ({ taxpayer }) => {
           <span className="fw-bold">Dirección: </span>
           {address}
         </p>
+        <p>
+          <span className="fw-bold">Notas: </span>
+          {notes}
+        </p>
+        <Link to={`${_id}`}>
+          <button className="btn btn-primary">Editar</button>
+        </Link>
       </div>
     </div>
   );

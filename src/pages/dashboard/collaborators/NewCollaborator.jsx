@@ -115,7 +115,7 @@ export default function NewCollaborator() {
           <div className="newCollaboratorRadio">
             {Object.keys(positionTypes).map((key) => {
               return (
-                <div className="radio__group" key={key}>
+                <div className="radio__group pb-3 pe-1" key={key}>
                   <input
                     type="radio"
                     name="position"
@@ -138,7 +138,7 @@ export default function NewCollaborator() {
           <div className="newCollaboratorRadio">
             {Object.keys(genderTypes).map((key) => {
               return (
-                <div className="radio__group" key={key}>
+                <div className="radio__group pb-3 pe-1" key={key}>
                   <input
                     type="radio"
                     name="gender"
@@ -161,7 +161,7 @@ export default function NewCollaborator() {
           <div className="newCollaboratorRadio">
             {Object.keys(roleTypes).map((key) => {
               return (
-                <div className="radio__group" key={key}>
+                <div className="radio__group pb-3 pe-1" key={key}>
                   <input
                     type="radio"
                     name="role"

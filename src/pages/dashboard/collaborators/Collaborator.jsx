@@ -278,7 +278,7 @@ export default function Collaborator() {
                     <div className="newCollaboratorRadio">
                       {Object.keys(positionTypes).map((key) => {
                         return (
-                          <div className="radio__group" key={key}>
+                          <div className="radio__group pb-3 pe-1" key={key}>
                             <input
                               type="radio"
                               name="position"

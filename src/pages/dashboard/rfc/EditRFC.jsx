@@ -1,57 +1,38 @@
 import React, { Fragment, useMemo, useState } from "react";
-import { InputGroup } from "../../../components/ui/InputGroup";
-import queryString from "query-string";
-
 import { useForm } from "../../../hooks/useForm";
-import { useLocation, useNavigate } from "react-router-dom";
-import { TaxPayerCard } from "./components/TaxPayerCard";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { rfcCreate, rfcStartLoading } from "../../../actions/rfcActions";
+import { rfcDelete, rfcUpdate } from "../../../actions/rfcActions";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const CreateNewRFC = () => {
+export const EditRFC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // get the rfc
+  const { rfcId } = useParams();
   const { allRfc } = useSelector((state) => state.rfc);
-
-  // start loading rfc
-  useEffect(() => {
-    dispatch(rfcStartLoading());
-  }, [dispatch]);
+  const foundedRfc = allRfc.find((rfc) => rfc._id === rfcId);
 
   const { values: newFormValues, handleInputChange: handleFormInputChange } =
-    useForm({
-      rfc: "",
-      name: "",
-      address: "",
-      phone: "",
-      email: "",
-      notes: "",
-    });
+    useForm({ ...foundedRfc });
   const { rfc, name, address, phone, email, notes } = newFormValues;
 
-  const handleSubmit = (e) => {
+  const handleUpdate = (e) => {
     e.preventDefault();
-    dispatch(rfcCreate(newFormValues));
+    dispatch(rfcUpdate(newFormValues));
+    navigate("/dashboard/rfc");
   };
 
-  const [search, setsearch] = useState("");
-
-  const handleSearchChange = (e) => {
-    setsearch(e.target.value);
-    console.log(search);
+  const handleDelete = (e) => {
+    e.preventDefault();
+    dispatch(rfcDelete(newFormValues));
+    navigate("/dashboard/rfc");
   };
-
-  const taxpayers = useMemo(() => {
-    return allRfc.filter((data) =>
-      data.rfc.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-    );
-  }, [search, allRfc]);
 
   return (
     <Fragment>
       <div className="row m-5">
-        <div className="db-rfc__header fs-2 mb-5">Registro de RFC</div>
-        <form onSubmit={handleSubmit}>
+        <div className="db-rfc__header fs-2 mb-5">Actualizar RFC</div>
+        <form onSubmit={handleUpdate}>
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="" className="form-label mb-3">
@@ -131,33 +112,16 @@ export const CreateNewRFC = () => {
                 onChange={handleFormInputChange}
               />
             </div>
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-around">
               <button className="btn btn-primary" type="submit">
-                Registrar
+                Actualizar
+              </button>
+              <button className="btn btn-danger" onClick={handleDelete}>
+                Eliminar
               </button>
             </div>
           </div>
         </form>
-      </div>
-
-      <div className="row m-5">
-        <div className="fs-2 mb-5">Búsqueda de usuarios</div>
-        <form>
-          <input
-            type="text"
-            placeholder="Introduce el RFC"
-            className="form-control"
-            name="searchText"
-            onChange={handleSearchChange}
-          />
-        </form>
-      </div>
-
-      {taxpayers.length === 0 && <div>No hay contribuyentes con ese RFC</div>}
-      <div className="row m-5 d-flex justify-content-around">
-        {taxpayers.map((taxpayer) => (
-          <TaxPayerCard taxpayer={taxpayer} />
-        ))}
       </div>
     </Fragment>
   );

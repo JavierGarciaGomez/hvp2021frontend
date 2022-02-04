@@ -1,6 +1,6 @@
 // 318
 export const types = {
-  // collaborator
+  /************* Collaborator *********/
   collaboratorCreateNew: "[collaborator] add new",
   collaboratorsLoaded: "[collaborator] loaded",
   collaboratorSetActive: "[collaborator] set active",
@@ -8,10 +8,12 @@ export const types = {
   collaboratorIsLoading: "[collaborator] is loading",
   collaboratorFinishedLoading: "[collaborator] finished loading",
 
+  /************* Auth *********/
   authLogin: "[auth] login",
   authCheckingFinish: "[auth] finish checking login state",
   authLogout: "[auth] logout",
 
+  /************* Cleanups *********/
   dailyCleanUpsIsLoading: "[cleanUps] daily cleanups is loading",
   dailyCleanUpsLoaded: "[cleanUps] daily cleanups loaded",
 
@@ -21,6 +23,10 @@ export const types = {
 
   operatingRoomCleanUpsIsLoading: "[cleanups] operating room is loading",
   operatingRoomCleanUpsLoaded: "[cleanups] operating room cleanups loaded",
+
+  /************* RFC *********/
+  rfcIsLoading: "[rfc] rfc is loading",
+  rfcLoaded: "[rfc] rfc is loaded",
 
   /*
   uiOpenModal: "[ui] Open modal",

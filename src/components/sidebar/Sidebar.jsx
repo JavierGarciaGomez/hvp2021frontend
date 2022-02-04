@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { roleTypes } from "../../types/types";
-import { CleaningServices } from "@mui/icons-material";
+import { CleaningServices, Grid3x3 } from "@mui/icons-material";
 
 export const Sidebar = () => {
   const { role } = useSelector((state) => state.auth);
@@ -56,7 +56,7 @@ export const Sidebar = () => {
             </Link>
             <Link to="/dashboard/rfc" className="link">
               <li className="sidebarListItem">
-                <CleaningServices className="sidebarIcon" />
+                <Grid3x3 className="sidebarIcon" />
                 RFC
               </li>
             </Link>
