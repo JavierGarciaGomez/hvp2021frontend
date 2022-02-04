@@ -7,7 +7,10 @@ import {
   operatingRoomCleanUpsStartLoading,
   updateOperatingRoomCleanUp,
 } from "../../../../actions/cleanUpsActions";
-import { convertCollectionDatesToString } from "../../../../helpers/utilites";
+import {
+  convertCollectionDatesToString,
+  formatAndOrderCollection,
+} from "../../../../helpers/utilites";
 import { cleanUpActions } from "../../../../types/types";
 
 export const OperatingRoomCleanUpDataGrid = () => {
@@ -28,7 +31,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
 
   useEffect(() => {
     setformattedOperRoomCleanUps(
-      convertCollectionDatesToString(operatingRoomCleanUps)
+      formatAndOrderCollection(operatingRoomCleanUps)
     );
   }, [operatingRoomCleanUps]);
 

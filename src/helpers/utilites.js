@@ -51,9 +51,20 @@ export const sortCollection = (collection = [], orderCriteria = "position") => {
       return sortOrder.indexOf(a.position) - sortOrder.indexOf(b.position); // Substract indexes, If element `a` comes first in the array, the returned value will be negative, resulting in it being sorted before `b`, and vice versa.
     }
   };
+
+  let sortByDate = (a, b) => {
+    a = dayjs(a.date);
+    b = dayjs(b.date);
+    return -a.diff(b);
+  };
+
   let compareFunction = () => {};
   if (orderCriteria === "position") {
     compareFunction = sortByPosition;
+  }
+
+  if (orderCriteria === "date") {
+    compareFunction = sortByDate;
   }
 
   return collection.sort(compareFunction);
@@ -85,6 +96,13 @@ export const getTextAsJSX = (text = "") => {
     });
 
   return JSXtoReturn;
+};
+
+// receive cleanups and return them with dates to string and ordered by date
+export const formatAndOrderCollection = (collection = []) => {
+  const sortedCollection = sortCollection(collection, "date");
+  const formattedCollection = convertCollectionDatesToString(sortedCollection);
+  return formattedCollection;
 };
 
 export const convertCollectionDatesToString = (collection = []) => {

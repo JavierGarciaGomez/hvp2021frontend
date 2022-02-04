@@ -81,9 +81,10 @@ Medium: 11px
   --primary-color-ti-er: #6e86bb;
   --primary-color-ti-st: #b7c3dd;
 
-  --primary-bgcolor: var(--custom-cyan);
-
   --custom-lightgray: #f1f3f5;
+
+  /* GRAYS */
+  --primary-bg-color: #f1f3f5;
 
   --primaryFont: "Inter";
   --secondaryFont: "Russo One";
@@ -155,6 +156,10 @@ body {
   background-color: var(--custom-lightblue);
 }
 
+.bg-default {
+  background-color: var(--primary-bg-color);
+}
+
 .text-lightgray {
   color: var(--custom-lightgray) !important;
 }
@@ -168,6 +173,17 @@ body {
 
 .a {
   color: inherit;
+}
+
+/**************************/
+/******** Fonts standar *******/
+/**************************/
+
+.form-label,
+.form-control,
+.btn-primary,
+.btn-secondary {
+  font-size: 1.6rem;
 }
 
 /**************************/

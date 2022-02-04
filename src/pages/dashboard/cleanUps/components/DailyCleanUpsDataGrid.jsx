@@ -7,7 +7,10 @@ import {
   updateDailyCleanUp,
   dailyCleanUpsStartLoading,
 } from "../../../../actions/cleanUpsActions";
-import { convertCollectionDatesToString } from "../../../../helpers/utilites";
+import {
+  convertCollectionDatesToString,
+  formatAndOrderCollection,
+} from "../../../../helpers/utilites";
 import { cleanUpActions } from "../../../../types/types";
 
 export const DailyCleanUpsDataGrid = () => {
@@ -24,7 +27,7 @@ export const DailyCleanUpsDataGrid = () => {
   }, [dispatch, branch]);
 
   useEffect(() => {
-    setformattedDailyCleanUps(convertCollectionDatesToString(dailyCleanUps));
+    setformattedDailyCleanUps(formatAndOrderCollection(dailyCleanUps));
   }, [dailyCleanUps]);
 
   const handleClean = (id) => {

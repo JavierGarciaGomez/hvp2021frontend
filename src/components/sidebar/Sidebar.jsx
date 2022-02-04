@@ -54,6 +54,12 @@ export const Sidebar = () => {
                 Control de limpieza
               </li>
             </Link>
+            <Link to="/dashboard/rfc" className="link">
+              <li className="sidebarListItem">
+                <CleaningServices className="sidebarIcon" />
+                RFC
+              </li>
+            </Link>
           </ul>
         </div>
         {/* <div className="sidebarMenu">

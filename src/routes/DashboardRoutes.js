@@ -13,6 +13,7 @@ import Collaborators from "../pages/dashboard/collaborators/Collaborators";
 import NewCollaborator from "../pages/dashboard/collaborators/NewCollaborator";
 import Collaborator from "../pages/dashboard/collaborators/Collaborator";
 import { CleanUpsLayoutPage } from "../pages/dashboard/cleanUps/CleanUpsLayout";
+import { CreateNewRFC } from "../pages/dashboard/rfc/CreateNewRFC";
 
 export const DashboardRoutes = () => {
   return (
@@ -41,6 +42,7 @@ export const DashboardRoutes = () => {
               element={<Collaborator />}
             />
             <Route path="cleanups/*" element={<CleanUpsLayoutPage />} />
+            <Route path="rfc" element={<CreateNewRFC />} />
 
             {/* Cleanups */}
             <Route path="*" element={<Navigate to="home" />} />

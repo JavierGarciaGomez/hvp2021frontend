@@ -15,7 +15,7 @@ export const CleanUpsBranch = () => {
 
   return (
     <Fragment>
-      <div className="container border-top border-primary">
+      <div className="container border-top">
         <div className="row d-flex justify-content-center m-3 align-self-center">
           <div className="col-6 text-center fs-4">
             {`Control de limpieza profunda de ${branch}`}

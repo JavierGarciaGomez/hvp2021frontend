@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
 import {
   convertCollectionDatesToString,
+  formatAndOrderCollection,
   getAColumn,
 } from "../../../../helpers/utilites";
 import { deepCleanUpActivities } from "../../../../types/types";
@@ -25,7 +26,7 @@ export const DeepCleanUpsDataGrid = () => {
   }, [dispatch, branch]);
 
   useEffect(() => {
-    setformattedDeepCleanUps(convertCollectionDatesToString(deepCleanUps));
+    setformattedDeepCleanUps(formatAndOrderCollection(deepCleanUps));
   }, [deepCleanUps]);
 
   const columns = [

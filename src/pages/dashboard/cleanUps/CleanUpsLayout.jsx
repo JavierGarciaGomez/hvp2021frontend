@@ -11,7 +11,7 @@ export const CleanUpsLayoutPage = () => {
     <Fragment>
       <div className="container py-3">
         <h1 className="text-center py-1 fs-2">Control de limpieza</h1>
-        <h3 className="text-center py-1 fs-4">Últimos registros</h3>
+
         {/* TODO */}
         <div className="container-sm d-flex justify-content-center py-1">
           <div className="btn-group" role="group" aria-label="Basic example">
