@@ -1,4 +1,4 @@
-import { positionTypes } from "../types/types";
+import { positionTypes, roleTypes } from "../types/types";
 import dayjs from "dayjs";
 import { Fragment } from "react";
 import { Check, Clear } from "@material-ui/icons";
@@ -254,4 +254,35 @@ const fillCollaboratorsCleanUps = (cleanUpsCollection, collaborators) => {
       });
     }
   });
+};
+
+// return true if the role is the same or above
+export const checkAutorization = (
+  role = roleTypes.guest,
+  requiredAuthorization = roleTypes.admin
+) => {
+  if (requiredAuthorization === roleTypes.admin) {
+    if (role === roleTypes.admin) return true;
+  }
+  if (requiredAuthorization === roleTypes.manager) {
+    if (role === roleTypes.admin || role === roleTypes.manager) return true;
+  }
+  if (requiredAuthorization === roleTypes.collaborator) {
+    if (
+      role === roleTypes.admin ||
+      role === roleTypes.manager ||
+      role === roleTypes.collaborator
+    )
+      return true;
+  }
+  if (requiredAuthorization === roleTypes.user) {
+    if (
+      role === roleTypes.admin ||
+      role === roleTypes.manager ||
+      role === roleTypes.collaborator ||
+      role === roleTypes.user
+    )
+      return true;
+  }
+  return false;
 };

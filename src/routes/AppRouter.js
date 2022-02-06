@@ -1,5 +1,5 @@
 import { CircularProgress, ThemeProvider } from "@material-ui/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import { startChecking } from "../actions/authActions";
@@ -13,6 +13,8 @@ import { DashboardRoutes } from "./DashboardRoutes";
 import { MainPageRouter } from "./MainPageRouter";
 import { createTheme } from "@mui/material/styles";
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
+import { roleTypes } from "../types/types";
+import { checkAutorization } from "../helpers/utilites";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -22,11 +24,16 @@ export const AppRouter = () => {
     },
   });
   const dispatch = useDispatch();
-  const { checking, isAuthenticated } = useSelector((state) => state.auth);
+  const { checking, role } = useSelector((state) => state.auth);
+  const [isCollaborator, setisCollaborator] = useState(false);
 
   useEffect(() => {
     dispatch(startChecking());
   }, [dispatch, checking]);
+
+  useEffect(() => {
+    setisCollaborator(checkAutorization(role, roleTypes.collaborator));
+  }, [role]);
 
   if (checking) {
     return <CircularProgress />;
@@ -36,12 +43,12 @@ export const AppRouter = () => {
     <ThemeProvider theme={theme}>
       <HashRouter>
         <Routes>
-          {isAuthenticated && (
+          {isCollaborator && (
             <Route path="/dashboard/*" element={<DashboardRoutes />}></Route>
           )}
           <Route path="/auth" element={<AuthPage />}></Route>
           <Route path="/auth/:token" element={<AuthPage />}></Route>
-          {<Route path="/clients" element={<ClientWelcome />}></Route>}
+          <Route path="/clients" element={<ClientWelcome />}></Route>
           <Route path="/*" element={<MainPageContainer />}></Route>
           <Route path="/test" element={<TestPage />}></Route>
 
