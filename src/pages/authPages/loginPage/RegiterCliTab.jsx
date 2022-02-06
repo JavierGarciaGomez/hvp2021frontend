@@ -36,7 +36,7 @@ export const RegisterCliTab = () => {
   };
 
   const handleGoogleRegister = (e) => {
-    e.preventDefault();
+    window.open("http://localhost:4000/api/auth/google", "_self");
   };
 
   return (

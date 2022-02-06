@@ -10,7 +10,7 @@ import "../auth.css";
 export const LoginTab = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("here1");
+
   const { isAuthenticated } = useSelector((state) => state.auth);
   // 369
   const { values, handleInputChange } = useForm({
@@ -18,16 +18,12 @@ export const LoginTab = () => {
     password: "",
   });
 
-  console.log("here2");
-
   const { email, password } = values;
 
   useEffect(() => {
-    console.log("here2.5");
     if (isAuthenticated) navigate("/dashboard", { replace: true });
   }, [isAuthenticated]);
 
-  console.log("here3");
   //   TODO
   const handleGoogleLogin = (e) => {
     e.preventDefault();

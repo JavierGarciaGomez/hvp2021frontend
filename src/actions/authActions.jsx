@@ -22,6 +22,8 @@ export const startChecking = () => {
         localStorage.setItem("token-init-date", new Date().getTime());
 
         const { uid, col_code, role, imgUrl } = body;
+
+        console.log("data", body);
         dispatch(
           authLogin({
             uid,

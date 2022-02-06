@@ -12,6 +12,7 @@ import { TestPage } from "../pages/test/TestPage";
 import { DashboardRoutes } from "./DashboardRoutes";
 import { MainPageRouter } from "./MainPageRouter";
 import { createTheme } from "@mui/material/styles";
+import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -39,7 +40,8 @@ export const AppRouter = () => {
             <Route path="/dashboard/*" element={<DashboardRoutes />}></Route>
           )}
           <Route path="/auth" element={<AuthPage />}></Route>
-
+          <Route path="/auth/:token" element={<AuthPage />}></Route>
+          {<Route path="/clients" element={<ClientWelcome />}></Route>}
           <Route path="/*" element={<MainPageContainer />}></Route>
           <Route path="/test" element={<TestPage />}></Route>
 
