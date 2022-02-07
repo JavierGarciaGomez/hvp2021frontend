@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./sidebar.css";
 import {
+  AccessTime,
   AttachMoney,
   BarChart,
   ChatBubbleOutline,
@@ -64,6 +65,12 @@ export const Sidebar = () => {
               <li className="sidebarListItem">
                 <PermIdentity className="sidebarIcon" />
                 Usuarios
+              </li>
+            </Link>
+            <Link to="/dashboard/authLogs" className="link">
+              <li className="sidebarListItem">
+                <AccessTime className="sidebarIcon" />
+                Log de acceso
               </li>
             </Link>
           </ul>

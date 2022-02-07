@@ -38,6 +38,11 @@ export const types = {
   usersIsLoading: "[user] is loading",
   usersFinishedLoading: "[user] finished loading",
 
+  /************* AuthLogs *********/
+  authLogsLoaded: "[authLogs] loaded",
+  authLogsIsLoading: "[authLogs] is loading",
+  authLogsFinishedLoading: "[authLogs] finished loading",
+
   /*
   uiOpenModal: "[ui] Open modal",
   uiCloseModal: "[ui] Close modal",

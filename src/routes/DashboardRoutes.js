@@ -16,6 +16,7 @@ import { CleanUpsLayoutPage } from "../pages/dashboard/cleanUps/CleanUpsLayout";
 import { CreateNewRFC } from "../pages/dashboard/rfc/CreateNewRFC";
 import { EditRFC } from "../pages/dashboard/rfc/EditRFC";
 import "../pages/dashboard/dashboardLayout.css";
+import { AuthLogPage } from "../pages/dashboard/authLogs/AuthLogPage";
 
 export const DashboardRoutes = () => {
   return (
@@ -29,6 +30,7 @@ export const DashboardRoutes = () => {
             {/* HOME */}
             <Route path="home" element={<HomeDashPage />} />
 
+            {/* Users */}
             <Route path="users" element={<Users />} />
             <Route path="users/newUser" element={<NewUser />} />
             <Route path="users/:userId" element={<User />} />
@@ -50,7 +52,10 @@ export const DashboardRoutes = () => {
             <Route path="rfc" element={<CreateNewRFC />} />
             <Route path="rfc/:rfcId" element={<EditRFC />} />
 
-            {/* Cleanups */}
+            {/* AuthLogs */}
+            <Route path="authLogs" element={<AuthLogPage />} />
+
+            {/* Default */}
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>
         </div>

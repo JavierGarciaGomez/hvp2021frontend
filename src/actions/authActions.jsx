@@ -11,6 +11,7 @@ import { genderTypes, roleTypes, types } from "../types/types";
 export const authLogin = (user) => ({ type: types.authLogin, payload: user });
 
 export const startChecking = () => {
+  console.log("start checking");
   return async (dispatch) => {
     try {
       const resp = await fetchConToken("collaborators/renew");

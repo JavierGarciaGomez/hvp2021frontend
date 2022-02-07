@@ -23,7 +23,7 @@ export default function Users() {
 
   useEffect(() => {
     dispatch(usersStartLoading());
-  }, [dispatch, role]);
+  }, [dispatch]);
 
   useEffect(() => {
     setisAuthorizedToDelete(checkAutorization(role, roleTypes.admin));
@@ -73,7 +73,6 @@ export default function Users() {
     },
   ];
 
-  console.log("hey", isLoadingUsers, users);
   if (isLoadingUsers) return <CircularProgress />;
 
   return (

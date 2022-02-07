@@ -1,5 +1,6 @@
 import { useGridReducer } from "@material-ui/data-grid";
 import { combineReducers } from "redux";
+import { authLogReducer } from "./authLogReducer";
 import { authReducer } from "./authReducer";
 import { cleanUpsReducer } from "./cleanUpsReducer";
 import { collaboratorReducer } from "./collaboratorReducer";
@@ -16,4 +17,5 @@ export const rootReducer = combineReducers({
   cleanups: cleanUpsReducer,
   rfc: rfcReducer,
   users: userReducer,
+  authLogs: authLogReducer,
 });
