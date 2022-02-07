@@ -1,8 +1,8 @@
 // 367
 import Swal from "sweetalert2";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
-import { genderTypes, roleTypes, types } from "../types/types";
-import { authLogin } from "./authActions";
+import { types } from "../types/types";
+import { authLogin, startChecking } from "./authActions";
 
 export const collaboratorsStartLoading = (isPublic = true) => {
   return async (dispatch) => {
@@ -20,9 +20,6 @@ export const collaboratorsStartLoading = (isPublic = true) => {
 
       if (body.ok) {
         dispatch(collaboratorsLoaded(body.collaborators));
-        // event.id = body.evento.id;
-        // event.user = { _id: uid, name };
-        // dispatch(eventAddNew(event));
       }
     } catch (error) {
       dispatch(collaboratorsFinishedLoading());
@@ -148,14 +145,9 @@ export const collaboratorStartRegister = (data) => {
         showConfirmButton: false,
         timer: 1500,
       });
-      // localStorage.setItem("token", body.token);
-      // localStorage.setItem("token-init-date", new Date().getTime());
-      // dispatch(
-      //   login({
-      //     uid: body.uid,
-      //     name: body.name,
-      //   })
-      // );
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+      dispatch(startChecking());
     } else {
       Swal.fire("Error", body.msg, "error");
     }

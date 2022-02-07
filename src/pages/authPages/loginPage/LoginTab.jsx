@@ -6,6 +6,7 @@ import { InputGroup } from "../../../components/ui/InputGroup";
 import { useForm } from "../../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
+import { userStartLogin } from "../../../actions/authActions";
 
 export const LoginTab = () => {
   const dispatch = useDispatch();
@@ -24,16 +25,14 @@ export const LoginTab = () => {
     if (isAuthenticated) navigate("/dashboard", { replace: true });
   }, [isAuthenticated]);
 
-  //   TODO
-  const handleGoogleLogin = (e) => {
-    e.preventDefault();
-  };
-
-  // TODO
   const handleLogin = (e) => {
     e.preventDefault();
 
-    dispatch(collaboratorStartLogin({ email, password }));
+    dispatch(userStartLogin({ email, password }));
+  };
+
+  const handleGoogleLogin = (e) => {
+    window.open("http://localhost:4000/api/auth/google", "_self");
   };
 
   return (
@@ -57,7 +56,7 @@ export const LoginTab = () => {
             onChange={handleInputChange}
           />
 
-          <button type="submit" className="btn btn-primary col-12">
+          <button type="submit" className="btn btn-primary col-12 mb-5">
             Submit
           </button>
           {/* TODO */}
@@ -65,7 +64,13 @@ export const LoginTab = () => {
             Forgot <a href="#">password?</a>
           </p> */}
 
-          <div className="google-btn mt-5" onClick={handleGoogleLogin}>
+          <div className="auth__separation mb-3">
+            <div className="auth__separation-line" />
+          </div>
+
+          <p className="mb-3 text-center mb-3">O accede con Google</p>
+
+          <div className="google-btn" onClick={handleGoogleLogin}>
             <div className="google-icon-wrapper">
               <img
                 className="google-icon"
@@ -74,7 +79,7 @@ export const LoginTab = () => {
               />
             </div>
             <p className="btn-text">
-              <b>Sign in with google</b>
+              <b>Accede con google</b>
             </p>
           </div>
         </form>

@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { roleTypes } from "../../types/types";
-import { CleaningServices, Grid3x3 } from "@mui/icons-material";
+import { Badge, CleaningServices, Grid3x3 } from "@mui/icons-material";
 
 export const Sidebar = () => {
   const { role } = useSelector((state) => state.auth);
@@ -44,7 +44,7 @@ export const Sidebar = () => {
             </Link>
             <Link to="/dashboard/collaborators" className="link">
               <li className="sidebarListItem">
-                <PermIdentity className="sidebarIcon" />
+                <Badge className="sidebarIcon" />
                 Colaboradores
               </li>
             </Link>
@@ -58,6 +58,12 @@ export const Sidebar = () => {
               <li className="sidebarListItem">
                 <Grid3x3 className="sidebarIcon" />
                 RFC
+              </li>
+            </Link>
+            <Link to="/dashboard/users" className="link">
+              <li className="sidebarListItem">
+                <PermIdentity className="sidebarIcon" />
+                Usuarios
               </li>
             </Link>
           </ul>
@@ -76,12 +82,6 @@ export const Sidebar = () => {
               <TrendingUp className="sidebarIcon" />
               Sales
             </li>
-            <Link to="/dashboard/users" className="link">
-              <li className="sidebarListItem">
-                <PermIdentity className="sidebarIcon" />
-                Users
-              </li>
-            </Link>
 
             <Link to="/products" className="link">
               <li className="sidebarListItem">

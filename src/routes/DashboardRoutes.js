@@ -8,7 +8,7 @@ import { Sidebar } from "../components/sidebar/Sidebar";
 import { HomeDashPage } from "../pages/dashboard/home/HomeDashPage";
 import NewUser from "../pages/dashboard/users/newUser/NewUser";
 import User from "../pages/dashboard/user/User";
-import UserList from "../pages/dashboard/userList/UserList";
+import Users from "../pages/dashboard/users/newUser/Users";
 import Collaborators from "../pages/dashboard/collaborators/Collaborators";
 import NewCollaborator from "../pages/dashboard/collaborators/NewCollaborator";
 import Collaborator from "../pages/dashboard/collaborators/Collaborator";
@@ -29,7 +29,7 @@ export const DashboardRoutes = () => {
             {/* HOME */}
             <Route path="home" element={<HomeDashPage />} />
 
-            <Route path="users" element={<UserList />} />
+            <Route path="users" element={<Users />} />
             <Route path="users/newUser" element={<NewUser />} />
             <Route path="users/:userId" element={<User />} />
 

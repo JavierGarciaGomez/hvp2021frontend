@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { userStartRegister } from "../../../actions/authActions";
 import { collaboratorStartRegister } from "../../../actions/collaboratorActions";
 
 import { InputGroup } from "../../../components/ui/InputGroup";
@@ -13,12 +14,13 @@ export const RegisterCliTab = () => {
   // 369
   const { values: formRegisterValues, handleInputChange } = useForm({
     name: "",
+    col_code: "",
     email: "",
     password1: "",
     password2: "",
   });
 
-  const { name, email, password1, password2 } = formRegisterValues;
+  const { name, col_code, email, password1, password2 } = formRegisterValues;
 
   // TODO
   const registerHandle = (e) => {
@@ -26,13 +28,14 @@ export const RegisterCliTab = () => {
     if (password1 !== password2) {
       return Swal.fire("Error", "Las contraseñas deben ser iguales", "error");
     }
-    const collaboratorData = {
+    const userData = {
       name,
+      col_code,
       email,
       password: password1,
     };
 
-    // dispatch(collaboratorStartRegister(collaboratorData));
+    dispatch(userStartRegister(userData));
   };
 
   const handleGoogleRegister = (e) => {
@@ -46,22 +49,37 @@ export const RegisterCliTab = () => {
           <div className="google-btn mb-5" onClick={handleGoogleRegister}>
             <div className="google-icon-wrapper">
               <img
-                className="google-icon"
+                className="google-icon mb-5"
                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
                 alt="google button"
               />
             </div>
             <p className="btn-text">
-              <b>Registrarse con Google</b>
+              <b>Regístrate con Google</b>
             </p>
           </div>
 
+          <div className="auth__separation mt-5 mb-3">
+            <div className="auth__separation-line" />
+          </div>
+
+          <p className="mb-3 text-center mb-3">O regístrate con tus datos</p>
+
           <InputGroup
-            label="Nombre"
+            label="Nombre completo"
             type="text"
             placeholder="Ingresa tu nombre"
             name="name"
             value={name}
+            onChange={handleInputChange}
+          />
+
+          <InputGroup
+            label="Nombre de usuario"
+            type="text"
+            placeholder="Ingresa tu nombre"
+            name="col_code"
+            value={col_code}
             onChange={handleInputChange}
           />
 

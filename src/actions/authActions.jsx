@@ -14,7 +14,6 @@ export const startChecking = () => {
   return async (dispatch) => {
     try {
       const resp = await fetchConToken("collaborators/renew");
-
       const body = await resp.json();
 
       if (body.ok) {
@@ -37,6 +36,64 @@ export const startChecking = () => {
       }
     } catch (error) {
       dispatch(checkingFinish());
+    }
+  };
+};
+
+export const userStartLogin = (data) => {
+  return async (dispatch) => {
+    // fetch the data (receive token, uid, colcode, role and imgurl)
+    const resp = await fetchSinToken("auth/", { ...data }, "POST");
+    const body = await resp.json();
+
+    if (body.ok) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Login exitoso",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      // retrieve fetched data
+      const { uid, col_code, role, imgUrl, token } = body;
+      // save in localstorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+
+      // get the body and dispatch
+      dispatch(
+        authLogin({
+          uid,
+          col_code,
+          role,
+          imgUrl,
+        })
+      );
+    } else {
+      Swal.fire("Error", body.msg, "error");
+    }
+  };
+};
+
+export const userStartRegister = (data) => {
+  return async (dispatch) => {
+    const resp = await fetchSinToken("auth/create", { ...data }, "POST");
+    const body = await resp.json();
+
+    if (body.ok) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Usuario creado correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+      dispatch(startChecking());
+    } else {
+      Swal.fire("Error", body.msg, "error");
     }
   };
 };

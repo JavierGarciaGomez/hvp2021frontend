@@ -11,6 +11,28 @@
   background-color: var(--primary-bg-color);
 }
 
+.auth__separation {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.auth__separation-line {
+  height: 0.5px;
+  width: 70%;
+  background-color: var(--primary-color);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 99;
+}
+
 .google-btn {
   cursor: pointer;
 

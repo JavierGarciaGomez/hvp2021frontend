@@ -31,6 +31,13 @@ export const types = {
   rfcIsLoading: "[rfc] rfc is loading",
   rfcLoaded: "[rfc] rfc is loaded",
 
+  /************* User *********/
+  userSetActive: "[User] set active",
+  userUpdate: "[user] update",
+  usersLoaded: "[user] loaded",
+  usersIsLoading: "[user] is loading",
+  usersFinishedLoading: "[user] finished loading",
+
   /*
   uiOpenModal: "[ui] Open modal",
   uiCloseModal: "[ui] Close modal",
