@@ -8,42 +8,50 @@ import { checkAutorization } from "../../../helpers/utilites";
 import { roleTypes } from "../../../types/types";
 
 export const AuthPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const { role } = useSelector((state) => state.auth);
+
   useEffect(() => {
-    const url = `${process.env.REACT_APP_API_URL}/auth/googleLogin/success`;
-    console.log("esta es url", url);
-    const getUser = () => {
-      fetch(`${process.env.REACT_APP_API_URL}/auth/googleLogin/success`, {
-        // mode: "no-cors",
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          // "Access-Control-Allow-Credentials": true,
-        },
-      })
-        .then((response) => {
-          console.log("ESTA ES LA RESPUESTA", response);
-          if (response.status === 200) return response.json();
-          throw new Error("authentication has been failed!");
-        })
-        .then((resObject) => {
-          console.log("POR FAVOR********", resObject);
-          localStorage.setItem("token", resObject.token);
-          localStorage.setItem("token-init-date", new Date().getTime());
-          dispatch(startChecking());
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    getUser();
+    const query = queryString.parse(location.search);
+    if (query.token) {
+      localStorage.setItem("token", query.token);
+    }
   }, []);
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   const url = `${process.env.REACT_APP_API_URL}/auth/googleLogin/success`;
+  //   console.log("esta es url", url);
+  //   const getUser = () => {
+  //     fetch(`${process.env.REACT_APP_API_URL}/auth/googleLogin/success`, {
+  //       // mode: "no-cors",
+  //       method: "GET",
+  //       credentials: "include",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //         "Access-Control-Allow-Credentials": true,
+  //       },
+  //     })
+  //       .then((response) => {
+  //         console.log("ESTA ES LA RESPUESTA", response);
+  //         if (response.status === 200) return response.json();
+  //         throw new Error("authentication has been failed!");
+  //       })
+  //       .then((resObject) => {
+  //         console.log("POR FAVOR********", resObject);
+  //         // localStorage.setItem("token", resObject.token);
+  //         // localStorage.setItem("token-init-date", new Date().getTime());
+  //         dispatch(startChecking());
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   };
+  //   getUser();
+  // }, []);
 
-  const { role } = useSelector((state) => state.auth);
   useEffect(() => {
     if (checkAutorization(role, roleTypes.collaborator)) {
       return navigate("/dashboard", { replace: true });

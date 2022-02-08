@@ -21,9 +21,9 @@ export const LoginTab = () => {
 
   const { email, password } = values;
 
-  useEffect(() => {
-    if (isAuthenticated) navigate("/dashboard", { replace: true });
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (isAuthenticated) navigate("/dashboard", { replace: true });
+  // }, [isAuthenticated]);
 
   const handleLogin = (e) => {
     e.preventDefault();
