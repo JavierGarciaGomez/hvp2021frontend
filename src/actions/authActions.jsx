@@ -291,6 +291,8 @@ const checkingFinish = () => ({ type: types.authCheckingFinish });
 export const startLogout = () => {
   return (dispatch) => {
     localStorage.clear();
+
+    window.open(`${process.env.REACT_APP_API_URL}/auth/logout`, "_self");
     dispatch(logout());
     // clear events
     // dispatch(eventLogout());

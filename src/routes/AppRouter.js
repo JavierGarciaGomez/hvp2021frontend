@@ -27,6 +27,8 @@ export const AppRouter = () => {
   const { checking, role } = useSelector((state) => state.auth);
   const [isCollaborator, setisCollaborator] = useState(false);
 
+  // todo: doing google login
+
   useEffect(() => {
     dispatch(startChecking());
   }, [dispatch, checking]);
