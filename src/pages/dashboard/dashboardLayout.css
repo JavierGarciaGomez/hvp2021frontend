@@ -1,5 +1,198 @@
-.pie-chart-container {
-  height: 20rem;
+/************************************************/
+/************************************************/
+/************** GENERAL *************************/
+/************************************************/
+/************************************************/
+
+.dashboard-main {
+  flex: 9;
+  background-color: rgb(235, 229, 229);
+}
+/* Dashboard */
+.dashboard-bottom-container {
+  display: flex;
+  width: 100%;
+}
+
+/************************************************/
+/************** COMPONENTS **********************/
+/************************************************/
+
+/************** TOPBAR **********************/
+
+.db-topbar {
+  width: 100%;
+  height: 50px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: var(--custom-yellow);
+}
+
+.db-topbar--main-wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.db-topbar--hamb-container {
+  flex: 0;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+.db-topbar--hamb-container:hover {
+  color: white;
+}
+
+.db-topbar--hamb-container svg {
+  font-size: 3.6rem;
+}
+
+.db-topbar--wrapper {
+  flex: 1;
+  height: 100%;
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.db-topbar--logo {
+  font-weight: bold;
+  font-size: 30px;
+  color: darkblue;
+  cursor: pointer;
+}
+
+.db-topbar--topRight {
+  display: flex;
+  align-items: center;
+}
+
+.db-topbar--iconContainer {
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #555;
+}
+
+.db-topbar--topIconBadge {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: -6px;
+  right: 0px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.db-topbar--topAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/****BELOW 544px (Phones)****/
+@media (max-width: 34em) {
+  .db-topbar {
+    position: relative;
+  }
+}
+
+/************** Sidebar **********************/
+
+.db-sidebar {
+  flex: 1;
+  height: calc(100vh - 50px);
+  position: sticky;
+  top: 50px;
+  background-color: white;
+}
+
+.db-sidebar__wrapper {
+  padding: 1rem;
+  color: #555;
+}
+
+.db-sidebar__menu {
+  margin-bottom: 10px;
+}
+
+.db-sidebar__title {
+  font-size: 2.4rem;
+  color: rgb(196, 47, 47);
+}
+
+.db-sidebar__list {
+  list-style: none;
+  padding: 5px;
+}
+
+.db-sidebar__navlink {
+  color: #363636;
+  transition: all 0.5s;
+}
+
+.db-sidebar__navlink.active,
+.db-sidebar__navlink:hover {
+  background-color: #24a1ac;
+  color: white;
+}
+.db-sidebar__listItem {
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  background-color: inherit;
+}
+
+.db-sidebar__listItem.active,
+.db-sidebar__ListItem:hover {
+  /* background-color: #24a1ac; */
+}
+
+.db-sidebar__icon {
+  margin-right: 5px;
+  font-size: 3rem;
+}
+
+/* Sidebar minimized */
+
+.db-sidebar.minimized {
+  flex: none;
+  max-width: 10vw;
+}
+
+.db-sidebar.minimized span {
+  display: none;
+}
+
+.db-sidebar.minimized .db-sidebar__title {
+  display: none;
+}
+
+/* Sidebar closed */
+.db-sidebar.close {
+  display: none;
+}
+
+/************************************************/
+/************************************************/
+/************** HOME    *************************/
+/************************************************/
+/************************************************/
+
+.homeDashPage {
+  margin-top: 10px;
 }
 
 /************************************************/
@@ -24,3 +217,13 @@
   align-items: center;
   gap: 1rem;
 }
+
+.pie-chart-container {
+  height: 20rem;
+}
+
+/************************************************/
+/************************************************/
+/************** QUERYS *************************/
+/************************************************/
+/************************************************/

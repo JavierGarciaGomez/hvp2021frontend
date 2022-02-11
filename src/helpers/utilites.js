@@ -224,7 +224,6 @@ export const getCollaboratorsCleanUpsSummary = (
   );
 
   const compare = (a, b) => {
-    console.log(a.cleanUps.length - b.cleanUps.length);
     return b.cleanUps.length - a.cleanUps.length;
   };
 

@@ -75,23 +75,4 @@
   text-decoration: none;
 }
 
-/* Dashboard */
-.dashboard-bottom-container {
-  display: flex;
-  width: 100%;
-}
-/* Sidebar */
-.sidebar {
-  background-color: white;
-}
-
-.dashboard-main {
-  flex: 7;
-  background-color: rgb(235, 229, 229);
-}
-
 /* HomeDashPage */
-
-.homeDashPage {
-  margin-top: 10px;
-}

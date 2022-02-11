@@ -43,6 +43,12 @@ export const types = {
   authLogsIsLoading: "[authLogs] is loading",
   authLogsFinishedLoading: "[authLogs] finished loading",
 
+  /************* dbUi *********/
+  dbUiMenuToggle: "[dbUI] toggle menu",
+  dbUiSetMenuState: "[dbUI] set menu state",
+  dbUiIsSmallScreen: "[dbUI] is small screen",
+  dbUiSetMenuView: "[dbUI] set menu view",
+
   /*
   uiOpenModal: "[ui] Open modal",
   uiCloseModal: "[ui] Close modal",

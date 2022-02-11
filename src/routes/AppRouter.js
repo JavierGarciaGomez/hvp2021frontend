@@ -9,12 +9,13 @@ import { RegisterColTab } from "../pages/authPages/loginPage/RegisterColTab";
 import { MainPageContainer } from "../pages/mainPages/MainPageContainer";
 import { TestPage } from "../pages/test/TestPage";
 
-import { DashboardRoutes } from "./DashboardRoutes";
+import { DashboardRouter } from "./DashboardRouter";
 import { MainPageRouter } from "./MainPageRouter";
 import { createTheme } from "@mui/material/styles";
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 import { roleTypes } from "../types/types";
 import { checkAutorization } from "../helpers/utilites";
+import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -46,7 +47,7 @@ export const AppRouter = () => {
       <HashRouter>
         <Routes>
           {isCollaborator && (
-            <Route path="/dashboard/*" element={<DashboardRoutes />}></Route>
+            <Route path="/dashboard/*" element={<DashboardLayout />}></Route>
           )}
           <Route path="/auth" element={<AuthPage />}></Route>
           <Route path="/auth/:token" element={<AuthPage />}></Route>

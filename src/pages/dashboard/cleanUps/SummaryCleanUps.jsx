@@ -81,7 +81,6 @@ export const SummaryCleanUps = () => {
       </div>
       <div className="row">
         {collaboratorsSummary.map((data) => {
-          console.log("******************", data);
           return (
             <div key={data.imgUrl} className="col-2 mb-3">
               <img
