@@ -3,8 +3,6 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 import { startLoadingLastMonthCleanUps } from "../../../actions/cleanUpsActions";
 import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
 import {
@@ -12,29 +10,6 @@ import {
   getCollaboratorsCleanUpsSummary,
 } from "../../../helpers/utilites";
 import { CleanUpSummaryBranch } from "./components/CleanUpSummaryBranch";
-import CustomPieChart from "./components/CustomPieChart";
-
-// TODO: delete
-const dummyData = [
-  {
-    col_code: "MAT",
-    imgUrl:
-      "https://res.cloudinary.com/dwalcv9li/image/upload/v1642066370/ql7lbrajibfofkkvoaww.jpg",
-    cleanups: 10,
-  },
-  {
-    col_code: "SDI",
-    imgUrl:
-      "https://res.cloudinary.com/dwalcv9li/image/upload/v1643120186/bgjlirz7vm390sqqhusy.jpg",
-    cleanups: 6,
-  },
-  {
-    col_code: "AAA",
-    imgUrl:
-      "https://res.cloudinary.com/dwalcv9li/image/upload/v1642066370/ql7lbrajibfofkkvoaww.jpg",
-    cleanups: 1,
-  },
-];
 
 export const SummaryCleanUps = () => {
   const dispatch = useDispatch();
@@ -67,7 +42,7 @@ export const SummaryCleanUps = () => {
     <div className="m-5">
       {/* header */}
       <div className="row mb-3 d-flex justify-content-lg-around">
-        <h3 className="mb-4">Resumen del control de limpieza</h3>
+        <h3 className="mb-4">Resumen mensual del control de limpieza</h3>
       </div>
       <div className="row d-flex justify-content-evenly">
         <CleanUpSummaryBranch branch="Urban" data={branchesSummary} />

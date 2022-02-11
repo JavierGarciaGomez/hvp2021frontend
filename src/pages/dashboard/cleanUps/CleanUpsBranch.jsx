@@ -17,7 +17,7 @@ export const CleanUpsBranch = () => {
     <Fragment>
       <div className="container border-top">
         <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-6 text-center fs-4">
+          <div className="col-6 text-center fs-2">
             {`Control de limpieza profunda de ${branch}`}
           </div>
           <div className="col-4 text-start">
@@ -30,13 +30,13 @@ export const CleanUpsBranch = () => {
         </div>
         <DeepCleanUpsDataGrid />
         <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-12 text-center fs-4">
+          <div className="col-12 text-center fs-2">
             {`Control de limpieza diaria de ${branch}`}
           </div>
         </div>
         <DailyCleanUpsDataGrid />
         <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-6 text-center fs-4">
+          <div className="col-6 text-center fs-2">
             {`Control de limpieza de quirófano de ${branch}`}
           </div>
           <div className="col-4 text-start">

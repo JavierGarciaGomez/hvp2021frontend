@@ -1,32 +1,26 @@
-import "./collaborators.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { DeleteOutline } from "@material-ui/icons";
-
 import { Link } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   collaboratorsStartLoading,
   collaboratorDelete,
 } from "../../../actions/collaboratorActions";
-import { userRows } from "../../../data/dummyData";
 import { CircularProgress } from "@material-ui/core";
 import { roleTypes } from "../../../types/types";
 
 export default function Collaborators() {
   const dispatch = useDispatch();
   const { role } = useSelector((state) => state.auth);
-  const [isAdmin, setisAdmin] = useState(false);
-
-  const [data, setData] = useState(userRows);
   const { collaborators, isLoading } = useSelector(
     (state) => state.collaborator
   );
+  const [isAdmin, setisAdmin] = useState(false);
 
+  // load collaborators and set authorizations
   useEffect(() => {
     dispatch(collaboratorsStartLoading(false));
-    console.log(role, roleTypes.admin);
     if (role === roleTypes.admin) {
       setisAdmin(true);
     }
@@ -83,18 +77,12 @@ export default function Collaborators() {
 
   return (
     <Fragment>
-      {/* <div style={{ height: 400, width: "100%" }}>
-        <DataGrid
-          rows={data}
-          disableSelectionOnClick
-          columns={columns}
-          rowsPerPageOptions={[5, 10, 20]}
-          pageSize={10}
-          checkboxSelection
-        />
-      </div> */}
       <h1 className="text-center m-4">Colaboradores</h1>
-      <div style={{ height: "70vh", width: "100%" }}>
+      {/* Display bigger than smaller tablets */}
+      <div
+        className="db-collaborators__datagrid-wrapper"
+        style={{ height: "70vh", width: "100%" }}
+      >
         <DataGrid
           rows={collaborators}
           disableSelectionOnClick
@@ -103,6 +91,48 @@ export default function Collaborators() {
           rowsPerPageOptions={[20, 50, 100]}
           getRowId={(row) => row._id}
         />
+      </div>
+      {/* Display smaller than smaller tablets */}
+      <div className="db-collaborators__cards-wrapper">
+        {/* TODO: do components */}
+        {collaborators.map((collaborator) => {
+          return (
+            <div className="db-collaborators__collaborator-card">
+              <div className="db-collaborators__card-top">
+                <div className="db-collaborators__img-container">
+                  <img
+                    className="db-collaborators__img"
+                    src={collaborator.imgUrl}
+                    alt=""
+                  />
+                </div>
+                <div className="db-collaborators__card-code">
+                  {collaborator.col_code}
+                </div>
+              </div>
+
+              <div className="db-collaborators__card-body">
+                <p>{`${collaborator.first_name} ${collaborator.last_name}`}</p>
+                <p>{collaborator.position}</p>
+                <p>{collaborator.role}</p>
+              </div>
+              <div className="db-collaborators__card-footer">
+                <Link to={`${collaborator._id}`}>
+                  <button className="btn btn-primary db-collaborators__btn">
+                    Ver
+                  </button>
+                </Link>
+                {isAdmin && (
+                  <Link to={`${collaborator._id}`}>
+                    <button className="btn btn-danger db-collaborators__btn">
+                      Eliminar
+                    </button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
       <Link to="newCollaborator">
         <button className="createNewUserButton">

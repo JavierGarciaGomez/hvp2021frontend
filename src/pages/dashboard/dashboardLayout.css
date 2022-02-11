@@ -7,6 +7,7 @@
 .dashboard-main {
   flex: 9;
   background-color: rgb(235, 229, 229);
+  min-height: calc(100vh - 5rem);
 }
 /* Dashboard */
 .dashboard-bottom-container {
@@ -22,7 +23,7 @@
 
 .db-topbar {
   width: 100%;
-  height: 50px;
+  height: 5rem;
   position: sticky;
   top: 0;
   z-index: 999;
@@ -197,6 +198,285 @@
 
 /************************************************/
 /************************************************/
+/************** COLLABORATORS *******************/
+/************************************************/
+/************************************************/
+
+/************************************************/
+/************** COLLABORATORS *******************/
+/************************************************/
+
+.collaboratorsImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.collaboratorsEdit {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #3bb077;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.collaboratorsDelete {
+  color: red;
+  cursor: pointer;
+}
+
+.createNewUserButton {
+  margin: 20px;
+  border: none;
+  padding: 5px;
+  background-color: teal;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+}
+
+/* cards small screen */
+.db-collaborators__cards-wrapper {
+  display: none;
+  margin: 1rem;
+  padding: 2rem;
+
+  /* display: grid; */
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+.db-collaborators__collaborator-card {
+  background-color: var(--primary-bg-color);
+  padding: 1rem;
+  border-radius: 3%;
+
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
+}
+.db-collaborators__card-top {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 3px var(--primary-color) solid;
+  padding-bottom: 1rem;
+}
+
+.db-collaborators__img-container {
+}
+.db-collaborators__img {
+  /* width: 100%; */
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.db-collaborators__card-code {
+  font-size: 3.2rem;
+  font-weight: 300;
+  color: var(--primary-color);
+}
+.db-collaborators__card-body {
+  font-size: 1.6rem;
+}
+.db-collaborators__card-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.db-collaborators__btn {
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+/**************************/
+/* BELOW 704px (Smaller tablets) */
+/**************************/
+
+@media (max-width: 44em) {
+  .db-collaborators__datagrid-wrapper {
+    display: none;
+  }
+
+  .db-collaborators__cards-wrapper {
+    display: grid;
+  }
+}
+
+/************************************************/
+/************** COLLABORATOR *******************/
+/************************************************/
+.db-collaborator {
+  padding: 20px;
+}
+
+.db-collaborator__titleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collaboratorAddButton {
+  width: 80px;
+  border: none;
+  padding: 5px;
+  background-color: teal;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+}
+
+.db-collaborator__container {
+  display: flex;
+  margin-top: 20px;
+  gap: 3.2rem;
+}
+
+.db-collaborator__show {
+  flex: 1;
+  padding: 20px;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+}
+
+.db-collaborator__showTop {
+  display: flex;
+  align-items: center;
+}
+
+.db-collaborator__showImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.db-collaborator__showTopTitle {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.db-collaborator__showUsername {
+  font-weight: 600;
+}
+
+.db-collaborator__showUserTitle {
+  font-weight: 300;
+}
+
+.db-collaborator__showBottom {
+  margin-top: 20px;
+}
+
+.db-collaborator__showTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(175, 170, 170);
+}
+
+.db-collaborator__showInfo {
+  display: flex;
+  align-items: center;
+  margin: 20px 0px;
+  color: #444;
+}
+
+.db-collaborator__showIcon {
+  font-size: 16px !important;
+}
+
+.db-collaborator__showInfoTitle {
+  margin-left: 10px;
+}
+
+.db_collaborator__update {
+  flex: 2;
+  padding: 20px;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+}
+
+.db_collaborator__updateTitle {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.db_collaborator__updateForm {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.db_collaborator__updateItem {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.db_collaborator__updateItem > label {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.db_collaborator__updateInput {
+  border: none;
+  width: 250px;
+  height: 30px;
+  border-bottom: 1px solid gray;
+}
+
+.db_collaborator__updateInputTextArea {
+  width: 100%;
+  height: 30rem;
+
+  border: none;
+  background-color: rgb(221, 221, 221);
+}
+
+.db_collaborator__updateRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.db_collaborator__updateUpload {
+  display: flex;
+  align-items: center;
+}
+
+.db_collaborator__updateImg {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.db_collaborator__updateIcon {
+  cursor: pointer;
+}
+
+.db_collaborator__updateButton {
+  margin-top: 2rem;
+}
+
+@media (max-width: 44em) {
+  .db-collaborator__container {
+    flex-direction: column;
+  }
+}
+
+/************************************************/
+/************************************************/
 /************** CLEANUPS *************************/
 /************************************************/
 /************************************************/
@@ -220,6 +500,78 @@
 
 .pie-chart-container {
   height: 20rem;
+}
+
+/************************************************/
+/************** CleanUps branch *****************/
+/************************************************/
+
+.db-cleanUps__card-wrapper {
+  display: none;
+  margin: 1rem;
+  padding: 2rem;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.db-cleanUps__dailyCard {
+  background-color: var(--primary-bg-color);
+  padding: 1rem;
+  border-radius: 3%;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.db-cleanUps__card-top {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.db-cleanUps__date {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.db-cleanUps__card-text {
+  font-size: 2rem;
+}
+
+.db-cleanUps__img {
+  /* width: 100%; */
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.db-cleanUps__card-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.db-cleanUps__btn {
+  font-size: 1.6rem;
+  width: 100%;
+}
+
+/**************************/
+/* BELOW 704px (Smaller tablets) */
+/**************************/
+
+@media (max-width: 44em) {
+  .db-cleanUps__table-wrapper {
+    display: none;
+  }
+
+  .db-cleanUps__card-wrapper {
+    display: grid;
+  }
 }
 
 /************************************************/

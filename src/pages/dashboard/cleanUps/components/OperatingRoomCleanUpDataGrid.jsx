@@ -1,16 +1,13 @@
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Link } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   operatingRoomCleanUpsStartLoading,
   updateOperatingRoomCleanUp,
 } from "../../../../actions/cleanUpsActions";
-import {
-  convertCollectionDatesToString,
-  formatAndOrderCollection,
-} from "../../../../helpers/utilites";
+import { formatAndOrderCollection } from "../../../../helpers/utilites";
 import { cleanUpActions } from "../../../../types/types";
 
 export const OperatingRoomCleanUpDataGrid = () => {
@@ -133,18 +130,79 @@ export const OperatingRoomCleanUpDataGrid = () => {
     return <p>No hay registros</p>;
   }
   return (
-    <div style={{ height: "300px", width: "100%" }}>
-      <DataGrid
-        rows={formattedOperRoomCleanUps}
-        disableSelectionOnClick
-        columns={columns}
-        pageSize={5}
-        getRowId={(row) => {
-          return row._id;
-        }}
-        rowHeight={40}
-        rowsPerPageOptions={[5, 50, 100]}
-      />
-    </div>
+    <Fragment>
+      <div
+        className="db-cleanUps__table-wrapper"
+        style={{ height: "400px", width: "100%" }}
+      >
+        <DataGrid
+          rows={formattedOperRoomCleanUps}
+          disableSelectionOnClick
+          columns={columns}
+          pageSize={5}
+          getRowId={(row) => {
+            return row._id;
+          }}
+          rowHeight={40}
+          rowsPerPageOptions={[5, 50, 100]}
+        />
+      </div>
+      <div className="db-cleanUps__card-wrapper">
+        {/* TODO: do components */}
+        {formattedOperRoomCleanUps.map((element) => {
+          return (
+            <div className="db-cleanUps__dailyCard">
+              <div className="db-cleanUps__card-top">
+                <h3 className="db-cleanUps__date">{element.date}</h3>
+              </div>
+
+              <div className="db-cleanUps__card-body">
+                <p className="db-cleanUps__card-text">
+                  Limpieza:{" "}
+                  {element.cleaners.map((cleaner, index) => {
+                    return (
+                      <img
+                        className="db-cleanUps__img"
+                        src={cleaner.cleaner?.imgUrl}
+                        alt=""
+                        key={cleaner.cleaner?.imgUrl}
+                      />
+                    );
+                  })}
+                </p>
+                <p className="db-cleanUps__card-text">
+                  Supervisión:{" "}
+                  {element.supervisors.map((supervisor, index) => {
+                    return (
+                      <img
+                        className="db-cleanUps__img"
+                        src={supervisor.supervisor?.imgUrl}
+                        alt=""
+                        key={supervisor.supervisor?.imgUrl}
+                      />
+                    );
+                  })}
+                </p>
+              </div>
+              <div className="db-cleanUps__card-footer">
+                <button
+                  className="btn btn-primary db-cleanUps__btn"
+                  onClick={() => handleClean(element._id)}
+                >
+                  Realicé
+                </button>
+
+                <button
+                  className="btn btn-danger db-cleanUps__btn"
+                  onClick={() => handleSupervise(element._id)}
+                >
+                  Supervisé
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Fragment>
   );
 };
