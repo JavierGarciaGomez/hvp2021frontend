@@ -173,6 +173,11 @@ img {
   background-color: #8a1e00;
 }
 
+.def-par {
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
 /* UTILITIES */
 
 section {
@@ -752,7 +757,7 @@ section {
   border-radius: 2%;
   box-shadow: 0 2.4rem 4.8rem rgba(177, 166, 14, 0.15);
   align-items: center;
-  margin-bottom: 3rem;
+  margin-bottom: 8rem;
 }
 
 .mp-FCM-main__disclaimer-left {
@@ -773,13 +778,185 @@ section {
   line-height: 1.5;
 }
 
+/* exp and function wrapper */
+.mp-FCM-main__expfuncWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 8rem;
+}
+
+.mp-FCM-main__guide {
+  height: 100%;
+  padding: 1.6rem;
+  background-color: var(--primary-bg-color);
+  border-radius: 2%;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: space-evenly;
+}
+
+.mp-FCM-main__secHeading {
+  padding: 0 3rem;
+  color: var(--primary-color-sh-st);
+}
+
+.mp-FCM-main__importance {
+  padding: 1.6rem;
+  background-color: var(--primary-bg-color);
+  border-radius: 2%;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-content: space-between;
+}
+
+.mp-FCM-main__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.mp-FCM-main__listItem {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  line-height: 1.2;
+}
+
+.mp-FCM-main__listItem span {
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+.mp-FCM-main__listIcon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--primary-color);
+  visibility: visible;
+}
+
+/* Links */
+.mp-FCP__links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  margin-bottom: 8rem;
+}
+
+.mp-FCP__link {
+  position: relative;
+  background: url("https://images.unsplash.com/photo-1580467277788-c6e040296602?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+
+  height: 20rem;
+  border-radius: 3%;
+  overflow: hidden;
+}
+
+.mp-FCP__link::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.mp-FCP__link:hover::before {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.mp-FCP__link.general {
+  background: url("http://fcm.mx/wp-content/uploads/2020/03/logo.png");
+  background-position: left center;
+  background-size: cover;
+}
+
+.mp-FCP__link.calc {
+  background: url("https://media.istockphoto.com/photos/hand-of-business-woman-accountant-or-banker-making-calculations-picture-id1177540747?b=1&k=20&m=1177540747&s=170667a&w=0&h=q_8f-DcBOu9hWh6nd92VPa-XQjMox8jm4F3agiurb8U=");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.pedigree {
+  background: url("https://images.unsplash.com/photo-1519150268069-c094cfc0b3c8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHB1cHBpZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.purRac {
+  background: url("https://images.unsplash.com/photo-1592817797597-392e3b878e1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fHB1cHBpZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.regIni {
+  background: url("https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHVwcHl8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.purRacIni {
+  background: url("https://images.unsplash.com/photo-1580467277788-c6e040296602?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.contest {
+  background: url("https://media.istockphoto.com/photos/proud-dog-jumping-over-obstacle-picture-id168253178?b=1&k=20&m=168253178&s=170667a&w=0&h=fNqA_WfT7SpuLwLlF7QHiIE2PFmlVlGa6MUgIHcINyw=");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.regPartner {
+  background: url("https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGFydG5lcnNoaXB8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link.changeOwner {
+  background: url("https://media.istockphoto.com/photos/young-man-is-playing-with-a-dog-and-do-selfie-picture-id1300658241?b=1&k=20&m=1300658241&s=170667a&w=0&h=0lrTViinfnDjbWDgxV0TDDSAXvzSgmrN-pKq0q60hqA=");
+  background-position: center;
+  background-size: cover;
+}
+
+.mp-FCP__link-content {
+  position: absolute;
+  padding: 1rem;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+}
+
+.mp-FCP__link-heading {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-size: 2.4rem;
+  line-height: 1.1;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
 /* BELOW 704px (Smaller tablets) */
-@media (max-width: 44em) {
+@media (max-width: 48em) {
   .mp-FCM-main__disclaimer-left {
     flex: 100%;
 
     display: flex;
     justify-content: center;
+  }
+
+  .mp-FCP__links {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 /* ************************************************************************************************ */
