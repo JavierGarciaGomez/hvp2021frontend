@@ -229,8 +229,21 @@ section {
 }
 
 /**************************/
+/******** GENERAL *********/
+/**************************/
+
+.mp-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+/**************************/
 /******** NAVBAR **********/
 /**************************/
+
+.mp-navbar {
+  height: 6rem;
+}
 
 .navbar a img {
   max-height: 50px;
@@ -571,6 +584,7 @@ section {
 /**************************************** FOOTER  ***************************************************/
 /* ************************************************************************************************ */
 .mainPages-site-footer {
+  margin-top: auto;
   background-color: var(--primary-color-sh-st);
   color: white;
   padding: 0.66em;
@@ -707,6 +721,67 @@ section {
   }
 }
 
+/* ************************************************************************************************ */
+/* *********************************************** FCM  ******************************************* */
+/* ************************************************************************************************ */
+
+.mp-FCM {
+  background-color: var(--primary-color-ti-st);
+  min-height: calc(100vh - 6rem);
+  padding-top: 10rem;
+}
+
+.mp-FCM-main__heading {
+  font-size: 3.6rem;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--primary-color-sh-er);
+}
+
+.mp-FCM-main__header {
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.mp-FCM-main__disclaimer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3.2rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 2%;
+  box-shadow: 0 2.4rem 4.8rem rgba(177, 166, 14, 0.15);
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.mp-FCM-main__disclaimer-left {
+  flex: 0;
+  max-height: 100%;
+}
+
+.mp-FCM-main__logo {
+  max-width: 30rem;
+}
+
+.mp-FCM-main__disclaimer-right {
+  flex: 1;
+}
+
+.mp-FCM-main__disclaimer-text {
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+/* BELOW 704px (Smaller tablets) */
+@media (max-width: 44em) {
+  .mp-FCM-main__disclaimer-left {
+    flex: 100%;
+
+    display: flex;
+    justify-content: center;
+  }
+}
 /* ************************************************************************************************ */
 /* ************************************************************************************************ */
 /**************************************** TEAM PAGE **********************************************/

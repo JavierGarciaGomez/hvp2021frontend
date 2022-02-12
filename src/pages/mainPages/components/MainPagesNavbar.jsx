@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 
 export const MainPagesNavbar = () => {
   return (
-    <nav className="navbar navbar-dark navbar-expand-md fixed-top bg-primary--ti-er">
+    <nav className="mp-navbar navbar navbar-dark navbar-expand-md fixed-top bg-primary--ti-er">
       <div className="container-fluid">
         <Link className="" to="/">
           <img src="assets/imgs/Logo_HVP.png" alt="" />
@@ -76,9 +76,7 @@ export const MainPagesNavbar = () => {
                     <NavLink to="/services/surgery">Cirugías</NavLink>
                   </li>
                   <li>
-                    <NavLink to="/services/FCM">
-                      Registro de camadas FCM
-                    </NavLink>
+                    <NavLink to="/services/FCM">Pedigrí y trámites FCM</NavLink>
                   </li>
                   <li>
                     <NavLink to="/services/insemination">

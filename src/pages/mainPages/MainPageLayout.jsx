@@ -3,16 +3,16 @@ import { Route, Routes } from "react-router-dom";
 import { MainPagesNavbar } from "./components/MainPagesNavbar";
 import { MainPageFooter } from "./components/MainPageFooter";
 import { MainPageRouter } from "../../routes/MainPageRouter";
-import "./mainPageContainer.css";
+import "./mainPageLayout.css";
 
-export const MainPageContainer = () => {
+export const MainPageLayout = () => {
   return (
     <div className="mainPage">
       <MainPagesNavbar />
-      <main className="mainPageContent">
+      <main className="mp-content">
         <MainPageRouter />
+        <MainPageFooter />
       </main>
-      <MainPageFooter />
     </div>
   );
 };

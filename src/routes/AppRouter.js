@@ -6,7 +6,7 @@ import { startChecking } from "../actions/authActions";
 import { AuthPage } from "../pages/authPages/loginPage/AuthPage";
 import { LoginTab } from "../pages/authPages/loginPage/LoginTab";
 import { RegisterColTab } from "../pages/authPages/loginPage/RegisterColTab";
-import { MainPageContainer } from "../pages/mainPages/MainPageContainer";
+import { MainPageLayout } from "../pages/mainPages/MainPageLayout";
 import { TestPage } from "../pages/test/TestPage";
 
 import { DashboardRouter } from "./DashboardRouter";
@@ -52,7 +52,7 @@ export const AppRouter = () => {
           <Route path="/auth" element={<AuthPage />}></Route>
           <Route path="/auth/:token" element={<AuthPage />}></Route>
           <Route path="/clients" element={<ClientWelcome />}></Route>
-          <Route path="/*" element={<MainPageContainer />}></Route>
+          <Route path="/*" element={<MainPageLayout />}></Route>
           <Route path="/test" element={<TestPage />}></Route>
 
           {/* <Route path="*" element={<LoginPage />} /> */}
