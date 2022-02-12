@@ -144,6 +144,7 @@ export const getAColumn = (field, headerName, flex, property) => {
 
 // *********   CLEANUPS *********************
 export const getBranchesSummary = (lastMonthCleanUps = []) => {
+  // format a branchdata
   const defaultBranchData = {
     daysCleaned: 0,
     daysNotCleaned: 0,
@@ -151,29 +152,28 @@ export const getBranchesSummary = (lastMonthCleanUps = []) => {
     operatingRoomCleanUps: 0,
   };
 
+  // add branch to the data
   const urban = { ...defaultBranchData, branch: "Urban" };
   const harbor = { ...defaultBranchData, branch: "Harbor" };
   const montejo = { ...defaultBranchData, branch: "Montejo" };
 
+  // branches summary. Return item
   const branchesSummary = [urban, harbor, montejo];
   // get today utc date
   const today = dayjs().utc(true).startOf("day");
 
   lastMonthCleanUps.dailyCleanUps.map((dailyCleanUp) => {
-    // check is is from the last seven days
-    if (today.diff(dailyCleanUp.date, "day") < 7) {
-      // compare branch
-      branchesSummary.forEach((branch) => {
-        if (branch.branch === dailyCleanUp.branch) {
-          // check if there are claners
-          if (dailyCleanUp.cleaners.length > 0) {
-            branch.daysCleaned++;
-          } else {
-            branch.daysNotCleaned++;
-          }
+    // compare branch
+    branchesSummary.forEach((branch) => {
+      if (branch.branch === dailyCleanUp.branch) {
+        // check if there are claners
+        if (dailyCleanUp.cleaners.length > 0) {
+          branch.daysCleaned++;
+        } else {
+          branch.daysNotCleaned++;
         }
-      });
-    }
+      }
+    });
   });
 
   lastMonthCleanUps.deepCleanUps.map((deepCleanUp) => {
@@ -181,6 +181,7 @@ export const getBranchesSummary = (lastMonthCleanUps = []) => {
       if (branch.branch === deepCleanUp.branch) {
         // check if there are claners
         if (deepCleanUp.cleaners.length > 0) {
+          console.log("este tiene información", deepCleanUp);
           branch.deepCleanUps++;
         }
       }
@@ -192,7 +193,7 @@ export const getBranchesSummary = (lastMonthCleanUps = []) => {
       if (branch.branch === entry.branch) {
         // check if there are claners
         if (entry.cleaners.length > 0) {
-          branch.deepCleanUps++;
+          branch.operatingRoomCleanUps++;
         }
       }
     });
@@ -224,7 +225,6 @@ export const getCollaboratorsCleanUpsSummary = (
   );
 
   const compare = (a, b) => {
-    console.log(a.cleanUps.length - b.cleanUps.length);
     return b.cleanUps.length - a.cleanUps.length;
   };
 

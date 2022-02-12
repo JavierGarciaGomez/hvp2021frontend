@@ -5,11 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
 import {
-  convertCollectionDatesToString,
   formatAndOrderCollection,
   getAColumn,
 } from "../../../../helpers/utilites";
-import { deepCleanUpActivities } from "../../../../types/types";
 
 export const DeepCleanUpsDataGrid = () => {
   const { branch } = useParams();
@@ -108,17 +106,73 @@ export const DeepCleanUpsDataGrid = () => {
     return <p>No hay registros</p>;
   }
   return (
-    <div style={{ height: "300px", width: "100%" }}>
-      <DataGrid
-        rows={formattedDeepCleanUps}
-        disableSelectionOnClick
-        columns={columns}
-        pageSize={5}
-        getRowId={(row) => {
-          return row._id;
-        }}
-        rowHeight={40}
-      />
-    </div>
+    <Fragment>
+      <div
+        className="db-cleanUps__table-wrapper"
+        style={{ height: "400px", width: "100%" }}
+      >
+        <DataGrid
+          rows={formattedDeepCleanUps}
+          disableSelectionOnClick
+          columns={columns}
+          pageSize={5}
+          getRowId={(row) => {
+            return row._id;
+          }}
+          rowHeight={40}
+        />
+      </div>
+      <div className="db-cleanUps__card-wrapper">
+        {/* TODO: do components */}
+        {formattedDeepCleanUps.map((element) => {
+          return (
+            <div className="db-cleanUps__dailyCard">
+              <div className="db-cleanUps__card-top">
+                <h3 className="db-cleanUps__date">{element.date}</h3>
+              </div>
+
+              <div className="db-cleanUps__card-body">
+                <p className="db-cleanUps__card-text">
+                  Limpieza:{" "}
+                  {element.cleaners.map((cleaner, index) => {
+                    return (
+                      <img
+                        className="db-cleanUps__img"
+                        src={cleaner.cleaner?.imgUrl}
+                        alt=""
+                        key={cleaner.cleaner?.imgUrl}
+                      />
+                    );
+                  })}
+                </p>
+                <p className="db-cleanUps__card-text">
+                  Supervisión:{" "}
+                  {element.supervisors.map((supervisor, index) => {
+                    return (
+                      <img
+                        className="db-cleanUps__img"
+                        src={supervisor.supervisor?.imgUrl}
+                        alt=""
+                        key={supervisor.supervisor?.imgUrl}
+                      />
+                    );
+                  })}
+                </p>
+              </div>
+              <div className="db-cleanUps__card-footer">
+                <Link to={`${element._id}`}>
+                  <button
+                    className="btn btn-primary db-cleanUps__btn"
+                    // onClick={() => handleClean(dailyCleanUp._id)}
+                  >
+                    Ver
+                  </button>
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Fragment>
   );
 };

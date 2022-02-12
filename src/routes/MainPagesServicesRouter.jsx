@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
-import { MainPagesNavbar } from "../components/mainPageComponents/common/MainPagesNavbar";
-import { MainPageIndex } from "../pages/mainPages/index/MainPageIndex";
+import { MainPagesNavbar } from "../pages/mainPages/components/MainPagesNavbar";
+import { MainPageIndex } from "../pages/mainPages/MainPageIndex";
+
 import { MainPagesAdvices } from "../pages/mainPages/MainPagesAdvices";
 import { MainPagesServices } from "../pages/mainPages/MainPagesServices";
 import { MainPagesServicesCataractSurgery } from "../pages/mainPages/services/MainPagesServicesCataractSurgery";

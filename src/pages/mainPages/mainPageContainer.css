@@ -217,6 +217,18 @@ section {
 }
 
 /**************************/
+/**** Bootstrap rewrite****/
+/**************************/
+.dropdown-menu {
+  font-size: 1.6rem;
+  background-color: var(--primary-color-ti-st);
+}
+
+.dropdown-menu li {
+  margin-bottom: 1.6rem;
+}
+
+/**************************/
 /******** NAVBAR **********/
 /**************************/
 

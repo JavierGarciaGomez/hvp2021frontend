@@ -1,16 +1,21 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { MainPagesSectionHeader } from "../../../components/mainPageComponents/MainPagesSectionHeader";
-import { useScript } from "../../../hooks/useScript";
-import { MainPageHero } from "../components/MainPageHero";
+
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Leaflet from "leaflet";
 import { useDispatch, useSelector } from "react-redux";
-import { collaboratorsStartLoading } from "../../../actions/collaboratorActions";
+
 import { CircularProgress } from "@material-ui/core";
-import { sortCollaborators, sortCollection } from "../../../helpers/utilites";
+
 import "leaflet/dist/leaflet.css";
-import { CharacteristicCard } from "../components/CharacteristicCard";
+
 import { Link } from "react-router-dom";
+import { MainPageHero } from "./components/MainPageHero";
+
+import { collaboratorsStartLoading } from "../../actions/collaboratorActions";
+import { sortCollection } from "../../helpers/utilites";
+import { CharacteristicCard } from "./components/CharacteristicCard";
+import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
+
 Leaflet.Icon.Default.imagePath = "../node_modules/leaflet";
 
 delete Leaflet.Icon.Default.prototype._getIconUrl;
