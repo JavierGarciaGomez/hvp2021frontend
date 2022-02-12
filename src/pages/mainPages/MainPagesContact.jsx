@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { MainPagesSectionHeader } from "../../components/mainPageComponents/MainPagesSectionHeader";
+import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 const position = [21.019557, -89.613934];

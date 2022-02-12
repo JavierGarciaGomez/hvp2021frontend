@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { MainPagesSectionHeader } from "../../components/mainPageComponents/MainPagesSectionHeader";
+import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 
 export const MainPagesServices = () => {
   return (
@@ -193,7 +193,7 @@ export const MainPagesServices = () => {
                 <img src="assets/imgs/mainPage/services/pedig.jpg" alt="" />
               </div>
               <div className="mp-service__content">
-                <h3> Registro de Camadas FCM </h3>
+                <h3> Trámites FCM </h3>
                 <p>
                   Somos inspectores oficiales de la Federación Canófila Mexicana
                   desde 1996, realizando trámites como el pedigrí, el
@@ -206,7 +206,7 @@ export const MainPagesServices = () => {
                       type="button"
                       className="mainPages-button mainPages-button--sm--light"
                     >
-                      Ver más
+                      Acceda al miniportal
                     </button>
                   </Link>
                 </div>

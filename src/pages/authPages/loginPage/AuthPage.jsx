@@ -1,6 +1,6 @@
 import { AuthTabs } from "./AuthTabs";
 import queryString from "query-string";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { startChecking } from "../../../actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
@@ -96,6 +96,14 @@ export const AuthPage = () => {
     <div className="auth__main">
       <div className="auth__tabContainer">
         <AuthTabs />
+
+        <div className="mt-5 d-flex justify-content-end">
+          <Link to="/">
+            <button className="btn btn-lg btn-primary fs-2">
+              Regresar a la página principal
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );

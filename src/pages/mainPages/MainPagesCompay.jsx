@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { MainPagesSectionHeader } from "../../components/mainPageComponents/MainPagesSectionHeader";
+import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 
 export const MainPagesCompany = () => {
   return (

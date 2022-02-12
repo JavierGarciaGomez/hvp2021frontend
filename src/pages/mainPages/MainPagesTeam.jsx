@@ -2,7 +2,7 @@ import { CircularProgress } from "@material-ui/core";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { collaboratorsStartLoading } from "../../actions/collaboratorActions";
-import { MainPagesSectionHeader } from "../../components/mainPageComponents/MainPagesSectionHeader";
+import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 import {
   convertPlainTextToHtml,
   getTextAsJSX,

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { MainPagesSectionHeader } from "../../../components/mainPageComponents/MainPagesSectionHeader";
+import { MainPagesSectionHeader } from "../components/MainPagesSectionHeader";
 
 export const MainPagesServicesModel = ({ sectionTitle, imgName, content }) => {
   const navigate = useNavigate();
