@@ -114,3 +114,54 @@ export const deepCleanUpActivities = {
   cleanedRefigerator: "Refrigerador limpio y sin residuos o sobrantes",
   everyAreaCleaned: "Limpieza y orden completa de todas las áreas",
 };
+
+export const procedureQuestionsTypes = {
+  puppiesNum: "Cantidad de cachorros",
+  dogsNum: "Cantidad de perros",
+  partnerNum: "Cantidad de socios a inscribir o renovar",
+  olderThan3Months: "Los cachorros son mayores de 3 meses",
+  transfersNum: "Cantidad de transferencias o cambio de propietario",
+};
+
+export const procedureTypes = {
+  pedigree: {
+    title: "Pedigri",
+    value: "pedigree",
+    questions: [
+      procedureQuestionsTypes.puppiesNum,
+      procedureQuestionsTypes.partnerNum,
+      procedureQuestionsTypes.transfersNum,
+      procedureQuestionsTypes.olderThan3Months,
+    ],
+  },
+  racePurity: {
+    title: "Pureza racial",
+    value: "racePurity",
+    concepts: {},
+  },
+  initialRacePurity: {
+    title: "Pureza racial Inicial",
+    value: "initialRacePurity",
+    concepts: {},
+  },
+  initialRegister: {
+    title: "Registro inicial",
+    value: "initialRegister",
+    concepts: {},
+  },
+  contestCertificate: {
+    title: "Certificado para concurso",
+    value: "contestCertificate",
+    concepts: {},
+  },
+  transfer: {
+    title: "Cambio de propietario o transferencia",
+    value: "transfer",
+    concepts: {},
+  },
+  partnership: {
+    title: "Alta o renovación de membresía FCM",
+    value: "partnership",
+    concepts: {},
+  },
+};

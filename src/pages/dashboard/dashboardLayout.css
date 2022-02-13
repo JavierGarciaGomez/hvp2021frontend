@@ -411,8 +411,6 @@
 }
 
 .db_collaborator__updateForm {
-  display: flex;
-  justify-content: space-between;
   margin-top: 20px;
 }
 

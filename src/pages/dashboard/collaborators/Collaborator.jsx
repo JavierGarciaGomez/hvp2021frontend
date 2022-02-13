@@ -246,163 +246,161 @@ export default function Collaborator() {
             Actualiza la información
           </span>
           <form className="db_collaborator__updateForm" onSubmit={handleSubmit}>
-            <div className="db_collaborator__updateLeft">
-              {isManager && (
-                <Fragment>
-                  <div className="db_collaborator__updateUpload">
-                    <img
-                      className="db_collaborator__updateImg"
-                      src={activeCollaborator.imgUrl}
-                      alt=""
+            {isManager && (
+              <Fragment>
+                <div className="db_collaborator__updateUpload">
+                  <img
+                    className="db_collaborator__updateImg"
+                    src={activeCollaborator.imgUrl}
+                    alt=""
+                  />
+                  <label htmlFor="file">
+                    <Publish
+                      className="db_collaborator__updateIcon"
+                      onClick={handlePictureUpload}
+                      type="button"
+                      sx={{ fontSize: 30 }}
                     />
-                    <label htmlFor="file">
-                      <Publish
-                        className="db_collaborator__updateIcon"
-                        onClick={handlePictureUpload}
-                        type="button"
-                        sx={{ fontSize: 30 }}
-                      />
-                    </label>
-                    <input
-                      type="file"
-                      id="file"
-                      style={{ display: "none" }}
-                      onChange={handleFileChange}
-                      name="file"
-                    />
-                  </div>
+                  </label>
+                  <input
+                    type="file"
+                    id="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                    name="file"
+                  />
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Nombre (s)</label>
-                    <input
-                      type="text"
-                      className="db_collaborator__updateInput"
-                      name="first_name"
-                      value={values.first_name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                <div className="db_collaborator__updateItem">
+                  <label>Nombre (s)</label>
+                  <input
+                    type="text"
+                    className="db_collaborator__updateInput"
+                    name="first_name"
+                    value={values.first_name}
+                    onChange={handleInputChange}
+                  />
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Apellidos:</label>
-                    <input
-                      className="db_collaborator__updateInput"
-                      type="text"
-                      name="last_name"
-                      value={values.last_name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                <div className="db_collaborator__updateItem">
+                  <label>Apellidos:</label>
+                  <input
+                    className="db_collaborator__updateInput"
+                    type="text"
+                    name="last_name"
+                    value={values.last_name}
+                    onChange={handleInputChange}
+                  />
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Posición</label>
-                    <div className="newCollaboratorRadio">
-                      {Object.keys(positionTypes).map((key) => {
-                        return (
-                          <div className="radio__group pb-3 pe-1" key={key}>
-                            <input
-                              type="radio"
-                              name="position"
-                              id={key}
-                              value={positionTypes[key]}
-                              checked={values.position === positionTypes[key]}
-                              onChange={handleInputChange}
-                            />
-                            <label htmlFor={key}>
-                              {capitalizeFirstLetter(positionTypes[key])}
-                            </label>
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div className="db_collaborator__updateItem">
+                  <label>Posición</label>
+                  <div className="newCollaboratorRadio">
+                    {Object.keys(positionTypes).map((key) => {
+                      return (
+                        <div className="radio__group pb-3 pe-1" key={key}>
+                          <input
+                            type="radio"
+                            name="position"
+                            id={key}
+                            value={positionTypes[key]}
+                            checked={values.position === positionTypes[key]}
+                            onChange={handleInputChange}
+                          />
+                          <label htmlFor={key}>
+                            {capitalizeFirstLetter(positionTypes[key])}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Género</label>
-                    <div className="newCollaboratorRadio">
-                      {Object.keys(genderTypes).map((key) => {
-                        return (
-                          <div className="radio__group" key={key}>
-                            <input
-                              type="radio"
-                              name="gender"
-                              id={key}
-                              value={genderTypes[key]}
-                              checked={values.gender === genderTypes[key]}
-                              onChange={handleInputChange}
-                            />
-                            <label htmlFor={key}>
-                              {capitalizeFirstLetter(genderTypes[key])}
-                            </label>
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div className="db_collaborator__updateItem">
+                  <label>Género</label>
+                  <div className="newCollaboratorRadio">
+                    {Object.keys(genderTypes).map((key) => {
+                      return (
+                        <div className="radio__group" key={key}>
+                          <input
+                            type="radio"
+                            name="gender"
+                            id={key}
+                            value={genderTypes[key]}
+                            checked={values.gender === genderTypes[key]}
+                            onChange={handleInputChange}
+                          />
+                          <label htmlFor={key}>
+                            {capitalizeFirstLetter(genderTypes[key])}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Rol</label>
-                    <div className="newCollaboratorRadio">
-                      {Object.keys(roleTypes).map((key) => {
-                        return (
-                          <div className="radio__group" key={key}>
-                            <input
-                              type="radio"
-                              name="role"
-                              id={key}
-                              value={roleTypes[key]}
-                              checked={values.role === roleTypes[key]}
-                              onChange={handleInputChange}
-                            />
-                            <label htmlFor={key}>
-                              {capitalizeFirstLetter(roleTypes[key])}
-                            </label>
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div className="db_collaborator__updateItem">
+                  <label>Rol</label>
+                  <div className="newCollaboratorRadio">
+                    {Object.keys(roleTypes).map((key) => {
+                      return (
+                        <div className="radio__group" key={key}>
+                          <input
+                            type="radio"
+                            name="role"
+                            id={key}
+                            value={roleTypes[key]}
+                            checked={values.role === roleTypes[key]}
+                            onChange={handleInputChange}
+                          />
+                          <label htmlFor={key}>
+                            {capitalizeFirstLetter(roleTypes[key])}
+                          </label>
+                        </div>
+                      );
+                    })}
                   </div>
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Activo</label>
-                    <Switch
-                      // checked={values.isActive}
-                      checked={values.isActive}
-                      onChange={handleInputChange}
-                      name="isActive"
-                      inputProps={{ "aria-label": "controlled" }}
-                    />
-                  </div>
+                <div className="db_collaborator__updateItem">
+                  <label>Activo</label>
+                  <Switch
+                    // checked={values.isActive}
+                    checked={values.isActive}
+                    onChange={handleInputChange}
+                    name="isActive"
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </div>
 
-                  <div className="db_collaborator__updateItem">
-                    <label>Se muestra en la web</label>
-                    <Switch
-                      // checked={values.isActive}
-                      checked={values.isDisplayedWeb}
-                      onChange={handleInputChange}
-                      name="isDisplayedWeb"
-                      inputProps={{ "aria-label": "controlled" }}
-                    />
-                  </div>
-                </Fragment>
-              )}
+                <div className="db_collaborator__updateItem">
+                  <label>Se muestra en la web</label>
+                  <Switch
+                    // checked={values.isActive}
+                    checked={values.isDisplayedWeb}
+                    onChange={handleInputChange}
+                    name="isDisplayedWeb"
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                </div>
+              </Fragment>
+            )}
 
-              <div className="db_collaborator__updateItem">
-                <label>Texto de presentación en la web:</label>
-                <textarea
-                  className="db_collaborator__updateInputTextArea"
-                  name="textPresentation"
-                  value={values.textPresentation}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <button
-                className="db_collaborator__updateButton btn btn-primary"
-                type="submit"
-              >
-                Actualizar
-              </button>
+            <div className="db_collaborator__updateItem">
+              <label>Texto de presentación en la web:</label>
+              <textarea
+                className="db_collaborator__updateInputTextArea"
+                name="textPresentation"
+                value={values.textPresentation}
+                onChange={handleInputChange}
+              />
             </div>
+            <button
+              className="db_collaborator__updateButton btn btn-primary"
+              type="submit"
+            >
+              Actualizar
+            </button>
           </form>
         </div>
       </div>

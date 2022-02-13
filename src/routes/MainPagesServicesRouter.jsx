@@ -1,7 +1,8 @@
 import React, { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
 import { MainPagesNavbar } from "../pages/mainPages/components/MainPagesNavbar";
-import { FCMLayout } from "../pages/mainPages/FCM/FCMLayout";
+import { FCMIndex } from "../pages/mainPages/FCM/FCMIndex";
+import { FCMLayout, FCMLayout2 } from "../pages/mainPages/FCM/FCMLayout";
 import { MainPageIndex } from "../pages/mainPages/MainPageIndex";
 
 import { MainPagesAdvices } from "../pages/mainPages/MainPagesAdvices";
@@ -13,11 +14,14 @@ import { MainPagesServicesInsemination } from "../pages/mainPages/services/MainP
 import { MainPagesServicesLaboratory } from "../pages/mainPages/services/MainPagesServicesLaboratory";
 import { MainPagesServicesModel } from "../pages/mainPages/services/MainPagesServicesModel";
 import { MainPagesServicesSurgery } from "../pages/mainPages/services/MainPagesServicesSurgery";
+import { FCMRouter } from "./FCMRouter";
 
 export const MainPageServicesRouter = () => {
   return (
     <Routes>
       <Route path="" element={<MainPagesServices />} />
+      <Route path="FCM" element={<FCMIndex />} />
+      <Route path="FCM/*" element={<FCMLayout />} />
       <Route
         path="consultation"
         element={
@@ -166,7 +170,6 @@ export const MainPageServicesRouter = () => {
         }
       />
 
-      <Route path="FCM" element={<FCMLayout />} />
       <Route
         path="insemination"
         element={

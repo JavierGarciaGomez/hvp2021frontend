@@ -178,6 +178,18 @@ img {
   line-height: 1.5;
 }
 
+.text-lightGray {
+  color: var(--custom-lightgray);
+}
+
+.mb-3r {
+  margin-bottom: 5rem;
+}
+
+.mb-5r {
+  margin-bottom: 5rem;
+}
+
 /* UTILITIES */
 
 section {
@@ -730,22 +742,37 @@ section {
 /* *********************************************** FCM  ******************************************* */
 /* ************************************************************************************************ */
 
+/* *********************************************** Index  ******************************************* */
+
 .mp-FCM {
   background-color: var(--primary-color-ti-st);
   min-height: calc(100vh - 6rem);
   padding-top: 10rem;
 }
 
+.mp-FCM-main__header {
+  width: 60%;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  padding-bottom: 5rem;
+}
+
 .mp-FCM-main__heading {
+  flex: 60%;
   font-size: 3.6rem;
   line-height: 1.1;
   letter-spacing: -0.5px;
   color: var(--primary-color-sh-er);
 }
 
-.mp-FCM-main__header {
-  padding: 2rem;
-  margin-bottom: 3rem;
+.mp-FCM-main__header img {
+  flex: 30%;
+  max-width: 30%;
+  border-radius: 4%;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .mp-FCM-main__disclaimer {
@@ -948,6 +975,10 @@ section {
 
 /* BELOW 704px (Smaller tablets) */
 @media (max-width: 48em) {
+  .mp-FCM-main__header {
+    width: 100%;
+  }
+
   .mp-FCM-main__disclaimer-left {
     flex: 100%;
 
@@ -955,10 +986,121 @@ section {
     justify-content: center;
   }
 
+  .mp-FCM-main__expfuncWrapper {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
   .mp-FCP__links {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* *********************************************** Layout ****************************************** */
+.mp-FCM__showMenu {
+  margin: 0 auto;
+  padding-right: 10rem;
+  margin-bottom: 5rem;
+}
+
+.mp-FCM__section-header {
+  width: 100%;
+}
+
+.mp-FCM__procHeading {
+  padding: 0 3rem;
+  color: var(--primary-color-sh-st);
+  font-size: 3.6rem;
+  text-align: center;
+}
+
+.mp-FCM__secHeadingLine {
+  border-bottom: solid 0.5rem var(--primary-color-sh-er);
+  width: 33%;
+  margin: 0 auto;
+  margin-top: 1rem;
+}
+
+.mp-FCM__section-desc {
+  background-color: var(--primary-color-sh-st);
+  border-radius: 2%;
+  padding: 2rem;
+}
+
+.mp-FCM__section-heading {
+  font-size: 2.4rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.mp-FCM__section-req {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mp-FCM__step {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* for single line flex container */
+  margin-bottom: 4rem;
+}
+.mp-FCM__step-number {
+  margin: 0 auto;
+  flex: 1;
+  font-size: 6rem;
+  font-weight: 600;
+  color: var(--primary-color-sh-er);
+  display: flex;
+  justify-content: center;
+}
+.mp-FCM__step-text-box {
+  flex: 3;
+  line-height: 1.5;
+}
+.mp-FCM__heading-tertiary {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+.mp-FCM__step-description {
+  font-size: 1.8rem;
+}
+.mp-FCM__step-img-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.mp-FCM__step-img {
+  max-height: 10rem;
+}
+
+.mp-FCM__calc-disclaimer {
+  background-color: #d2dcf2;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  font-weight: 300;
+}
+.mp-FCM__calc-disclaimer span {
+  font-weight: 500;
+}
+
+.mp-FCM__calc-questions-container {
+  padding: 0 20rem;
+  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 40%);
+  gap: 2rem;
+}
+
+.mp-FCM__calc-question {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.mp-FCM__calc-input {
+  max-width: 20%;
+}
+
 /* ************************************************************************************************ */
 /* ************************************************************************************************ */
 /**************************************** TEAM PAGE **********************************************/

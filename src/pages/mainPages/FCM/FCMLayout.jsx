@@ -1,182 +1,37 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useScript } from "../../../hooks/useScript";
 import { Check } from "@mui/icons-material";
 import { Link } from "@mui/material";
 import { FCMLink } from "./FCMLink";
+import { FCMHeader } from "./components/FCMHeader";
+import { FCMLinks } from "./components/FCMLinks";
+import { FCMRouter } from "../../../routes/FCMRouter";
 
 export const FCMLayout = () => {
+  const [showMenu, setshowMenu] = useState(false);
+
+  const handleShowMenu = () => {
+    setshowMenu((prevState) => !prevState);
+  };
+
+  const handleHideMenu = () => {
+    setshowMenu(false);
+  };
   // ionicons
 
   return (
     <div className="mp-FCM">
-      <div className="mp-FCM-main__header">
-        <h2 className="mp-FCM-main__heading">
-          Miniportal de trámites de la Federación Canófila Mexicana
-        </h2>
+      <FCMHeader />
+      <div className="mp-FCM__showMenu container">
+        <button
+          className=" btn btn-lg btn-success ms-auto d-block"
+          onClick={handleShowMenu}
+        >
+          Muestra el menú
+        </button>
       </div>
-      {/* disclaimer */}
-      <div className="container">
-        <div className="mp-FCM-main__disclaimer">
-          <div className="mp-FCM-main__disclaimer-left">
-            <a href="https://fcm.mx/">
-              <img
-                className="mp-FCM-main__logo"
-                src="http://fcm.mx/wp-content/uploads/2020/03/logo.png"
-                alt=""
-              />
-            </a>
-          </div>
-
-          <div className="mp-FCM-main__disclaimer-right">
-            <p className="mp-FCM-main__disclaimer-text">
-              Nuestro director médico es médico inspector de la{" "}
-              <span className="fw-bold text-danger">
-                Federación Canófila Mexicana A. C.
-              </span>
-              , la cual es la que emite la información oficial y registra en
-              última instancia los trámites. Con gusto le podemos ayudar en sus
-              dudas, pero para mayor certeza le invitamos a visitar el sitio web
-              de la FCM o bien contactarlos al teléfono &nbsp;
-              <span className="text-muted">555 655 9330</span>.
-            </p>
-            <a href="https://fcm.mx/" className="">
-              <button className="d-block mx-auto btn btn-primary">
-                Visite el sitio oficial
-              </button>
-            </a>
-          </div>
-        </div>
-      </div>
-      {/* Explicación del portal */}
-      <div className="mp-FCM-main__expfuncWrapper container">
-        <div className="mp-FCM-main__explanation container">
-          <div className="mp-FCM-main__guide">
-            <h3 className="mp-FCM-main__secHeading">Funcionamiento</h3>
-            <p className="def-par">
-              Este miniportal tiene por objetivo ser una guía para nuestros
-              clientes con respecto a los trámites de la Federación Canófila
-              Mexicana. Su funcionamiento es muy sencillo, basta con seleccionar
-              el trámite deseado para conocer los procedimientos, requisitos y
-              hacer los cálculos respectivos.
-            </p>
-            <p className="def-par">
-              Cualquier duda al respecto, puede consultarnos vía telefónica o de
-              forma presencial. O bien consultar directamente con la Federación
-              Canófila Mexicana.
-            </p>
-          </div>
-        </div>
-        <div className="mp-FCM-main__importance">
-          <h3 className="mp-FCM-main__secHeading">Ventajas del registro</h3>
-          <ul className="mp-FCM-main__list">
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{
-                  color: "var(--primary-color)",
-                  fontSize: "3.2rem",
-                }}
-              />
-              <span>
-                Contar con su certificado de registro que funciona como acta de
-                nacimiento y como titulo de propiedad y respaldo legal.
-              </span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>
-                Certificar los datos como nombre, raza, color, sexo, número de
-                registro, fecha y lugar de nacimiento
-              </span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>Poder participar en los eventos que programa la FCM</span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>
-                Contar hasta con 3 identificaciones permanentes: registro,
-                microchip y tatuaje
-              </span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>Conocer la línea de sangre.</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      {/* importancia */}
-
-      <div className="mp-FCM-main__links"></div>
-      {/* Acceso al portal */}
-
-      <div className="mp-FCP__links container">
-        <FCMLink
-          link=""
-          classN="general"
-          heading="Inicio"
-          desc="Regresa al inicio del portal."
-        />
-        <FCMLink
-          link=""
-          classN="calc"
-          heading="Calculadora de costos"
-          desc="Con este instrumento podrás calcular el costo de los servicios que requieres."
-        />
-        <FCMLink
-          link=""
-          classN="pedigree"
-          heading="Pedigree (camadas)"
-          desc="Garantiza que pertenece a una raza determinada y que esta está
-                certificada por al menos tres generaciones."
-        />
-        <FCMLink
-          link=""
-          classN="purRac"
-          heading="Pureza racial (camadas)"
-          desc="Certifica que es de determinada raza, en virtud de que al menos uno de sus padres también lo es."
-        />
-        <FCMLink
-          link=""
-          classN="regIni"
-          heading="Registro inicial (individual)"
-          desc="Revisión preliminar de un cachorro que no cuenta con antecedentes y que no cuenta con la edad para obtener un certificado de pureza racial inicial."
-        />
-        <FCMLink
-          link=""
-          classN="purRacIni"
-          heading="Pureza racial inicial (individual)"
-          desc="Certifica que es de determinada raza, pero no cuenta con antecedentes y es mayor a 8 meses."
-        />
-        <FCMLink
-          link=""
-          classN="contest"
-          heading="Certificado para concurso"
-          desc="El trámite tiene por objeto registrar a un perro para que pueda participar en un concurso sin tener en cuenta que tiene alguna determinada raza."
-        />
-        <FCMLink
-          link=""
-          classN="regPartner"
-          heading="Alta o renovación de socios"
-          desc="Dar de alta a un socio o renovar su membresía."
-        />
-        <FCMLink
-          link=""
-          classN="changeOwner"
-          heading="Cambio de propietario o transferencia"
-          desc="Certificar el nuevo propietario para los trámites correspondientes."
-        />
-      </div>
+      {showMenu && <FCMLinks handleHideMenu={handleHideMenu} />}
+      <FCMRouter />
     </div>
   );
 };
