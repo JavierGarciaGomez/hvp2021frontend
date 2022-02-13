@@ -1095,10 +1095,46 @@ section {
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+  align-items: center;
 }
 
 .mp-FCM__calc-input {
   max-width: 20%;
+}
+
+.mp-FCM__calc-table {
+  max-width: 80rem;
+  font-size: 1.6rem;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.mp-FCM__calc-table th,
+.mp-FCM__calc-table td {
+  /* border: 1px solid #343a40; */
+  padding: 0;
+  text-align: left;
+}
+
+.mp-FCM__calc-table thead tr {
+  background-color: var(--primary-color-sh-st);
+  color: #fff;
+}
+
+.mp-FCM__calc-table thead th {
+  width: 13.3%;
+}
+
+.mp-FCM__calc-table thead tr th:nth-child(1) {
+  width: 60%;
+}
+
+.mp-FCM__calc-table tbody tr:nth-child(odd) {
+  background-color: #f8f9fa;
+}
+
+.mp-FCM__calc-table tbody tr:nth-child(even) {
+  background-color: #e9ecef;
 }
 
 /* ************************************************************************************************ */

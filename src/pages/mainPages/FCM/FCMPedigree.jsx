@@ -9,6 +9,7 @@ import {
   Link,
   MenuItem,
   Select,
+  Switch,
   Tooltip,
 } from "@mui/material";
 import { FCMLink } from "./FCMLink";
@@ -20,10 +21,24 @@ import { procedureQuestionsTypes, procedureTypes } from "../../../types/types";
 import { useEffect } from "react";
 import { useState } from "react";
 import { lineHeight } from "@mui/system";
+import { useForm } from "../../../hooks/useForm";
+
+export const initialState = {
+  puppiesNum: 0,
+  dogsNum: 0,
+  partnerNum: 0,
+  olderThan3Months: false,
+  transfersNum: 0,
+};
 
 export const FCMPedigree = () => {
   const [procedure, setProcedure] = useState("");
   const [questions, setquestions] = useState([]);
+
+  const { values, handleInputChange, reset, setFullValues } =
+    useForm(initialState);
+  const { puppiesNum, dogsNum, partnerNum, olderThan3Months, transfersNum } =
+    values;
 
   const handleChange = (event) => {
     setProcedure(event.target.value);
@@ -33,6 +48,8 @@ export const FCMPedigree = () => {
     console.log(procedure, procedureTypes);
     if (procedure !== "") setquestions([procedureTypes[procedure].questions]);
   }, [procedure]);
+
+  console.log(values);
 
   return (
     <div className="container">
@@ -162,6 +179,7 @@ export const FCMPedigree = () => {
               {Object.keys(procedureTypes).map((key) => {
                 return (
                   <MenuItem
+                    key={key}
                     value={procedureTypes[key].value}
                     sx={{ fontSize: "1.6rem" }}
                   >
@@ -173,34 +191,63 @@ export const FCMPedigree = () => {
           </FormControl>
         </div>
 
-        <div className="mp-FCM__calc-form">
+        <div className="mp-FCM__calc-form mb-3r">
           <form>
             <div className="mp-FCM__calc-questions-container">
               <div className="mp-FCM__calc-question">
                 <label htmlFor="" className="mp-FCM__calc-label">
-                  {procedureQuestionsTypes.puppiesNum}
-                </label>
-                <input type="number" className="mp-FCM__calc-input" />
-              </div>
-              <div className="mp-FCM__calc-question">
-                <label htmlFor="" className="mp-FCM__calc-label">
-                  {procedureQuestionsTypes.partnerNum}
-                </label>
-                <input type="number" className="mp-FCM__calc-input" />
-              </div>
-              <div className="mp-FCM__calc-question">
-                <label htmlFor="" className="mp-FCM__calc-label">
-                  {procedureQuestionsTypes.transfersNum}
-                </label>
-                <input type="number" className="mp-FCM__calc-input" />
-              </div>
-              <div className="mp-FCM__calc-question">
-                <label htmlFor="" className="mp-FCM__calc-label">
-                  {procedureQuestionsTypes.olderThan3Months} &nbsp;
+                  {procedureQuestionsTypes.puppiesNum}&nbsp;
                   <Tooltip
                     title={
                       <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
-                        title
+                        Cantidad de cachorros que se van a registrar para
+                        obtener el pedigrí.
+                      </span>
+                    }
+                  >
+                    <Info />
+                  </Tooltip>
+                </label>
+                <input
+                  type="number"
+                  name="puppiesNum"
+                  value={puppiesNum}
+                  onChange={handleInputChange}
+                  className="mp-FCM__calc-input form-control"
+                />
+              </div>
+              <div className="mp-FCM__calc-question">
+                <label htmlFor="" className="mp-FCM__calc-label">
+                  {procedureQuestionsTypes.partnerNum}&nbsp;
+                  <Tooltip
+                    title={
+                      <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
+                        Los propietarios de los padres deben ser, en lo
+                        individual, socios vigentes. En caso de no serlo deberán
+                        abonar su inscripción o renovación.
+                      </span>
+                    }
+                  >
+                    <Info />
+                  </Tooltip>
+                </label>
+                <input
+                  type="number"
+                  name="partnerNum"
+                  value={partnerNum}
+                  onChange={handleInputChange}
+                  className="mp-FCM__calc-input form-control"
+                />
+              </div>
+              <div className="mp-FCM__calc-question">
+                <label htmlFor="" className="mp-FCM__calc-label">
+                  {procedureQuestionsTypes.transfersNum}&nbsp;
+                  <Tooltip
+                    title={
+                      <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
+                        En caso de que existan endosos en los pedigríes de los
+                        padres deberán haberse formalizado ante la FCM. En caso
+                        contrario, deberá abonarse también la transferencia.
                       </span>
                     }
                   >
@@ -210,12 +257,70 @@ export const FCMPedigree = () => {
                 <input
                   type="number"
                   className="mp-FCM__calc-input form-control"
+                  name="transfersNum"
+                  value={transfersNum}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="mp-FCM__calc-question">
+                <label htmlFor="" className="mp-FCM__calc-label">
+                  {procedureQuestionsTypes.olderThan3Months} &nbsp;
+                  <Tooltip
+                    title={
+                      <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
+                        Los cachorros siempre deben ser de ocho meses o menos.
+                        Pero cuando son mayores de tres meses, el costo es
+                        adicional.
+                      </span>
+                    }
+                  >
+                    <Info />
+                  </Tooltip>
+                </label>
+                <Switch
+                  checked={olderThan3Months}
+                  onChange={handleInputChange}
+                  name="olderThan3Months"
+                  inputProps={{ "aria-label": "controlled" }}
                 />
               </div>
             </div>
           </form>
         </div>
-        <div className="mpm-FCM__calc-calculations"></div>
+        <div className="mp-FCM__calc-calculations  mb-3r">
+          <table className="mp-FCM__calc-table">
+            <thead className="mp-FCM__calc-tablehead">
+              <tr>
+                <th>Concepto</th>
+                <th>Cantidad</th>
+                <th>Monto</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <th>
+                  Registro de camadas de 6 semanas a 3 meses de edad por perro
+                  con 3 generaciones
+                </th>
+                <td>7</td>
+                <td>$500.00</td>
+                <td>$3500.00</td>
+              </tr>
+              <tr>
+                <th>
+                  Registro de camadas de 6 semanas a 3 meses de edad por perro
+                  con 3 generaciones
+                </th>
+                <td>7</td>
+                <td>$500.00</td>
+                <td>$3500.00</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="mp-FCM__calc-total"></div>
+        </div>
       </div>
     </div>
   );
