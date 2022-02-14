@@ -5,7 +5,7 @@ import { Logout } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { startLogout } from "../../../../actions/authActions";
 import { toggleMenu } from "../../../../actions/dbUiActions";
 
@@ -32,6 +32,9 @@ export const Topbar = () => {
         </div>
         <div className="db-topbar--wrapper">
           <div className="db-topbar--topLeft">
+            <Link className="" to="/">
+              <img src="assets/imgs/Logo_HVP.png" alt="" />
+            </Link>
             <span className="db-topbar--logo">Admin</span>
           </div>
 

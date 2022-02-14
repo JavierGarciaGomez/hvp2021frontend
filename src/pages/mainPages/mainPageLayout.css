@@ -1112,7 +1112,7 @@ section {
 .mp-FCM__calc-table th,
 .mp-FCM__calc-table td {
   /* border: 1px solid #343a40; */
-  padding: 0;
+  padding: 1.6rem 2.4rem;
   text-align: left;
 }
 
@@ -1135,6 +1135,21 @@ section {
 
 .mp-FCM__calc-table tbody tr:nth-child(even) {
   background-color: #e9ecef;
+}
+
+.mp-FCM__calc-total {
+  display: flex;
+  justify-content: center;
+}
+
+.mp-FCM__calc-totalBox {
+  font-size: 3.6rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 4rem;
 }
 
 /* ************************************************************************************************ */

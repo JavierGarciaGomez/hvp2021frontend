@@ -36,6 +36,17 @@
   height: 100%;
 }
 
+.db-topbar--topLeft {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.db-topbar img {
+  max-height: 5rem;
+  margin-right: 2rem;
+}
+
 .db-topbar--hamb-container {
   flex: 0;
   padding: 0 1rem;

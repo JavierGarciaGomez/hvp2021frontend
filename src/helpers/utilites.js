@@ -1,4 +1,4 @@
-import { positionTypes, roleTypes } from "../types/types";
+import { positionTypes, procedureTypes, roleTypes } from "../types/types";
 import dayjs from "dayjs";
 import { Fragment } from "react";
 import { Check, Clear } from "@material-ui/icons";
@@ -285,4 +285,178 @@ export const checkAutorization = (
       return true;
   }
   return false;
+};
+
+export const getCalcItems = (procedure, recValues) => {
+  let values = { ...recValues };
+
+  if (typeof procedure === "undefined") {
+    return;
+  }
+
+  if (
+    procedure.title === procedureTypes.initialRacePurity.title ||
+    procedure.title === procedureTypes.initialRegister.title ||
+    procedure.title === procedureTypes.contestCertificate.title
+  ) {
+    values.puppiesNum = 1;
+  }
+  if (procedure.title === procedureTypes.initialRacePurity.title) {
+    values.olderThan3Months = true;
+  }
+
+  let calcItems = [];
+
+  // PEDIGREE 6 sem 3 meses
+  if (
+    procedure.title === procedureTypes.pedigree.title &&
+    values.puppiesNum > 0 &&
+    !values.olderThan3Months
+  ) {
+    let item = {
+      text: "Registro de camadas de 6 semanas a 3 meses de edad por perro con 3 generaciones",
+      qty: values.puppiesNum,
+      price: "$600",
+      subtotal: values.puppiesNum * 600,
+    };
+    calcItems.push(item);
+  }
+  // PEDIGREE 3 a 8 meses
+  if (
+    procedure.title === procedureTypes.pedigree.title &&
+    values.puppiesNum > 0 &&
+    values.olderThan3Months
+  ) {
+    let item = {
+      text: "Registro de camadas de 3 a 9 meses de edad por perro con 3 generaciones",
+      qty: values.puppiesNum,
+      price: "$700",
+      subtotal: values.puppiesNum * 700,
+    };
+    calcItems.push(item);
+  }
+
+  // Pureza racial, Pureza racial inicial
+  if (
+    procedure.title === procedureTypes.racePurity.title ||
+    procedure.title === procedureTypes.initialRacePurity.title
+  ) {
+    let item = {
+      text: "Certificado de pureza racial (CPR)",
+      qty: values.puppiesNum,
+      price: "$700",
+      subtotal: values.puppiesNum * 700,
+    };
+    calcItems.push(item);
+  }
+
+  // Registro inicial
+  if (procedure.title === procedureTypes.initialRegister.title) {
+    let item = {
+      text: "Registro inicial (CRI) hasta 6 meses",
+      qty: values.puppiesNum,
+      price: "$700",
+      subtotal: values.puppiesNum * 700,
+    };
+    calcItems.push(item);
+  }
+
+  // Microchip
+
+  if (values.puppiesNum > 0) {
+    let item = {
+      text: "Microchip aplicado por médico inspector",
+      qty: values.puppiesNum,
+      price: "$700",
+      subtotal: values.puppiesNum * 700,
+    };
+    calcItems.push(item);
+  }
+
+  // Tatuajes
+  if (
+    // procedure === procedureTypes.pedigree.value &&
+    values.puppiesNum > 0 &&
+    !values.olderThan3Months
+  ) {
+    let item = {
+      text: "Tatuaje perros de 6 semanas a 3 meses de edad",
+      qty: values.puppiesNum,
+      price: "$500",
+      subtotal: values.puppiesNum * 500,
+    };
+    calcItems.push(item);
+  }
+
+  // Tatuajes
+  if (
+    // procedure === procedureTypes.pedigree.value &&
+    values.puppiesNum > 0 &&
+    values.olderThan3Months
+  ) {
+    let item = {
+      text: "Tatuaje perros mayores de 3 meses de edad",
+      qty: values.puppiesNum,
+      price: "$600",
+      subtotal: values.puppiesNum * 600,
+    };
+    calcItems.push(item);
+  }
+
+  // Sedación
+  if (
+    // procedure === procedureTypes.pedigree.value &&
+    values.puppiesNum > 0 &&
+    values.sedationIsNeeded
+  ) {
+    let item = {
+      text: "Tranquilización para perros que la requieran",
+      qty: values.puppiesNum,
+      price: "$600",
+      subtotal: values.puppiesNum * 400,
+    };
+    calcItems.push(item);
+  }
+
+  // Socios
+  if (values.partnerNum > 0) {
+    let item = {
+      text: "Socio usufructuario cuota anual",
+      qty: values.partnerNum,
+      price: "$900",
+      subtotal: values.partnerNum * 900,
+    };
+    calcItems.push(item);
+  }
+
+  // Transferencias
+  if (values.transfersNum > 0) {
+    let item = {
+      text: "Transferencia cualquier tipo de registro (cambio de propietario)",
+      qty: values.transfersNum,
+      price: "$600",
+      subtotal: values.transfersNum * 600,
+    };
+    calcItems.push(item);
+  }
+
+  // Envío
+  let send = {
+    text: "Envío por mensajería",
+    qty: 1,
+    price: "$900",
+    subtotal: 1 * 900,
+  };
+
+  calcItems.push(send);
+
+  return calcItems;
+};
+
+export const getFCMTotal = (calcItems) => {
+  let total = 0;
+  calcItems.forEach((calcItem) => {
+    total = total + calcItem.subtotal;
+  });
+  return total;
 };
