@@ -277,9 +277,10 @@ section {
   position: relative;
   /* background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(../img/morgana.jpg); */
   background: url("../../../public/assets/imgs/morgana.jpg");
-  background-position: left center;
+
   background-size: cover;
   height: 100vh;
+  background-position: center center;
 }
 
 .mainPages-hero::before {
@@ -329,7 +330,7 @@ section {
   /* display: block; */
 
   max-width: 60%;
-  margin: 8em 2em auto auto;
+  margin: 8rem 2rem auto auto;
   color: white;
   text-align: right;
   font-size: 3rem;
@@ -340,12 +341,13 @@ section {
   font-weight: bolder;
 } */
 
-@media (min-width: 768px) {
+/********** S BELOW 768px (smaller tablets) ********/
+@media (max-width: 48em) {
   .mainPages-hero {
-    background-position: center center;
+    background-position: left center;
   }
-
-  .mainPages-hero--heading {
+  .mainPages-hero p {
+    /* margin: 2rem 2rem auto auto; */
   }
 }
 

@@ -39,7 +39,7 @@ export const Topbar = () => {
           </div>
 
           <div className="db-topbar--topRight">
-            <div className="db-topbar--iconContainer">
+            {/* <div className="db-topbar--iconContainer">
               <NotificationsNone />
               <span className="db-topbar--topIconBadge">2</span>
             </div>
@@ -49,7 +49,7 @@ export const Topbar = () => {
             </div>
             <div className="db-topbar--iconContainer">
               <Settings />
-            </div>
+            </div> */}
             <div className="db-topbar--iconContainer" onClick={handleLogout}>
               <Logout />
             </div>
