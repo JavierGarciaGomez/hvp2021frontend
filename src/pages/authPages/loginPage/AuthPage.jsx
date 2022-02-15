@@ -16,6 +16,7 @@ export const AuthPage = () => {
   useEffect(() => {
     const query = queryString.parse(location.search);
     if (query.token) {
+      console.log("setting token", query.token);
       localStorage.setItem("token", query.token);
     }
   }, []);
@@ -53,6 +54,7 @@ export const AuthPage = () => {
   // }, []);
 
   useEffect(() => {
+    console.log("***********role", role);
     if (checkAutorization(role, roleTypes.collaborator)) {
       return navigate("/dashboard", { replace: true });
     }
