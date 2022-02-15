@@ -917,37 +917,37 @@ section {
   background-size: cover;
 }
 
-.mp-FCP__link.purRac {
+.mp-FCP__link.racePurity {
   background: url("https://images.unsplash.com/photo-1592817797597-392e3b878e1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fHB1cHBpZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
   background-position: center;
   background-size: cover;
 }
 
-.mp-FCP__link.regIni {
+.mp-FCP__link.initialRegister {
   background: url("https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHVwcHl8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
   background-position: center;
   background-size: cover;
 }
 
-.mp-FCP__link.purRacIni {
+.mp-FCP__link.initialRacePurity {
   background: url("https://images.unsplash.com/photo-1580467277788-c6e040296602?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
   background-position: center;
   background-size: cover;
 }
 
-.mp-FCP__link.contest {
+.mp-FCP__link.contestCertificate {
   background: url("https://media.istockphoto.com/photos/proud-dog-jumping-over-obstacle-picture-id168253178?b=1&k=20&m=168253178&s=170667a&w=0&h=fNqA_WfT7SpuLwLlF7QHiIE2PFmlVlGa6MUgIHcINyw=");
   background-position: center;
   background-size: cover;
 }
 
-.mp-FCP__link.regPartner {
+.mp-FCP__link.partnership {
   background: url("https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGFydG5lcnNoaXB8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
   background-position: center;
   background-size: cover;
 }
 
-.mp-FCP__link.changeOwner {
+.mp-FCP__link.transfer {
   background: url("https://media.istockphoto.com/photos/young-man-is-playing-with-a-dog-and-do-selfie-picture-id1300658241?b=1&k=20&m=1300658241&s=170667a&w=0&h=0lrTViinfnDjbWDgxV0TDDSAXvzSgmrN-pKq0q60hqA=");
   background-position: center;
   background-size: cover;
@@ -973,7 +973,7 @@ section {
   margin-bottom: 2rem;
 }
 
-/* BELOW 704px (Smaller tablets) */
+/********** S BELOW 768px (smaller tablets) ********/
 @media (max-width: 48em) {
   .mp-FCM-main__header {
     width: 100%;
@@ -1150,6 +1150,24 @@ section {
   background-color: var(--primary-color);
   color: white;
   padding: 4rem;
+}
+
+/********** S BELOW 768px (smaller tablets) ********/
+@media (max-width: 48em) {
+  .mp-FCM__calc-questions-container {
+    padding: 0;
+    gap: 2rem;
+  }
+
+  .mp-FCM__calc-table th,
+  .mp-FCM__calc-table td {
+    /* border: 1px solid #343a40; */
+    padding: 1rem;
+  }
+
+  .mp-FCM__section-req {
+    width: 90%;
+  }
 }
 
 /* ************************************************************************************************ */

@@ -365,7 +365,6 @@ export default function Collaborator() {
                 <div className="db_collaborator__updateItem">
                   <label>Activo</label>
                   <Switch
-                    // checked={values.isActive}
                     checked={values.isActive}
                     onChange={handleInputChange}
                     name="isActive"

@@ -283,6 +283,13 @@ export const procedureTypes = {
     value: "transfer",
     questions: [
       {
+        name: "partnerNum",
+        question: "Cantidad de socios a inscribir o renovar",
+        tooltip:
+          "El propietario deberá ser socio vigente. En caso de no serlo deberá abonar su inscripción o renovación.",
+        type: "number",
+      },
+      {
         name: "transfersNum",
         question: "Cantidad de transferencias o cambios de propietario",
         tooltip:

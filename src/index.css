@@ -187,38 +187,40 @@ body {
   font-size: 1.6rem;
 }
 
-/**************************/
-/******** GENERAL QUERYS***/
-/**************************/
-/**************************/
-/* BELOW 1344px (Smaller desktops) */
-/**************************/
+/***************************************************/
+/******************** GENERAL QUERYS ***************/
+/***************************************************/
 
-@media (max-width: 84em) {
+/********** XXL ABOVE 1400px (Big desktops) ********/
+
+@media (min-width: 87.5em) {
 }
 
-/**************************/
-/* BELOW 1200px (Landscape Tablets) */
-/**************************/
+/********** XL BELOW 1400px (Smaller desktops) *****/
+
+@media (max-width: 87.5em) {
+}
+
+/********** L BELOW 1200px (Landscape tablets) *****/
 
 @media (max-width: 75em) {
 }
-/****BELOW 944px (Tablets)****/
 
-@media (max-width: 59em) {
+/********** M BELOW 992px (tablets) ****************/
+
+@media (max-width: 62em) {
   html {
     /* 9px / 16px  */
     font-size: 50%;
   }
 }
 
-/**************************/
-/* BELOW 704px (Smaller tablets) */
-/**************************/
-
-@media (max-width: 44em) {
+/********** S BELOW 768px (smaller tablets) ********/
+@media (max-width: 48em) {
 }
 
+/********** X-S BELOW 576px (phones) ***************/
+
 /****BELOW 544px (Phones)****/
-@media (max-width: 34em) {
+@media (max-width: 36em) {
 }

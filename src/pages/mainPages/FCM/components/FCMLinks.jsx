@@ -24,38 +24,38 @@ export const FCMLinks = ({ handleHideMenu }) => {
             certificada por al menos tres generaciones."
       />
       <FCMLink
-        link=""
-        classN="purRac"
+        link="racePurity"
+        classN="racePurity"
         heading="Pureza racial (camadas)"
         desc="Certifica que es de determinada raza, en virtud de que al menos uno de sus padres también lo es."
       />
       <FCMLink
-        link=""
-        classN="regIni"
+        link="initialRegister"
+        classN="initialRegister"
         heading="Registro inicial (individual)"
         desc="Revisión preliminar de un cachorro que no cuenta con antecedentes y que no cuenta con la edad para obtener un certificado de pureza racial inicial."
       />
       <FCMLink
-        link=""
-        classN="purRacIni"
+        link="initialRacePurity"
+        classN="initialRacePurity"
         heading="Pureza racial inicial (individual)"
         desc="Certifica que es de determinada raza, pero no cuenta con antecedentes y es mayor a 8 meses."
       />
       <FCMLink
-        link=""
-        classN="contest"
-        heading="Certificado para concurso"
+        link="contestCertificate"
+        classN="contestCertificate"
+        heading="Certificado para concurso (individual)"
         desc="El trámite tiene por objeto registrar a un perro para que pueda participar en un concurso sin tener en cuenta que tiene alguna determinada raza."
       />
       <FCMLink
-        link=""
-        classN="regPartner"
+        link="partnership"
+        classN="partnership"
         heading="Alta o renovación de socios"
         desc="Dar de alta a un socio o renovar su membresía."
       />
       <FCMLink
-        link=""
-        classN="changeOwner"
+        link="transfer"
+        classN="transfer"
         heading="Cambio de propietario o transferencia"
         desc="Certificar el nuevo propietario para los trámites correspondientes."
       />

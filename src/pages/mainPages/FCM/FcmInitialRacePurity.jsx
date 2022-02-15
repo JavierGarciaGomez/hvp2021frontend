@@ -5,35 +5,33 @@ import { FcmStep } from "./components/FcmStep";
 import { FcmCalculator } from "./components/FcmCalculator";
 import { procedureTypes } from "../../../types/types";
 
-export const FCMPedigree = () => {
+export const FcmInitialRacePurity = () => {
   return (
     <div className="container">
       <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">Pedigrí (camadas)</h3>
+        <h3 className="mp-FCM__procHeading">
+          Pureza racial inicial (individual)
+        </h3>
         <div className="mp-FCM__secHeadingLine"></div>
       </div>
       <div className="mp-FCM__section-desc  mb-5r">
         <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
         <p className="def-par text-white">
-          El trámite para la obtención del pedigrí tiene por objeto garantizar
-          que una camada pertenece a determinada raza y que posee un mínimo de
-          tres generaciones de antepasados de la misma raza cumpliendo un
-          estándar determinado.
+          El trámite para la obtención del certificado de pureza racial inicial
+          tiene por objeto certificar que un perro es de determinada raza, pero
+          que no tiene antecedentes ni propios ni de sus padres en la FCM.
         </p>
       </div>
       <div className="mp-FCM__section-req mb-5r">
         <h4 className="mp-FCM__section-heading">Requisitos</h4>
         <ul className="mp-FCM-main__list">
           {/* todo adjuntar enlace */}
-          <FcmListItem text="Llenar el formato electrónico de certificado de cruza correctamente, a través de este sitio web." />
-          <FcmListItem text="Ambos padres deberán contar con pedigrí. Esto se prueba presentando copia de los pedigrís internacionales (color azul) de la Federación Canófila Mexicana. También se pueden registrar los perros que tengan antecedentes de tres generaciones con certificado de pureza racial." />
-          <FcmListItem text="Los cachorros deberán ser mayores de 6 semanas y menores de 9 meses. En caso contrario, deberá realizarse el trámite de registro extemporáneo." />
-          <FcmListItem text="Los propietarios de ambos padres sean socios vigentes de la FCM. Esto se prueba presentando sus credenciales vigentes. En caso de no serlo deberán darse de alta mediante el procedimiento correspondiente que se puede consultar en este sitio." />
-          <FcmListItem text="Comprobar la identidad del o los propietarios, presentando originales y copias de sus credenciales de elector." />
+          <FcmListItem text="Llenar el formato electrónico de certificado para pureza racial inicial, a través de este sitio web." />
+          <FcmListItem text="El perro debe ser mayor de 8 meses." />
+          <FcmListItem text="El propietario debe ser socio vigente de la FCM. Esto se prueba presentando su credencial vigente. En caso de no serlo deberá darse de alta mediante el procedimiento correspondiente que se puede consultar en este sitio." />
+          <FcmListItem text="Comprobar la identidad del propietario, presentando original y copia de su credencial de elector." />
           <FcmListItem text="Informar del número telefónico para contacto posterior." />
           <FcmListItem text="Informar del correo electrónico para contacto posterior." />
-          <FcmListItem text="Los propietarios de los padres deberán constar en los pedigrís respectivos, en caso de haberse endosado previamente sin haberse formalizado el cambio de propietario ante la FCM, se deberá realizar también el cambio de propietario que se puede consultar en este sitio." />
-          <FcmListItem text="En caso de que se presenten documentos internacionales no expedidos por la FCM, deben venir endosados en el país de origen." />
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
@@ -104,7 +102,7 @@ export const FCMPedigree = () => {
           reverse={false}
         />
       </div>
-      <FcmCalculator recProcedure={procedureTypes.pedigree.value} />
+      <FcmCalculator recProcedure={procedureTypes.initialRacePurity.value} />
     </div>
   );
 };

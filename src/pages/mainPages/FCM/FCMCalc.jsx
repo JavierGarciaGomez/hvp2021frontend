@@ -5,9 +5,14 @@ import { Link } from "@mui/material";
 import { FCMLink } from "./FCMLink";
 import { FCMHeader } from "./components/FCMHeader";
 import { FCMLinks } from "./components/FCMLinks";
+import { FcmCalculator } from "./components/FcmCalculator";
 
 export const FCMCalc = () => {
   // ionicons
 
-  return <div className="mp-FCM">Calculadora</div>;
+  return (
+    <div className="container">
+      <FcmCalculator />
+    </div>
+  );
 };

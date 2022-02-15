@@ -5,35 +5,31 @@ import { FcmStep } from "./components/FcmStep";
 import { FcmCalculator } from "./components/FcmCalculator";
 import { procedureTypes } from "../../../types/types";
 
-export const FCMPedigree = () => {
+export const FcmPartnership = () => {
   return (
     <div className="container">
       <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">Pedigrí (camadas)</h3>
+        <h3 className="mp-FCM__procHeading">Altas y renovaciones de socios</h3>
         <div className="mp-FCM__secHeadingLine"></div>
       </div>
       <div className="mp-FCM__section-desc  mb-5r">
         <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
         <p className="def-par text-white">
-          El trámite para la obtención del pedigrí tiene por objeto garantizar
-          que una camada pertenece a determinada raza y que posee un mínimo de
-          tres generaciones de antepasados de la misma raza cumpliendo un
-          estándar determinado.
+          El trámite tiene por objeto dar de alta a un socio en la FCM o renovar
+          su membresía, lo que resulta obligatorio para realizar cualquiera de
+          los otros trámites referidos en este minisitio.
         </p>
       </div>
       <div className="mp-FCM__section-req mb-5r">
         <h4 className="mp-FCM__section-heading">Requisitos</h4>
         <ul className="mp-FCM-main__list">
           {/* todo adjuntar enlace */}
-          <FcmListItem text="Llenar el formato electrónico de certificado de cruza correctamente, a través de este sitio web." />
-          <FcmListItem text="Ambos padres deberán contar con pedigrí. Esto se prueba presentando copia de los pedigrís internacionales (color azul) de la Federación Canófila Mexicana. También se pueden registrar los perros que tengan antecedentes de tres generaciones con certificado de pureza racial." />
-          <FcmListItem text="Los cachorros deberán ser mayores de 6 semanas y menores de 9 meses. En caso contrario, deberá realizarse el trámite de registro extemporáneo." />
-          <FcmListItem text="Los propietarios de ambos padres sean socios vigentes de la FCM. Esto se prueba presentando sus credenciales vigentes. En caso de no serlo deberán darse de alta mediante el procedimiento correspondiente que se puede consultar en este sitio." />
-          <FcmListItem text="Comprobar la identidad del o los propietarios, presentando originales y copias de sus credenciales de elector." />
+          <FcmListItem text="Llenar el formato electrónico de nuevo socio." />
+          <FcmListItem text="Llenar el formato físico de nuevo socio. El nuevo socio deberá poner únicamente su firma en la credencial y en el resguardo de la FCM y en la parte final deberá poner su nombre completo, dirección (calle, número, colonia, ciudad, estado y CP), teléfono y correo electrónico." />
+          <FcmListItem text="Comprobar la identidad del cliente, presentando original y copia de su credencial de elector." />
+          <FcmListItem text="Comprobar el domicilio del cliente, presentando original y copia de un comprobante domiciliario." />
           <FcmListItem text="Informar del número telefónico para contacto posterior." />
           <FcmListItem text="Informar del correo electrónico para contacto posterior." />
-          <FcmListItem text="Los propietarios de los padres deberán constar en los pedigrís respectivos, en caso de haberse endosado previamente sin haberse formalizado el cambio de propietario ante la FCM, se deberá realizar también el cambio de propietario que se puede consultar en este sitio." />
-          <FcmListItem text="En caso de que se presenten documentos internacionales no expedidos por la FCM, deben venir endosados en el país de origen." />
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
@@ -65,46 +61,39 @@ export const FCMPedigree = () => {
           imgSrc={"veterinarian.png"}
           num="04"
           title="Acude a la cita"
-          desc="Acude a la cita con los documentos requeridos y los cachorros."
+          desc="Acude a la cita con los documentos requeridos."
           reverse={true}
-        />
-        <FcmStep
-          imgSrc={"stethoscope.png"}
-          num="05"
-          title="Inspección"
-          desc="Nuestro médico hará la inspección respectiva, así como la implantación del microchip y el tatuaje. El tatuaje es opcional, pero debe pagarse."
-          reverse={false}
         />
         <FcmStep
           imgSrc={"signature.png"}
-          num="06"
+          num="05"
           title="Firma"
-          desc="Se termina de llenar el formato y se firma por el médico así como por los clientes."
-          reverse={true}
+          desc="Se termina de llenar el formato y se firma por el cliente."
+          reverse={false}
         />
         <FcmStep
           imgSrc={"money.png"}
-          num="07"
+          num="06"
           title="Pago"
           desc="Realiza el pago en nuestra caja."
-          reverse={false}
-        />
-        <FcmStep
-          imgSrc={"package.png"}
-          num="08"
-          title="Envío"
-          desc="Nuestro personal enviará el paquete con los documentos respectivos a la sede de la FCM."
           reverse={true}
         />
         <FcmStep
-          imgSrc={"delivery.png"}
-          num="09"
-          title="Entrega"
-          desc="Cuando recibamos los documentos de la FCM, nos comunicaremos para pasar a recogerlos."
+          imgSrc={"package.png"}
+          num="07"
+          title="Envío"
+          desc="Nuestro personal enviará el paquete con los documentos respectivos a la sede de la FCM."
           reverse={false}
         />
+        <FcmStep
+          imgSrc={"delivery.png"}
+          num="08"
+          title="Entrega"
+          desc="Cuando recibamos los documentos de la FCM, nos comunicaremos para pasar a recogerlos."
+          reverse={true}
+        />
       </div>
-      <FcmCalculator recProcedure={procedureTypes.pedigree.value} />
+      <FcmCalculator recProcedure={procedureTypes.partnership.value} />
     </div>
   );
 };

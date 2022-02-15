@@ -361,6 +361,17 @@ export const getCalcItems = (procedure, recValues) => {
     calcItems.push(item);
   }
 
+  // Registro inicial
+  if (procedure.title === procedureTypes.contestCertificate.title) {
+    let item = {
+      text: "Certificado para concurso",
+      qty: values.puppiesNum,
+      price: "$700",
+      subtotal: values.puppiesNum * 700,
+    };
+    calcItems.push(item);
+  }
+
   // Microchip
 
   if (values.puppiesNum > 0) {

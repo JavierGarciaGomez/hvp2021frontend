@@ -1,26 +1,26 @@
 import React, { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { AddNewDeepCleanup } from "../pages/dashboard/cleanUps/AddNewDeepCleanUp";
-import { CleanUpsBranch } from "../pages/dashboard/cleanUps/CleanUpsBranch";
-import { DeepCleanUpShow } from "../pages/dashboard/cleanUps/DeepCleanUpShow";
-import { SummaryCleanUps } from "../pages/dashboard/cleanUps/SummaryCleanUps";
-import { HomeDashPage } from "../pages/dashboard/home/HomeDashPage";
 import { FCMCalc } from "../pages/mainPages/FCM/FCMCalc";
-import { FCMIndex } from "../pages/mainPages/FCM/FCMIndex";
-import { FCMLayout } from "../pages/mainPages/FCM/FCMLayout";
+import { FcmContestCertificate } from "../pages/mainPages/FCM/FcmContestCertificate";
+import { FcmInitialRacePurity } from "../pages/mainPages/FCM/FcmInitialRacePurity";
+import { FcmInitialRegister } from "../pages/mainPages/FCM/FcmInitialRegister";
+import { FcmPartnership } from "../pages/mainPages/FCM/FcmPartnership";
 import { FCMPedigree } from "../pages/mainPages/FCM/FCMPedigree";
-import { TestPage } from "../pages/test/TestPage";
-
-import { MainPageServicesRouter } from "./MainPagesServicesRouter";
+import { FcmRacePurity } from "../pages/mainPages/FCM/FcmRacePurity";
+import { FcmTransfer } from "../pages/mainPages/FCM/FcmTransfer";
 
 export const FCMRouter = () => {
   return (
     <Routes>
-      {/* <Route path="*" element={<MainPageIndex />} /> */}
-
       <Route path="fcmCalc" element={<FCMCalc />} />
       <Route path="pedigree" element={<FCMPedigree />} />
+      <Route path="racePurity" element={<FcmRacePurity />} />
+      <Route path="initialRacePurity" element={<FcmInitialRacePurity />} />
+      <Route path="initialRegister" element={<FcmInitialRegister />} />
+      <Route path="contestCertificate" element={<FcmContestCertificate />} />
+      <Route path="transfer" element={<FcmTransfer />} />
+      <Route path="partnership" element={<FcmPartnership />} />
     </Routes>
   );
 };

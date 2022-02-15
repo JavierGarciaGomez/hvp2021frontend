@@ -23,8 +23,9 @@ export const initialState = {
   transfersNum: 0,
   sedationIsNeeded: false,
 };
-export const FcmCalculator = () => {
-  const [procedureSelection, setProcedureSelection] = useState("");
+export const FcmCalculator = ({ recProcedure = {} }) => {
+  console.log("recProcedure", recProcedure);
+  const [procedureSelection, setProcedureSelection] = useState(recProcedure);
   const [procedure, setprocedure] = useState({});
 
   const [calcItems, setcalcItems] = useState([]);
