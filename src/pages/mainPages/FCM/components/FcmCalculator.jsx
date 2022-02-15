@@ -24,7 +24,6 @@ export const initialState = {
   sedationIsNeeded: false,
 };
 export const FcmCalculator = ({ recProcedure = {} }) => {
-  console.log("recProcedure", recProcedure);
   const [procedureSelection, setProcedureSelection] = useState(recProcedure);
   const [procedure, setprocedure] = useState({});
 
@@ -48,17 +47,6 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
     setcalcItems(getCalcItems(procedure, values));
   }, [procedure, values]);
 
-  console.log(
-    "DATA",
-    "procedure",
-    procedureSelection,
-    "values",
-    values,
-    "procedure",
-    procedure,
-    "calcitems",
-    calcItems
-  );
   return (
     <div className="mp-FCM__section-calc mb-5r">
       <h4 className="mp-FCM__section-heading">Calculadora de costos</h4>

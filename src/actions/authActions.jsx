@@ -11,7 +11,6 @@ import { genderTypes, roleTypes, types } from "../types/types";
 export const authLogin = (user) => ({ type: types.authLogin, payload: user });
 
 export const startChecking = () => {
-  console.log("start checking");
   return async (dispatch) => {
     try {
       const resp = await fetchConToken("collaborators/renew");
@@ -22,16 +21,6 @@ export const startChecking = () => {
         localStorage.setItem("token-init-date", new Date().getTime());
 
         const { uid, col_code, role, imgUrl } = body;
-
-        console.log("data", body);
-        dispatch(
-          authLogin({
-            uid,
-            col_code,
-            role,
-            imgUrl,
-          })
-        );
       } else {
         dispatch(checkingFinish());
       }

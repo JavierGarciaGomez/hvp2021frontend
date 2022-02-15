@@ -91,8 +91,6 @@ export const DeepCleanUpShow = () => {
       }
     });
 
-    console.log("data que voy a enviar", data);
-
     await dispatch(deepCleanUpUpdate(branch, deepCleanUpId, data));
     navigate(-1);
   };

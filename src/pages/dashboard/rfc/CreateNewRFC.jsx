@@ -38,7 +38,6 @@ export const CreateNewRFC = () => {
 
   const handleSearchChange = (e) => {
     setsearch(e.target.value);
-    console.log(search);
   };
 
   const taxpayers = useMemo(() => {

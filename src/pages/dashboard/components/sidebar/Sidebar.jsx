@@ -29,7 +29,6 @@ export const Sidebar = () => {
 
   const handleNavLinkClick = () => {
     if (isSmallScreen) {
-      console.log("is small", isSmallScreen);
       dispatch(setMenuState(false));
     }
   };

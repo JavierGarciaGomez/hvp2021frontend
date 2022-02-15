@@ -3,11 +3,9 @@
 import { useState } from "react";
 
 export const useForm = (initialState = {}) => {
-  console.log("++++++++++++", initialState);
   const [values, setValues] = useState(initialState);
 
   const reset = () => {
-    console.log("initialState", initialState);
     setValues(initialState);
   };
 

@@ -181,7 +181,6 @@ export const getBranchesSummary = (lastMonthCleanUps = []) => {
       if (branch.branch === deepCleanUp.branch) {
         // check if there are claners
         if (deepCleanUp.cleaners.length > 0) {
-          console.log("este tiene información", deepCleanUp);
           branch.deepCleanUps++;
         }
       }
