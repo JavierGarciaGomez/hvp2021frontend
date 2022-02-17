@@ -12,6 +12,7 @@ import { CleanUpsLayoutPage } from "../pages/dashboard/cleanUps/CleanUpsLayout";
 import { CreateNewRFC } from "../pages/dashboard/rfc/CreateNewRFC";
 import { EditRFC } from "../pages/dashboard/rfc/EditRFC";
 import { AuthLogPage } from "../pages/dashboard/authLogs/AuthLogPage";
+import { ActivityRegisterCol } from "../pages/dashboard/activityRegister/ActivityRegisterCol";
 
 export const DashboardRouter = () => {
   return (
@@ -40,6 +41,9 @@ export const DashboardRouter = () => {
 
       {/* AuthLogs */}
       <Route path="authLogs" element={<AuthLogPage />} />
+
+      {/* Activity Register */}
+      <Route path="activityRegister" element={<ActivityRegisterCol />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />
