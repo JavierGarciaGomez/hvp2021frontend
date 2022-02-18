@@ -470,3 +470,6 @@ export const getFCMTotal = (calcItems) => {
   });
   return total;
 };
+
+export const getKeyByValue = (object, value) =>
+  Object.keys(object).find((key) => object[key] === value);

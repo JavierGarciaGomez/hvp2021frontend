@@ -1,0 +1,226 @@
+/* inter font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap"); */
+
+/*
+--- 01 TYPOGRAPHY SYSTEM
+
+- Font sizes (px)
+10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98
+
+- Font weights
+Default: 400
+Medium: 500
+Semi-bold: 600
+Bold: 700
+
+- Line heights
+Default: 1
+Small: 1.05
+Medium: 1.2
+Paragraph default: 1.6
+Large: 1.8
+
+- Letter spacing
+-0.5px
+0.75px
+
+--- 02 COLORS
+
+- Primary: #e67e22
+- Tints:
+#fdf2e9
+#fae5d3
+#eb984e
+
+- Shades: 
+#cf711f
+#45260a
+
+- Accents:
+- Greys
+
+#888
+#767676 (lightest grey allowed on #fff)
+#6f6f6f (lightest grey allowed on #fdf2e9)
+#555
+#333
+
+--- 05 SHADOWS
+
+0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+
+--- 06 BORDER-RADIUS
+
+Default: 9px
+Medium: 11px
+
+--- 07 WHITESPACE
+
+- Spacing system (px)
+2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+*/
+
+:root {
+  /* all colors */
+  --custom-cyan: #44d9e6;
+  --custom-yellow: #ffbd4a;
+  --custom-orange: #ff5b5b;
+  --custom-darkblue: #0e368d;
+  --custom-lightblue: #5583a7;
+  --custom-gray: #afafaf;
+
+  /* chosen colors */
+  --primary-color: var(--custom-darkblue);
+  /* shades */
+  --primary-color-sh-er: #0b2b71;
+  --primary-color-sh-st: #082055;
+  /* tints */
+  --primary-color-ti-er: #6e86bb;
+  --primary-color-ti-st: #b7c3dd;
+
+  --custom-lightgray: #f1f3f5;
+
+  /* GRAYS */
+  --primary-bg-color: #f1f3f5;
+
+  --primaryFont: "Inter";
+  --secondaryFont: "Russo One";
+  --fontPTSans: "PT Sans";
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+body {
+  font-family: var(--primaryFont), sans-serif;
+  line-height: 1;
+  font-weight: 400;
+  color: #555;
+  font-size: 1.6rem;
+}
+
+/* html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  
+} */
+
+/* body {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+
+/* app container */
+/* .app-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+} */
+
+/* LoginPage */
+
+/**************************/
+/* GENRAL REUSABLE COMPONENTS */
+/**************************/
+
+/**************************/
+/******** UTILITIES *******/
+/**************************/
+
+.bg-light-blue {
+  background-color: var(--custom-lightblue);
+}
+
+.bg-default {
+  background-color: var(--primary-bg-color);
+}
+
+.text-lightgray {
+  color: var(--custom-lightgray) !important;
+}
+
+/* inherit color */
+.navbar-dark,
+.navbar-nav,
+.nav-link {
+  color: inherit;
+}
+
+.a {
+  color: inherit;
+}
+
+/**************************/
+/******** Fonts standar *******/
+/**************************/
+
+.btn,
+.form-label,
+.form-control,
+.btn-primary,
+.btn-secondary {
+  font-size: 1.6rem;
+}
+
+/***************************************************/
+/******************** GENERAL QUERYS ***************/
+/***************************************************/
+
+/********** XXL ABOVE 1400px (Big desktops) ********/
+
+@media (min-width: 87.5em) {
+}
+
+/********** XL BELOW 1400px (Smaller desktops) *****/
+
+@media (max-width: 87.5em) {
+}
+
+/********** L BELOW 1200px (Landscape tablets) *****/
+
+@media (max-width: 75em) {
+}
+
+/********** M BELOW 992px (tablets) ****************/
+
+@media (max-width: 62em) {
+  html {
+    /* 9px / 16px  */
+    font-size: 50%;
+  }
+}
+
+/********** S BELOW 768px (smaller tablets) ********/
+@media (max-width: 48em) {
+}
+
+/********** X-S BELOW 576px (phones) ***************/
+
+/****BELOW 544px (Phones)****/
+@media (max-width: 36em) {
+}

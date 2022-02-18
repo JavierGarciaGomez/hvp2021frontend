@@ -1,0 +1,136 @@
+.heading--secondary {
+  font-size: 3.2rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.heading--tertiary {
+  font-size: 2.4rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.mt-1r {
+  margin-top: 1rem;
+}
+
+.mt-2r {
+  margin-top: 2rem;
+}
+
+.mt-3r {
+  margin-top: 3rem;
+}
+
+.mt-4r {
+  margin-top: 4rem;
+}
+
+.mt-5r {
+  margin-top: 5rem;
+}
+
+.mt-6r {
+  margin-top: 6rem;
+}
+
+.mt-7r {
+  margin-top: 7rem;
+}
+
+.mt-8r {
+  margin-top: 8rem;
+}
+
+.mt-9r {
+  margin-top: 9rem;
+}
+
+.mt-10r {
+  margin-top: 10rem;
+}
+
+.mb-1r {
+  margin-bottom: 1rem;
+}
+
+.mb-2r {
+  margin-bottom: 2rem;
+}
+
+.mb-3r {
+  margin-bottom: 3rem;
+}
+
+.mb-4r {
+  margin-bottom: 4rem;
+}
+
+.mb-5r {
+  margin-bottom: 5rem;
+}
+
+.mb-6r {
+  margin-bottom: 6rem;
+}
+
+.mb-7r {
+  margin-bottom: 7rem;
+}
+
+.mb-8r {
+  margin-bottom: 8rem;
+}
+
+.mb-9r {
+  margin-bottom: 9rem;
+}
+
+.mb-10r {
+  margin-bottom: 10rem;
+}
+
+.me-4r {
+  margin-right: 4rem;
+}
+
+.me-10r {
+  margin-right: 10rem;
+}
+
+.center-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.right-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+}
+
+.db-actReg__showActive {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 0 auto;
+}
+
+.db-actReg-active__timer {
+  font-size: 3rem;
+}
+/*# sourceMappingURL=main.css.map */
