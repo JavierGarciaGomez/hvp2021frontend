@@ -1,9 +1,17 @@
 // 367
 
+import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
-import { findObjectByProperty } from "../helpers/utilites";
+import {
+  checkIfIsBetween,
+  findObjectByProperty,
+  checkIfIsLong,
+  checkIfIsOld,
+  sortCollectionByDate,
+  checkIfIsStartBeforeEnd,
+} from "../helpers/utilites";
 import { types } from "../types/types";
 import { authLogin, startChecking } from "./authActions";
 
@@ -20,17 +28,22 @@ export const activityRegistersStartLoading = () => {
       resp = await fetchConToken(`activityRegister/${uid}`);
       body = await resp.json();
 
+      let activityRegisters = sortCollectionByDate(
+        body.activityRegisters,
+        "endingTime"
+      );
+
       if (body.ok) {
-        dispatch(colActRegistersLoaded(body.activityRegisters));
+        dispatch(colActRegistersLoaded(activityRegisters));
         dispatch(
           setCurrentRegister(
-            findObjectByProperty(body.activityRegisters, "endingTime", null)
+            findObjectByProperty(activityRegisters, "endingTime", null)
           )
         );
 
         dispatch(
           setLastActivityRegister(
-            body.activityRegisters.reduce((a, b) =>
+            activityRegisters.reduce((a, b) =>
               a.endingTime > b.endingTime ? a : b
             )
           )
@@ -89,6 +102,38 @@ const setLastActivityRegister = (data) => {
 export const activityRegisterStartUpdate = (activity) => {
   return async (dispatch, getState) => {
     try {
+      const { activeColRegisters } = getState().activityRegister;
+
+      let isOld = checkIfIsOld(activity);
+      let isBetween = checkIfIsBetween(activeColRegisters, activity);
+      let isLong = checkIfIsLong(activity);
+      let isStartBeforeEnd = checkIfIsStartBeforeEnd(activity);
+
+      console.log(
+        "isold",
+        isOld,
+        "isbetween",
+        isBetween,
+        "islong",
+        isLong,
+        "isStartBeforeend",
+        isStartBeforeEnd
+      );
+
+      if (isBetween || isOld || !isStartBeforeEnd) {
+        return Swal.fire({
+          icon: "error",
+          title:
+            "No puedes crear una actividad dentro de otra, ni que haya empezado hace más de tres días, ni que termine antes de que empiece",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+
+      if (isLong) {
+        activity.endingTime = dayjs(activity.startingTime).add(14, "hours");
+      }
+
       const resp = await fetchConToken(
         `activityRegister/${activity._id}`,
         activity,
@@ -116,6 +161,24 @@ export const activityRegisterStartUpdate = (activity) => {
 export const createActivityRegister = (activity) => {
   return async (dispatch, getState) => {
     try {
+      const { activeColRegisters } = getState().activityRegister;
+
+      let isOld = checkIfIsOld(activity);
+      let isBetween = checkIfIsBetween(activeColRegisters, activity);
+      let isLong = checkIfIsLong(activity);
+      let isStartBeforeEnd = checkIfIsStartBeforeEnd(activity);
+
+      console.log("isold", isOld, "isbetween", isBetween, "islong", isLong);
+      if (isBetween || isLong || isOld || !isStartBeforeEnd) {
+        return Swal.fire({
+          icon: "error",
+          title:
+            "No puedes crear una actividad dentro de otra, ni que haya empezado hace más de tres días, ni que termine antes de que empiece",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+
       const resp = await fetchConToken(`activityRegister/`, activity, "POST");
       const body = await resp.json();
 

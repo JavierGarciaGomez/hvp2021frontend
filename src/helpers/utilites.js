@@ -3,7 +3,11 @@ import dayjs from "dayjs";
 import { Fragment } from "react";
 import { Check, Clear } from "@material-ui/icons";
 import utc from "dayjs/plugin/utc";
+import isBetween from "dayjs/plugin/isBetween";
+import isYesterday from "dayjs/plugin/isYesterday";
 dayjs.extend(utc);
+dayjs.extend(isBetween);
+dayjs.extend(isYesterday);
 
 export const generateRandomString = (length = 4) => {
   const chars =
@@ -486,4 +490,159 @@ export const isObjectEmpty = (object) => {
     return true;
   }
   return Object.keys(object).length === 0;
+};
+
+export const checkIfIsBetween = (collection, object) => {
+  let isBetween = false;
+  let objStartingTime = dayjs(object.startingTime);
+  let objEndingTime = dayjs(object.endingTime);
+
+  collection.map((element) => {
+    if (object._id !== element._id) {
+      if (
+        objStartingTime.isBetween(
+          dayjs(element.startingTime),
+          dayjs(element.endingTime)
+        ) ||
+        objEndingTime.isBetween(
+          dayjs(element.startingTime),
+          dayjs(element.endingTime)
+        ) ||
+        objStartingTime.isSame(dayjs(element.startingTime))
+      ) {
+        isBetween = true;
+      }
+    }
+  });
+
+  return isBetween;
+};
+
+export const checkIfIsLong = (object) => {
+  let isLong = false;
+  let objStartingTime = dayjs(object.startingTime);
+  let objEndingTime = dayjs(object.endingTime);
+
+  if (objEndingTime.diff(objStartingTime, "hour") >= 14) {
+    isLong = true;
+  }
+
+  return isLong;
+};
+
+export const checkIfIsOld = (object) => {
+  let isOld = false;
+  let objStartingTime = dayjs(object.startingTime);
+
+  if (dayjs().diff(objStartingTime, "hour") >= 84) {
+    isOld = true;
+  }
+
+  return isOld;
+};
+
+export const checkIfIsStartBeforeEnd = (object) => {
+  if (!object.endingTime) {
+    return true;
+  }
+
+  let objStartingTime = dayjs(object.startingTime);
+  let objEndingTime = dayjs(object.endingTime);
+
+  return objStartingTime.isBefore(objEndingTime);
+};
+
+export const sortCollectionByDate = (collection, datePropName) => {
+  let sortByDate = (a, b) => {
+    a = dayjs(a[datePropName]);
+    b = dayjs(b[datePropName]);
+    return -a.diff(b);
+  };
+  const collectionToSort = [...collection];
+  return collectionToSort.sort(sortByDate);
+};
+
+export const calculateTotalHours = (collection = []) => {
+  const result = collection.reduce((acc, item) => {
+    return (
+      acc +
+      dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
+    );
+  }, 0);
+  return (Math.round(result * 100) / 100).toFixed(2);
+};
+
+export const calculateYesterdayHours = (collection = []) => {
+  const result = collection.reduce((acc, item) => {
+    if (dayjs(item.startingTime).isYesterday()) {
+      console.log(
+        "is yesterday",
+        dayjs
+          .duration(dayjs(item.endingTime).diff(item.startingTime))
+          .asHours(),
+        "acc",
+        acc
+      );
+      return (
+        acc +
+        dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
+      );
+    } else {
+      return acc;
+    }
+  }, 0);
+
+  return (Math.round(result * 100) / 100).toFixed(2);
+};
+
+export const calculateWeekHours = (collection = []) => {
+  const result = collection.reduce((acc, item) => {
+    if (
+      dayjs(item.startingTime).isAfter(dayjs().startOf("week").add(1, "day"))
+    ) {
+      console.log(
+        "is thisweek",
+        item.startingTime,
+        "sum",
+        dayjs
+          .duration(dayjs(item.endingTime).diff(item.startingTime))
+          .asHours(),
+        "acc",
+        acc
+      );
+      return (
+        acc +
+        dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
+      );
+    } else {
+      return acc;
+    }
+  }, 0);
+
+  return (Math.round(result * 100) / 100).toFixed(2);
+};
+
+export const calculateMonthHours = (collection = []) => {
+  const result = collection.reduce((acc, item) => {
+    if (dayjs(item.startingTime).isAfter(dayjs().startOf("month"))) {
+      console.log(
+        "is thisweek",
+        item.startingTime,
+        "sum",
+        dayjs
+          .duration(dayjs(item.endingTime).diff(item.startingTime))
+          .asHours(),
+        "acc",
+        acc
+      );
+      return (
+        acc +
+        dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
+      );
+    } else {
+      return acc;
+    }
+  }, 0);
+
+  return (Math.round(result * 100) / 100).toFixed(2);
 };

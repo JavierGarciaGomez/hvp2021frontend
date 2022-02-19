@@ -1,6 +1,7 @@
 import { CircularProgress, MenuItem, TextField } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@mui/material";
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -8,13 +9,24 @@ import Swal from "sweetalert2";
 import { hour, minute, second } from "../../../helpers/constants";
 
 import { useForm } from "../../../hooks/useForm";
-import { getKeyByValue, isObjectEmpty } from "../../../helpers/utilites";
+import {
+  calculateMonthHours,
+  calculateTotalHours,
+  calculateWeekHours,
+  calculateYesterdayHours,
+  getKeyByValue,
+  isObjectEmpty,
+} from "../../../helpers/utilites";
 import { useDispatch, useSelector } from "react-redux";
 import {
   activityRegistersStartLoading,
   activityRegisterStartUpdate,
   createActivityRegister,
 } from "../../../actions/activityRegisterActions";
+import { DataGrid } from "@material-ui/data-grid";
+import { Link } from "react-router-dom";
+import { DeleteOutline } from "@material-ui/icons";
+dayjs.extend(duration);
 
 // todo: delete
 const initialNewActivityFormValues = {
@@ -28,6 +40,7 @@ export const ActivityRegisterCol = () => {
   // todo check what is need it
   const dispatch = useDispatch();
   const {
+    activeColRegisters,
     currentRegister,
     isLoadingAcitivityRegisters,
     activityRegisterTypes,
@@ -223,15 +236,84 @@ export const ActivityRegisterCol = () => {
   };
 
   const handleRegisterPastActivity = async (e) => {
-    dispatch(createActivityRegister({ ...newActivityValues }));
+    dispatch(
+      createActivityRegister({
+        ...newActivityValues,
+        activity: activityRegisterTypes[newActivityValues.activity],
+      })
+    );
     setshowCreateNewForm(false);
   };
+
+  const columns = [
+    { field: "activity", headerName: "Actividad", flex: 1 },
+    {
+      field: "Inicio",
+      headerName: "Inicio",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className="d-flex align-items-center">
+            {dayjs(params.row.startingTime).format("DD/MMM/YY HH:mm")}
+          </div>
+        );
+      },
+    },
+    {
+      field: "Fin",
+      headerName: "Fin",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className="d-flex align-items-center">
+            {dayjs(params.row.endingTime).format("DD/MMM/YY HH:mm")}
+          </div>
+        );
+      },
+    },
+    {
+      field: "Duración",
+      headerName: "Duración",
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className="d-flex align-items-center">
+            {dayjs
+              .duration(
+                dayjs(params.row.endingTime).diff(params.row.startingTime)
+              )
+              .format("HH:mm")}
+          </div>
+        );
+      },
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 2,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={`${params.row._id}`}>
+              <button className="collaboratorsEdit">Ver</button>
+            </Link>
+            {
+              <DeleteOutline
+                className="collaboratorsDelete"
+                // onClick={() => handleDelete(params.id)}
+              />
+            }
+          </>
+        );
+      },
+    },
+  ];
 
   if (isLoadingAcitivityRegisters) {
     return <CircularProgress />;
   }
   return (
-    <div className="container m-5">
+    <div className="p-5">
       <div className="activityRegisterTopButton right-content me-10r">
         <div className="btn btn-primary mb-3r">Ver otros</div>
       </div>
@@ -482,6 +564,52 @@ export const ActivityRegisterCol = () => {
           </form>
         </div>
       )}
+      <div className="activityRegisterBottomPage">
+        <div className="activityRegisterLeft">
+          <div className="activityRegisterLastRecords">
+            <h3 className="headingTertiary">Últimos registros</h3>
+            <div style={{ height: "75vh", width: "100%" }}>
+              <DataGrid
+                rows={activeColRegisters}
+                disableSelectionOnClick
+                columns={columns}
+                pageSize={20}
+                rowsPerPageOptions={[20, 50, 100]}
+                getRowId={(row) => row._id}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="activityRegisterRight">
+          <div className="activityRegisterStatistics">
+            <h3 className="headingTertiary">Estadísticas</h3>
+            <p className="paragraph">
+              Horas registradas ayer:{" "}
+              <span className="text-primary fw-bold">
+                {calculateYesterdayHours(activeColRegisters)}
+              </span>
+            </p>
+            <p className="paragraph">
+              Horas registradas en este mes:{" "}
+              <span className="text-primary fw-bold">
+                {calculateMonthHours(activeColRegisters)}
+              </span>
+            </p>
+            <p className="paragraph">
+              Horas registradas en esta semana:{" "}
+              <span className="text-primary fw-bold">
+                {calculateWeekHours(activeColRegisters)}
+              </span>
+            </p>
+            <p className="paragraph">
+              Total de horas registradas:{" "}
+              <span className="text-primary fw-bold">
+                {calculateTotalHours(activeColRegisters)}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

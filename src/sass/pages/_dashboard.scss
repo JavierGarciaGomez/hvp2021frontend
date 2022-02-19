@@ -5,3 +5,17 @@
     text-align: center;
   }
 }
+
+.activityRegisterBottomPage {
+  display: flex;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.activityRegisterLeft {
+  flex: 1;
+}
+
+.activityRegisterRight {
+  flex: 1;
+}
