@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from "@material-ui/core";
+import { CircularProgress, MenuItem, TextField } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@mui/material";
 import dayjs from "dayjs";
 import React from "react";
@@ -8,43 +8,32 @@ import Swal from "sweetalert2";
 import { hour, minute, second } from "../../../helpers/constants";
 
 import { useForm } from "../../../hooks/useForm";
-import { getKeyByValue } from "../../../helpers/utilites";
-
-// Todo: delete
-let selectDummyData = {
-  payroll: "Nómina",
-  orders: "Pedidos",
-  webDevelopment: "Desarrollo web",
-  audit: "Auditoría",
-};
+import { getKeyByValue, isObjectEmpty } from "../../../helpers/utilites";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  activityRegistersStartLoading,
+  activityRegisterStartUpdate,
+  createActivityRegister,
+} from "../../../actions/activityRegisterActions";
 
 // todo: delete
 const initialNewActivityFormValues = {
-  activity: getKeyByValue(selectDummyData, selectDummyData.orders),
-  startingTime: dayjs("2022-02-17T17:30:04.572Z").format("YYYY-MM-DDTHH:mm"),
+  activity: "",
+  startingTime: "",
   endingTime: "",
   desc: "",
 };
 
 export const ActivityRegisterCol = () => {
-  let dummyCurrentActivity = {
-    _id: "620bba90e3a783708942c696",
-    startingTime: "2022-02-18T12:37:04.572Z",
-    activity: "Desarrollo web",
-    desc: "Módulo de registro de actividades",
-  };
+  // todo check what is need it
+  const dispatch = useDispatch();
+  const {
+    currentRegister,
+    isLoadingAcitivityRegisters,
+    activityRegisterTypes,
+    lastActivityRegister,
+  } = useSelector((state) => state.activityRegister);
 
-  let lastActivity = {
-    _id: "620bba90e3a783708942c696",
-    startingTime: "2022-02-17T14:37:04.572Z",
-    endingTime: "2022-02-17T18:37:04.572Z",
-    activity: "Nómina",
-    desc: "",
-  };
-
-  const [currentActivity, setcurrentActivity] = useState({
-    ...dummyCurrentActivity,
-  });
   const [showEditForm, setshowEditForm] = useState(false);
   const [showCreateNewForm, setshowCreateNewForm] = useState(false);
   const [isTimerActive, setisTimerActive] = useState(false);
@@ -60,43 +49,45 @@ export const ActivityRegisterCol = () => {
     values: currentActivityValues,
     handleInputChange: handleCurrentActivityInputChange,
     setFullValues: setCurrentActivityFullValues,
-  } = useForm({
-    ...currentActivity,
-    startingTime: dayjs(currentActivity.startingTime).format(
-      "YYYY-MM-DDTHH:mm"
-    ),
-    activity: getKeyByValue(selectDummyData, currentActivity.activity),
-  });
+    reset: resetCurrentActivityValues,
+  } = useForm({});
+
+  // Load all
+  useEffect(() => {
+    dispatch(activityRegistersStartLoading());
+  }, [dispatch]);
 
   // check if there is a current activity with no endingtime
   useEffect(() => {
-    if (currentActivity && !currentActivity.endingTime) {
+    if (!isObjectEmpty(currentRegister) && !currentRegister.endingTime) {
       setisTimerActive(true);
       setshowCreateNewActivity(false);
     } else {
       setisTimerActive(false);
       setshowCreateNewActivity(true);
     }
-  }, [currentActivity]);
+  }, [currentRegister]);
 
   // start the timer
   useEffect(() => {
     let interval = null;
     if (isTimerActive) {
       interval = setInterval(() => {
-        setTime(dayjs().diff(dayjs(currentActivity.startingTime)));
+        setTime(dayjs().diff(dayjs(currentRegister.startingTime)));
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isTimerActive, currentActivity]);
+  }, [isTimerActive, currentRegister]);
 
+  /**********HANDLERS********/
   const handleShowEditForm = async () => {
+    // set the values for the form
     setCurrentActivityFullValues({
-      ...currentActivity,
-      startingTime: dayjs(currentActivity.startingTime).format(
+      ...currentRegister,
+      startingTime: dayjs(currentRegister.startingTime).format(
         "YYYY-MM-DDTHH:mm"
       ),
-      activity: getKeyByValue(selectDummyData, currentActivity.activity),
+      activity: getKeyByValue(activityRegisterTypes, currentRegister.activity),
     });
     setshowEditForm((prevState) => !prevState);
   };
@@ -112,14 +103,13 @@ export const ActivityRegisterCol = () => {
       confirmButtonText: "Sí!",
     }).then((result) => {
       if (result.isConfirmed) {
-        setcurrentActivity((prevData) => ({
-          ...prevData,
-          endingTime: dayjs(),
-        }));
+        dispatch(
+          activityRegisterStartUpdate({
+            ...currentRegister,
+            endingTime: dayjs(),
+          })
+        );
       }
-
-      currentActivity.endingTime = dayjs();
-      setisTimerActive(false);
     });
   };
 
@@ -128,12 +118,10 @@ export const ActivityRegisterCol = () => {
       title: "Termina e inicia nueva actividad",
       icon: "question",
       input: "select",
-      inputOptions: selectDummyData,
+      inputOptions: activityRegisterTypes,
       inputPlaceholder: "Selecciona una actividad",
       showCancelButton: true,
     });
-
-    console.log("activity", activity);
 
     if (activity) {
       const { value: desc } = await Swal.fire({
@@ -142,42 +130,49 @@ export const ActivityRegisterCol = () => {
         input: "text",
         inputLabel: "Agrega un detalle a la actividad, si deseas",
       });
-      // conclude last activity and save
-      setcurrentActivity((prevData) => ({
-        ...prevData,
-        endingTime: dayjs(),
-      }));
 
-      console.log("a ver", {
-        startingTime: dayjs(),
-        activity: selectDummyData[activity],
-        desc,
-      });
-      setcurrentActivity({
-        startingTime: dayjs(),
-        activity: selectDummyData[activity],
-        desc,
-      });
+      dispatch(
+        activityRegisterStartUpdate({
+          ...currentRegister,
+          endingTime: dayjs(),
+        })
+      );
+
+      dispatch(
+        createActivityRegister({
+          startingTime: dayjs(),
+          activity: activityRegisterTypes[activity],
+          desc,
+        })
+      );
 
       // generate new activity
-
-      setisTimerActive(false);
     }
   };
 
   const handleEditCurrentActivity = async (e) => {
     e.preventDefault();
-    console.log("curActVal", currentActivityValues);
-    setcurrentActivity({
-      ...currentActivityValues,
-      activity: selectDummyData[currentActivityValues.activity],
-    });
+    dispatch(
+      activityRegisterStartUpdate({
+        ...currentActivityValues,
+        activity: activityRegisterTypes[currentActivityValues.activity],
+      })
+    );
+    resetCurrentActivityValues();
     setshowEditForm(false);
   };
 
   const handleContinueLastActivity = async () => {
+    if (isObjectEmpty(lastActivityRegister)) {
+      return Swal.fire({
+        title: "No tienes ninguna actividad previa registrada",
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
     Swal.fire({
-      title: `¿Quieres continuar con la actividad de ${lastActivity.activity}`,
+      title: `¿Quieres continuar con la actividad de ${lastActivityRegister.activity}`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -185,12 +180,13 @@ export const ActivityRegisterCol = () => {
       confirmButtonText: "Sí!",
     }).then((result) => {
       if (result.isConfirmed) {
-        setcurrentActivity({
-          ...lastActivity,
-          startingTime: dayjs(),
-          endingTime: null,
-        });
-        setisTimerActive(true);
+        dispatch(
+          createActivityRegister({
+            ...lastActivityRegister,
+            startingTime: dayjs(),
+            endingTime: null,
+          })
+        );
       }
     });
   };
@@ -200,20 +196,26 @@ export const ActivityRegisterCol = () => {
       title: "Inicia nueva actividad",
       icon: "question",
       input: "select",
-      inputOptions: selectDummyData,
+      inputOptions: activityRegisterTypes,
       inputPlaceholder: "Selecciona una actividad",
       showCancelButton: true,
     });
 
-    const { value: desc } = await Swal.fire({
-      title: "Nueva actividad",
-      icon: "question",
-      input: "text",
-      inputLabel: "Agrega un detalle a la actividad, si deseas",
-      showCancelButton: true,
-    });
-    setcurrentActivity({ startingTime: dayjs(), activity, desc });
-    setisTimerActive(true);
+    if (activity) {
+      const { value: desc } = await Swal.fire({
+        title: "Nueva actividad",
+        icon: "question",
+        input: "text",
+        inputLabel: "Agrega un detalle a la actividad, si deseas",
+      });
+      dispatch(
+        createActivityRegister({
+          startingTime: dayjs(),
+          activity: activityRegisterTypes[activity],
+          desc,
+        })
+      );
+    }
   };
 
   const handleShowCreateForm = async () => {
@@ -221,11 +223,13 @@ export const ActivityRegisterCol = () => {
   };
 
   const handleRegisterPastActivity = async (e) => {
-    e.preventDefault();
-    setcurrentActivity({ ...newActivityValues });
-    console.log(newActivityValues);
+    dispatch(createActivityRegister({ ...newActivityValues }));
+    setshowCreateNewForm(false);
   };
 
+  if (isLoadingAcitivityRegisters) {
+    return <CircularProgress />;
+  }
   return (
     <div className="container m-5">
       <div className="activityRegisterTopButton right-content me-10r">
@@ -239,17 +243,17 @@ export const ActivityRegisterCol = () => {
         <div className="activityRegisterActive l-singleCardContainer mb-3r">
           <div className="card">
             <div className="card__top  card__top--col">
-              <h3 className="card__title">{currentActivity.activity}</h3>
-              <p className="paragraph">{currentActivity.desc}</p>
+              <h3 className="card__title">{currentRegister.activity}</h3>
+              <p className="paragraph">{currentRegister.desc}</p>
             </div>
             <div className="card__body">
               <p className="paragraph">
                 Fecha de inicio:{" "}
-                {dayjs(currentActivity.startingTime).format("DD/MMM/YYYY")}
+                {dayjs(currentRegister.startingTime).format("DD/MMM/YYYY")}
               </p>
               <p className="paragraph">
                 Hora de inicio:{" "}
-                {dayjs(currentActivity.startingTime).format("HH:mm")}
+                {dayjs(currentRegister.startingTime).format("HH:mm")}
               </p>
               <div className="activityRegisterActive__time mb-2r">
                 <span>{("0" + Math.floor((time / hour) % 60)).slice(-2)}:</span>
@@ -302,14 +306,14 @@ export const ActivityRegisterCol = () => {
                   onChange={handleCurrentActivityInputChange}
                   sx={{ fontSize: "1.6rem" }}
                 >
-                  {Object.keys(selectDummyData).map((key) => {
+                  {Object.keys(activityRegisterTypes).map((key) => {
                     return (
                       <MenuItem
                         key={key}
                         value={key}
                         sx={{ fontSize: "1.6rem" }}
                       >
-                        {selectDummyData[key]}
+                        {activityRegisterTypes[key]}
                       </MenuItem>
                     );
                   })}
@@ -409,14 +413,14 @@ export const ActivityRegisterCol = () => {
                   onChange={handleNewActivityInputChange}
                   sx={{ fontSize: "1.6rem" }}
                 >
-                  {Object.keys(selectDummyData).map((key) => {
+                  {Object.keys(activityRegisterTypes).map((key) => {
                     return (
                       <MenuItem
                         key={key}
                         value={key}
                         sx={{ fontSize: "1.6rem" }}
                       >
-                        {selectDummyData[key]}
+                        {activityRegisterTypes[key]}
                       </MenuItem>
                     );
                   })}

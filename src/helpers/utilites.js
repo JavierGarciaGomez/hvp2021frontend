@@ -473,3 +473,17 @@ export const getFCMTotal = (calcItems) => {
 
 export const getKeyByValue = (object, value) =>
   Object.keys(object).find((key) => object[key] === value);
+
+export const findObjectByProperty = (collection, property, matchValue) => {
+  return collection.find((obj) => {
+    return obj[property] === matchValue;
+  });
+};
+
+export const isObjectEmpty = (object) => {
+  console.log("este es el objeto que voy a probar", object);
+  if (!object) {
+    return true;
+  }
+  return Object.keys(object).length === 0;
+};
