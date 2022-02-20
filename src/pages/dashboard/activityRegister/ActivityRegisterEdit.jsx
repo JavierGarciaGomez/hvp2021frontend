@@ -12,6 +12,7 @@ import { useForm } from "../../../hooks/useForm";
 import { getKeyByValue, isObjectEmpty } from "../../../helpers/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  activeActivityRegisterStartLoading,
   activityRegistersStartLoading,
   activityRegistersStartLoadingActive,
   activityRegisterStartUpdate,
@@ -24,56 +25,21 @@ import { DeleteOutline } from "@material-ui/icons";
 import { ActivityRegisterForm } from "./components/ActivityRegisterForm";
 dayjs.extend(duration);
 
-// todo: delete
-const initialNewActivityFormValues = {
-  activity: "",
-  startingTime: "",
-  endingTime: "",
-  desc: "",
-};
-
 export const ActivityRegisterEdit = () => {
-  const { colId, actRegId } = useParams();
-  const [isLoading, setisLoading] = useState(true);
+  const { actRegId } = useParams();
+
   // todo check what is need it
   const dispatch = useDispatch();
-  const {
-    activeColRegisters,
-
-    isLoadingAcitivityRegisters,
-    activityRegisterTypes,
-    lastActivityRegister,
-    activeRegister,
-  } = useSelector((state) => state.activityRegister);
-
-  const [isTimerActive, setisTimerActive] = useState(false);
-
-  // Todo: DOING
-  // Load register
-  useEffect(() => {
-    // if there are no registers, load them
-    if (isObjectEmpty(activeColRegisters)) {
-      dispatch(activityRegistersStartLoading());
-    } else {
-      const activeRegister = activeColRegisters.find(
-        (element) => element._id === actRegId
-      );
-      dispatch(setActiveActivityRegister(activeRegister));
-      setisLoading(false);
-    }
-  }, [dispatch, activeColRegisters]);
-
-  console.log(
-    "***ACTIVITY REGISTER EDIT",
-    "is loading",
-    isLoading,
-    "activecolregisters",
-    activeColRegisters,
-    "activity",
-    activeRegister
+  const { activeRegister, isLoadingAcitivityRegisters } = useSelector(
+    (state) => state.activityRegister
   );
 
-  if (isLoading) {
+  // load active register
+  useEffect(() => {
+    dispatch(activeActivityRegisterStartLoading(actRegId));
+  }, [dispatch]);
+
+  if (isLoadingAcitivityRegisters) {
     return <CircularProgress />;
   }
   return (

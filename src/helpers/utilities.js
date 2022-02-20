@@ -487,6 +487,7 @@ export const findObjectByProperty = (collection, property, matchValue) => {
 };
 
 export const isObjectEmpty = (object) => {
+  console.log("object esto recibí", object);
   if (!object) {
     return true;
   }
@@ -561,6 +562,26 @@ export const sortCollectionByDate = (collection, datePropName) => {
   };
   const collectionToSort = [...collection];
   return collectionToSort.sort(sortByDate);
+};
+
+export const sortCollectionAlphabetically = (collection, propName) => {
+  let sortAlphabetically = (a, b) => {
+    if (a[propName] < b[propName]) {
+      return -1;
+    }
+    if (a[propName] > b[propName]) {
+      return 1;
+    }
+    return 0;
+  };
+  const collectionToSort = [...collection];
+  return collectionToSort.sort(sortAlphabetically);
+};
+
+export const sortObjectPropertiesAlphabetically = (object) => {
+  return Object.fromEntries(
+    Object.entries(object).sort(([, a], [, b]) => a - b)
+  );
 };
 
 export const calculateTotalHours = (collection = []) => {
@@ -716,7 +737,7 @@ export const getColsActivityRegisters = (activityRegisters) => {
     for (let col of colArray) {
       if (col.col_code === activityRegister.collaborator.col_code) {
         foundOne = true;
-        col.registers++;
+        col.registersAmount++;
 
         col.totalTime = Number(
           Math.round(
@@ -728,6 +749,7 @@ export const getColsActivityRegisters = (activityRegisters) => {
               100
           ) / 100
         ).toFixed(2);
+        col.registers.push(activityRegister);
 
         break;
       }
@@ -737,11 +759,12 @@ export const getColsActivityRegisters = (activityRegisters) => {
         _id: activityRegister.collaborator._id,
         col_code: activityRegister.collaborator.col_code,
         imgUrl: activityRegister.collaborator.imgUrl,
-        registers: 1,
+        registersAmount: 1,
         totalTime: getDuration(
           activityRegister.startingTime,
           activityRegister.endingTime
         ),
+        registers: [activityRegister],
       };
       console.log("nuevo elemento", newElement);
       colArray.push(newElement);

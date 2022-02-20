@@ -69,7 +69,9 @@ export const ActivityRegisterForm = ({
           activity: activityRegisterTypes[values.activity],
         })
       );
-      handleShowForm();
+      if (showCancel) {
+        handleShowForm();
+      }
     }
   };
 

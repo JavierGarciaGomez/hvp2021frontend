@@ -176,6 +176,14 @@ export const ActivityRegisterCol = () => {
     dispatch(activityRegisterDelete(id));
   };
 
+  console.log(
+    "***ACTIVITY REGISTER COL PRUEBAS",
+    "currentRegister",
+    currentRegister,
+    "isTimerActive",
+    isTimerActive
+  );
+
   const lastRegistersColumns = [
     { field: "activity", headerName: "Actividad", flex: 1 },
     {
@@ -257,7 +265,7 @@ export const ActivityRegisterCol = () => {
 
       {/* Current activity */}
 
-      {isTimerActive && (
+      {isTimerActive && !isObjectEmpty(currentRegister) && (
         <div className="activityRegisterActive l-singleCardContainer mb-3r">
           <div className="card">
             <div className="card__top  card__top--col">

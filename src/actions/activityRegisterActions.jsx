@@ -13,6 +13,8 @@ import {
   checkIfIsStartBeforeEnd,
   fireSwalSuccess,
   fireSwalError,
+  sortCollectionAlphabetically,
+  sortObjectPropertiesAlphabetically,
 } from "../helpers/utilities";
 import { types } from "../types/types";
 import { authLogin, startChecking } from "./authActions";
@@ -23,8 +25,6 @@ export const allActivityRegistersStartLoading = () => {
       dispatch(activityRegistersIsLoading());
       let resp = await fetchConToken(`activityRegister/`);
       let body = await resp.json();
-
-      console.log("body", body);
 
       let allActivityRegisters = sortCollectionByDate(
         body.allActivityRegisters,
@@ -49,9 +49,11 @@ export const activityRegistersStartLoading = () => {
       const { uid } = getState().auth;
       let resp = await fetchConToken(`misc/activityType`);
       let body = await resp.json();
-      dispatch(activityTypesLoaded(body.misc.data));
+      dispatch(
+        activityTypesLoaded(sortObjectPropertiesAlphabetically(body.misc.data))
+      );
 
-      resp = await fetchConToken(`activityRegister/${uid}`);
+      resp = await fetchConToken(`activityRegister/getByCol/${uid}`);
       body = await resp.json();
 
       let activityRegisters = sortCollectionByDate(
@@ -61,11 +63,17 @@ export const activityRegistersStartLoading = () => {
 
       if (body.ok) {
         dispatch(colActRegistersLoaded(activityRegisters));
-        dispatch(
-          setCurrentRegister(
-            findObjectByProperty(activityRegisters, "endingTime", null)
-          )
+
+        let currentRegister = findObjectByProperty(
+          activityRegisters,
+          "endingTime",
+          null
         );
+        if (currentRegister) {
+          dispatch(setCurrentRegister(currentRegister));
+        } else {
+          dispatch(setCurrentRegister(null));
+        }
 
         dispatch(
           setLastActivityRegister(
@@ -82,6 +90,24 @@ export const activityRegistersStartLoading = () => {
     }
   };
 };
+
+export const activeActivityRegisterStartLoading = (actRegId) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(activityRegistersIsLoading());
+      let resp = await fetchConToken(`activityRegister/${actRegId}`);
+      let body = await resp.json();
+
+      if (body.ok) {
+        dispatch(setActiveActivityRegister(body.activityRegister));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(activityRegistersFinishedLoading());
+  };
+};
+
 // todo doing
 export const setActiveActivityRegister = (data) => ({
   type: types.setActiveActivityRegister,
@@ -189,6 +215,7 @@ export const activityRegisterStartUpdate = (activity) => {
           title: body.msg,
           showConfirmButton: true,
         });
+        dispatch(activeActivityRegisterStartLoading(activity._id));
         dispatch(activityRegistersStartLoading());
       } else {
         Swal.fire("error", body.msg, "error");
