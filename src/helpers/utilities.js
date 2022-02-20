@@ -692,12 +692,14 @@ export const fireSwalQuestionSelect = async (
   inputOptions,
   inputPlaceholder
 ) => {
+  const sortedInputOptions = convertArrayToObjectAndSort(inputOptions);
+
   const result = await Swal.fire({
     title: "RESPONDE",
     text: message,
     icon: "question",
     input: "select",
-    inputOptions: inputOptions,
+    inputOptions: sortedInputOptions,
     inputPlaceholder: inputPlaceholder,
     showCancelButton: true,
   });
@@ -772,4 +774,24 @@ export const getColsActivityRegisters = (activityRegisters) => {
   });
 
   return colArray;
+};
+
+export const convertArrayToObjectAndSort = (collection = []) => {
+  const sortedCollection = sortCollectionAlphabetically(collection, "label");
+  let newObject = {};
+  sortedCollection.forEach((element) => {
+    newObject[element.value] = element.label;
+  });
+
+  return newObject;
+};
+
+export const findLabelByValue = (collection = [], value) => {
+  console.log("findlabel", collection, value);
+  const foundElement = collection.find((element) => element.value === value);
+  const label = foundElement?.label;
+  if (!label) {
+    return value;
+  }
+  return label;
 };

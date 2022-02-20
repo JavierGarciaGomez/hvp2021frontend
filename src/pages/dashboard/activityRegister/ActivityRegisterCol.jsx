@@ -13,6 +13,9 @@ import {
   calculateTotalHours,
   calculateWeekHours,
   calculateYesterdayHours,
+  convertArrayToObjectAndSort,
+  findLabelByValue,
+  findObjectByProperty,
   fireSwalConfirmation,
   fireSwalError,
   fireSwalQuestionInput,
@@ -121,7 +124,7 @@ export const ActivityRegisterCol = () => {
       dispatch(
         createActivityRegister({
           startingTime: dayjs(),
-          activity: activityRegisterTypes[activity],
+          activity,
           desc,
         })
       );
@@ -133,7 +136,10 @@ export const ActivityRegisterCol = () => {
       fireSwalError("No tienes ninguna actividad previa registrada");
     }
     const isConfirmed = await fireSwalConfirmation(
-      `¿Quieres continuar con la actividad de ${lastActivityRegister.activity}`
+      `¿Quieres continuar con la actividad de ${findLabelByValue(
+        activityRegisterTypes,
+        lastActivityRegister.activity
+      )}`
     );
 
     if (isConfirmed) {
@@ -161,7 +167,7 @@ export const ActivityRegisterCol = () => {
       dispatch(
         createActivityRegister({
           startingTime: dayjs(),
-          activity: activityRegisterTypes[activity],
+          activity,
           desc,
         })
       );
@@ -185,7 +191,19 @@ export const ActivityRegisterCol = () => {
   );
 
   const lastRegistersColumns = [
-    { field: "activity", headerName: "Actividad", flex: 1 },
+    {
+      field: "activity",
+      headerName: "Actividad",
+      flex: 1,
+
+      renderCell: (params) => {
+        return (
+          <div>
+            {findLabelByValue(activityRegisterTypes, params.row.activity)}
+          </div>
+        );
+      },
+    },
     {
       field: "Inicio",
       headerName: "Inicio",
@@ -269,7 +287,12 @@ export const ActivityRegisterCol = () => {
         <div className="activityRegisterActive l-singleCardContainer mb-3r">
           <div className="card">
             <div className="card__top  card__top--col">
-              <h3 className="card__title">{currentRegister.activity}</h3>
+              <h3 className="card__title">
+                {findLabelByValue(
+                  activityRegisterTypes,
+                  currentRegister.activity
+                )}
+              </h3>
               <p className="paragraph">{currentRegister.desc}</p>
             </div>
             <div className="card__body">

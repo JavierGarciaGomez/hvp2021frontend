@@ -49,9 +49,7 @@ export const activityRegistersStartLoading = () => {
       const { uid } = getState().auth;
       let resp = await fetchConToken(`misc/activityType`);
       let body = await resp.json();
-      dispatch(
-        activityTypesLoaded(sortObjectPropertiesAlphabetically(body.misc.data))
-      );
+      dispatch(activityTypesLoaded(body.misc.data));
 
       resp = await fetchConToken(`activityRegister/getByCol/${uid}`);
       body = await resp.json();
@@ -167,9 +165,6 @@ const setLastActivityRegister = (data) => {
 export const activityRegisterStartUpdate = (activity) => {
   return async (dispatch, getState) => {
     try {
-      // if (activity.endingTime === "Invalid Date") {
-      //   activity.endingTime = null;
-      // }
       const { activeColRegisters } = getState().activityRegister;
 
       let isOld = checkIfIsOld(activity);

@@ -26,7 +26,6 @@ export const ActivityRegisterForm = ({
 
   let initialValues = {
     ...activityRegister,
-    activity: getKeyByValue(activityRegisterTypes, activityRegister.activity),
     startingTime: dayjs(activityRegister.startingTime).format(
       "YYYY-MM-DDTHH:mm"
     ),
@@ -58,7 +57,6 @@ export const ActivityRegisterForm = ({
       dispatch(
         createActivityRegister({
           ...values,
-          activity: activityRegisterTypes[values.activity],
         })
       );
       handleShowForm();
@@ -66,7 +64,6 @@ export const ActivityRegisterForm = ({
       dispatch(
         activityRegisterStartUpdate({
           ...values,
-          activity: activityRegisterTypes[values.activity],
         })
       );
       if (showCancel) {
@@ -95,10 +92,14 @@ export const ActivityRegisterForm = ({
               onChange={handleInputChange}
               sx={{ fontSize: "1.6rem" }}
             >
-              {Object.keys(activityRegisterTypes).map((key) => {
+              {activityRegisterTypes.map((element) => {
                 return (
-                  <MenuItem key={key} value={key} sx={{ fontSize: "1.6rem" }}>
-                    {activityRegisterTypes[key]}
+                  <MenuItem
+                    key={element.value}
+                    value={element.value}
+                    sx={{ fontSize: "1.6rem" }}
+                  >
+                    {element.label}
                   </MenuItem>
                 );
               })}
