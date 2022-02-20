@@ -7,7 +7,7 @@ import {
   updateDailyCleanUp,
   dailyCleanUpsStartLoading,
 } from "../../../../actions/cleanUpsActions";
-import { formatAndOrderCollection } from "../../../../helpers/utilites";
+import { formatAndOrderCollection } from "../../../../helpers/utilities";
 import { cleanUpActions } from "../../../../types/types";
 
 export const DailyCleanUpsDataGrid = () => {

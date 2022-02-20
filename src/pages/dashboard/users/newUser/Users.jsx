@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 import { CircularProgress } from "@material-ui/core";
 import { usersStartLoading, userDelete } from "../../../../actions/userActions";
-import { checkAutorization } from "../../../../helpers/utilites";
+import { checkAutorization } from "../../../../helpers/utilities";
 import { roleTypes } from "../../../../types/types";
 
 export default function Users() {

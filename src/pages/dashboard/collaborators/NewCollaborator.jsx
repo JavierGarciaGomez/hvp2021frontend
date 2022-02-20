@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import Swal from "sweetalert2";
 
-import { generateRandomString } from "../../../helpers/utilites";
+import { generateRandomString } from "../../../helpers/utilities";
 import { uploadImg } from "../../../helpers/uploadImg";
 
 import { genderTypes, positionTypes, roleTypes } from "../../../types/types";

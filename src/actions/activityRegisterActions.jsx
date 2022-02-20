@@ -11,7 +11,9 @@ import {
   checkIfIsOld,
   sortCollectionByDate,
   checkIfIsStartBeforeEnd,
-} from "../helpers/utilites";
+  fireSwalSuccess,
+  fireSwalError,
+} from "../helpers/utilities";
 import { types } from "../types/types";
 import { authLogin, startChecking } from "./authActions";
 
@@ -42,6 +44,12 @@ export const activityRegistersStartLoading = () => {
         );
 
         dispatch(
+          setActiveActivityRegister(
+            findObjectByProperty(activityRegisters, "endingTime", null)
+          )
+        );
+
+        dispatch(
           setLastActivityRegister(
             activityRegisters.reduce((a, b) =>
               a.endingTime > b.endingTime ? a : b
@@ -56,6 +64,11 @@ export const activityRegistersStartLoading = () => {
     }
   };
 };
+// todo doing
+export const setActiveActivityRegister = (data) => ({
+  type: types.setActiveActivityRegister,
+  payload: data,
+});
 
 // Todo
 const activityRegistersIsLoading = () => ({
@@ -102,6 +115,9 @@ const setLastActivityRegister = (data) => {
 export const activityRegisterStartUpdate = (activity) => {
   return async (dispatch, getState) => {
     try {
+      // if (activity.endingTime === "Invalid Date") {
+      //   activity.endingTime = null;
+      // }
       const { activeColRegisters } = getState().activityRegister;
 
       let isOld = checkIfIsOld(activity);
@@ -315,25 +331,20 @@ export const activityRegisterDelete = (activityRegisterId) => {
   return async (dispatch) => {
     try {
       const resp = await fetchConToken(
-        `activityRegisters/${activityRegisterId}`,
+        `activityRegister/${activityRegisterId}`,
         {},
         "DELETE"
       );
       const body = await resp.json();
 
       if (body.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Colaborador eliminado correctamente",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        dispatch(activityRegistersStartLoading(false));
+        fireSwalSuccess("Eliminación correcta");
+        dispatch(activityRegistersStartLoading());
       } else {
-        Swal.fire("error", body.msg, "error");
+        fireSwalError(body.msg);
       }
     } catch (error) {
-      Swal.fire("error", "error", "error");
+      fireSwalError(error.message);
     }
   };
 };

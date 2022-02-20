@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { startChecking } from "../../../actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAutorization } from "../../../helpers/utilites";
+import { checkAutorization } from "../../../helpers/utilities";
 import { roleTypes } from "../../../types/types";
 
 export const AuthPage = () => {

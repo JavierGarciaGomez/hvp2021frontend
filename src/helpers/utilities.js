@@ -5,6 +5,8 @@ import { Check, Clear } from "@material-ui/icons";
 import utc from "dayjs/plugin/utc";
 import isBetween from "dayjs/plugin/isBetween";
 import isYesterday from "dayjs/plugin/isYesterday";
+import { elGR } from "@material-ui/data-grid";
+import Swal from "sweetalert2";
 dayjs.extend(utc);
 dayjs.extend(isBetween);
 dayjs.extend(isYesterday);
@@ -485,7 +487,6 @@ export const findObjectByProperty = (collection, property, matchValue) => {
 };
 
 export const isObjectEmpty = (object) => {
-  console.log("este es el objeto que voy a probar", object);
   if (!object) {
     return true;
   }
@@ -564,25 +565,21 @@ export const sortCollectionByDate = (collection, datePropName) => {
 
 export const calculateTotalHours = (collection = []) => {
   const result = collection.reduce((acc, item) => {
-    return (
-      acc +
-      dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
-    );
+    if (item.endingTime) {
+      return (
+        acc +
+        dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
+      );
+    } else {
+      return acc;
+    }
   }, 0);
   return (Math.round(result * 100) / 100).toFixed(2);
 };
 
 export const calculateYesterdayHours = (collection = []) => {
   const result = collection.reduce((acc, item) => {
-    if (dayjs(item.startingTime).isYesterday()) {
-      console.log(
-        "is yesterday",
-        dayjs
-          .duration(dayjs(item.endingTime).diff(item.startingTime))
-          .asHours(),
-        "acc",
-        acc
-      );
+    if (dayjs(item.startingTime).isYesterday() && item.endingTime) {
       return (
         acc +
         dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
@@ -598,18 +595,9 @@ export const calculateYesterdayHours = (collection = []) => {
 export const calculateWeekHours = (collection = []) => {
   const result = collection.reduce((acc, item) => {
     if (
-      dayjs(item.startingTime).isAfter(dayjs().startOf("week").add(1, "day"))
+      dayjs(item.startingTime).isAfter(dayjs().startOf("week").add(1, "day")) &&
+      item.endingTime
     ) {
-      console.log(
-        "is thisweek",
-        item.startingTime,
-        "sum",
-        dayjs
-          .duration(dayjs(item.endingTime).diff(item.startingTime))
-          .asHours(),
-        "acc",
-        acc
-      );
       return (
         acc +
         dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
@@ -624,17 +612,10 @@ export const calculateWeekHours = (collection = []) => {
 
 export const calculateMonthHours = (collection = []) => {
   const result = collection.reduce((acc, item) => {
-    if (dayjs(item.startingTime).isAfter(dayjs().startOf("month"))) {
-      console.log(
-        "is thisweek",
-        item.startingTime,
-        "sum",
-        dayjs
-          .duration(dayjs(item.endingTime).diff(item.startingTime))
-          .asHours(),
-        "acc",
-        acc
-      );
+    if (
+      dayjs(item.startingTime).isAfter(dayjs().startOf("month")) &&
+      item.endingTime
+    ) {
       return (
         acc +
         dayjs.duration(dayjs(item.endingTime).diff(item.startingTime)).asHours()
@@ -645,4 +626,30 @@ export const calculateMonthHours = (collection = []) => {
   }, 0);
 
   return (Math.round(result * 100) / 100).toFixed(2);
+};
+
+export const getConcludedActivityRegisters = (collection) => {
+  return collection.filter((element) => element.endingTime);
+};
+
+export const fireSwalError = (message) => {
+  return Swal.fire({
+    icon: "error",
+    title: "ERROR",
+    text: message,
+    message: message,
+    showConfirmButton: false,
+    timer: 1500,
+  });
+};
+
+export const fireSwalSuccess = (message) => {
+  return Swal.fire({
+    icon: "success",
+    title: "ÉXITO",
+    text: message,
+    message: message,
+    showConfirmButton: false,
+    timer: 1500,
+  });
 };

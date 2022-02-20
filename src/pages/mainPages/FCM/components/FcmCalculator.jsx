@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { getCalcItems, getFCMTotal } from "../../../../helpers/utilites";
+import { getCalcItems, getFCMTotal } from "../../../../helpers/utilities";
 import { useForm } from "../../../../hooks/useForm";
 import { procedureTypes } from "../../../../types/types";
 import {

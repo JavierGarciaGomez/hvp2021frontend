@@ -14,7 +14,7 @@ import { MainPageRouter } from "./MainPageRouter";
 import { createTheme } from "@mui/material/styles";
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 import { roleTypes } from "../types/types";
-import { checkAutorization } from "../helpers/utilites";
+import { checkAutorization } from "../helpers/utilities";
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 
 export const AppRouter = () => {

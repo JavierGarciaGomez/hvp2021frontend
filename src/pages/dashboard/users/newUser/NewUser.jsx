@@ -12,7 +12,7 @@ import {
   startRegister,
 } from "../../../../actions/collaboratorActions";
 import { uploadImg } from "../../../../helpers/uploadImg";
-import { generateRandomString } from "../../../../helpers/utilites";
+import { generateRandomString } from "../../../../helpers/utilities";
 
 export const initialState = {
   first_name: "Fátima Lucía",

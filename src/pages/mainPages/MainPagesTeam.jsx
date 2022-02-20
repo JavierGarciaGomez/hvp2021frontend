@@ -7,7 +7,7 @@ import {
   convertPlainTextToHtml,
   getTextAsJSX,
   sortCollection,
-} from "../../helpers/utilites";
+} from "../../helpers/utilities";
 
 export const MainPagesTeam = () => {
   const dispatch = useDispatch();

@@ -13,6 +13,9 @@ import { CreateNewRFC } from "../pages/dashboard/rfc/CreateNewRFC";
 import { EditRFC } from "../pages/dashboard/rfc/EditRFC";
 import { AuthLogPage } from "../pages/dashboard/authLogs/AuthLogPage";
 import { ActivityRegisterCol } from "../pages/dashboard/activityRegister/ActivityRegisterCol";
+import { Misc } from "../pages/misc/Misc";
+import { ActivityRegisterSelect } from "../pages/dashboard/activityRegister/ActivityRegisterSelect";
+import { ActivityRegisterEdit } from "../pages/dashboard/activityRegister/ActivityRegisterEdit";
 
 export const DashboardRouter = () => {
   return (
@@ -44,6 +47,18 @@ export const DashboardRouter = () => {
 
       {/* Activity Register */}
       <Route path="activityRegister" element={<ActivityRegisterCol />} />
+      <Route path="activityRegister/all" element={<ActivityRegisterSelect />} />
+      <Route
+        path="activityRegister/:colId"
+        element={<ActivityRegisterEdit />}
+      />
+      <Route
+        path="activityRegister/:colId/:actRegId"
+        element={<ActivityRegisterEdit />}
+      />
+
+      {/* Misc */}
+      <Route path="misc" element={<Misc />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />

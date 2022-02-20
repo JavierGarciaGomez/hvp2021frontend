@@ -2,7 +2,7 @@ import { CircularProgress, MenuItem, TextField } from "@material-ui/core";
 import { FormControl, InputLabel, Select } from "@mui/material";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import React, { Fragment } from "react";
+import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -14,13 +14,11 @@ import {
   calculateTotalHours,
   calculateWeekHours,
   calculateYesterdayHours,
-  getConcludedActivityRegisters,
   getKeyByValue,
   isObjectEmpty,
 } from "../../../helpers/utilities";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  activityRegisterDelete,
   activityRegistersStartLoading,
   activityRegisterStartUpdate,
   createActivityRegister,
@@ -28,7 +26,6 @@ import {
 import { DataGrid } from "@material-ui/data-grid";
 import { Link } from "react-router-dom";
 import { DeleteOutline } from "@material-ui/icons";
-import { ActivityRegisterForm } from "./components/ActivityRegisterForm";
 dayjs.extend(duration);
 
 // todo: delete
@@ -39,7 +36,7 @@ const initialNewActivityFormValues = {
   desc: "",
 };
 
-export const ActivityRegisterCol = () => {
+export const ActivityRegisterSelect = () => {
   // todo check what is need it
   const dispatch = useDispatch();
   const {
@@ -49,8 +46,6 @@ export const ActivityRegisterCol = () => {
     activityRegisterTypes,
     lastActivityRegister,
   } = useSelector((state) => state.activityRegister);
-
-  const { uid } = useSelector((state) => state.auth);
 
   const [showEditForm, setshowEditForm] = useState(false);
   const [showCreateNewForm, setshowCreateNewForm] = useState(false);
@@ -168,6 +163,18 @@ export const ActivityRegisterCol = () => {
     }
   };
 
+  const handleEditCurrentActivity = async (e) => {
+    e.preventDefault();
+    dispatch(
+      activityRegisterStartUpdate({
+        ...currentActivityValues,
+        activity: activityRegisterTypes[currentActivityValues.activity],
+      })
+    );
+    resetCurrentActivityValues();
+    setshowEditForm(false);
+  };
+
   const handleContinueLastActivity = async () => {
     if (isObjectEmpty(lastActivityRegister)) {
       return Swal.fire({
@@ -228,12 +235,17 @@ export const ActivityRegisterCol = () => {
     setshowCreateNewForm((prevState) => !prevState);
   };
 
-  const handleDelete = async (id) => {
-    console.log("voy a borrar");
-    dispatch(activityRegisterDelete(id));
+  const handleRegisterPastActivity = async (e) => {
+    dispatch(
+      createActivityRegister({
+        ...newActivityValues,
+        activity: activityRegisterTypes[newActivityValues.activity],
+      })
+    );
+    setshowCreateNewForm(false);
   };
 
-  const lastRegistersColumns = [
+  const columns = [
     { field: "activity", headerName: "Actividad", flex: 1 },
     {
       field: "Inicio",
@@ -282,13 +294,13 @@ export const ActivityRegisterCol = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`${uid}/${params.row._id}`}>
-              <button className="btn btn-primary">Editar</button>
+            <Link to={`${params.row._id}`}>
+              <button className="collaboratorsEdit">Ver</button>
             </Link>
             {
               <DeleteOutline
                 className="collaboratorsDelete"
-                onClick={() => handleDelete(params.id)}
+                // onClick={() => handleDelete(params.id)}
               />
             }
           </>
@@ -303,12 +315,10 @@ export const ActivityRegisterCol = () => {
   return (
     <div className="p-5">
       <div className="activityRegisterTopButton right-content me-10r">
-        <Link to="all">
-          <div className="btn btn-primary mb-3r">Ver otros</div>
-        </Link>
+        <div className="btn btn-primary mb-3r">Ver otros</div>
       </div>
       <div className="activityRegisterHeading mb-3r">
-        <h2 className="heading--secondary">Actividades de Javier García</h2>
+        <h2 className="heading--secondary">A VER</h2>
       </div>
 
       {isTimerActive && (
@@ -359,12 +369,80 @@ export const ActivityRegisterCol = () => {
       )}
 
       {showEditForm && (
-        <ActivityRegisterForm
-          activityRegister={currentRegister}
-          handleShowForm={handleShowEditForm}
-          showCancel={true}
-          showEndDate={false}
-        />
+        <div className="activityRegisterNewActivityForm l-singleCardContainer mb-3r">
+          <form className="row" onSubmit={handleEditCurrentActivity}>
+            <div className="col-md-6 mb-3">
+              <FormControl fullWidth>
+                <InputLabel
+                  id="demo-simple-select-label"
+                  sx={{ fontSize: "1.6rem" }}
+                >
+                  Actividad
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={currentActivityValues.activity}
+                  name="activity"
+                  label="Actividad"
+                  onChange={handleCurrentActivityInputChange}
+                  sx={{ fontSize: "1.6rem" }}
+                >
+                  {Object.keys(activityRegisterTypes).map((key) => {
+                    return (
+                      <MenuItem
+                        key={key}
+                        value={key}
+                        sx={{ fontSize: "1.6rem" }}
+                      >
+                        {activityRegisterTypes[key]}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="" className="form-label mb-3">
+                Descripción (opcional)
+              </label>
+              <input
+                type="text"
+                className="form-control mb-3"
+                name="desc"
+                placeholder="Descripción"
+                value={currentActivityValues.desc}
+                onChange={handleCurrentActivityInputChange}
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="" className="form-label mb-3">
+                Fecha y hora de inicio
+              </label>
+              <input
+                type="datetime-local"
+                className="form-control mb-3"
+                name="startingTime"
+                placeholder="Fecha y hora de inicio"
+                value={currentActivityValues.startingTime}
+                onChange={handleCurrentActivityInputChange}
+              />
+            </div>
+
+            <div className="d-flex justify-content-evenly">
+              <button className="btn btn-primary" type="submit">
+                Guardar cambios
+              </button>
+              <button
+                className="btn btn-danger"
+                type="button"
+                onClick={handleShowEditForm}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
       {showCreateNewActivity && (
@@ -398,13 +476,93 @@ export const ActivityRegisterCol = () => {
       )}
 
       {showCreateNewForm && (
-        <ActivityRegisterForm
-          isNewActivity={true}
-          activityRegister={{}}
-          handleShowForm={handleShowCreateForm}
-          showCancel={true}
-          showEndDate={true}
-        />
+        <div className="activityRegisterNewActivityForm l-singleCardContainer mb-3r">
+          <form className="row" onSubmit={handleRegisterPastActivity}>
+            <div className="col-md-6 mb-3">
+              <FormControl fullWidth>
+                <InputLabel
+                  id="demo-simple-select-label"
+                  sx={{ fontSize: "1.6rem" }}
+                >
+                  Actividad
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={newActivityValues.activity}
+                  name="activity"
+                  label="Actividad"
+                  onChange={handleNewActivityInputChange}
+                  sx={{ fontSize: "1.6rem" }}
+                >
+                  {Object.keys(activityRegisterTypes).map((key) => {
+                    return (
+                      <MenuItem
+                        key={key}
+                        value={key}
+                        sx={{ fontSize: "1.6rem" }}
+                      >
+                        {activityRegisterTypes[key]}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="" className="form-label mb-3">
+                Descripción (opcional)
+              </label>
+              <input
+                type="text"
+                className="form-control mb-3"
+                name="desc"
+                placeholder="Descripción"
+                value={newActivityValues.desc}
+                onChange={handleNewActivityInputChange}
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="" className="form-label mb-3">
+                Fecha y hora de inicio
+              </label>
+              <input
+                type="datetime-local"
+                className="form-control mb-3"
+                name="startingTime"
+                placeholder="Fecha y hora de inicio"
+                value={newActivityValues.startingTime}
+                onChange={handleNewActivityInputChange}
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="" className="form-label mb-3">
+                Fecha y hora de conclusión
+              </label>
+              <input
+                type="datetime-local"
+                className="form-control mb-3"
+                name="endingTime"
+                placeholder="Fecha y hora de conclusión"
+                value={newActivityValues.endingTime}
+                onChange={handleNewActivityInputChange}
+              />
+            </div>
+
+            <div className="d-flex justify-content-evenly">
+              <button className="btn btn-primary" type="submit">
+                Registrar
+              </button>
+              <button
+                className="btn btn-danger"
+                type="button"
+                onClick={handleShowCreateForm}
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
       )}
       <div className="activityRegisterBottomPage">
         <div className="activityRegisterLeft">
@@ -412,9 +570,9 @@ export const ActivityRegisterCol = () => {
             <h3 className="headingTertiary">Últimos registros</h3>
             <div style={{ height: "75vh", width: "100%" }}>
               <DataGrid
-                rows={getConcludedActivityRegisters(activeColRegisters)}
+                rows={activeColRegisters}
                 disableSelectionOnClick
-                columns={lastRegistersColumns}
+                columns={columns}
                 pageSize={20}
                 rowsPerPageOptions={[20, 50, 100]}
                 getRowId={(row) => row._id}

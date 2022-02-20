@@ -8,7 +8,7 @@ import { collaboratorsStartLoading } from "../../../actions/collaboratorActions"
 import {
   getBranchesSummary,
   getCollaboratorsCleanUpsSummary,
-} from "../../../helpers/utilites";
+} from "../../../helpers/utilities";
 import { CleanUpSummaryBranch } from "./components/CleanUpSummaryBranch";
 
 export const SummaryCleanUps = () => {

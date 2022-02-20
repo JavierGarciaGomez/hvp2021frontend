@@ -11,6 +11,8 @@ import {
   AccessTime,
   LineStyle,
   PermIdentity,
+  WorkOutline,
+  MiscellaneousServicesOutlined,
 } from "@mui/icons-material";
 import { setMenuState } from "../../../../actions/dbUiActions";
 
@@ -112,6 +114,33 @@ export const Sidebar = () => {
               <li className="db-sidebar__listItem">
                 <AccessTime className="db-sidebar__icon" fontSize="large" />
                 <span>Log de Acceso</span>
+              </li>
+            </NavLink>
+            <NavLink
+              to="/dashboard/activityRegister"
+              className={({ isActive }) => {
+                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
+              }}
+              onClick={handleNavLinkClick}
+            >
+              <li className="db-sidebar__listItem">
+                <WorkOutline className="db-sidebar__icon" fontSize="large" />
+                <span>Registro de actividades</span>
+              </li>
+            </NavLink>
+            <NavLink
+              to="/dashboard/misc"
+              className={({ isActive }) => {
+                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
+              }}
+              onClick={handleNavLinkClick}
+            >
+              <li className="db-sidebar__listItem">
+                <MiscellaneousServicesOutlined
+                  className="db-sidebar__icon"
+                  fontSize="large"
+                />
+                <span>Misc</span>
               </li>
             </NavLink>
           </ul>

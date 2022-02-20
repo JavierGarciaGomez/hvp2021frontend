@@ -5,6 +5,7 @@ import { types } from "../types/types";
 const initialState = {
   allActivityRegisters: [],
   activeColRegisters: [],
+  activeRegister: [],
   currentRegister: {},
   lastActivityRegister: {},
   // todo: isItNeedIt?
@@ -34,6 +35,10 @@ export const activityRegisterReducer = (state = initialState, action) => {
 
     case types.setLastActivityRegister: {
       return { ...state, lastActivityRegister: action.payload };
+    }
+
+    case types.setActiveActivityRegister: {
+      return { ...state, activeRegister: action.payload };
     }
 
     case types.activityTypesLoaded: {

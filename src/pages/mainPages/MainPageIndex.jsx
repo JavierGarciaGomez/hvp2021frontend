@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { MainPageHero } from "./components/MainPageHero";
 
 import { collaboratorsStartLoading } from "../../actions/collaboratorActions";
-import { sortCollection } from "../../helpers/utilites";
+import { sortCollection } from "../../helpers/utilities";
 import { CharacteristicCard } from "./components/CharacteristicCard";
 import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 

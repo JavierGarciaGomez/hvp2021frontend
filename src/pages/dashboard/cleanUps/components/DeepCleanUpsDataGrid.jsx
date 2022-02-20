@@ -7,7 +7,7 @@ import { deepCleanUpsStartLoading } from "../../../../actions/cleanUpsActions";
 import {
   formatAndOrderCollection,
   getAColumn,
-} from "../../../../helpers/utilites";
+} from "../../../../helpers/utilities";
 
 export const DeepCleanUpsDataGrid = () => {
   const { branch } = useParams();

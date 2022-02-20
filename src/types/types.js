@@ -56,6 +56,7 @@ export const types = {
   activityRegisterFinishedLoading: "[activityRegister] finished loading",
   setCurrentActivityRegister: "[activityRegister] set current",
   setLastActivityRegister: "[activityRegister] set last activity",
+  setActiveActivityRegister: "[activityRegister] set active",
 
   activityRegisterCreateNew: "[activityRegister] add new",
   activityRegistersLoaded: "[activityRegister] loaded",
