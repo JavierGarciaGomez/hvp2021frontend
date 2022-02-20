@@ -17,6 +17,30 @@ import {
 import { types } from "../types/types";
 import { authLogin, startChecking } from "./authActions";
 
+export const allActivityRegistersStartLoading = () => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(activityRegistersIsLoading());
+      let resp = await fetchConToken(`activityRegister/`);
+      let body = await resp.json();
+
+      console.log("body", body);
+
+      let allActivityRegisters = sortCollectionByDate(
+        body.allActivityRegisters,
+        "endingTime"
+      );
+
+      if (body.ok) {
+        dispatch(allActivityRegisterLoaded(allActivityRegisters));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(activityRegistersFinishedLoading());
+  };
+};
+
 // Todo
 export const activityRegistersStartLoading = () => {
   return async (dispatch, getState) => {
@@ -39,12 +63,6 @@ export const activityRegistersStartLoading = () => {
         dispatch(colActRegistersLoaded(activityRegisters));
         dispatch(
           setCurrentRegister(
-            findObjectByProperty(activityRegisters, "endingTime", null)
-          )
-        );
-
-        dispatch(
-          setActiveActivityRegister(
             findObjectByProperty(activityRegisters, "endingTime", null)
           )
         );
@@ -84,6 +102,14 @@ const activityRegistersFinishedLoading = () => ({
 const activityTypesLoaded = (data) => {
   return {
     type: types.activityTypesLoaded,
+    payload: data,
+  };
+};
+
+// Todo
+const allActivityRegisterLoaded = (data) => {
+  return {
+    type: types.allActivityRegistersLoaded,
     payload: data,
   };
 };

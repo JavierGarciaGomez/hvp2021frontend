@@ -1,21 +1,23 @@
-import { CircularProgress, MenuItem, TextField } from "@material-ui/core";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import React, { Fragment } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import Swal from "sweetalert2";
+
 import { hour, minute, second } from "../../../helpers/constants";
 
-import { useForm } from "../../../hooks/useForm";
 import {
   calculateMonthHours,
   calculateTotalHours,
   calculateWeekHours,
   calculateYesterdayHours,
+  fireSwalConfirmation,
+  fireSwalError,
+  fireSwalQuestionInput,
+  fireSwalQuestionSelect,
   getConcludedActivityRegisters,
-  getKeyByValue,
   isObjectEmpty,
 } from "../../../helpers/utilities";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,16 +33,7 @@ import { DeleteOutline } from "@material-ui/icons";
 import { ActivityRegisterForm } from "./components/ActivityRegisterForm";
 dayjs.extend(duration);
 
-// todo: delete
-const initialNewActivityFormValues = {
-  activity: "",
-  startingTime: "",
-  endingTime: "",
-  desc: "",
-};
-
 export const ActivityRegisterCol = () => {
-  // todo check what is need it
   const dispatch = useDispatch();
   const {
     activeColRegisters,
@@ -50,7 +43,7 @@ export const ActivityRegisterCol = () => {
     lastActivityRegister,
   } = useSelector((state) => state.activityRegister);
 
-  const { uid } = useSelector((state) => state.auth);
+  const { uid, col_code } = useSelector((state) => state.auth);
 
   const [showEditForm, setshowEditForm] = useState(false);
   const [showCreateNewForm, setshowCreateNewForm] = useState(false);
@@ -58,24 +51,12 @@ export const ActivityRegisterCol = () => {
   const [time, setTime] = useState(dayjs().diff(""));
   const [showCreateNewActivity, setshowCreateNewActivity] = useState(false);
 
-  const {
-    values: newActivityValues,
-    handleInputChange: handleNewActivityInputChange,
-  } = useForm(initialNewActivityFormValues);
-
-  const {
-    values: currentActivityValues,
-    handleInputChange: handleCurrentActivityInputChange,
-    setFullValues: setCurrentActivityFullValues,
-    reset: resetCurrentActivityValues,
-  } = useForm({});
-
   // Load all
   useEffect(() => {
     dispatch(activityRegistersStartLoading());
   }, [dispatch]);
 
-  // check if there is a current activity with no endingtime
+  // check if there is a current register and set the timer
   useEffect(() => {
     if (!isObjectEmpty(currentRegister) && !currentRegister.endingTime) {
       setisTimerActive(true);
@@ -99,56 +80,37 @@ export const ActivityRegisterCol = () => {
 
   /**********HANDLERS********/
   const handleShowEditForm = async () => {
-    // set the values for the form
-    setCurrentActivityFullValues({
-      ...currentRegister,
-      startingTime: dayjs(currentRegister.startingTime).format(
-        "YYYY-MM-DDTHH:mm"
-      ),
-      activity: getKeyByValue(activityRegisterTypes, currentRegister.activity),
-    });
     setshowEditForm((prevState) => !prevState);
   };
 
-  const handleFinishActivity = () => {
+  // todo working
+  const handleFinishActivity = async () => {
     // ask confirmation
-    Swal.fire({
-      title: "¿Estás seguro en dar por terminada esta actividad?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(
-          activityRegisterStartUpdate({
-            ...currentRegister,
-            endingTime: dayjs(),
-          })
-        );
-      }
-    });
+    const isConfirmed = await fireSwalConfirmation(
+      "¿Estás seguro en dar por terminada esta actividad?"
+    );
+
+    if (isConfirmed) {
+      dispatch(
+        activityRegisterStartUpdate({
+          ...currentRegister,
+          endingTime: dayjs(),
+        })
+      );
+    }
   };
 
   const handleFinishAndStartActivity = async () => {
-    const { value: activity } = await Swal.fire({
-      title: "Termina e inicia nueva actividad",
-      icon: "question",
-      input: "select",
-      inputOptions: activityRegisterTypes,
-      inputPlaceholder: "Selecciona una actividad",
-      showCancelButton: true,
-    });
-
+    const activity = await fireSwalQuestionSelect(
+      "¿Qué actividad quieres comenzar?",
+      activityRegisterTypes,
+      "Selecciona una actividad"
+    );
     if (activity) {
-      const { value: desc } = await Swal.fire({
-        title: "Nueva actividad",
-        icon: "question",
-        input: "text",
-        inputLabel: "Agrega un detalle a la actividad, si deseas",
-      });
-
+      const desc = await fireSwalQuestionInput(
+        "¿Qué actividad quieres comenzar?",
+        "Agrega una descripción (opcional)"
+      );
       dispatch(
         activityRegisterStartUpdate({
           ...currentRegister,
@@ -163,57 +125,39 @@ export const ActivityRegisterCol = () => {
           desc,
         })
       );
-
-      // generate new activity
     }
   };
 
   const handleContinueLastActivity = async () => {
     if (isObjectEmpty(lastActivityRegister)) {
-      return Swal.fire({
-        title: "No tienes ninguna actividad previa registrada",
-        icon: "error",
-        showConfirmButton: false,
-        timer: 1000,
-      });
+      fireSwalError("No tienes ninguna actividad previa registrada");
     }
-    Swal.fire({
-      title: `¿Quieres continuar con la actividad de ${lastActivityRegister.activity}`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(
-          createActivityRegister({
-            ...lastActivityRegister,
-            startingTime: dayjs(),
-            endingTime: null,
-          })
-        );
-      }
-    });
+    const isConfirmed = await fireSwalConfirmation(
+      `¿Quieres continuar con la actividad de ${lastActivityRegister.activity}`
+    );
+
+    if (isConfirmed) {
+      dispatch(
+        createActivityRegister({
+          ...lastActivityRegister,
+          startingTime: dayjs(),
+          endingTime: null,
+        })
+      );
+    }
   };
 
   const handleCreateNewActivity = async () => {
-    const { value: activity } = await Swal.fire({
-      title: "Inicia nueva actividad",
-      icon: "question",
-      input: "select",
-      inputOptions: activityRegisterTypes,
-      inputPlaceholder: "Selecciona una actividad",
-      showCancelButton: true,
-    });
-
+    const activity = await fireSwalQuestionSelect(
+      "¿Qué actividad quieres comenzar?",
+      activityRegisterTypes,
+      "Selecciona una actividad"
+    );
     if (activity) {
-      const { value: desc } = await Swal.fire({
-        title: "Nueva actividad",
-        icon: "question",
-        input: "text",
-        inputLabel: "Agrega un detalle a la actividad, si deseas",
-      });
+      const desc = await fireSwalQuestionInput(
+        "¿Qué actividad quieres comenzar?",
+        "Agrega una descripción (opcional)"
+      );
       dispatch(
         createActivityRegister({
           startingTime: dayjs(),
@@ -229,7 +173,6 @@ export const ActivityRegisterCol = () => {
   };
 
   const handleDelete = async (id) => {
-    console.log("voy a borrar");
     dispatch(activityRegisterDelete(id));
   };
 
@@ -302,14 +245,17 @@ export const ActivityRegisterCol = () => {
   }
   return (
     <div className="p-5">
+      {/* Button to show other users */}
       <div className="activityRegisterTopButton right-content me-10r">
         <Link to="all">
           <div className="btn btn-primary mb-3r">Ver otros</div>
         </Link>
       </div>
       <div className="activityRegisterHeading mb-3r">
-        <h2 className="heading--secondary">Actividades de Javier García</h2>
+        <h2 className="heading--secondary">Actividades de {col_code}</h2>
       </div>
+
+      {/* Current activity */}
 
       {isTimerActive && (
         <div className="activityRegisterActive l-singleCardContainer mb-3r">
@@ -358,7 +304,8 @@ export const ActivityRegisterCol = () => {
         </div>
       )}
 
-      {showEditForm && (
+      {/* Edit Form */}
+      {showEditForm && currentRegister && (
         <ActivityRegisterForm
           activityRegister={currentRegister}
           handleShowForm={handleShowEditForm}
@@ -367,6 +314,7 @@ export const ActivityRegisterCol = () => {
         />
       )}
 
+      {/* CREATE NEW ACTIVITIES */}
       {showCreateNewActivity && (
         <div className="activityRegisterNewActivity l-singleCardContainer mb-3r">
           <div className="card">
@@ -397,6 +345,7 @@ export const ActivityRegisterCol = () => {
         </div>
       )}
 
+      {/* NEW ACTIVITY FORM */}
       {showCreateNewForm && (
         <ActivityRegisterForm
           isNewActivity={true}
@@ -406,7 +355,9 @@ export const ActivityRegisterCol = () => {
           showEndDate={true}
         />
       )}
-      <div className="activityRegisterBottomPage">
+
+      {/* BOTTOM PAGE */}
+      <div className="activityRegisterBottomPage mt-10r">
         <div className="activityRegisterLeft">
           <div className="activityRegisterLastRecords">
             <h3 className="headingTertiary">Últimos registros</h3>

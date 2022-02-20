@@ -97,7 +97,10 @@ export default function Collaborators() {
         {/* TODO: do components */}
         {collaborators.map((collaborator) => {
           return (
-            <div className="db-collaborators__collaborator-card">
+            <div
+              className="db-collaborators__collaborator-card"
+              key={collaborator._id}
+            >
               <div className="db-collaborators__card-top">
                 <div className="db-collaborators__img-container">
                   <img

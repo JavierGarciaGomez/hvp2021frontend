@@ -63,6 +63,16 @@ export const ActivityRegisterEdit = () => {
     }
   }, [dispatch, activeColRegisters]);
 
+  console.log(
+    "***ACTIVITY REGISTER EDIT",
+    "is loading",
+    isLoading,
+    "activecolregisters",
+    activeColRegisters,
+    "activity",
+    activeRegister
+  );
+
   if (isLoading) {
     return <CircularProgress />;
   }

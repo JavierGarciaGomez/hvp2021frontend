@@ -637,7 +637,6 @@ export const fireSwalError = (message) => {
     icon: "error",
     title: "ERROR",
     text: message,
-    message: message,
     showConfirmButton: false,
     timer: 1500,
   });
@@ -648,8 +647,106 @@ export const fireSwalSuccess = (message) => {
     icon: "success",
     title: "ÉXITO",
     text: message,
-    message: message,
     showConfirmButton: false,
     timer: 1500,
   });
+};
+
+export const fireSwalConfirmation = async (message) => {
+  const result = await Swal.fire({
+    icon: "warning",
+    title: "CONFIRMACIÓN",
+    text: message,
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí!",
+  });
+
+  return result.isConfirmed;
+};
+
+export const fireSwalQuestionSelect = async (
+  message,
+  inputOptions,
+  inputPlaceholder
+) => {
+  const result = await Swal.fire({
+    title: "RESPONDE",
+    text: message,
+    icon: "question",
+    input: "select",
+    inputOptions: inputOptions,
+    inputPlaceholder: inputPlaceholder,
+    showCancelButton: true,
+  });
+
+  return result.value;
+};
+
+export const fireSwalQuestionInput = async (message, inputLabel) => {
+  const result = await Swal.fire({
+    title: "RESPONDE",
+    text: message,
+    icon: "question",
+    input: "text",
+    inputLabel,
+  });
+
+  return result.value;
+};
+
+export const getDuration = (startTime, endTime) => {
+  return dayjs.duration(dayjs(endTime).diff(startTime)).asHours();
+};
+
+export const getColsActivityRegisters = (activityRegisters) => {
+  const colArray = [];
+  activityRegisters.map((activityRegister) => {
+    if (!activityRegister.endingTime) {
+      return;
+    }
+    console.log(
+      "activityRegister",
+      activityRegister,
+      "esta duración",
+      getDuration(activityRegister.startingTime, activityRegister.endingTime)
+    );
+    let foundOne = false;
+    for (let col of colArray) {
+      if (col.col_code === activityRegister.collaborator.col_code) {
+        foundOne = true;
+        col.registers++;
+
+        col.totalTime = Number(
+          Math.round(
+            (Number(col.totalTime) +
+              getDuration(
+                activityRegister.startingTime,
+                activityRegister.endingTime
+              )) *
+              100
+          ) / 100
+        ).toFixed(2);
+
+        break;
+      }
+    }
+    if (!foundOne) {
+      let newElement = {
+        _id: activityRegister.collaborator._id,
+        col_code: activityRegister.collaborator.col_code,
+        imgUrl: activityRegister.collaborator.imgUrl,
+        registers: 1,
+        totalTime: getDuration(
+          activityRegister.startingTime,
+          activityRegister.endingTime
+        ),
+      };
+      console.log("nuevo elemento", newElement);
+      colArray.push(newElement);
+    }
+  });
+
+  return colArray;
 };

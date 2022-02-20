@@ -22,7 +22,7 @@ export const ActivityRegisterForm = ({
     (state) => state.activityRegister
   );
 
-  console.log("este es el activity register", activityRegister);
+  console.log("ACTIVITY REGISTER FORM", activityRegister);
 
   let initialValues = {
     ...activityRegister,
@@ -46,8 +46,6 @@ export const ActivityRegisterForm = ({
 
   const { values, handleInputChange } = useForm(initialValues);
 
-  console.log("estos son los values", values, activityRegister);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -64,14 +62,15 @@ export const ActivityRegisterForm = ({
         })
       );
       handleShowForm();
+    } else {
+      dispatch(
+        activityRegisterStartUpdate({
+          ...values,
+          activity: activityRegisterTypes[values.activity],
+        })
+      );
+      handleShowForm();
     }
-
-    dispatch(
-      activityRegisterStartUpdate({
-        ...values,
-        activity: activityRegisterTypes[values.activity],
-      })
-    );
   };
 
   return (

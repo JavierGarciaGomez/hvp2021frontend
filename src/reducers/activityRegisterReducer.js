@@ -45,6 +45,10 @@ export const activityRegisterReducer = (state = initialState, action) => {
       return { ...state, activityRegisterTypes: action.payload };
     }
 
+    case types.allActivityRegistersLoaded: {
+      return { ...state, allActivityRegisters: action.payload };
+    }
+
     default:
       return state;
   }
