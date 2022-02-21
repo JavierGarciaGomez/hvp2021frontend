@@ -182,14 +182,6 @@ export const ActivityRegisterCol = () => {
     dispatch(activityRegisterDelete(id));
   };
 
-  console.log(
-    "***ACTIVITY REGISTER COL PRUEBAS",
-    "currentRegister",
-    currentRegister,
-    "isTimerActive",
-    isTimerActive
-  );
-
   const lastRegistersColumns = [
     {
       field: "activity",

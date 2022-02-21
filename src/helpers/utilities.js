@@ -487,7 +487,6 @@ export const findObjectByProperty = (collection, property, matchValue) => {
 };
 
 export const isObjectEmpty = (object) => {
-  console.log("object esto recibí", object);
   if (!object) {
     return true;
   }
@@ -787,11 +786,28 @@ export const convertArrayToObjectAndSort = (collection = []) => {
 };
 
 export const findLabelByValue = (collection = [], value) => {
-  console.log("findlabel", collection, value);
   const foundElement = collection.find((element) => element.value === value);
   const label = foundElement?.label;
   if (!label) {
     return value;
   }
   return label;
+};
+
+export const checkIfLabelAndValueAreUnique = (values, collection) => {
+  let isNotUniqueValue = findObjectByProperty(
+    collection,
+    "value",
+    values.value
+  );
+  let isNotUniqueLabel = findObjectByProperty(
+    collection,
+    "label",
+    values.label
+  );
+
+  if (isNotUniqueValue || isNotUniqueLabel) {
+    return false;
+  }
+  return true;
 };

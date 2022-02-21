@@ -1,0 +1,303 @@
+// 367
+
+import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { fetchConToken, fetchSinToken } from "../helpers/fetch";
+import {
+  checkIfIsBetween,
+  findObjectByProperty,
+  checkIfIsLong,
+  checkIfIsOld,
+  sortCollectionByDate,
+  checkIfIsStartBeforeEnd,
+  fireSwalSuccess,
+  fireSwalError,
+  sortCollectionAlphabetically,
+  sortObjectPropertiesAlphabetically,
+} from "../helpers/utilities";
+import { types } from "../types/types";
+import { authLogin, startChecking } from "./authActions";
+
+export const allMiscStartLoading = () => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(miscIsLoading());
+      let resp = await fetchConToken(`misc/`);
+      let body = await resp.json();
+
+      if (body.ok) {
+        dispatch(miscLoaded(body.allMisc));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    dispatch(miscFinishedLoading());
+  };
+};
+
+// Todo
+const miscIsLoading = () => ({
+  type: types.miscStartLoading,
+});
+
+// Todo
+const miscFinishedLoading = () => ({
+  type: types.miscFinishedLoading,
+});
+
+// Todo
+const miscLoaded = (data) => {
+  return {
+    type: types.miscLoaded,
+    payload: data,
+  };
+};
+
+export const miscUpdate = (miscKey, data) => {
+  console.log("***********esta es la data", data);
+  return async (dispatch, getState) => {
+    try {
+      const dataToUpdate = {
+        key: miscKey,
+        data,
+      };
+      const resp = await fetchConToken(`misc/${miscKey}`, dataToUpdate, "PUT");
+      const body = await resp.json();
+
+      if (body.ok) {
+        Swal.fire({
+          icon: "success",
+          title: body.msg,
+          showConfirmButton: true,
+        });
+        dispatch(allMiscStartLoading());
+      } else {
+        Swal.fire("error", body.msg, "error");
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+// todo doing
+export const setActiveActivityRegister = (data) => ({
+  type: types.setActiveActivityRegister,
+  payload: data,
+});
+
+// Todo
+const activityTypesLoaded = (data) => {
+  return {
+    type: types.activityTypesLoaded,
+    payload: data,
+  };
+};
+
+// Todo
+const colActRegistersLoaded = (activityRegisters) => {
+  return {
+    type: types.colActivityRegistersLoaded,
+    payload: activityRegisters,
+  };
+};
+
+// Todo
+const setCurrentRegister = (data) => {
+  return {
+    type: types.setCurrentActivityRegister,
+    payload: data,
+  };
+};
+
+const setLastActivityRegister = (data) => {
+  return {
+    type: types.setLastActivityRegister,
+    payload: data,
+  };
+};
+
+// Todo
+
+// todo
+export const createActivityRegister = (activity) => {
+  return async (dispatch, getState) => {
+    try {
+      const { activeColRegisters } = getState().activityRegister;
+
+      let isOld = checkIfIsOld(activity);
+      let isBetween = checkIfIsBetween(activeColRegisters, activity);
+      let isLong = checkIfIsLong(activity);
+      let isStartBeforeEnd = checkIfIsStartBeforeEnd(activity);
+
+      console.log("isold", isOld, "isbetween", isBetween, "islong", isLong);
+      if (isBetween || isLong || isOld || !isStartBeforeEnd) {
+        return Swal.fire({
+          icon: "error",
+          title:
+            "No puedes crear una actividad dentro de otra, ni que haya empezado hace más de tres días, ni que termine antes de que empiece",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+
+      const resp = await fetchConToken(`activityRegister/`, activity, "POST");
+      const body = await resp.json();
+
+      if (body.ok) {
+        Swal.fire({
+          icon: "success",
+          title: body.msg,
+          showConfirmButton: true,
+        });
+        // dispatch(activityRegistersStartLoading());
+      } else {
+        Swal.fire("error", body.msg, "error");
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+// Todo
+export const activityRegisterStartSetActive = (id) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(`activityRegisters/${id}`, {
+        activityRegisterId: id,
+      });
+
+      const body = await resp.json();
+
+      if (body.ok) {
+        const activityRegister = body.activityRegister;
+
+        dispatch(activityRegisterSetActive(activityRegister));
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+// Todo
+const activityRegisterSetActive = (activityRegister) => {
+  return {
+    type: types.activityRegisterSetActive,
+    payload: activityRegister,
+  };
+};
+
+// Todo
+export const activityRegisterStartCreate = async (data) => {
+  const resp = await fetchConToken("activityRegisters/create", data, "POST");
+  const body = await resp.json();
+  if (body.ok) {
+    // localStorage.setItem("token", body.token);
+    // localStorage.setItem("token-init-date", new Date().getTime());
+    // dispatch(
+    //   login({
+    //     uid: body.uid,
+    //     name: body.name,
+    //   })
+    // );
+    Swal.fire({
+      icon: "success",
+      title: `Usuario ${body.activityRegister.col_code} creado con éxito. El código de acceso es: ${body.activityRegister.accessCode}`,
+      showConfirmButton: true,
+    });
+  } else {
+    Swal.fire("Error", body.msg, "error");
+  }
+};
+
+// Todo
+export const activityRegisterStartLogin = (data) => {
+  return async (dispatch) => {
+    const resp = await fetchSinToken("activityRegisters/", { ...data }, "POST");
+    const body = await resp.json();
+
+    if (body.ok) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Login exitoso",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+
+      const { uid, col_code, role, imgUrl } = body;
+      dispatch(
+        authLogin({
+          uid,
+          col_code,
+          role,
+          imgUrl,
+        })
+      );
+    } else {
+      Swal.fire("Error", body.msg, "error");
+    }
+  };
+};
+
+// Todo
+export const activityRegisterStartRegister = (data) => {
+  return async (dispatch) => {
+    const resp = await fetchSinToken(
+      "activityRegisters/register",
+      { ...data },
+      "PATCH"
+    );
+    const body = await resp.json();
+
+    if (body.ok) {
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Colaborador actualizado correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      localStorage.setItem("token", body.token);
+      localStorage.setItem("token-init-date", new Date().getTime());
+      dispatch(startChecking());
+    } else {
+      Swal.fire("Error", body.msg, "error");
+    }
+  };
+};
+
+// Todo
+export const activityRegisterDelete = (activityRegisterId) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(
+        `activityRegister/${activityRegisterId}`,
+        {},
+        "DELETE"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        fireSwalSuccess("Eliminación correcta");
+        // dispatch(activityRegistersStartLoading());
+      } else {
+        fireSwalError(body.msg);
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+    }
+  };
+};
+
+// Todo
+const activityRegisterUpdate = (activityRegister) => ({
+  type: types.activityRegisterUpdate,
+  payload: activityRegister,
+});

@@ -13,9 +13,10 @@ import { CreateNewRFC } from "../pages/dashboard/rfc/CreateNewRFC";
 import { EditRFC } from "../pages/dashboard/rfc/EditRFC";
 import { AuthLogPage } from "../pages/dashboard/authLogs/AuthLogPage";
 import { ActivityRegisterCol } from "../pages/dashboard/activityRegister/ActivityRegisterCol";
-import { Misc } from "../pages/misc/Misc";
+
 import { ActivityRegisterSelect } from "../pages/dashboard/activityRegister/ActivityRegisterSelect";
 import { ActivityRegisterEdit } from "../pages/dashboard/activityRegister/ActivityRegisterEdit";
+import { Misc } from "../pages/dashboard/misc/Misc";
 
 export const DashboardRouter = () => {
   return (

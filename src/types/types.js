@@ -63,6 +63,11 @@ export const types = {
   activityRegistersLoaded: "[activityRegister] loaded",
   activityRegisterSetActive: "[activityRegister] set active",
   activityRegisterUpdate: "[activityRegister] update",
+
+  /************* Misc Reducer *********/
+  miscStartLoading: "[misc] start loading",
+  miscLoaded: "[misc] loaded",
+  miscFinishedLoading: "[misc] finished loading",
 };
 
 export const genderTypes = {
