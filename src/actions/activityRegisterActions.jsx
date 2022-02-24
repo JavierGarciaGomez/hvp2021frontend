@@ -172,17 +172,6 @@ export const activityRegisterStartUpdate = (activity) => {
       let isLong = checkIfIsLong(activity);
       let isStartBeforeEnd = checkIfIsStartBeforeEnd(activity);
 
-      console.log(
-        "isold",
-        isOld,
-        "isbetween",
-        isBetween,
-        "islong",
-        isLong,
-        "isStartBeforeend",
-        isStartBeforeEnd
-      );
-
       if (isBetween || isOld || !isStartBeforeEnd) {
         return Swal.fire({
           icon: "error",
@@ -196,6 +185,12 @@ export const activityRegisterStartUpdate = (activity) => {
       if (isLong) {
         activity.endingTime = dayjs(activity.startingTime).add(14, "hours");
       }
+      console.log("activity before", activity);
+      activity.startingTime = dayjs(activity.startingTime).toISOString();
+      if (activity.endingTime) {
+        activity.endingTime = dayjs(activity.endingTime).toISOString();
+      }
+      console.log("activity after", activity);
 
       const resp = await fetchConToken(
         `activityRegister/${activity._id}`,
@@ -242,6 +237,13 @@ export const createActivityRegister = (activity) => {
           timer: 2000,
         });
       }
+
+      console.log("activity before", activity);
+      activity.startingTime = dayjs(activity.startingTime).toISOString();
+      if (activity.endingTime) {
+        activity.endingTime = dayjs(activity.endingTime).toISOString();
+      }
+      console.log("activity before", activity);
 
       const resp = await fetchConToken(`activityRegister/`, activity, "POST");
       const body = await resp.json();

@@ -1,5 +1,5 @@
-import { DataGrid } from "@material-ui/data-grid";
-import { DeleteOutline } from "@material-ui/icons";
+import { DataGrid } from "@mui/x-data-grid";
+import { DeleteOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,7 +7,7 @@ import {
   collaboratorsStartLoading,
   collaboratorDelete,
 } from "../../../actions/collaboratorActions";
-import { CircularProgress } from "@material-ui/core";
+import CircularProgress from "@mui/material/CircularProgress";
 import { roleTypes } from "../../../types/types";
 
 export default function Collaborators() {
@@ -81,7 +81,7 @@ export default function Collaborators() {
       {/* Display bigger than smaller tablets */}
       <div
         className="db-collaborators__datagrid-wrapper"
-        style={{ height: "70vh", width: "100%" }}
+        style={{ width: "100%" }}
       >
         <DataGrid
           rows={collaborators}
@@ -90,6 +90,7 @@ export default function Collaborators() {
           pageSize={20}
           rowsPerPageOptions={[20, 50, 100]}
           getRowId={(row) => row._id}
+          autoHeight={true}
         />
       </div>
       {/* Display smaller than smaller tablets */}

@@ -12,7 +12,7 @@ import {
 import { useForm } from "../../../hooks/useForm";
 import { deepCleanUpActivities } from "../../../types/types";
 import Swal from "sweetalert2";
-import { CircularProgress } from "@material-ui/core";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const initialState = {};
 Object.keys(deepCleanUpActivities).map((key) => {

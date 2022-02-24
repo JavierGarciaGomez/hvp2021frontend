@@ -1,5 +1,4 @@
-import { CircularProgress, MenuItem, TextField } from "@material-ui/core";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import React from "react";
@@ -19,9 +18,9 @@ import {
   createActivityRegister,
   setActiveActivityRegister,
 } from "../../../actions/activityRegisterActions";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { Link, useParams } from "react-router-dom";
-import { DeleteOutline } from "@material-ui/icons";
+import { DeleteOutline } from "@mui/icons-material";
 import { ActivityRegisterForm } from "./components/ActivityRegisterForm";
 dayjs.extend(duration);
 

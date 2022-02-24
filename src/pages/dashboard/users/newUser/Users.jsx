@@ -1,13 +1,13 @@
 import "./userList.css";
-import { DataGrid } from "@material-ui/data-grid";
-import { DeleteOutline } from "@material-ui/icons";
+import { DataGrid } from "@mui/x-data-grid";
+import { DeleteOutline } from "@mui/icons-material";
 
 import { Link } from "react-router-dom";
 import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
-import { CircularProgress } from "@material-ui/core";
+import CircularProgress from "@mui/material/CircularProgress";
 import { usersStartLoading, userDelete } from "../../../../actions/userActions";
 import { checkAutorization } from "../../../../helpers/utilities";
 import { roleTypes } from "../../../../types/types";

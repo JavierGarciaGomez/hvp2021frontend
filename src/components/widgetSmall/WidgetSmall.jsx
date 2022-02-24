@@ -1,7 +1,7 @@
 import "./widgetSmall.css";
 
 import React from "react";
-import { Visibility } from "@material-ui/icons";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export const WidgetSmall = () => {
   return (
@@ -19,7 +19,7 @@ export const WidgetSmall = () => {
             <span className="widgetSmallUserTitle">Software Engineer</span>
           </div>
           <button className="widgetSmallButton">
-            <Visibility className="widgetSmallIcon" />
+            <VisibilityIcon className="widgetSmallIcon" />
             Display
           </button>
         </li>
@@ -34,7 +34,7 @@ export const WidgetSmall = () => {
             <span className="widgetSmallUserTitle">Software Engineer</span>
           </div>
           <button className="widgetSmallButton">
-            <Visibility className="widgetSmallIcon" />
+            <VisibilityIcon className="widgetSmallIcon" />
             Display
           </button>
         </li>
@@ -49,7 +49,7 @@ export const WidgetSmall = () => {
             <span className="widgetSmallUserTitle">Software Engineer</span>
           </div>
           <button className="widgetSmallButton">
-            <Visibility className="widgetSmallIcon" />
+            <VisibilityIcon className="widgetSmallIcon" />
             Display
           </button>
         </li>
@@ -64,7 +64,7 @@ export const WidgetSmall = () => {
             <span className="widgetSmallUserTitle">Software Engineer</span>
           </div>
           <button className="widgetSmallButton">
-            <Visibility className="widgetSmallIcon" />
+            <VisibilityIcon className="widgetSmallIcon" />
             Display
           </button>
         </li>
@@ -79,7 +79,7 @@ export const WidgetSmall = () => {
             <span className="widgetSmallUserTitle">Software Engineer</span>
           </div>
           <button className="widgetSmallButton">
-            <Visibility className="widgetSmallIcon" />
+            <VisibilityIcon className="widgetSmallIcon" />
             Display
           </button>
         </li>

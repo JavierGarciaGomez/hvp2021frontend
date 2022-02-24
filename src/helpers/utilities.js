@@ -1,11 +1,19 @@
 import { positionTypes, procedureTypes, roleTypes } from "../types/types";
 import dayjs from "dayjs";
 import { Fragment } from "react";
-import { Check, Clear } from "@material-ui/icons";
+import {
+  Check,
+  ChromeReaderMode,
+  Clear,
+  GridOn,
+  MoreHoriz,
+  OndemandVideo,
+  PictureAsPdf,
+  YouTube,
+} from "@mui/icons-material/";
 import utc from "dayjs/plugin/utc";
 import isBetween from "dayjs/plugin/isBetween";
 import isYesterday from "dayjs/plugin/isYesterday";
-import { elGR } from "@material-ui/data-grid";
 import Swal from "sweetalert2";
 dayjs.extend(utc);
 dayjs.extend(isBetween);
@@ -794,6 +802,56 @@ export const findLabelByValue = (collection = [], value) => {
   return label;
 };
 
+export const organiseDocumentation = (data) => {
+  // const colArray = [
+  //   {typeName, data[
+  //  {topicName, data[
+  // {title, format, link, date, author, status}
+  // ]}
+
+  // ]}
+  // ];
+  const organisedDocumentation = [];
+
+  data.map((element) => {
+    // variable to determine if the type existed
+    let typeExistedBefore = false;
+    for (let type of organisedDocumentation) {
+      console.log("prueba", type.typeName, element.type);
+      if (type.typeName === element.type) {
+        typeExistedBefore = true;
+        // variable to determine if the topic existed
+        let topicExistedBefore = false;
+        for (let topic of type.data) {
+          if (topic.topicName === element.topic) {
+            topicExistedBefore = true;
+            topic.data.push(element);
+            break;
+          }
+        }
+        if (!topicExistedBefore) {
+          let newTopic = {
+            topicName: element.topic,
+            data: [element],
+          };
+          type.data.push(newTopic);
+        }
+
+        break;
+      }
+    }
+    if (!typeExistedBefore) {
+      let newType = {
+        typeName: element.type,
+        data: [{ topicName: element.topic, data: [element] }],
+      };
+      organisedDocumentation.push(newType);
+    }
+  });
+
+  return organisedDocumentation;
+};
+
 export const checkIfLabelAndValueAreUnique = (values, collection) => {
   let isNotUniqueValue = findObjectByProperty(
     collection,
@@ -810,4 +868,42 @@ export const checkIfLabelAndValueAreUnique = (values, collection) => {
     return false;
   }
   return true;
+};
+
+export const getFormatIcon = (format) => {
+  if (format === "video") {
+    return <YouTube />;
+  }
+  if (format === "hoja de cálculo") {
+    return <GridOn />;
+  }
+  if (format === "pdf") {
+    return <PictureAsPdf />;
+  }
+  if (format === "documento de texto") {
+    return <ChromeReaderMode />;
+  }
+  return <MoreHoriz />;
+};
+
+export const getTxtClass = (status) => {
+  switch (status) {
+    case "Actualizado":
+      return "txt-success";
+
+    case "Semidesactualizado":
+      return "txt-warning";
+
+    case "Desactualizado":
+      return "txt-danger";
+
+    case "No aplica":
+      return "txt-gray";
+
+    case "No vigente":
+      return "txt-dark";
+
+    default:
+      return null;
+  }
 };

@@ -1,4 +1,4 @@
-import { EmojiPeople, Http } from "@material-ui/icons";
+import { EmojiPeople, Http } from "@mui/icons-material";
 import {
   BadgeOutlined,
   Numbers,

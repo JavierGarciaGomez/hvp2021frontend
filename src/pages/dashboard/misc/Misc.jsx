@@ -1,4 +1,4 @@
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 
 import {
   CircularProgress,
@@ -144,7 +144,6 @@ export const Misc = () => {
     return <CircularProgress />;
   }
 
-  console.log("all misc", allMisc);
   return (
     <div className="p-5">
       <div className="">

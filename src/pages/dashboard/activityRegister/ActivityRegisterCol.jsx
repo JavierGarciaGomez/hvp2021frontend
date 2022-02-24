@@ -30,9 +30,9 @@ import {
   activityRegisterStartUpdate,
   createActivityRegister,
 } from "../../../actions/activityRegisterActions";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import { DeleteOutline } from "@material-ui/icons";
+import { DeleteOutline } from "@mui/icons-material";
 import { ActivityRegisterForm } from "./components/ActivityRegisterForm";
 dayjs.extend(duration);
 

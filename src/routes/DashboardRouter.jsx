@@ -17,6 +17,7 @@ import { ActivityRegisterCol } from "../pages/dashboard/activityRegister/Activit
 import { ActivityRegisterSelect } from "../pages/dashboard/activityRegister/ActivityRegisterSelect";
 import { ActivityRegisterEdit } from "../pages/dashboard/activityRegister/ActivityRegisterEdit";
 import { Misc } from "../pages/dashboard/misc/Misc";
+import { Documentation } from "../pages/dashboard/documentation/Documentation";
 
 export const DashboardRouter = () => {
   return (
@@ -60,6 +61,8 @@ export const DashboardRouter = () => {
 
       {/* Misc */}
       <Route path="misc" element={<Misc />} />
+      {/* Documentation */}
+      <Route path="documentation" element={<Documentation />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />

@@ -1,17 +1,12 @@
-import { CircularProgress, ThemeProvider } from "@material-ui/core";
+import CircularProgress from "@mui/material/CircularProgress";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { startChecking } from "../actions/authActions";
 import { AuthPage } from "../pages/authPages/loginPage/AuthPage";
-import { LoginTab } from "../pages/authPages/loginPage/LoginTab";
-import { RegisterColTab } from "../pages/authPages/loginPage/RegisterColTab";
 import { MainPageLayout } from "../pages/mainPages/MainPageLayout";
 import { TestPage } from "../pages/test/TestPage";
-
-import { DashboardRouter } from "./DashboardRouter";
-import { MainPageRouter } from "./MainPageRouter";
-import { createTheme } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 import { roleTypes } from "../types/types";
 import { checkAutorization } from "../helpers/utilities";

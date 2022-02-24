@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { roleTypes } from "../../../../types/types";
@@ -13,6 +13,7 @@ import {
   PermIdentity,
   WorkOutline,
   MiscellaneousServicesOutlined,
+  Article,
 } from "@mui/icons-material";
 import { setMenuState } from "../../../../actions/dbUiActions";
 
@@ -141,6 +142,18 @@ export const Sidebar = () => {
                   fontSize="large"
                 />
                 <span>Misc</span>
+              </li>
+            </NavLink>
+            <NavLink
+              to="/dashboard/documentation"
+              className={({ isActive }) => {
+                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
+              }}
+              onClick={handleNavLinkClick}
+            >
+              <li className="db-sidebar__listItem">
+                <Article className="db-sidebar__icon" fontSize="large" />
+                <span>Documentación de apoyo</span>
               </li>
             </NavLink>
           </ul>

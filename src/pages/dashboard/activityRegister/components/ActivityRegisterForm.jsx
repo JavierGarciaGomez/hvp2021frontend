@@ -46,6 +46,7 @@ export const ActivityRegisterForm = ({
   const { values, handleInputChange } = useForm(initialValues);
 
   const handleSubmit = async (e) => {
+    console.log("ESTO ES EL FORM", values);
     e.preventDefault();
 
     if (isNewActivity) {
@@ -54,6 +55,7 @@ export const ActivityRegisterForm = ({
           "No puedes crear un registro sin determinar primero una actividad y una hora de inicio"
         );
       }
+
       dispatch(
         createActivityRegister({
           ...values,
@@ -76,35 +78,24 @@ export const ActivityRegisterForm = ({
     <div className="activityRegisterNewActivityForm l-singleCardContainer mb-3r">
       <form className="row" onSubmit={handleSubmit}>
         <div className="col-md-6 mb-3">
-          <FormControl fullWidth>
-            <InputLabel
-              id="demo-simple-select-label"
-              sx={{ fontSize: "1.6rem" }}
-            >
-              Actividad
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={values.activity}
-              name="activity"
-              label="Actividad"
-              onChange={handleInputChange}
-              sx={{ fontSize: "1.6rem" }}
-            >
-              {activityRegisterTypes.map((element) => {
-                return (
-                  <MenuItem
-                    key={element.value}
-                    value={element.value}
-                    sx={{ fontSize: "1.6rem" }}
-                  >
-                    {element.label}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          <label htmlFor="" className="form-label mb-3">
+            Selecciona actividad
+          </label>
+          <select
+            className="form-select mb-3 form-control"
+            aria-label="Default select example"
+            value={values.activity}
+            name="activity"
+            onChange={handleInputChange}
+          >
+            {activityRegisterTypes.map((element) => {
+              return (
+                <option key={element.value} value={element.value}>
+                  {element.label}
+                </option>
+              );
+            })}
+          </select>
         </div>
         <div className="col-md-6 mb-3">
           <label htmlFor="" className="form-label mb-3">

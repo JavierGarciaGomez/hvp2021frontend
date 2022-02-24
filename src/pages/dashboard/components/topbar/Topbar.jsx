@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // material icons
-import { NotificationsNone, Language, Settings } from "@material-ui/icons";
+import { NotificationsNone, Language, Settings } from "@mui/icons-material";
 import { Logout } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import MenuIcon from "@mui/icons-material/Menu";

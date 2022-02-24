@@ -1,5 +1,5 @@
-import { CircularProgress } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
+import CircularProgress from "@mui/material/CircularProgress";
+import { DataGrid } from "@mui/x-data-grid";
 import React, { Fragment } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
