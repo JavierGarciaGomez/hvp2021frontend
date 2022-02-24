@@ -1,4 +1,3 @@
-import { OndemandVideo } from "@mui/icons-material";
 import {
   Container,
   Paper,
@@ -13,23 +12,31 @@ import {
 import dayjs from "dayjs";
 import React from "react";
 import {
+  checkAutorization,
   getFormatIcon,
   getTxtClass,
   organiseDocumentation,
 } from "../../../helpers/utilities";
 
+import { useSelector } from "react-redux";
+import { roleTypes } from "../../../types/types";
+import { Link } from "react-router-dom";
+
 const dummyData = [
   {
+    _id: 1,
     format: "video",
     link: "https://www.youtube.com/watch?v=74xNmKeJv3E",
-    title: "Política de recursos humanos del Hospital Veterinario Peninsular",
+    title: "Restringido",
     type: "Lineamientos",
     topic: "Recursos humanos",
     date: dayjs("12-25-1995"),
     author: "Javier García",
     status: "Actualizado",
+    authorization: "Colaborador",
   },
   {
+    _id: 2,
     format: "pdf",
     link: "https://www.youtube.com/watch?v=74xNmKeJv3E",
     title: "Política de recursos humanos del Hospital Veterinario Peninsular",
@@ -40,7 +47,8 @@ const dummyData = [
     status: "No vigente",
   },
   {
-    format: "vide",
+    _id: 3,
+    format: "video",
     link: "https://www.youtube.com/watch?v=74xNmKeJv3E",
     title: "Política de recursos humanos del Hospital Veterinario Peninsular",
     type: "Guías y protocolos",
@@ -52,9 +60,12 @@ const dummyData = [
 ];
 
 const organisedDocumentation = organiseDocumentation(dummyData);
-console.log("imprimo la doc", organisedDocumentation);
 
 export const Documentation = () => {
+  const { role } = useSelector((state) => state.auth);
+
+  const handleDelete = (id) => {};
+
   return (
     <Container className="mt-5r">
       <div className="heading__container mb-2r">
@@ -67,6 +78,11 @@ export const Documentation = () => {
           así como en el manejo de esta plataforma
         </Typography>
       </div>
+      <div className="mb-3r">
+        <Link to="new">
+          <button className="btn btn-primary">Agregar nuevo documento</button>
+        </Link>
+      </div>
       {organisedDocumentation.map((type) => {
         return (
           <div
@@ -78,7 +94,10 @@ export const Documentation = () => {
             </div>
             {type.data.map((topic) => {
               return (
-                <div className="documentation__topicContainer mb-2r">
+                <div
+                  className="documentation__topicContainer mb-2r"
+                  key={topic.topicName}
+                >
                   <div className="documentation__topicHeadingContainer">
                     <h4>{topic.topicName}</h4>
                   </div>
@@ -90,43 +109,79 @@ export const Documentation = () => {
                       >
                         <TableHead>
                           <TableRow>
-                            <TableCell className="fw-bold">Título</TableCell>
+                            <TableCell
+                              className="fw-bold"
+                              sx={{ width: "50%" }}
+                            >
+                              Título
+                            </TableCell>
                             <TableCell className="fw-bold">Formato</TableCell>
                             <TableCell className="fw-bold">Fecha</TableCell>
                             <TableCell className="fw-bold">Autor</TableCell>
                             <TableCell className="fw-bold">Estado</TableCell>
+                            {checkAutorization(role, roleTypes.manager) && (
+                              <TableCell className="fw-bold">
+                                Acciones
+                              </TableCell>
+                            )}
                           </TableRow>
                         </TableHead>
                         <TableBody>
-                          {topic.data.map((row) => (
-                            <TableRow
-                              key={row._id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell component="th" scope="row">
-                                <a href={row.link}>{row.title}</a>
-                              </TableCell>
-                              <TableCell>{getFormatIcon(row.format)}</TableCell>
-                              <TableCell>
-                                {dayjs(row.date).format("DD-MMM-YYYY")}
-                              </TableCell>
-                              <TableCell>{row.author}</TableCell>
-                              <TableCell className={getTxtClass(row.status)}>
-                                {row.status}
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {topic.data.map(
+                            (row) =>
+                              checkAutorization(role, row.authorization) && (
+                                <TableRow
+                                  key={row._id}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                  }}
+                                >
+                                  <TableCell component="th" scope="row">
+                                    <a href={row.link}>{row.title}</a>
+                                  </TableCell>
+                                  <TableCell>
+                                    {getFormatIcon(row.format)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {dayjs(row.date).format("DD-MMM-YYYY")}
+                                  </TableCell>
+                                  <TableCell>{row.author}</TableCell>
+                                  <TableCell
+                                    className={getTxtClass(row.status)}
+                                  >
+                                    {row.status}
+                                  </TableCell>
+                                  {checkAutorization(
+                                    role,
+                                    roleTypes.manager
+                                  ) && (
+                                    <TableCell>
+                                      <div className="documentation__actions">
+                                        <Link to={`${row._id}`}>
+                                          <button className="btn btn-primary">
+                                            Editar
+                                          </button>
+                                        </Link>
+                                        <button
+                                          className="btn btn-danger"
+                                          onClick={() => {
+                                            handleDelete(row._id);
+                                          }}
+                                        >
+                                          Borrar
+                                        </button>
+                                      </div>
+                                    </TableCell>
+                                  )}
+                                </TableRow>
+                              )
+                          )}
                         </TableBody>
                       </Table>
                     </TableContainer>
                   </div>
-                  {topic.data.map((entry) => {
-                    return <p>{entry.title}</p>;
-                  })}
                 </div>
               );
             })}

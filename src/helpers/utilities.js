@@ -7,7 +7,6 @@ import {
   Clear,
   GridOn,
   MoreHoriz,
-  OndemandVideo,
   PictureAsPdf,
   YouTube,
 } from "@mui/icons-material/";
@@ -802,6 +801,15 @@ export const findLabelByValue = (collection = [], value) => {
   return label;
 };
 
+export const findValueByLabel = (collection = [], label) => {
+  const foundElement = collection.find((element) => element.label === label);
+  const value = foundElement?.value;
+  if (!value) {
+    return label;
+  }
+  return value;
+};
+
 export const organiseDocumentation = (data) => {
   // const colArray = [
   //   {typeName, data[
@@ -871,16 +879,16 @@ export const checkIfLabelAndValueAreUnique = (values, collection) => {
 };
 
 export const getFormatIcon = (format) => {
-  if (format === "video") {
+  if (format === "Video") {
     return <YouTube />;
   }
-  if (format === "hoja de cálculo") {
+  if (format === "Hoja de cálculo") {
     return <GridOn />;
   }
-  if (format === "pdf") {
+  if (format === "Pdf") {
     return <PictureAsPdf />;
   }
-  if (format === "documento de texto") {
+  if (format === "Documento de texto") {
     return <ChromeReaderMode />;
   }
   return <MoreHoriz />;
@@ -907,3 +915,37 @@ export const getTxtClass = (status) => {
       return null;
   }
 };
+
+export const getRoleTypesLabelsAndValues = () => {
+  const newRoleTypes = [];
+  Object.entries(roleTypes).map((item) => {
+    newRoleTypes.push({
+      label: item[1],
+      value: item[0],
+    });
+  });
+
+  return newRoleTypes;
+};
+
+export const getLabelsAndValuesFromCollection = (
+  collection,
+  labelProperty,
+  valueProperty
+) => {
+  const labelsAndValues = [];
+  collection.map((element) => {
+    labelsAndValues.push({
+      label: element[labelProperty],
+      value: element[valueProperty],
+    });
+  });
+
+  return sortCollectionAlphabetically(labelsAndValues, "label");
+};
+
+export const findPropertyInCollection = (
+  collection,
+  searchProperty,
+  returnProperty
+) => {};

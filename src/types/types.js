@@ -311,3 +311,30 @@ export const procedureTypes = {
     ],
   },
 };
+
+export const documentationTypesTypes = [
+  { label: "Administración", value: "admon" },
+  { value: "support", label: "Apoyo" },
+  { value: "communications", label: "Comunicaciones" },
+  { value: "controls", label: "Controles" },
+  { value: "formats", label: "Formatos" },
+  { value: "guides", label: "Guías y protocolos" },
+  { value: "guidances", label: "Lineamientos" },
+];
+
+export const documentationFormatTypes = [
+  { value: "video", label: "Video" },
+  { value: "spreadsheet", label: "Hoja de cálculo" },
+  { value: "pdf", label: "PDF" },
+  { value: "textDocument", label: "Documento de texto" },
+  { value: "others", label: "Otros" },
+  { value: "guidances", label: "Lineamientos" },
+];
+
+export const documentationStatusTypes = [
+  { value: "updated", label: "Actualizado" },
+  { value: "semiOutdated", label: "Semidesactualizado" },
+  { value: "outdated", label: "Outdated" },
+  { value: "notValid", label: "No vigente" },
+  { value: "notApplicable", label: "No aplica" },
+];

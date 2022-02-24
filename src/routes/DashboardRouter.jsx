@@ -18,6 +18,8 @@ import { ActivityRegisterSelect } from "../pages/dashboard/activityRegister/Acti
 import { ActivityRegisterEdit } from "../pages/dashboard/activityRegister/ActivityRegisterEdit";
 import { Misc } from "../pages/dashboard/misc/Misc";
 import { Documentation } from "../pages/dashboard/documentation/Documentation";
+import { DocumentationForm } from "../pages/dashboard/documentation/components/DocumentationForm";
+import { TestPage } from "../pages/test/TestPage";
 
 export const DashboardRouter = () => {
   return (
@@ -63,6 +65,8 @@ export const DashboardRouter = () => {
       <Route path="misc" element={<Misc />} />
       {/* Documentation */}
       <Route path="documentation" element={<Documentation />} />
+      <Route path="documentation/new" element={<TestPage />} />
+      <Route path="documentation/:docId" element={<DocumentationForm />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />

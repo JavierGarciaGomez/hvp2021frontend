@@ -20,6 +20,13 @@
   flex: 1;
 }
 
-.documentation__docContainer {
+// DOCUMENTATION
+
+.documentation__actions {
   display: flex;
+  gap: 1rem;
+}
+
+.documentation__titleColumn {
+  min-width: 50%;
 }
