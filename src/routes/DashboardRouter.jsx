@@ -65,7 +65,6 @@ export const DashboardRouter = () => {
       <Route path="misc" element={<Misc />} />
       {/* Documentation */}
       <Route path="documentation" element={<Documentation />} />
-      <Route path="documentation/new" element={<TestPage />} />
       <Route path="documentation/:docId" element={<DocumentationForm />} />
 
       {/* Default */}

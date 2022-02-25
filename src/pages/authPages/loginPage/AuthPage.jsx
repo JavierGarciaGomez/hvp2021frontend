@@ -4,7 +4,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { startChecking } from "../../../actions/authActions";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAutorization } from "../../../helpers/utilities";
+import {
+  checkAuthorization,
+  checkAutorization,
+} from "../../../helpers/utilities";
 import { roleTypes } from "../../../types/types";
 
 export const AuthPage = () => {
@@ -55,10 +58,10 @@ export const AuthPage = () => {
 
   useEffect(() => {
     console.log("***********role", role);
-    if (checkAutorization(role, roleTypes.collaborator)) {
+    if (checkAuthorization(role, roleTypes.collaborator)) {
       return navigate("/dashboard", { replace: true });
     }
-    if (checkAutorization(role, roleTypes.user)) {
+    if (checkAuthorization(role, roleTypes.user)) {
       return navigate("/clients", { replace: true });
     }
   }, [role]);

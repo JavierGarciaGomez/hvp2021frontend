@@ -10,59 +10,44 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useEffect } from "react";
 import {
-  checkAutorization,
   getFormatIcon,
   getTxtClass,
   organiseDocumentation,
+  checkAuthorization,
+  findLabelByValue,
+  prepareDocumentation,
 } from "../../../helpers/utilities";
 
-import { useSelector } from "react-redux";
-import { roleTypes } from "../../../types/types";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  documentationFormatTypes,
+  documentationStatusTypes,
+  documentationTypesTypes,
+  roleTypes,
+} from "../../../types/types";
 import { Link } from "react-router-dom";
-
-const dummyData = [
-  {
-    _id: 1,
-    format: "video",
-    link: "https://www.youtube.com/watch?v=74xNmKeJv3E",
-    title: "Restringido",
-    type: "Lineamientos",
-    topic: "Recursos humanos",
-    date: dayjs("12-25-1995"),
-    author: "Javier García",
-    status: "Actualizado",
-    authorization: "Colaborador",
-  },
-  {
-    _id: 2,
-    format: "pdf",
-    link: "https://www.youtube.com/watch?v=74xNmKeJv3E",
-    title: "Política de recursos humanos del Hospital Veterinario Peninsular",
-    type: "Guías y protocolos",
-    topic: "Recursos humanos",
-    date: dayjs("12-25-1995"),
-    author: "Javier García",
-    status: "No vigente",
-  },
-  {
-    _id: 3,
-    format: "video",
-    link: "https://www.youtube.com/watch?v=74xNmKeJv3E",
-    title: "Política de recursos humanos del Hospital Veterinario Peninsular",
-    type: "Guías y protocolos",
-    topic: "Recursos humanos",
-    date: dayjs("12-25-1995"),
-    author: "Javier García",
-    status: "Actualizado",
-  },
-];
-
-const organisedDocumentation = organiseDocumentation(dummyData);
+import { allDocumentationStartLoading } from "../../../actions/documentationActions";
+import { useState } from "react";
 
 export const Documentation = () => {
+  const { allDocumentation } = useSelector((state) => state.documentation);
+  const dispatch = useDispatch();
   const { role } = useSelector((state) => state.auth);
+  // todo: change for prepared
+  // todo: exclude not auth
+  // todo: organise it
+  const [preparedDocumentation, setpreparedDocumentation] = useState([]);
+
+  useEffect(() => {
+    dispatch(allDocumentationStartLoading());
+  }, []);
+  useEffect(() => {
+    if (allDocumentation.length > 0) {
+      setpreparedDocumentation(prepareDocumentation(allDocumentation, role));
+    }
+  }, [allDocumentation]);
 
   const handleDelete = (id) => {};
 
@@ -83,22 +68,24 @@ export const Documentation = () => {
           <button className="btn btn-primary">Agregar nuevo documento</button>
         </Link>
       </div>
-      {organisedDocumentation.map((type) => {
+      {preparedDocumentation.map((type) => {
         return (
           <div
-            className="documentation__typeContainer mb-3r"
+            className="documentation__typeContainer mb-5r"
             key={type.typeName}
           >
-            <div className="documentation__typeHeadingContainer">
-              <h3 className="heading-tertiary">{type.typeName}</h3>
+            <div className="documentation__typeHeadingContainer mb-3r">
+              <h3 className="heading-tertiary">
+                {findLabelByValue(documentationTypesTypes, type.typeName)}
+              </h3>
             </div>
             {type.data.map((topic) => {
               return (
                 <div
-                  className="documentation__topicContainer mb-2r"
+                  className="documentation__topicContainer mb-3r"
                   key={topic.topicName}
                 >
-                  <div className="documentation__topicHeadingContainer">
+                  <div className="documentation__topicHeadingContainer mb-2r">
                     <h4>{topic.topicName}</h4>
                   </div>
                   <div className="documentation__tableContainer">
@@ -119,7 +106,7 @@ export const Documentation = () => {
                             <TableCell className="fw-bold">Fecha</TableCell>
                             <TableCell className="fw-bold">Autor</TableCell>
                             <TableCell className="fw-bold">Estado</TableCell>
-                            {checkAutorization(role, roleTypes.manager) && (
+                            {checkAuthorization(role, roleTypes.manager) && (
                               <TableCell className="fw-bold">
                                 Acciones
                               </TableCell>
@@ -129,7 +116,10 @@ export const Documentation = () => {
                         <TableBody>
                           {topic.data.map(
                             (row) =>
-                              checkAutorization(role, row.authorization) && (
+                              checkAuthorization(
+                                role,
+                                roleTypes[row.authorization]
+                              ) && (
                                 <TableRow
                                   key={row._id}
                                   sx={{
@@ -139,7 +129,7 @@ export const Documentation = () => {
                                   }}
                                 >
                                   <TableCell component="th" scope="row">
-                                    <a href={row.link}>{row.title}</a>
+                                    <a href={row.url}>{row.title}</a>
                                   </TableCell>
                                   <TableCell>
                                     {getFormatIcon(row.format)}
@@ -147,13 +137,16 @@ export const Documentation = () => {
                                   <TableCell>
                                     {dayjs(row.date).format("DD-MMM-YYYY")}
                                   </TableCell>
-                                  <TableCell>{row.author}</TableCell>
+                                  <TableCell>{row.author.col_code}</TableCell>
                                   <TableCell
                                     className={getTxtClass(row.status)}
                                   >
-                                    {row.status}
+                                    {findLabelByValue(
+                                      documentationStatusTypes,
+                                      row.status
+                                    )}
                                   </TableCell>
-                                  {checkAutorization(
+                                  {checkAuthorization(
                                     role,
                                     roleTypes.manager
                                   ) && (

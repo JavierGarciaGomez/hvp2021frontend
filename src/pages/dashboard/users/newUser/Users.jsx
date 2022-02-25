@@ -9,8 +9,9 @@ import { useEffect } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { usersStartLoading, userDelete } from "../../../../actions/userActions";
-import { checkAutorization } from "../../../../helpers/utilities";
+
 import { roleTypes } from "../../../../types/types";
+import { checkAuthorization } from "../../../../helpers/utilities";
 
 export default function Users() {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ export default function Users() {
   }, [dispatch]);
 
   useEffect(() => {
-    setisAuthorizedToDelete(checkAutorization(role, roleTypes.admin));
+    setisAuthorizedToDelete(checkAuthorization(role, roleTypes.admin));
   }, [role]);
 
   const handleDelete = (id) => {

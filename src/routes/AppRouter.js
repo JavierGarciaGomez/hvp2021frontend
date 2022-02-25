@@ -9,8 +9,9 @@ import { TestPage } from "../pages/test/TestPage";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 import { roleTypes } from "../types/types";
-import { checkAutorization } from "../helpers/utilities";
+
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
+import { checkAuthorization } from "../helpers/utilities";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -30,7 +31,7 @@ export const AppRouter = () => {
   }, [dispatch, checking]);
 
   useEffect(() => {
-    setisCollaborator(checkAutorization(role, roleTypes.collaborator));
+    setisCollaborator(checkAuthorization(role, roleTypes.collaborator));
   }, [role]);
 
   console.log("checking", checking);

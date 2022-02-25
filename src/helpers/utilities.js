@@ -269,7 +269,7 @@ const fillCollaboratorsCleanUps = (cleanUpsCollection, collaborators) => {
 };
 
 // return true if the role is the same or above
-export const checkAutorization = (
+export const checkAuthorization = (
   role = roleTypes.guest,
   requiredAuthorization = roleTypes.admin
 ) => {
@@ -825,7 +825,6 @@ export const organiseDocumentation = (data) => {
     // variable to determine if the type existed
     let typeExistedBefore = false;
     for (let type of organisedDocumentation) {
-      console.log("prueba", type.typeName, element.type);
       if (type.typeName === element.type) {
         typeExistedBefore = true;
         // variable to determine if the topic existed
@@ -860,6 +859,16 @@ export const organiseDocumentation = (data) => {
   return organisedDocumentation;
 };
 
+export const prepareDocumentation = (documentation, role) => {
+  const authorizedDocumentation = documentation.filter((element) => {
+    if (checkAuthorization(role, roleTypes[element.authorization])) {
+      return element;
+    }
+  });
+
+  return organiseDocumentation(authorizedDocumentation);
+};
+
 export const checkIfLabelAndValueAreUnique = (values, collection) => {
   let isNotUniqueValue = findObjectByProperty(
     collection,
@@ -879,16 +888,16 @@ export const checkIfLabelAndValueAreUnique = (values, collection) => {
 };
 
 export const getFormatIcon = (format) => {
-  if (format === "Video") {
+  if (format === "video") {
     return <YouTube />;
   }
-  if (format === "Hoja de cálculo") {
+  if (format === "spreadsheet") {
     return <GridOn />;
   }
-  if (format === "Pdf") {
+  if (format === "pdf") {
     return <PictureAsPdf />;
   }
-  if (format === "Documento de texto") {
+  if (format === "textDocument") {
     return <ChromeReaderMode />;
   }
   return <MoreHoriz />;
@@ -896,19 +905,19 @@ export const getFormatIcon = (format) => {
 
 export const getTxtClass = (status) => {
   switch (status) {
-    case "Actualizado":
+    case "updated":
       return "txt-success";
 
-    case "Semidesactualizado":
+    case "semiOutdated":
       return "txt-warning";
 
-    case "Desactualizado":
+    case "outdated":
       return "txt-danger";
 
-    case "No aplica":
+    case "notValid":
       return "txt-gray";
 
-    case "No vigente":
+    case "notApplicable":
       return "txt-dark";
 
     default:
@@ -944,8 +953,22 @@ export const getLabelsAndValuesFromCollection = (
   return sortCollectionAlphabetically(labelsAndValues, "label");
 };
 
-export const findPropertyInCollection = (
-  collection,
-  searchProperty,
-  returnProperty
-) => {};
+export const formatDatePropertyJustDate = (collection, dateProperty) => {
+  return collection.map((element) => {
+    if (element[dateProperty] === null) {
+      element[dateProperty] = "";
+    } else {
+      element[dateProperty] = dayjs(element[dateProperty]).format("YYYY-MM-DD");
+    }
+    return element;
+  });
+};
+
+export const formatDatePropertyToIsoString = (object, dateProperty) => {
+  if (object[dateProperty]) {
+    object[dateProperty] = dayjs(object[dateProperty]).toISOString();
+  }
+};
+
+// todo: Doing
+export const getCollaboratorCodeById = () => {};

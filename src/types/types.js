@@ -68,6 +68,11 @@ export const types = {
   miscStartLoading: "[misc] start loading",
   miscLoaded: "[misc] loaded",
   miscFinishedLoading: "[misc] finished loading",
+
+  /************* Documentation *********/
+  documentationIsLoading: "[documentation] is loading",
+  documentationFinishedLoading: "[documentation] finished loading",
+  allDocumentationLoaded: "[documentation] all loaded",
 };
 
 export const genderTypes = {
@@ -313,13 +318,13 @@ export const procedureTypes = {
 };
 
 export const documentationTypesTypes = [
-  { label: "Administración", value: "admon" },
+  { value: "admon", label: "Administración" },
   { value: "support", label: "Apoyo" },
-  { value: "communications", label: "Comunicaciones" },
   { value: "controls", label: "Controles" },
   { value: "formats", label: "Formatos" },
   { value: "guides", label: "Guías y protocolos" },
   { value: "guidances", label: "Lineamientos" },
+  { value: "veterinary", label: "Veterinario" },
 ];
 
 export const documentationFormatTypes = [
@@ -334,7 +339,7 @@ export const documentationFormatTypes = [
 export const documentationStatusTypes = [
   { value: "updated", label: "Actualizado" },
   { value: "semiOutdated", label: "Semidesactualizado" },
-  { value: "outdated", label: "Outdated" },
+  { value: "outdated", label: "Desactualizado" },
   { value: "notValid", label: "No vigente" },
   { value: "notApplicable", label: "No aplica" },
 ];

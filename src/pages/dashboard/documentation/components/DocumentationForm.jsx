@@ -1,20 +1,14 @@
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Swal from "sweetalert2";
-import {
-  activityRegisterStartUpdate,
-  createActivityRegister,
-} from "../../../../actions/activityRegisterActions";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { collaboratorsStartLoading } from "../../../../actions/collaboratorActions";
 import {
-  findLabelByValue,
-  findValueByLabel,
-  fireSwalError,
-  getKeyByValue,
+  allDocumentationStartLoading,
+  createDocumentation,
+  documentationUpdate,
+} from "../../../../actions/documentationActions";
+import {
   getLabelsAndValuesFromCollection,
-  getRoleTypes,
   getRoleTypesLabelsAndValues,
 } from "../../../../helpers/utilities";
 import { useForm } from "../../../../hooks/useForm";
@@ -24,82 +18,79 @@ import {
   documentationTypesTypes,
 } from "../../../../types/types";
 
-export const DocumentationForm = ({
-  activityRegister = null,
-  handleShowForm,
-  showCancel,
-  showEndDate,
-  isNewActivity,
-}) => {
+let initialValues = {
+  type: "guides",
+  topic: "",
+  title: "",
+  url: "",
+  format: "video",
+  creationDate: "",
+  lastUpdateDate: "",
+  version: 0,
+  author: "AAA",
+  status: "updated",
+  authorization: "collaborator",
+};
+
+export const DocumentationForm = ({}) => {
   const dispatch = useDispatch();
+  const { docId } = useParams();
+  const navigate = useNavigate();
 
-  const { activityRegisterTypes = [], activeRegister } = useSelector(
-    (state) => state.activityRegister
-  );
-  const { collaborators, isLoading: collaboratorsIsLoading } = useSelector(
-    (state) => state.collaborator
-  );
-  const [isLoading, setisLoading] = useState(false);
+  const { allDocumentation } = useSelector((state) => state.documentation);
+  const { collaborators } = useSelector((state) => state.collaborator);
+  const { values, handleInputChange, setFullValues } = useForm(initialValues);
 
+  // Load documentation and collaborators
   useEffect(() => {
     const executeAsync = async () => {
+      if (allDocumentation.length === 0) {
+        await dispatch(allDocumentationStartLoading());
+      }
       await dispatch(collaboratorsStartLoading(false));
     };
-
     executeAsync();
-
-    setisLoading(false);
   }, [dispatch]);
 
-  let initialEmptyValues = {
-    type: "guides",
-    topic: "",
-    title: "",
-    url: "",
-    format: "video",
-    creationDate: "",
-    lastUpdateDate: "",
-    version: 0,
-    author: "AAA",
-    status: "updated",
-    authorization: "collaborator",
-  };
-
-  const { values, handleInputChange } = useForm(initialEmptyValues);
+  // find documentation and set it active
+  useEffect(() => {
+    // find documentation
+    if (allDocumentation.length > 0) {
+      let found = allDocumentation.find((el) => el._id === docId);
+      // set active documentation
+      if (found) {
+        found.author = found.author._id;
+        return setFullValues({ ...found });
+      }
+    }
+  }, [allDocumentation]);
 
   const handleSubmit = async (e) => {
-    console.log("ESTO ES EL FORM", values);
     e.preventDefault();
-
-    // if (isNewActivity) {
-    //   if (values.activity === "" || values.startingTime === "") {
-    //     return fireSwalError(
-    //       "No puedes crear un registro sin determinar primero una actividad y una hora de inicio"
-    //     );
-    //   }
-
-    //   dispatch(
-    //     createActivityRegister({
-    //       ...values,
-    //     })
-    //   );
-    //   handleShowForm();
-    // } else {
-    //   dispatch(
-    //     activityRegisterStartUpdate({
-    //       ...values,
-    //     })
-    //   );
-    //   if (showCancel) {
-    //     handleShowForm();
-    //   }
-    // }
+    // If has an id is existent so update, else create
+    if (values._id) {
+      const succesfulDispatch = await dispatch(
+        documentationUpdate({ ...values })
+      );
+      if (succesfulDispatch) {
+        navigate(`/dashboard/documentation`);
+      }
+    } else {
+      const succesfulDispatch = await dispatch(
+        createDocumentation({ ...values })
+      );
+      if (succesfulDispatch) {
+        navigate(`/dashboard/documentation`);
+      }
+    }
   };
 
   return (
     <div className="p-5">
       <div className="mb-3r">
-        <h2 className="heading--secondary">Editar actividad</h2>
+        <h2 className="heading--secondary">
+          {values._id ? "Editar documento" : "Crear documento"}
+        </h2>
       </div>
 
       <div className="l-singleCardContainer mb-3r">
@@ -191,7 +182,6 @@ export const DocumentationForm = ({
               name="author"
               onChange={handleInputChange}
             >
-              {/* TODO cargar la lista de colaboradores */}
               {getLabelsAndValuesFromCollection(
                 collaborators,
                 "col_code",
@@ -250,8 +240,8 @@ export const DocumentationForm = ({
             <select
               className="form-select mb-3 form-control"
               aria-label="Default select example"
-              value={values.format}
-              name="format"
+              value={values.status}
+              name="status"
               onChange={handleInputChange}
             >
               {documentationStatusTypes.map((element) => {
@@ -288,15 +278,11 @@ export const DocumentationForm = ({
             <button className="btn btn-primary" type="submit">
               Guardar
             </button>
-            {showCancel && (
-              <button
-                className="btn btn-danger"
-                type="button"
-                onClick={handleShowForm}
-              >
+            <Link to={`/dashboard/documentation`}>
+              <button className="btn btn-danger" type="button">
                 Cancelar
               </button>
-            )}
+            </Link>
           </div>
         </form>
       </div>
