@@ -2,18 +2,18 @@ import React from "react";
 
 export const MainPagesSectionHeader = ({ title }) => {
   return (
-    <div className="mainPages-section__header">
-      <div className="mainPages-section__icon-container">
+    <div className="c-sectionHeader">
+      <div className="c-sectionHeader_iconContainer">
         <img
-          className="mainPages-section__img"
+          className="c-sectionHeader_img"
           src="assets/imgs/mainPage/dog.png"
           alt=""
         />
       </div>
-      <h2 className="mainPages-section__title">{title}</h2>
-      <div className="mainPages-section__icon-container">
+      <h2 className="c-sectionHeader_title">{title}</h2>
+      <div className="c-sectionHeader_iconContainer">
         <img
-          className="mainPages-section__img"
+          className="c-sectionHeader_img"
           src="assets/imgs/mainPage/cat.png"
           alt=""
         />

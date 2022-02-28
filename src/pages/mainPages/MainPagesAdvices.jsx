@@ -5,31 +5,31 @@ import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 export const MainPagesAdvices = () => {
   return (
     <Fragment>
-      <section className="mainPages-advisesPage bg-primary--ti-st section-pb section-pt">
+      <section className="section_advises u-bgPrimaryLightest u-pb-6r u-pt-10r">
         <div className="container">
           <MainPagesSectionHeader title="Blog" />
 
-          <article className="blog-post">
-            <div className="blog-img">
+          <article className="blogPost">
+            <div className="blogPost_img">
               <img
                 src="https://shandree.files.wordpress.com/2018/04/calupoh-el-espectacular-perro-lobo-de-mc3a9xico-1.png?w=640"
                 alt="Blog"
               />
             </div>
-            <div className="text-post">
+            <div className="blogPost_body">
               <a
                 href="https://shandree.wordpress.com/2018/04/19/calupoh-perro-lobo-mexicano/"
                 target="_blank"
               >
-                <h4 className="mb-3">
+                <h3 className="heading--tertiary u-textPrimary">
                   CALUPOH PERRO LOBO DE MÉXICO ESTÁNDAR RACIAL
-                </h4>
+                </h3>
               </a>
-              <p>
-                Escrito el: <span>19/04/2018</span> por:{" "}
-                <span>Dr. Rafael García</span>
+              <p className="blogPost_author">
+                Escrito el: <span className="u-textWhite">19/04/2018</span> por:{" "}
+                <span className="u-textWhite">Dr. Rafael García</span>
               </p>
-              <p>
+              <p className="blogPost_text">
                 El perro lobo de México surge como un hibridismo entre el perro
                 y el lobo gris que se llevó a cabo en el México prehispánico
                 desde inicios de nuestra era hasta el siglo XVI. Esta práctica
@@ -43,25 +43,27 @@ export const MainPagesAdvices = () => {
             </div>
           </article>
 
-          <article className="blog-post">
-            <div className="blog-img">
+          <article className="blogPost">
+            <div className="blogPost_img">
               <img
                 src="https://shandree.files.wordpress.com/2018/03/fcm-cert-estudios-rx-e1521918181553.jpg?w=640"
                 alt="Blog"
               />
             </div>
-            <div className="text-post">
+            <div className="blogPost_body">
               <a
                 href="https://shandree.wordpress.com/2018/03/24/certificacion-para-estudios-de-rayos-x/"
                 target="_blank"
               >
-                <h4>Certificación para Estudios de Rayos X</h4>
+                <h3 className="heading--tertiary u-textPrimary">
+                  Certificación para Estudios de Rayos X
+                </h3>
               </a>
-              <p>
+              <p className="blogPost_author">
                 Escrito el: <span>19/04/2018</span> por:{" "}
                 <span>Dr. Rafael García</span>
               </p>
-              <p>
+              <p className="blogPost_text">
                 La Federación Canófila Mexicana extiende el presente Certificado
                 para los estudios radiológicos en los casos de Displasia de
                 Cadera, Displasia de codo y Luxación patelar...{" "}
@@ -75,25 +77,27 @@ export const MainPagesAdvices = () => {
             </div>
           </article>
 
-          <article className="blog-post">
-            <div className="blog-img">
+          <article className="blogPost">
+            <div className="blogPost_img">
               <img
                 src="https://shandree.files.wordpress.com/2017/10/estudio-de-nombre-2.jpg?w=640&h=478"
                 alt="Blog"
               />
             </div>
-            <div className="text-post">
+            <div className="blogPost_body">
               <a
                 href="https://shandree.wordpress.com/2017/10/20/nombres-para-perros-mas-populares-en-espana/"
                 target="_blank"
               >
-                <h4>Nombres para perros mas populares en España</h4>
+                <h3 className="heading--tertiary u-textPrimary">
+                  Nombres para perros mas populares en España
+                </h3>
               </a>
-              <p>
+              <p className="blogPost_author">
                 Escrito el: <span>20/10/2017</span> por:{" "}
                 <span>Dr. Rafael García</span>
               </p>
-              <p>
+              <p className="blogPost_text">
                 A continuación les compartimos un estudio realizado en España
                 con los nombres mas populares de perros, Disfrútenlo y
                 compartanlo sirve para ver que tanto nos parecemos en
@@ -110,14 +114,14 @@ export const MainPagesAdvices = () => {
         </div>
         <div className="d-flex justify-content-center">
           <a href="https://shandree.wordpress.com/">
-            <button type="button" className="mainPages-button">
+            <button type="button" className="c-button -large">
               Lea más artículos del blog
             </button>
           </a>
         </div>
       </section>
 
-      <section className="mainPages-advisesPage bg-primary--ti-er section-pb">
+      <section className="mainPages-advisesPage u-bgPrimaryLighter u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Videoconsejos para mascotas" />
 
@@ -214,7 +218,7 @@ export const MainPagesAdvices = () => {
         </div>
         <div className="d-flex justify-content-center">
           <a href="https://www.facebook.com/VideoconsejosParatuMascota">
-            <button type="button" className="mainPages-button">
+            <button type="button" className="c-button -large">
               Conoce videoconsejos para tu mascota
             </button>
           </a>

@@ -1,10 +1,7 @@
 import Switch from "@mui/material/Switch";
 import { useDispatch } from "react-redux";
 
-import "./newCollaborator.css";
 import { useState } from "react";
-
-import Swal from "sweetalert2";
 
 import { generateRandomString } from "../../../helpers/utilities";
 import { uploadImg } from "../../../helpers/uploadImg";

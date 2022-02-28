@@ -1,7 +1,8 @@
-// MARGIN TOP
-.mt-1r {
-  margin-top: 1rem;
-}
+@import "u-general";
+@import "u-spacing";
+
+// TODO DELETE:
+
 .mt-2r {
   margin-top: 2rem;
 }
@@ -85,6 +86,13 @@
 .center-content {
   display: flex;
   justify-content: center;
+}
+
+.u-center {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
 }
 
 .right-content {

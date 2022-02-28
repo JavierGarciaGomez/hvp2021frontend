@@ -1,13 +1,11 @@
 import React, { Fragment } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+
 import Swal from "sweetalert2";
 import { userStartRegister } from "../../../actions/authActions";
-import { collaboratorStartRegister } from "../../../actions/collaboratorActions";
 
 import { InputGroup } from "../../../components/ui/InputGroup";
 import { useForm } from "../../../hooks/useForm";
-import "../auth.css";
 
 export const RegisterCliTab = () => {
   const dispatch = useDispatch();

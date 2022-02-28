@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { FcmListItem } from "../components/FcmListItem";
 import { FcmStep } from "./components/FcmStep";
@@ -7,14 +7,16 @@ import { procedureTypes } from "../../../types/types";
 
 export const FcmInitialRegister = () => {
   return (
-    <div className="container">
-      <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">Registro inicial (individual)</h3>
-        <div className="mp-FCM__secHeadingLine"></div>
+    <Fragment>
+      <div className="mb-5r">
+        <h3 className="heading--secondary u-center u-textPrimary">
+          Registro inicial (individual)
+        </h3>
+        <div className="separationLine"></div>
       </div>
-      <div className="mp-FCM__section-desc  mb-5r">
-        <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
-        <p className="def-par text-white">
+      <div className="c-card u-bgPrimaryDarkest u-p2r  mb-5r">
+        <h4 className="heading--tertiary u-textWhite">Descripción</h4>
+        <p className="text-white">
           El trámite para la obtención del registro inicial tiene por objeto
           evaluar la raza, a través de una revisión preliminar del cachorro
           (entre 1 y 6 meses de edad), que no tiene antecedentes ni propios ni
@@ -23,9 +25,9 @@ export const FcmInitialRegister = () => {
           cumplida esta deberá realizarse una inspección.
         </p>
       </div>
-      <div className="mp-FCM__section-req mb-5r">
-        <h4 className="mp-FCM__section-heading">Requisitos</h4>
-        <ul className="mp-FCM-main__list">
+      <div className="mb-5r">
+        <h4 className="heading--tertiary mb-2r">Requisitos</h4>
+        <ul className="">
           {/* todo adjuntar enlace */}
           <FcmListItem text="Llenar el formato electrónico de registro inicial, a través de este sitio web." />
           <FcmListItem text="El perro debe tener entre 1 y 6 meses de edad." />
@@ -36,8 +38,8 @@ export const FcmInitialRegister = () => {
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
-      <div className="mp-FCM__section-proc mb-5r">
-        <h4 className="mp-FCM__section-heading">Procedimiento</h4>
+      <div className=" mb-5r">
+        <h4 className="heading--tertiary mb-2r">Procedimiento</h4>
         <FcmStep
           imgSrc={"requirement.png"}
           num="01"
@@ -104,6 +106,6 @@ export const FcmInitialRegister = () => {
         />
       </div>
       <FcmCalculator recProcedure={procedureTypes.initialRegister.value} />
-    </div>
+    </Fragment>
   );
 };

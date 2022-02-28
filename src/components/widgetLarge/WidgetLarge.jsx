@@ -1,5 +1,3 @@
-import "./widgetLarge.css";
-
 import React from "react";
 
 export const WidgetLarge = () => {

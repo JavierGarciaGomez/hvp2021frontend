@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 export const FCMLink = ({ link, classN, heading, desc }) => {
   return (
     <Link to={link}>
-      <div className={`mp-FCP__link ${classN}`}>
-        <div className="mp-FCP__link-content">
-          <h3 className="mp-FCP__link-heading">{heading}</h3>
-          <p className="def-par">{desc} </p>
+      <div className={`fcmLinkCard fcm${classN}`}>
+        <div className="fcmLinkCard_content">
+          <h3 className="heading--tertiary">{heading}</h3>
+          <p className="">{desc} </p>
         </div>
       </div>
     </Link>

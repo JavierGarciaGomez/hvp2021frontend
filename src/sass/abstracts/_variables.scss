@@ -1,2 +1,115 @@
+/****************************************/
+/***********COLORS***********************/
+/****************************************/
+
+// TODO DELETE PREVIOUS COLORS
+:root {
+  /* all colors */
+  --custom-cyan: #44d9e6;
+  --custom-yellow: #ffbd4a;
+  --custom-orange: #ff5b5b;
+  --custom-darkblue: #0e368d;
+  --custom-lightblue: #5583a7;
+  --custom-gray: #afafaf;
+
+  /* chosen colors */
+  --primary-color: var(--custom-darkblue);
+  /* shades */
+  --primary-color-sh-er: #0b2b71;
+  --primary-color-sh-st: #082055;
+  /* tints */
+  --primary-color-ti-er: #6e86bb;
+  --primary-color-ti-st: #b7c3dd;
+
+  --custom-lightgray: #f1f3f5;
+
+  /* GRAYS */
+  --primary-bg-color: #f1f3f5;
+
+  --primaryFont: "Inter";
+  --secondaryFont: "Russo One";
+  --fontPTSans: "PT Sans";
+}
+/******************************/
+/*********New colors***********/
+/******************************/
+
+/*********General***********/
+$primaryColor: #0e368d;
+// ligther: 40%, lightest: 60%, darker: 10%, darkest: 20%
+$secondaryColor: #ff5b5b;
+$textPrimaryColor: #242424;
+$backgroundPrimaryColor: #ebe5e5;
+$darkColor: #212529;
+$lightColor: #f8f9fa;
+$successColor: #0e368d;
+$warningColor: #ffc107;
+$dangerColor: #dc3545;
+
+/*********Main Page***********/
+
+/*********Dashboard***********/
+
+/*********Brand colors***********/
+$custom-cyan: #44d9e6;
+$custom-yellow: #ffbd4a;
+$custom-orange: #ff5b5b;
+$custom-darkblue: #0e368d;
+$custom-lightblue: #5583a7;
+$custom-gray: #afafaf;
+
+// Todo: delete
+/*********Previous colors***********/
+// CORRECT COLORS
 $color-grey-light: #eeeeee;
 $color-primary: #0e368d;
+
+/* all colors */
+
+/* chosen colors */
+$primary-color: $custom-darkblue;
+/* shades */
+// todo delete: use darken and lighten
+$primary-color-sh-er: #0b2b71;
+$primary-color-sh-st: #082055;
+/* tints */
+$primary-color-ti-er: #6e86bb;
+$primary-color-ti-st: #b7c3dd;
+
+$custom-lightgray: #f1f3f5;
+
+/* GRAYS */
+$primary-bg-color: #f1f3f5;
+
+$color-black: #000;
+$colorWhite: #ffffff;
+
+$primaryFontColor: #212121;
+
+$primaryFont: "Inter";
+$secondaryFont: "Russo One";
+$fontPTSans: "PT Sans";
+
+/****************************************/
+/***********BREAKPOINTS***********************/
+/****************************************/
+
+/********** XXL ABOVE 1400px (Big desktops) ********/
+
+/****BELOW 600px (Phones)****/
+/****BETWEEN 600px-900px (TABLETS)****/
+$bp-sm: 600px;
+/****BETWEEN 900px-1200px (LANDSCAPE)****/
+$bp-md: 900px;
+/****BETWEEN 1200px-1536px (SMALL DESKTOP)****/
+$bp-lg: 1200px;
+/****BETWEEN 1200px-1536px (BIG DESKTOP)****/
+$bp-xl: 1536px;
+
+/****************************************/
+/***********BOX SHADOWS******************/
+/****************************************/
+
+// $box-shadow1: 0 10px 20px 0 rgba(0, 0, 0, 0.3);
+// $box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !default;
+$boxShadow1: 0 1rem 2rem 0 rgba(0, 0, 0, 0.25);

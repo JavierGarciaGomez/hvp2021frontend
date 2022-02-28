@@ -48,38 +48,34 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
   }, [procedure, values]);
 
   return (
-    <div className="mp-FCM__section-calc mb-5r">
-      <h4 className="mp-FCM__section-heading">Calculadora de costos</h4>
-      <div className="mp-FCM__calc-disclaimer mb-3r">
-        <span>Nota:</span> Los costos de esta calculadora son con respecto a los
-        trámites de la FCM, pero pueden haber costos adicionales.
+    <div className="mb-5r">
+      <h4 className="heading--tertiary mb-3r">Calculadora de costos</h4>
+      <div className="c-card mb-3r">
+        <p>
+          <span className="fw-bold">Nota:</span> Los costos de esta calculadora
+          son con respecto a los trámites de la FCM, pero pueden haber costos
+          adicionales.
+        </p>
       </div>
-      <div className="mp-FCM__calc-select d-flex justify-content-center mb-3r">
+      {/* Select procedure */}
+      <div className="l-flex mb-3r">
         <FormControl
           sx={{
             m: 1,
             minWidth: "30rem",
-            fontSize: "3.6rem",
           }}
         >
-          <InputLabel id="demo-simple-select-label" sx={{ fontSize: "1.6rem" }}>
-            Trámite
-          </InputLabel>
+          <InputLabel id="demo-simple-select-label">Trámite</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             value={procedureSelection}
             label="Trámite"
             onChange={handleChange}
-            sx={{ fontSize: "1.6rem" }}
           >
             {Object.keys(procedureTypes).map((key) => {
               return (
-                <MenuItem
-                  key={key}
-                  value={procedureTypes[key].value}
-                  sx={{ fontSize: "1.6rem" }}
-                >
+                <MenuItem key={key} value={procedureTypes[key].value}>
                   {procedureTypes[key].title}
                 </MenuItem>
               );
@@ -88,15 +84,15 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
         </FormControl>
       </div>
 
-      <div className="mp-FCM__calc-form mb-3r">
+      <div className="mb-3r">
         <form>
-          <div className="mp-FCM__calc-questions-container">
+          <div className="fcmCalcInputsWrapper">
             {procedure?.questions &&
               procedure.questions.map((question) => {
                 if (!question.isBoolean) {
                   return (
-                    <div className="mp-FCM__calc-question">
-                      <label htmlFor="" className="mp-FCM__calc-label">
+                    <div className="fcmCalcInput">
+                      <label htmlFor="" className="fcmCalcInput_label">
                         {question.question}&nbsp;
                         <Tooltip
                           title={
@@ -113,14 +109,14 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
                         name={question.name}
                         value={values[question.name]}
                         onChange={handleInputChange}
-                        className="mp-FCM__calc-input form-control"
+                        className="fcmCalcInput_input form-control"
                       />
                     </div>
                   );
                 }
                 return (
-                  <div className="mp-FCM__calc-question">
-                    <label htmlFor="" className="mp-FCM__calc-label">
+                  <div className="fcmCalcInput">
+                    <label htmlFor="" className="fcmCalcInput_label">
                       {question.question} &nbsp;
                       <Tooltip
                         title={
@@ -146,9 +142,9 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
       </div>
       {/* Calculations */}
       {calcItems && (
-        <div className="mp-FCM__calc-calculations  mb-3r">
-          <table className="mp-FCM__calc-table">
-            <thead className="mp-FCM__calc-tablehead">
+        <div className="mb-3r">
+          <table className="fcmCalcTable">
+            <thead className="">
               <tr>
                 <th>Concepto</th>
                 <th>Cantidad</th>
@@ -161,7 +157,7 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
               {calcItems.map((calcItem) => {
                 return (
                   <tr>
-                    <th>{calcItem.text}</th>
+                    <td>{calcItem.text}</td>
                     <td>{calcItem.qty}</td>
                     <td>{calcItem.price}</td>
                     <td>$ {calcItem.subtotal}</td>
@@ -175,8 +171,8 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
 
       {/* TOTAL */}
       {calcItems && (
-        <div className="mp-FCM__calc-total mb-3r">
-          <div className="mp-FCM__calc-totalBox">
+        <div className="l-flex mb-3r">
+          <div className="fcmCalcTotal">
             <div>TOTAL</div>
             <div>$ {getFCMTotal(calcItems)}</div>
           </div>

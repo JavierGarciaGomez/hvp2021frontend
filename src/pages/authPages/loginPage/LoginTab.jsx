@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { InputGroup } from "../../../components/ui/InputGroup";
 import { useForm } from "../../../hooks/useForm";
 import { useNavigate } from "react-router-dom";
-import "../auth.css";
 import { userStartLogin } from "../../../actions/authActions";
 
 export const LoginTab = () => {

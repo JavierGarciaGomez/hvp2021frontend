@@ -1,0 +1,74 @@
+/**************************/
+/******** HERO **********/
+/**************************/
+.hero {
+  position: relative;
+  /* background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(../img/morgana.jpg); */
+  background: url("../../../public/assets/imgs/morgana.jpg");
+
+  background-size: cover;
+  height: 100vh;
+  background-position: center center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &_content {
+    position: absolute;
+    top: 10rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &_heading {
+    font-family: "Fredoka One", cursive;
+    color: #fff;
+    letter-spacing: -0.5px;
+    font-size: 5rem;
+    text-align: center;
+  }
+
+  &_socialNav {
+    font-size: 3rem;
+    margin: 2rem auto;
+  }
+
+  &_socialLink,
+  &_socialLink:visited,
+  &_socialLink:link {
+    color: white;
+    margin: 0 0.5em;
+  }
+
+  &_socialNav a:hover {
+    color: var(--custom-cyan);
+    margin: 0 0.5em;
+  }
+
+  & p {
+    max-width: 60%;
+    margin: 8rem 2rem auto auto;
+    color: white;
+    text-align: right;
+    font-size: 3rem;
+  }
+
+  @media (max-width: $bp-lg) {
+    & {
+      background-position: left center;
+    }
+    &_slogan {
+      /* margin: 2rem 2rem auto auto; */
+    }
+  }
+}

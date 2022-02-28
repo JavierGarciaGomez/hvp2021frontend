@@ -20,18 +20,20 @@ export const FCMLayout = () => {
   // ionicons
 
   return (
-    <div className="mp-FCM">
-      <FCMHeader />
-      <div className="mp-FCM__showMenu container">
-        <button
-          className=" btn btn-lg btn-success ms-auto d-block"
-          onClick={handleShowMenu}
-        >
-          Muestra el menú
-        </button>
+    <div className="l-pageContent u-pt-10r u-bgPrimaryLightest">
+      <div className="container">
+        <FCMHeader />
+        <div className="u-mb-5r u-pe-10r u-mx-auto">
+          <button
+            className=" btn btn-lg btn-success ms-auto d-block"
+            onClick={handleShowMenu}
+          >
+            Muestra el menú
+          </button>
+        </div>
+        {showMenu && <FCMLinks handleHideMenu={handleHideMenu} />}
+        <FCMRouter />
       </div>
-      {showMenu && <FCMLinks handleHideMenu={handleHideMenu} />}
-      <FCMRouter />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { MainPagesSectionHeader } from "../components/MainPagesSectionHeader";
 export const MainPagesServicesModel = ({ sectionTitle, imgName, content }) => {
   const navigate = useNavigate();
   return (
-    <section className="mainPages-service-only-page bg-primary--ti-st section-pb section-pt">
+    <section className="mainPages-service-only-page u-bgPrimaryLightest u-pb-6r u-pt-10r">
       <div className="container">
         <MainPagesSectionHeader title={sectionTitle} />
 
@@ -18,7 +18,7 @@ export const MainPagesServicesModel = ({ sectionTitle, imgName, content }) => {
         <div className="return-div">
           <button
             type="button"
-            className="mainPages-button"
+            className="c-button -large"
             onClick={() => navigate(-1)}
           >
             ◀ Regresar

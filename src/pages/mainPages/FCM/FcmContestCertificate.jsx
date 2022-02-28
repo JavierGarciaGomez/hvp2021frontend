@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { FcmListItem } from "../components/FcmListItem";
 import { FcmStep } from "./components/FcmStep";
@@ -7,23 +7,23 @@ import { procedureTypes } from "../../../types/types";
 
 export const FcmContestCertificate = () => {
   return (
-    <div className="container">
-      <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">
+    <Fragment>
+      <div className="mb-5r">
+        <h3 className="heading--secondary u-center u-textPrimary">
           Certificado para concurso (individual)
         </h3>
-        <div className="mp-FCM__secHeadingLine"></div>
+        <div className="separationLine"></div>
       </div>
-      <div className="mp-FCM__section-desc  mb-5r">
-        <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
-        <p className="def-par text-white">
+      <div className="c-card u-bgPrimaryDarkest u-p2r u-mb-5r">
+        <h4 className="heading--tertiary u-textWhite">Descripción</h4>
+        <p className="text-white">
           El trámite tiene por objeto registrar a un perro para que pueda
           participar en un concurso organizado por la FCM.
         </p>
       </div>
-      <div className="mp-FCM__section-req mb-5r">
-        <h4 className="mp-FCM__section-heading">Requisitos</h4>
-        <ul className="mp-FCM-main__list">
+      <div className="mb-5r">
+        <h4 className="heading--tertiary mb-2r">Requisitos</h4>
+        <ul className="">
           {/* todo adjuntar enlace */}
           <FcmListItem text="Llenar el formato electrónico de certificado para concurso, a través de este sitio web." />
           <FcmListItem text="El perro debe tener entre 6 semanas y 10 años de edad." />
@@ -34,8 +34,8 @@ export const FcmContestCertificate = () => {
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
-      <div className="mp-FCM__section-proc mb-5r">
-        <h4 className="mp-FCM__section-heading">Procedimiento</h4>
+      <div className="u-mb-5r">
+        <h4 className="heading--tertiary u-mb-2r">Procedimiento</h4>
         <FcmStep
           imgSrc={"requirement.png"}
           num="01"
@@ -102,6 +102,6 @@ export const FcmContestCertificate = () => {
         />
       </div>
       <FcmCalculator recProcedure={procedureTypes.contestCertificate.value} />
-    </div>
+    </Fragment>
   );
 };

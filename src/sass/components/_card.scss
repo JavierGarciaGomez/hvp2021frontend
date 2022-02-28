@@ -1,16 +1,20 @@
-.card {
+.c-card {
   position: relative;
   display: flex;
+  flex: 1;
+
+  justify-items: center;
+
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 3%;
   background-color: $color-grey-light;
-  box-shadow: 0 1rem 2rem rgba(#000000, 0.2);
+  box-shadow: $boxShadow1;
   padding: 1rem;
 
-  &__top {
+  &_top {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -19,13 +23,13 @@
     padding-bottom: 1rem;
   }
 
-  &__top--col {
+  &_top--col {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
   }
 
-  &__body {
+  &_body {
     flex: 1 1 auto;
     padding: 1rem;
     display: flex;
@@ -33,16 +37,46 @@
     gap: 1rem;
   }
 
-  &__footer {
+  &_footer {
     display: flex;
     justify-content: space-evenly;
     gap: 1rem;
   }
 
-  &__title {
+  &_title {
     @extend .heading--tertiary;
+    text-transform: uppercase;
+    text-align: center;
   }
 
-  &__subtitle {
+  &_subtitle {
+  }
+}
+
+.c-horizontalCard {
+  position: relative;
+  display: flex;
+  flex: 1;
+  gap: 2rem;
+  justify-items: center;
+  align-items: center;
+  min-width: 0;
+  word-wrap: break-word;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 2%;
+  background-color: $color-grey-light;
+  box-shadow: $boxShadow1;
+  padding: 2rem;
+
+  &_left {
+    flex: 0;
+    max-height: 100%;
+  }
+  &_rigt {
+    flex: 1;
+  }
+
+  @media (max-width: $bp-md) {
+    flex-direction: column;
   }
 }

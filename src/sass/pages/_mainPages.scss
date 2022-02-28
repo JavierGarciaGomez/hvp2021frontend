@@ -1,0 +1,616 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Russo+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+
+/* ************************************************************************************************ */
+/**************************************** CHARACTERISTICS *******************************************/
+/* ************************************************************************************************ */
+
+.featuresContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 20%);
+  justify-content: space-evenly;
+}
+
+.feature_img {
+  max-width: 10rem;
+  margin: 1rem auto;
+}
+
+@media (max-width: $bp-lg) {
+  .featuresContainer {
+    grid-template-columns: repeat(2, 40%);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: $bp-sm) {
+  .featuresContainer {
+    max-width: 40rem;
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0 2rem;
+    margin: 0 auto;
+  }
+}
+
+/* ************************************************************************************************ */
+/**************************************** PROMOTIONS *******************************************/
+/* ************************************************************************************************ */
+
+/* ************************************************************************************************ */
+/**************************************** COLLABORATORS *******************************************/
+/* ************************************************************************************************ */
+
+.collaboratorCardsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.collaboratorCard {
+  border: solid 2px var(--primary-color);
+  border-radius: 10%;
+  flex: 0 0 calc(33% - 1rem);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+  &_img {
+    object-fit: fill;
+    filter: grayscale(0.8);
+    transition: all 0.5s ease-in-out;
+  }
+
+  &_text {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    min-height: 30%;
+    padding: 1rem;
+    margin: 0;
+    color: white;
+
+    transition: all 0.5s ease-in-out;
+  }
+
+  &_position {
+    color: lighten($primaryColor, 40%);
+    font-weight: bold;
+  }
+
+  &:hover &_img {
+    filter: grayscale(0);
+    transform: scale(1.2);
+  }
+
+  &:hover &_text {
+    bottom: -6rem;
+    opacity: 0;
+  }
+}
+
+@media (max-width: $bp-md) {
+  .collaboratorCard {
+    flex: 0 0 calc(50% - 1rem);
+
+    &_text {
+      min-height: auto;
+    }
+  }
+}
+
+@media (max-width: $bp-sm) {
+  .collaboratorCardsWrapper {
+    justify-content: center;
+    margin: 0 4rem;
+  }
+  .collaboratorCard {
+    justify-self: center;
+    flex: 0 0 90%;
+    padding: 0 auto;
+  }
+}
+
+/* ************************************************************************************************ */
+/**************************************** SERVICES *************************************************/
+/* ************************************************************************************************ */
+
+.serviceImgCardWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.serviceImgCard {
+  flex: 0 0 calc(33.33% - 1rem);
+  margin-bottom: 2rem;
+
+  &_text {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    text-align: center;
+    font-size: 2rem;
+    background-color: lighten($primaryColor, 60%);
+    font-weight: 300;
+  }
+  @media (max-width: $bp-md) {
+    flex: 0 0 calc(50% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/**************************************** CONTACT *************************************************/
+/* ************************************************************************************************ */
+
+.branchesWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  @media (max-width: $bp-sm) {
+    flex-direction: column;
+  }
+}
+
+.branchCard {
+  &_icon {
+    color: $primaryColor;
+  }
+
+  @media (max-width: $bp-sm) {
+    width: 30rem;
+    margin: 0 auto;
+  }
+}
+
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** ADVICES PAGE **********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+/* Bottom section */
+
+.blogPost {
+  display: flex;
+  justify-content: space-between;
+  margin: 3em 0;
+  background-color: setHue($primaryColor, lighter);
+  align-items: center;
+  padding: 1.5em;
+  border-radius: 1%;
+  gap: 3rem;
+
+  &_img {
+    flex: 4;
+  }
+
+  &_body {
+    flex: 6;
+  }
+
+  &_author {
+  }
+
+  &_text {
+  }
+}
+
+.carousel iframe {
+  margin: 0 auto;
+  width: 100%;
+  height: 40rem;
+}
+
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** SERVICES PAGE **********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+.mp-service__services {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.serviceCard {
+  color: #fff;
+  flex-basis: calc(50% - 2rem);
+  padding: 1rem;
+  border-radius: 3%;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+
+  &_img {
+    text-align: center;
+    flex-basis: calc(50% - 1rem);
+    max-width: 100%;
+    align-self: center;
+  }
+  &_content {
+    flex-basis: calc(50% - 1rem);
+
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  @media (max-width: $bp-lg) {
+    flex: 0 0 calc(80% - 1rem);
+  }
+}
+
+/* ************************************************************************************************ */
+/* *********************************************** FCM  ******************************************* */
+/* ************************************************************************************************ */
+
+/* *********************************************** Index  ******************************************* */
+
+.fcmLogo {
+  max-width: 30rem;
+}
+
+.fcmListItem {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  line-height: 1.2;
+}
+
+.fcmLinkCard {
+  position: relative;
+  background: url("https://images.unsplash.com/photo-1580467277788-c6e040296602?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+  height: 20rem;
+  border-radius: 3%;
+  overflow: hidden;
+  background-position: left center;
+  background-size: cover;
+
+  &:hover {
+    &::before {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  &.fcmGeneral {
+    background: url("http://fcm.mx/wp-content/uploads/2020/03/logo.png");
+    background-position: left center;
+    background-size: cover;
+  }
+
+  &.fcmCalc {
+    background: url("https://media.istockphoto.com/photos/hand-of-business-woman-accountant-or-banker-making-calculations-picture-id1177540747?b=1&k=20&m=1177540747&s=170667a&w=0&h=q_8f-DcBOu9hWh6nd92VPa-XQjMox8jm4F3agiurb8U=");
+  }
+
+  &.fcmPedigree {
+    background: url("https://images.unsplash.com/photo-1519150268069-c094cfc0b3c8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHB1cHBpZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  }
+
+  &.fcmRacePurity {
+    background: url("https://images.unsplash.com/photo-1592817797597-392e3b878e1c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTd8fHB1cHBpZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  }
+
+  &.fcmInitialRegister {
+    background: url("https://images.unsplash.com/photo-1546527868-ccb7ee7dfa6a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cHVwcHl8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  }
+
+  &.fcmInitialRacePurity {
+    background: url("https://images.unsplash.com/photo-1580467277788-c6e040296602?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+  }
+
+  &.fcmContestCertificate {
+    background: url("https://media.istockphoto.com/photos/proud-dog-jumping-over-obstacle-picture-id168253178?b=1&k=20&m=168253178&s=170667a&w=0&h=fNqA_WfT7SpuLwLlF7QHiIE2PFmlVlGa6MUgIHcINyw=");
+  }
+
+  &.fcmPartnership {
+    background: url("https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGFydG5lcnNoaXB8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60");
+  }
+
+  &.fcmTransfer {
+    background: url("https://media.istockphoto.com/photos/young-man-is-playing-with-a-dog-and-do-selfie-picture-id1300658241?b=1&k=20&m=1300658241&s=170667a&w=0&h=0lrTViinfnDjbWDgxV0TDDSAXvzSgmrN-pKq0q60hqA=");
+  }
+
+  &_content {
+    position: absolute;
+    padding: 1rem;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+  }
+
+  &_heading {
+    position: absolute;
+    padding: 1rem;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+  }
+}
+
+/* *********************************************** Layout ****************************************** */
+
+.fcmStep {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* for single line flex container */
+  margin-bottom: 4rem;
+
+  &_number {
+    margin: 0 auto;
+    flex: 1;
+    font-size: 6rem;
+    font-weight: 600;
+    color: $primaryColor;
+    display: flex;
+    justify-content: center;
+  }
+
+  &_textBox {
+    flex: 3;
+  }
+
+  &_desc {
+    font-size: 1.8rem;
+  }
+
+  &_imgBox {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  &_img {
+    max-height: 10rem;
+  }
+}
+
+/* *********************************************** CALCULATOR ****************************************** */
+
+.fcmCalcInputsWrapper {
+  padding: 0 20rem;
+  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(2, 40%);
+  gap: 2rem;
+}
+
+.fcmCalcInput {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+
+  &_label {
+  }
+  &_input {
+    max-width: 20%;
+  }
+}
+
+.fcmCalcTable {
+  max-width: 80rem;
+  font-size: 1.6rem;
+  border-collapse: collapse;
+  margin: 0 auto;
+
+  th,
+  td {
+    padding: 1.6rem 2.4rem;
+    text-align: left;
+  }
+
+  thead tr {
+    padding: 1.6rem 2.4rem;
+    text-align: left;
+  }
+
+  thead th {
+    width: 13.3%;
+  }
+  thead tr th:nth-child(1) {
+    width: 60%;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #e9ecef;
+  }
+}
+
+.fcmCalcTotal {
+  font-size: 3.6rem;
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 4rem;
+}
+
+/********** S BELOW 768px (smaller tablets) ********/
+@media (max-width: $bp-md) {
+  .fcmCalcInputsWrapper {
+    padding: 0;
+    gap: 2rem;
+  }
+
+  .fcmCalcTable {
+    th,
+    td {
+      padding: 1rem;
+    }
+  }
+}
+
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** TEAM PAGE **********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+.mp-team__item {
+  padding: 1rem;
+  margin: 3rem;
+  border-radius: 2%;
+}
+
+.mp-team__header {
+  text-align: center;
+  padding: 2rem;
+}
+.mp-team__item h3 {
+  color: var(--primary-color-sh-st);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.mp-team__item h4 {
+  font-style: italic;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.mp-team__content {
+  display: flex;
+  gap: 3rem;
+
+  margin: 0 auto;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mp-team__img {
+  flex-basis: 45%;
+}
+.mp-team__img img {
+  max-width: 100%;
+  border-radius: 2%;
+}
+
+.mp-team__text {
+  flex-basis: 55%;
+  line-height: 1.5;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+/****BELOW 944px (Tablets)****/
+@media (max-width: $bp-md) {
+  .mp-team__content {
+    flex-direction: column;
+  }
+}
+
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** COMPANY PAGE **********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+.mp-video-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 4rem;
+}
+
+.mp-company__text {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  color: var(--primary-color-sh-st);
+  width: 66%;
+  margin: 0 auto;
+}
+.mp-company__text h3 {
+  margin: 0.5rem auto;
+  font-size: 3.6rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+/****BELOW 944px (Tablets)****/
+@media (max-width: $bp-md) {
+  .mp-company__text {
+    width: 80%;
+  }
+}
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+/**************************************** SERVIECS PAGES ********************************************/
+/* ************************************************************************************************ */
+/* ************************************************************************************************ */
+
+.mainPages-service-only-page {
+  min-height: 90vh;
+}
+
+.service-only-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.service-only-image {
+  width: 95%;
+  text-align: center;
+  font-size: 30px;
+  float: none;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+.service-only-image img {
+  margin: auto;
+}
+
+.service-only-text {
+  color: var(--secondaryColor);
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  .service-only-container {
+    display: block;
+  }
+
+  .service-only-image {
+    width: 50%;
+    float: left;
+    padding: 0 2rem 2rem 0;
+  }
+}
+
+.service-only-list {
+  display: inline-block;
+  list-style: square;
+  padding-left: 1rem;
+  margin-left: 1rem;
+}

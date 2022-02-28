@@ -5,8 +5,6 @@ import { WidgetLarge } from "../../../components/widgetLarge/WidgetLarge";
 import { WidgetSmall } from "../../../components/widgetSmall/WidgetSmall";
 import { userData } from "../../../data/dummyData";
 
-import "./homeDashPage.css";
-
 export const HomeDashPage = () => {
   return (
     <div className="homeDashPage">

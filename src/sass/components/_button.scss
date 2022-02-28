@@ -1,0 +1,51 @@
+/***** button *******/
+.c-button {
+  &,
+  &:link,
+  &:visited {
+    display: inline-block;
+    font-weight: 600;
+    line-height: 1.5;
+    color: $white;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: $primary-color;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 1.6rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    transition: all 0.5s;
+    position: relative;
+  }
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+    // #0b2b71
+    transform: translateY(-3px);
+    box-shadow: 0 1rem 2rem rgba($color-black, 0.2);
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  }
+
+  &.-large {
+    padding: 1.5rem 3rem;
+    font-size: 2rem;
+    border-radius: 1rem;
+  }
+
+  &.-light {
+    background-color: lighten($primary-color, 50%);
+  }
+
+  &.-light:hover {
+    background-color: lighten($primary-color, 30%);
+  }
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { FcmListItem } from "../components/FcmListItem";
 import { FcmStep } from "./components/FcmStep";
@@ -7,25 +7,25 @@ import { procedureTypes } from "../../../types/types";
 
 export const FcmTransfer = () => {
   return (
-    <div className="container">
-      <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">
+    <Fragment>
+      <div className="mb-5r">
+        <h3 className="heading--secondary u-center u-textPrimary">
           Cambio de propietario o transferencia
         </h3>
-        <div className="mp-FCM__secHeadingLine"></div>
+        <div className="separationLine"></div>
       </div>
-      <div className="mp-FCM__section-desc  mb-5r">
-        <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
-        <p className="def-par text-white">
+      <div className="c-card u-bgPrimaryDarkest u-p2r u-mb-5r">
+        <h4 className="heading--tertiary u-textWhite">Descripción</h4>
+        <p className="text-white">
           El trámite para el cambio de propietario, este trámite es bastante
           recurrente cuando se presenta el trámite de pedigrí de un cachorro o
           camada y el propietario de uno de los padres no está a nombre de quien
           realiza el trámite.
         </p>
       </div>
-      <div className="mp-FCM__section-req mb-5r">
-        <h4 className="mp-FCM__section-heading">Requisitos</h4>
-        <ul className="mp-FCM-main__list">
+      <div className="mb-5r">
+        <h4 className="heading--tertiary mb-2r">Requisitos</h4>
+        <ul className="">
           {/* todo adjuntar enlace */}
           <FcmListItem text="Presentar el documento del que se va a realizar la transferencia correctamente endosado, a saber: a) Firma del vendedor (en caso de varios endosos, deberán aparecer todos), b) firma del comprador (en caso de copropiedad, deberán aparecer todos), c) Fecha de transferencia." />
           <FcmListItem text="El comprador o compradores deberán ser socios de la FCM. En caso de no serlo deberá darse de alta mediante el procedimiento correspondiente." />
@@ -35,8 +35,8 @@ export const FcmTransfer = () => {
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
-      <div className="mp-FCM__section-proc mb-5r">
-        <h4 className="mp-FCM__section-heading">Procedimiento</h4>
+      <div className="u-mb-5r">
+        <h4 className="heading--tertiary u-mb-2r">Procedimiento</h4>
         <FcmStep
           imgSrc={"requirement.png"}
           num="01"
@@ -96,6 +96,6 @@ export const FcmTransfer = () => {
         />
       </div>
       <FcmCalculator recProcedure={procedureTypes.transfer.value} />
-    </div>
+    </Fragment>
   );
 };

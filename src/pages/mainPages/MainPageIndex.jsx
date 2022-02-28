@@ -13,7 +13,7 @@ import { MainPageHero } from "./components/MainPageHero";
 
 import { collaboratorsStartLoading } from "../../actions/collaboratorActions";
 import { sortCollection } from "../../helpers/utilities";
-import { CharacteristicCard } from "./components/CharacteristicCard";
+import { FeatureCard } from "./components/FeatureCard";
 import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 
 Leaflet.Icon.Default.imagePath = "../node_modules/leaflet";
@@ -49,28 +49,28 @@ export const MainPageIndex = () => {
       <MainPageHero />
       {/* HERO */}
 
-      <section className="mainPages-sectionChar bg-primary--ti-st section-pb">
+      <section className="sectionFeatures u-bgPrimaryLightest u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Lo que nos distingue" />
-          <div className="mainPages-sectionChar__characteristics">
-            <CharacteristicCard
+          <div className="featuresContainer">
+            <FeatureCard
               imgSrc="assets/imgs/mainPage/char-personal.png"
               title="Personalizado"
               text="El seguimiento que damos cada uno de nuestros pacientes es personalizado y acorde con sus necesidades."
             />
-            <CharacteristicCard
+            <FeatureCard
               imgSrc="assets/imgs/mainPage/char-experience.png"
               title="Experiencia"
               text="Tenemos 30 años de experiencia en veterinaria, por lo que
                   somos un referente en Mérida y en todo el sureste."
             />
-            <CharacteristicCard
+            <FeatureCard
               imgSrc="assets/imgs/mainPage/char-specialist.png"
               title="Especialidad"
               text="Nuestros médicos son especializados en oftalmología y
               prestamos servicios relacionados en otras especialidades."
             />
-            <CharacteristicCard
+            <FeatureCard
               imgSrc="assets/imgs/mainPage/char-coverage.png"
               title="Cobertura"
               text="Contamos con tres sucursales, todas en las tiendas Petco en la
@@ -80,7 +80,7 @@ export const MainPageIndex = () => {
         </div>
       </section>
 
-      <section className="bg-primary--ti-er section-pb">
+      <section className="u-bgPrimaryLighter u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Promociones" />
           <div
@@ -154,30 +154,26 @@ export const MainPageIndex = () => {
         </div>
       </section>
 
-      <section className="bg-primary--ti-st section-pb">
-        {" "}
+      <section className="u-bgPrimaryLightest u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Quiénes somos" />
 
-          <div className="mainPages-sectionCollaborators__collaborators">
+          <div className="collaboratorCardsWrapper">
             {isLoading ? (
               <CircularProgress />
             ) : (
               sortedCollaborators.map((collaborator) => {
                 return (
-                  <div
-                    className="mainPages-sectionCollaborators__collaborator"
-                    key={collaborator._id}
-                  >
+                  <div className="collaboratorCard" key={collaborator._id}>
                     <img
-                      className="mainPages_collaboratorImg"
+                      className="collaboratorCard_img"
                       src={collaborator.imgUrl}
                       alt="colaborador"
                     />
                     <div className="coll-name">
-                      <p>
+                      <p className="collaboratorCard_text">
                         {`${collaborator.first_name} ${collaborator.last_name} `}
-                        <span className="position">
+                        <span className="collaboratorCard_position">
                           {collaborator.position}
                         </span>
                       </p>
@@ -190,39 +186,43 @@ export const MainPageIndex = () => {
         </div>
       </section>
 
-      <section className="bg-primary--ti-er section-pb">
+      <section className="u-bgPrimaryLighter u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Servicios" />
 
-          <div className="mainPages-sectionCollaborators__services">
-            <div className="mainPages-sectionCollaborators__service">
+          <div className="serviceImgCardWrapper">
+            <div className="serviceImgCard">
               <img src="assets/imgs/mainPage/services/consulta.jpg" alt="" />
-              <p>Consultas</p>
+              <p className="serviceImgCard_text">Consultas</p>
             </div>
-            <div className="mainPages-sectionCollaborators__service">
+            <div className="serviceImgCard">
               <img src="assets/imgs/mainPage/services/vaccine.jpg" alt="" />
-              <p>Vacunas</p>
+              <p className="serviceImgCard_text">Vacunas</p>
             </div>
-            <div className="mainPages-sectionCollaborators__service">
-              <img src="assets/imgs/mainPage/services/desp.jpg" alt="" />
-              <p>Desparasitaciones</p>
+            <div className="serviceImgCard">
+              <img
+                className="serviceImgCard_img"
+                src="assets/imgs/mainPage/services/desp.jpg"
+                alt=""
+              />
+              <p className="serviceImgCard_text">Desparasitaciones</p>
             </div>
-            <div className="mainPages-sectionCollaborators__service">
+            <div className="serviceImgCard">
               <img src="assets/imgs/mainPage/services/lab.jpg" alt="" />
-              <p>Laboratorio</p>
+              <p className="serviceImgCard_text">Laboratorio</p>
             </div>
-            <div className="mainPages-sectionCollaborators__service">
+            <div className="serviceImgCard">
               <img src="assets/imgs/mainPage/services/surgery.jpg" alt="" />
-              <p>Cirugía</p>
+              <p className="serviceImgCard_text">Cirugía</p>
             </div>
-            <div className="mainPages-sectionCollaborators__service">
+            <div className="serviceImgCard">
               <img src="assets/imgs/mainPage/services/pedig.jpg" alt="" />
-              <p>Pedigrí</p>
+              <p className="serviceImgCard_text">Pedigrí</p>
             </div>
           </div>
           <div className="d-flex justify-content-center">
             <Link className="" to="/services">
-              <button type="button" className="mainPages-button">
+              <button type="button" className="c-button -large">
                 Conozca más
               </button>
             </Link>
@@ -230,7 +230,7 @@ export const MainPageIndex = () => {
         </div>
       </section>
 
-      <section className="bg-primary--ti-st section-pb">
+      <section className="u-bgPrimaryLightest u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Contacto" />
           <div>
@@ -273,39 +273,40 @@ export const MainPageIndex = () => {
               </MapContainer>
             </div>
           </div>
-          <div className="mainPages-sectionContact__branches">
-            <div className="mainPages-sectionContact__branch">
-              <p className="mainPages-sectionContact__branchName">Urban</p>
+          <div className="branchesWrapper">
+            <div className="branchCard c-card u-bgPrimaryLighter u-textWhite">
+              <p className="branchCard c-card_title">Urban</p>
               <p>
-                <i className="fas fa-phone"></i> 999 406 9174
+                <i className="branchCard_icon fas fa-phone"></i> 999 406 9174
               </p>
               <p>
                 {" "}
-                <i className="fab fa-whatsapp-square"></i> 999 510 1404
+                <i className="branchCard_icon fab fa-whatsapp-square"></i> 999
+                510 1404
               </p>
               <p>
-                <i className="fas fa-thumbtack"></i> Av. Cámara de Comercio 215,
-                Monterreal
-              </p>
-            </div>
-            <div className="mainPages-sectionContact__branch">
-              <p className="mainPages-sectionContact__branchName">Harbor</p>
-              <p>
-                <i className="fas fa-phone"></i> 999 925 0015
-              </p>
-              <p>
-                <i className="fas fa-thumbtack"></i> Calle 60 261, Zona
-                Industrial
+                <i className="branchCard_icon fas fa-thumbtack"></i> Av. Cámara
+                de Comercio 215, Monterreal
               </p>
             </div>
-            <div className="mainPages-sectionContact__branch">
-              <p className="mainPages-sectionContact__branchName">Montejo</p>
+            <div className="branchCard c-card u-bgPrimaryLighter u-textWhite">
+              <p className="branchCard c-card_title">Harbor</p>
               <p>
-                <i className="fas fa-phone"></i> 999 400 7974
+                <i className="branchCard_icon fas fa-phone"></i> 999 925 0015
               </p>
               <p>
-                <i className="fas fa-thumbtack"></i> Prol. Paseo Montejo 99,
-                Campestre
+                <i className="branchCard_icon fas fa-thumbtack"></i> Calle 60
+                261, Zona Industrial
+              </p>
+            </div>
+            <div className="branchCard c-card u-bgPrimaryLighter u-textWhite">
+              <p className="branchCard c-card_title">Montejo</p>
+              <p>
+                <i className="branchCard_icon fas fa-phone"></i> 999 400 7974
+              </p>
+              <p>
+                <i className="branchCard_icon fas fa-thumbtack"></i> Prol. Paseo
+                Montejo 99, Campestre
               </p>
             </div>
           </div>

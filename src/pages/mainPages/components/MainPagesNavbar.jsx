@@ -3,10 +3,14 @@ import { Link, NavLink } from "react-router-dom";
 
 export const MainPagesNavbar = () => {
   return (
-    <nav className="mp-navbar navbar navbar-dark navbar-expand-md fixed-top bg-primary--ti-er">
+    <nav className="l-navbar navbar navbar-dark navbar-expand-md fixed-top u-bgPrimaryLighter">
       <div className="container-fluid">
-        <Link className="" to="/">
-          <img src="assets/imgs/Logo_HVP.png" alt="" />
+        <Link to="/">
+          <img
+            className="l-navbar_logo"
+            src="assets/imgs/Logo_HVP.png"
+            alt=""
+          />
         </Link>
 
         <button
@@ -21,8 +25,8 @@ export const MainPagesNavbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <ul className="navbar-nav me-auto mb-md-0 text-white">
-            <li className="nav-item">
+          <ul className="l-navbar_menu navbar-nav me-auto mb-md-0 text-white">
+            <li className="nav-item l-navbar_item">
               <NavLink
                 className={({ isActive }) =>
                   `nav-item nav-link ${isActive ? "active" : ""}`
@@ -32,7 +36,7 @@ export const MainPagesNavbar = () => {
                 Inicio
               </NavLink>
             </li>
-            <li className="nav-item">
+            <li className="nav-item l-navbar_item">
               {/* <a class="nav-link" href="advices.html">Blog y consejos</a> */}
               <NavLink
                 className={({ isActive }) =>
@@ -43,7 +47,7 @@ export const MainPagesNavbar = () => {
                 Blog y consejos
               </NavLink>
             </li>
-            <li className="nav-item dropdown">
+            <li className="nav-item l-navbar_item">
               <div className="btn-group">
                 {/* <a class="nav-link" href="services.html"> */}
                 <NavLink
@@ -64,26 +68,29 @@ export const MainPagesNavbar = () => {
                 >
                   <span className="visually-hidden">Toggle Dropdown</span>
                 </a>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li>
+                <ul
+                  className="dropdown-menu u-bgPrimaryLighter"
+                  aria-labelledby="navbarDropdown"
+                >
+                  <li className="mb-1r">
                     <NavLink to="/services/consultation">Consultas</NavLink>
                   </li>
 
-                  <li>
+                  <li className="mb-1r">
                     <NavLink to="/services/laboratory">Laboratorio</NavLink>
                   </li>
-                  <li>
+                  <li className="mb-1r">
                     <NavLink to="/services/surgery">Cirugías</NavLink>
                   </li>
-                  <li>
+                  <li className="mb-1r">
                     <NavLink to="/services/FCM">Pedigrí y trámites FCM</NavLink>
                   </li>
-                  <li>
+                  <li className="mb-1r">
                     <NavLink to="/services/insemination">
                       Inseminación artificial
                     </NavLink>
                   </li>
-                  <li>
+                  <li className="mb-1r">
                     <NavLink to="/services/cataractSurgery">
                       Cirugía de cataratas
                     </NavLink>
@@ -91,7 +98,7 @@ export const MainPagesNavbar = () => {
                 </ul>
               </div>
             </li>
-            <li className="nav-item">
+            <li className="nav-item l-navbar_item">
               {/* <a class="nav-link" href="team.html">Equipo</a> */}
               <NavLink
                 className={({ isActive }) =>
@@ -102,7 +109,7 @@ export const MainPagesNavbar = () => {
                 Equipo
               </NavLink>
             </li>
-            <li className="nav-item">
+            <li className="nav-item l-navbar_item">
               <NavLink
                 className={({ isActive }) =>
                   `nav-item nav-link ${isActive ? "active" : ""}`
@@ -113,7 +120,7 @@ export const MainPagesNavbar = () => {
               </NavLink>
               {/* <a class="nav-link" href="company.html">Empresa</a> */}
             </li>
-            <li className="nav-item">
+            <li className="nav-item l-navbar_item">
               <NavLink
                 className={({ isActive }) =>
                   `nav-item nav-link ${isActive ? "active" : ""}`
@@ -123,7 +130,7 @@ export const MainPagesNavbar = () => {
                 Contacto
               </NavLink>
             </li>
-            <li className="nav-item">
+            <li className="nav-item l-navbar_item">
               <NavLink
                 className={({ isActive }) =>
                   `nav-item nav-link ${isActive ? "active" : ""}`

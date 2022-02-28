@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { FcmListItem } from "../components/FcmListItem";
 import { FcmStep } from "./components/FcmStep";
@@ -7,23 +7,25 @@ import { procedureTypes } from "../../../types/types";
 
 export const FCMPedigree = () => {
   return (
-    <div className="container">
-      <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">Pedigrí (camadas)</h3>
-        <div className="mp-FCM__secHeadingLine"></div>
+    <Fragment>
+      <div className="mb-5r">
+        <h3 className="heading--secondary u-center u-textPrimary">
+          Pedigrí (camadas)
+        </h3>
+        <div className="separationLine"></div>
       </div>
-      <div className="mp-FCM__section-desc  mb-5r">
-        <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
-        <p className="def-par text-white">
+      <div className="c-card u-bgPrimaryDarkest u-p2r u-mb-5r">
+        <h4 className="heading--tertiary u-textWhite">Descripción</h4>
+        <p className="text-white">
           El trámite para la obtención del pedigrí tiene por objeto garantizar
           que una camada pertenece a determinada raza y que posee un mínimo de
           tres generaciones de antepasados de la misma raza cumpliendo un
           estándar determinado.
         </p>
       </div>
-      <div className="mp-FCM__section-req mb-5r">
-        <h4 className="mp-FCM__section-heading">Requisitos</h4>
-        <ul className="mp-FCM-main__list">
+      <div className="mb-5r">
+        <h4 className="heading--tertiary mb-2r">Requisitos</h4>
+        <ul className="">
           {/* todo adjuntar enlace */}
           <FcmListItem text="Llenar el formato electrónico de certificado de cruza correctamente, a través de este sitio web." />
           <FcmListItem text="Ambos padres deberán contar con pedigrí. Esto se prueba presentando copia de los pedigrís internacionales (color azul) de la Federación Canófila Mexicana. También se pueden registrar los perros que tengan antecedentes de tres generaciones con certificado de pureza racial." />
@@ -37,8 +39,9 @@ export const FCMPedigree = () => {
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
-      <div className="mp-FCM__section-proc mb-5r">
-        <h4 className="mp-FCM__section-heading">Procedimiento</h4>
+      {/* STEPS */}
+      <div className="u-mb-5r">
+        <h4 className="heading--tertiary u-mb-2r">Procedimiento</h4>
         <FcmStep
           imgSrc={"requirement.png"}
           num="01"
@@ -104,7 +107,8 @@ export const FCMPedigree = () => {
           reverse={false}
         />
       </div>
+      {/* CALCULATOR */}
       <FcmCalculator recProcedure={procedureTypes.pedigree.value} />
-    </div>
+    </Fragment>
   );
 };

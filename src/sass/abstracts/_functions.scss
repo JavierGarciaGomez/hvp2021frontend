@@ -1,0 +1,14 @@
+@function setHue($color, $hue) {
+  @if ($hue==lighter) {
+    @return lighten($color, 40%);
+  }
+  @if ($hue==lightest) {
+    @return lighten($color, 60%);
+  }
+  @if ($hue==darker) {
+    @return darken($color, 10%);
+  }
+  @if ($hue==lighter) {
+    @return darken($color, 20%);
+  }
+}

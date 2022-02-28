@@ -3,7 +3,7 @@ import React from "react";
 
 export const FcmListItem = ({ text, reverse = false }) => {
   return (
-    <li className="mp-FCM-main__listItem">
+    <li className="fcmListItem mb-2r">
       <Check
         sx={{
           color: "var(--primary-color)",

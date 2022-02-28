@@ -10,23 +10,23 @@ export const FCMIndex = () => {
   // ionicons
 
   return (
-    <div className="mp-FCM">
+    <div className="l-pageContent u-pt-10r u-bgPrimaryLightest">
       <FCMHeader />
       {/* disclaimer */}
       <div className="container">
-        <div className="mp-FCM-main__disclaimer">
-          <div className="mp-FCM-main__disclaimer-left">
+        <div className="c-horizontalCard u-bgWhite u-mb-5r">
+          <div className="c-horizontalCard_left">
             <a href="https://fcm.mx/">
               <img
-                className="mp-FCM-main__logo"
+                className="fcmLogo"
                 src="http://fcm.mx/wp-content/uploads/2020/03/logo.png"
                 alt=""
               />
             </a>
           </div>
 
-          <div className="mp-FCM-main__disclaimer-right">
-            <p className="mp-FCM-main__disclaimer-text">
+          <div className="c-horizontalCard_right">
+            <p className="">
               Nuestro director médico es médico inspector de la{" "}
               <span className="fw-bold text-danger">
                 Federación Canófila Mexicana A. C.
@@ -44,78 +44,81 @@ export const FCMIndex = () => {
             </a>
           </div>
         </div>
-      </div>
-      {/* Explicación del portal */}
-      <div className="mp-FCM-main__expfuncWrapper container">
-        <div className="mp-FCM-main__explanation">
-          <div className="mp-FCM-main__guide">
-            <h3 className="mp-FCM-main__secHeading">Funcionamiento</h3>
-            <p className="def-par">
+
+        {/* Explicación del portal */}
+
+        <div className="l-gridWrapper mb-5r">
+          <div className="c-card u-p-2r">
+            <h3 className="heading--secondary u-textPrimary u-mb-2r">
+              Funcionamiento
+            </h3>
+            <p className="">
               Este miniportal tiene por objetivo ser una guía para nuestros
               clientes con respecto a los trámites de la Federación Canófila
               Mexicana. Su funcionamiento es muy sencillo, basta con seleccionar
               el trámite deseado para conocer los procedimientos, requisitos y
               hacer los cálculos respectivos.
             </p>
-            <p className="def-par">
+            <p className="">
               Cualquier duda al respecto, puede consultarnos vía telefónica o de
               forma presencial. O bien consultar directamente con la Federación
               Canófila Mexicana.
             </p>
           </div>
+
+          <div className="c-card u-p-2r">
+            <h3 className="heading--secondary u-textPrimary u-mb-2r">
+              Ventajas del registro
+            </h3>
+            <ul className="list">
+              <li className="fcmListItem">
+                <Check
+                  sx={{
+                    color: "var(--primary-color)",
+                    fontSize: "3.2rem",
+                  }}
+                />
+                <span>
+                  Contar con su certificado de registro que funciona como acta
+                  de nacimiento y como titulo de propiedad y respaldo legal.
+                </span>
+              </li>
+              <li className="fcmListItem">
+                <Check
+                  sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
+                />
+                <span>
+                  Certificar los datos como nombre, raza, color, sexo, número de
+                  registro, fecha y lugar de nacimiento
+                </span>
+              </li>
+              <li className="fcmListItem">
+                <Check
+                  sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
+                />
+                <span>Poder participar en los eventos que programa la FCM</span>
+              </li>
+              <li className="fcmListItem">
+                <Check
+                  sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
+                />
+                <span>
+                  Contar hasta con 3 identificaciones permanentes: registro,
+                  microchip y tatuaje
+                </span>
+              </li>
+              <li className="fcmListItem">
+                <Check
+                  sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
+                />
+                <span>Conocer la línea de sangre.</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="mp-FCM-main__importance">
-          <h3 className="mp-FCM-main__secHeading">Ventajas del registro</h3>
-          <ul className="mp-FCM-main__list">
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{
-                  color: "var(--primary-color)",
-                  fontSize: "3.2rem",
-                }}
-              />
-              <span>
-                Contar con su certificado de registro que funciona como acta de
-                nacimiento y como titulo de propiedad y respaldo legal.
-              </span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>
-                Certificar los datos como nombre, raza, color, sexo, número de
-                registro, fecha y lugar de nacimiento
-              </span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>Poder participar en los eventos que programa la FCM</span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>
-                Contar hasta con 3 identificaciones permanentes: registro,
-                microchip y tatuaje
-              </span>
-            </li>
-            <li className="mp-FCM-main__listItem">
-              <Check
-                sx={{ color: "var(--primary-color)", fontSize: "3.2rem" }}
-              />
-              <span>Conocer la línea de sangre.</span>
-            </li>
-          </ul>
-        </div>
+
+        <FCMLinks />
       </div>
-
-      {/* importancia */}
-
-      <FCMLinks />
     </div>
   );
 };

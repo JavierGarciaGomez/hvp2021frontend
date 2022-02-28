@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Route, Routes } from "react-router-dom";
+import { FcmCalculator } from "../pages/mainPages/FCM/components/FcmCalculator";
 
-import { FCMCalc } from "../pages/mainPages/FCM/FCMCalc";
 import { FcmContestCertificate } from "../pages/mainPages/FCM/FcmContestCertificate";
 import { FcmInitialRacePurity } from "../pages/mainPages/FCM/FcmInitialRacePurity";
 import { FcmInitialRegister } from "../pages/mainPages/FCM/FcmInitialRegister";
@@ -13,7 +13,7 @@ import { FcmTransfer } from "../pages/mainPages/FCM/FcmTransfer";
 export const FCMRouter = () => {
   return (
     <Routes>
-      <Route path="fcmCalc" element={<FCMCalc />} />
+      <Route path="fcmCalc" element={<FcmCalculator />} />
       <Route path="pedigree" element={<FCMPedigree />} />
       <Route path="racePurity" element={<FcmRacePurity />} />
       <Route path="initialRacePurity" element={<FcmInitialRacePurity />} />

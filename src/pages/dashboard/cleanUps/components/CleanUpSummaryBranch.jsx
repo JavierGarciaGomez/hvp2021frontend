@@ -10,7 +10,7 @@ export const CleanUpSummaryBranch = ({ branch, data }) => {
     branchData;
 
   return (
-    <div className="col-12 col-lg-3 border-2 border rounded-3 border-primary mb-4">
+    <div className="col-12 col-lg-3 border-2 border rounded-3 u-borderPrimary mb-4">
       <h4 className="fs-2 text-center pt-2 mb-3">{branch}</h4>
       <p className="mb-2">Porcentaje de cumplimiento del último mes: </p>
       <div className="pie-chart-container mb-3">

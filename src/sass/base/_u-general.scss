@@ -1,0 +1,67 @@
+/****************************************/
+/***********GENERAL***********************/
+/****************************************/
+
+// todo add u-
+.a {
+  color: inherit;
+}
+
+.bg-light-blue {
+  background-color: var(--custom-lightblue);
+}
+
+.bg-default {
+  background-color: var(--primary-bg-color);
+}
+
+.text-lightgray {
+  color: var(--custom-lightgray) !important;
+}
+
+/* inherit color */
+.navbar-dark,
+.navbar-nav,
+.nav-link {
+  color: inherit;
+}
+
+.u-textWhite {
+  color: $lightColor;
+}
+
+.u-textPrimary {
+  color: $primaryColor !important;
+}
+
+.u-defTextColor {
+  color: $textPrimaryColor !important;
+}
+
+.u-bg-primary {
+  background-color: $primary-color !important;
+}
+
+.u-bgPrimaryLighter {
+  background-color: lighten($primary-color, 40%) !important;
+}
+
+.u-bgPrimaryLightest {
+  background-color: lighten($primary-color, 60%) !important;
+}
+
+.u-bgPrimaryDarker {
+  background-color: darken($primary-color, 10%) !important;
+}
+
+.u-bgPrimaryDarkest {
+  background-color: darken($primary-color, 20%) !important;
+}
+
+.u-bgWhite {
+  background-color: white !important;
+}
+
+.u-borderPrimary {
+  border: $primary-color 3px solid;
+}

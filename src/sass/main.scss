@@ -1,64 +1,33 @@
-// 7 to 1 architecture
-// sass/
-// |
-// |– abstracts/
-// |   |– _variables.scss    # Sass Variables
-// |   |– _mixins.scss       # Sass Mixins
-// |
-// |– vendors/
-// |   |– _bootstrap.scss    # Bootstrap
-// |
-// |– base/
-// |   |– _reset.scss        # Reset/normalize
-// |   |– _typography.scss   # Typography rules
-// |
-// |– layout/
-// |   |– _navigation.scss   # Navigation
-// |   |– _grid.scss         # Grid system
-// |   |– _header.scss       # Header
-// |   |– _footer.scss       # Footer
-// |   |– _sidebar.scss      # Sidebar
-// |   |– _forms.scss        # Forms
-// |
-// |– components/
-// |   |– _buttons.scss      # Buttons
-// |   |– _carousel.scss     # Carousel
-// |   |– _cover.scss        # Cover
-// |   |– _dropdown.scss     # Dropdown
-// |
-// |– pages/
-// |   |– _home.scss         # Home specific styles
-// |   |– _contact.scss      # Contact specific styles
-// |
-// |– themes/
-// |   |– _theme.scss        # Default theme
-// |   |– _admin.scss        # Admin theme
-// |
-//  – main.scss              # Main Sass input file
-
 // Abstracts
-// @import "abstracts/functions";
+@import "abstracts/functions";
 // @import "abstracts/mixins";
 @import "abstracts/variables";
 
 // Vendors
+@import "vendors/vendors";
 
 // Base
 // @import "base/animations";
-// @import "base/base";
+@import "base/base";
 @import "base/typography";
 @import "base/utilities";
 
 // Components
 // @import "components/bg-video";
 // @import "components/button";
+// todo review
+@import "components/button";
 @import "components/card";
+@import "components/sectionHeader";
+@import "components/hero";
+@import "components/headingWithImg";
+@import "components/general";
+
 // @import "components/composition";
 // @import "components/feature-box";
 // @import "components/form";
 // @import "components/popup";
 // @import "components/story";
-
 // Layouts
 @import "layout/layouts";
 // @import "layout/grid";
@@ -66,11 +35,54 @@
 // @import "layout/navigation";
 
 // Pages
+@import "pages/mainPages";
 @import "pages/dashboard";
+// todo review
+@import "pages/auth";
 
-// Themes
+/*
+7 to 1 architecture
+sass/
+|
+|– abstracts/
+|   |– _variables.scss    # Sass Variables
+|   |– _mixins.scss       # Sass Mixins
+|
+|– vendors/
+|   |– _bootstrap.scss    # Bootstrap
+|
+|– base/
+|   |– _reset.scss        # Reset/normalize
+|   |– _typography.scss   # Typography rules
+|
+|– layout/
+|   |– _navigation.scss   # Navigation
+|   |– _grid.scss         # Grid system
+|   |– _header.scss       # Header
+|   |– _footer.scss       # Footer
+|   |– _sidebar.scss      # Sidebar
+|   |– _forms.scss        # Forms
+|
+|– components/
+|   |– _buttons.scss      # Buttons
+|   |– _carousel.scss     # Carousel
+|   |– _cover.scss        # Cover
+|   |– _dropdown.scss     # Dropdown
+|
+|– pages/
+|   |– _home.scss         # Home specific styles
+|   |– _contact.scss      # Contact specific styles
+|
+|– themes/
+|   |– _theme.scss        # Default theme
+|   |– _admin.scss        # Admin theme
+|
+ – main.scss              # Main Sass input file
+*/
 
-.swal2-html-container,
-.swal2-select {
-  font-size: 1.6rem;
-}
+/*PREFIXES
+u-utilities
+c-components
+l-layouts
+
+*/

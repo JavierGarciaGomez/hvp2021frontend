@@ -1,6 +1,6 @@
 import Switch from "@mui/material/Switch";
 import { useDispatch } from "react-redux";
-import "./newUser.css";
+
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { capitalizeFirstLetter } from "../../../../helpers/formatHelpers";

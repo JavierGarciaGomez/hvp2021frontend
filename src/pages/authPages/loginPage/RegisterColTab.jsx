@@ -6,7 +6,6 @@ import { collaboratorStartRegister } from "../../../actions/collaboratorActions"
 
 import { InputGroup } from "../../../components/ui/InputGroup";
 import { useForm } from "../../../hooks/useForm";
-import "../auth.css";
 
 export const RegisterColTab = () => {
   const dispatch = useDispatch();

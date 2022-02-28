@@ -4,7 +4,7 @@ import { MainPagesSectionHeader } from "./components/MainPagesSectionHeader";
 export const MainPagesCompany = () => {
   return (
     <Fragment>
-      <section className="bg-primary--ti-st section-pb section-pt">
+      <section className="u-bgPrimaryLightest u-pb-6r u-pt-10r">
         <div className="container">
           <MainPagesSectionHeader title="Empresa" />
           <div className="mp-video-wrapper">
@@ -52,7 +52,7 @@ export const MainPagesCompany = () => {
         </div>
       </section>
 
-      <section className="bg-primary--ti-er section-pb">
+      <section className="u-bgPrimaryLighter u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Misión, visión y valores" />
           <div className="mp-company__text">
@@ -77,7 +77,7 @@ export const MainPagesCompany = () => {
         </div>
       </section>
 
-      <section className="bg-primary--ti-st section-pb">
+      <section className="u-bgPrimaryLightest u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Logo, eslogan y mascota" />
 

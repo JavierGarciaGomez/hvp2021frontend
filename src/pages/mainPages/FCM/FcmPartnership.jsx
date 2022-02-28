@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { FcmListItem } from "../components/FcmListItem";
 import { FcmStep } from "./components/FcmStep";
@@ -7,22 +7,24 @@ import { procedureTypes } from "../../../types/types";
 
 export const FcmPartnership = () => {
   return (
-    <div className="container">
-      <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">Altas y renovaciones de socios</h3>
-        <div className="mp-FCM__secHeadingLine"></div>
+    <Fragment>
+      <div className="mb-5r">
+        <h3 className="heading--secondary u-center u-textPrimary">
+          Altas y renovaciones de socios
+        </h3>
+        <div className="separationLine"></div>
       </div>
-      <div className="mp-FCM__section-desc  mb-5r">
-        <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
-        <p className="def-par text-white">
+      <div className="c-card u-bgPrimaryDarkest u-p2r  mb-5r">
+        <h4 className="heading--tertiary u-textWhite">Descripción</h4>
+        <p className="text-white">
           El trámite tiene por objeto dar de alta a un socio en la FCM o renovar
           su membresía, lo que resulta obligatorio para realizar cualquiera de
           los otros trámites referidos en este minisitio.
         </p>
       </div>
-      <div className="mp-FCM__section-req mb-5r">
-        <h4 className="mp-FCM__section-heading">Requisitos</h4>
-        <ul className="mp-FCM-main__list">
+      <div className="mb-5r">
+        <h4 className="heading--tertiary mb-2r">Requisitos</h4>
+        <ul className="">
           {/* todo adjuntar enlace */}
           <FcmListItem text="Llenar el formato electrónico de nuevo socio." />
           <FcmListItem text="Llenar el formato físico de nuevo socio. El nuevo socio deberá poner únicamente su firma en la credencial y en el resguardo de la FCM y en la parte final deberá poner su nombre completo, dirección (calle, número, colonia, ciudad, estado y CP), teléfono y correo electrónico." />
@@ -33,8 +35,8 @@ export const FcmPartnership = () => {
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
-      <div className="mp-FCM__section-proc mb-5r">
-        <h4 className="mp-FCM__section-heading">Procedimiento</h4>
+      <div className=" mb-5r">
+        <h4 className="heading--tertiary mb-2r">Procedimiento</h4>
         <FcmStep
           imgSrc={"requirement.png"}
           num="01"
@@ -94,6 +96,6 @@ export const FcmPartnership = () => {
         />
       </div>
       <FcmCalculator recProcedure={procedureTypes.partnership.value} />
-    </div>
+    </Fragment>
   );
 };

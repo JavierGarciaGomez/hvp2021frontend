@@ -6,7 +6,7 @@ const position = [21.019557, -89.613934];
 export const MainPagesContact = () => {
   return (
     <Fragment>
-      <section className="bg-primary--ti-st section-pb section-pt">
+      <section className="u-bgPrimaryLightest u-pb-6r u-pt-10r">
         <div className="container">
           <MainPagesSectionHeader title="Contacto" />
           <div>

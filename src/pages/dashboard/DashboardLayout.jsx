@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
 
 import { DashboardRouter } from "../../routes/DashboardRouter";
-import "./dashboardLayout.css";
 import { Sidebar } from "./components/sidebar/Sidebar";
 import { Topbar } from "./components/topbar/Topbar";
 import { useMediaQuery } from "react-responsive";
@@ -13,7 +12,7 @@ export const DashboardLayout = () => {
   const dispatch = useDispatch();
   const { isMenuOpen, isSmallScreen } = useSelector((state) => state.dbUi);
 
-  const isASmallScreen = useMediaQuery({ query: "(max-width: 704px)" });
+  const isASmallScreen = useMediaQuery({ query: "(max-width: 900px)" });
   useEffect(() => {
     dispatch(setSmallScreen(isASmallScreen));
   }, [isASmallScreen]);

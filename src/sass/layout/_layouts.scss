@@ -6,3 +6,101 @@
   margin: 0 auto;
   align-items: center;
 }
+
+.l-pageContent {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.l-navbar {
+  height: 6rem;
+
+  &_logo {
+    max-height: 5rem;
+  }
+
+  &_menu {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &_item {
+    // margin-right: 1rem;
+  }
+}
+
+.l-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 20%);
+  justify-content: space-between;
+}
+
+.l-centerContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.l-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* for single line flex container */
+  margin-bottom: 3rem;
+}
+
+.l-flexWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.l-gridWrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  @media (max-width: $bp-md) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  &.-grid3 {
+    grid-template-columns: repeat(3, 1fr);
+    @media (max-width: $bp-md) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* ************************************************************************************************ */
+/**************************************** FOOTER  ***************************************************/
+/* ************************************************************************************************ */
+.l-footer {
+  margin-top: auto;
+  background-color: darken($primaryColor, 60%);
+  color: white;
+  padding: 0.66em;
+  text-align: center;
+
+  &_social {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  &_icon {
+    color: white;
+    font-size: 1.6rem;
+  }
+
+  &_icon:hover {
+    color: lighten($primaryColor, 40%);
+  }
+}

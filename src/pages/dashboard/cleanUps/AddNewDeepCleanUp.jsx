@@ -62,7 +62,7 @@ export const AddNewDeepCleanup = () => {
         <span className="fw-bold text-info">{branch}</span>
       </h4>
 
-      <div className="border border-primary">
+      <div className="border u-borderPrimary">
         <div className="p-2 fw-bold">Selecciona tu participación</div>
         <div className="d-flex flex-wrap">
           <div className="col-12 col-md-6 d-flex p-2 align-items-center">

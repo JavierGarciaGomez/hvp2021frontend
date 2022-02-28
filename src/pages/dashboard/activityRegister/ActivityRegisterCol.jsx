@@ -277,9 +277,9 @@ export const ActivityRegisterCol = () => {
 
       {isTimerActive && !isObjectEmpty(currentRegister) && (
         <div className="activityRegisterActive l-singleCardContainer mb-3r">
-          <div className="card">
-            <div className="card__top  card__top--col">
-              <h3 className="card__title">
+          <div className="c-card">
+            <div className="c-card_top  card__top--col">
+              <h3 className="c-card_title">
                 {findLabelByValue(
                   activityRegisterTypes,
                   currentRegister.activity
@@ -287,7 +287,7 @@ export const ActivityRegisterCol = () => {
               </h3>
               <p className="paragraph">{currentRegister.desc}</p>
             </div>
-            <div className="card__body">
+            <div className="c-card_body">
               <p className="paragraph">
                 Fecha de inicio:{" "}
                 {dayjs(currentRegister.startingTime).format("DD/MMM/YYYY")}
@@ -306,7 +306,7 @@ export const ActivityRegisterCol = () => {
                 </span>
               </div>
             </div>
-            <div className="card__footer">
+            <div className="c-card_footer">
               <button className="btn btn-primary" onClick={handleShowEditForm}>
                 Editar tarea actual
               </button>
@@ -340,11 +340,11 @@ export const ActivityRegisterCol = () => {
       {/* CREATE NEW ACTIVITIES */}
       {showCreateNewActivity && (
         <div className="activityRegisterNewActivity l-singleCardContainer mb-3r">
-          <div className="card">
-            <div className="card__top">
-              <h3 className="card__title">Crear nueva actividad</h3>
+          <div className="c-card">
+            <div className="c-card_top">
+              <h3 className="c-card_title">Crear nueva actividad</h3>
             </div>
-            <div className="card__footer">
+            <div className="c-card_footer">
               <button
                 className="btn btn-primary"
                 onClick={handleContinueLastActivity}
@@ -401,25 +401,25 @@ export const ActivityRegisterCol = () => {
             <h3 className="headingTertiary">Estadísticas</h3>
             <p className="paragraph">
               Horas registradas ayer:{" "}
-              <span className="text-primary fw-bold">
+              <span className="u-textPrimary fw-bold">
                 {calculateYesterdayHours(activeColRegisters)}
               </span>
             </p>
             <p className="paragraph">
               Horas registradas en este mes:{" "}
-              <span className="text-primary fw-bold">
+              <span className="u-textPrimary fw-bold">
                 {calculateMonthHours(activeColRegisters)}
               </span>
             </p>
             <p className="paragraph">
               Horas registradas en esta semana:{" "}
-              <span className="text-primary fw-bold">
+              <span className="u-textPrimary fw-bold">
                 {calculateWeekHours(activeColRegisters)}
               </span>
             </p>
             <p className="paragraph">
               Total de horas registradas:{" "}
-              <span className="text-primary fw-bold">
+              <span className="u-textPrimary fw-bold">
                 {calculateTotalHours(activeColRegisters)}
               </span>
             </p>

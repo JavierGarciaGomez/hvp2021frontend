@@ -5,12 +5,12 @@ export const TaxPayerCard = ({ taxpayer }) => {
   const { _id, rfc, name, email, phone, address, notes } = taxpayer;
   return (
     <div className="col-12 col-md-5 bg-default m-3">
-      <div className="card-body">
-        <h5 className="card-title  fs-2">
+      <div className="c-card-body">
+        <h5 className="c-card-title  fs-2">
           <span className="fw-bold">RFC: </span>
           {rfc}
         </h5>
-        <p className="card-text mb-3">
+        <p className="c-card-text mb-3">
           <span className="fw-bold">Nombre o razón social: </span>
           {name}
         </p>

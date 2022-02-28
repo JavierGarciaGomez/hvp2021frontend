@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { FcmListItem } from "../components/FcmListItem";
 import { FcmStep } from "./components/FcmStep";
@@ -7,14 +7,16 @@ import { procedureTypes } from "../../../types/types";
 
 export const FcmRacePurity = () => {
   return (
-    <div className="container">
-      <div className="mp-FCM__section-header  mb-5r">
-        <h3 className="mp-FCM__procHeading">Pureza racial (camadas)</h3>
-        <div className="mp-FCM__secHeadingLine"></div>
+    <Fragment>
+      <div className="mb-5r">
+        <h3 className="heading--secondary u-center u-textPrimary">
+          Pureza racial (camadas)
+        </h3>
+        <div className="separationLine"></div>
       </div>
-      <div className="mp-FCM__section-desc  mb-5r">
-        <h4 className="mp-FCM__section-heading text-white">Descripción</h4>
-        <p className="def-par text-white">
+      <div className="c-card u-bgPrimaryDarkest u-p2r  mb-5r">
+        <h4 className="heading--tertiary u-textWhite">Descripción</h4>
+        <p className="text-white">
           El trámite para la obtención del certificado de pureza racial tiene
           por objeto certificar que los cachorros de una camada son de
           determinada raza, en virtud de que ambos padres o uno de ellos cuenta
@@ -22,9 +24,9 @@ export const FcmRacePurity = () => {
           racial inicial.
         </p>
       </div>
-      <div className="mp-FCM__section-req mb-5r">
-        <h4 className="mp-FCM__section-heading">Requisitos</h4>
-        <ul className="mp-FCM-main__list">
+      <div className="mb-5r">
+        <h4 className="heading--tertiary mb-2r">Requisitos</h4>
+        <ul className="">
           {/* todo adjuntar enlace */}
           <FcmListItem text="Llenar el formato electrónico de certificado de cruza correctamente, a través de este sitio web." />
           <FcmListItem text="Al menos uno de los padres deberá contar con pedigrí o con certificado de pureza racial. Esto se prueba presentando copia del CPR o del pedigrí internacional (color azul) de la Federación Canófila Mexicana." />
@@ -38,8 +40,8 @@ export const FcmRacePurity = () => {
           <FcmListItem text="Pagar las cuotas que correspondan." />
         </ul>
       </div>
-      <div className="mp-FCM__section-proc mb-5r">
-        <h4 className="mp-FCM__section-heading">Procedimiento</h4>
+      <div className=" mb-5r">
+        <h4 className="heading--tertiary mb-2r">Procedimiento</h4>
         <FcmStep
           imgSrc={"requirement.png"}
           num="01"
@@ -106,6 +108,6 @@ export const FcmRacePurity = () => {
         />
       </div>
       <FcmCalculator recProcedure={procedureTypes.racePurity.value} />
-    </div>
+    </Fragment>
   );
 };

@@ -26,7 +26,7 @@ export const MainPagesTeam = () => {
 
   return (
     <Fragment>
-      <section className="bg-primary--ti-st section-pb section-pt">
+      <section className="u-bgPrimaryLightest u-pb-6r u-pt-10r">
         <MainPagesSectionHeader title="Equipo" />
         {isLoading ? (
           <CircularProgress />
@@ -34,7 +34,7 @@ export const MainPagesTeam = () => {
           sortedCollaborators.map((collaborator, index) => {
             return (
               <div
-                className="mp-team__item bg-primary--ti-er border-primary"
+                className="mp-team__item u-bgPrimaryLighter u-borderPrimary"
                 key={collaborator._id}
               >
                 <div className="mp-team__header">
