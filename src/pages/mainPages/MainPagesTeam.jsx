@@ -34,18 +34,24 @@ export const MainPagesTeam = () => {
           sortedCollaborators.map((collaborator, index) => {
             return (
               <div
-                className="mp-team__item u-bgPrimaryLighter u-borderPrimary"
+                className="teamItem u-bgPrimaryLighter u-borderPrimary"
                 key={collaborator._id}
               >
-                <div className="mp-team__header">
-                  <h3>{`${collaborator.first_name} ${collaborator.last_name}`}</h3>
-                  <h4>{collaborator.position}</h4>
+                <div className="teamItem_header">
+                  <h3 className="teamItem_name heading--secondary text-uppercase">{`${collaborator.first_name} ${collaborator.last_name}`}</h3>
+                  <h4 className="teamItem_position heading--tertiary fst-italic">
+                    {collaborator.position}
+                  </h4>
                 </div>
-                <div className="mp-team__content">
-                  <div className="mp-team__img">
-                    <img src={collaborator.imgUrl} alt="" />
+                <div className="teamItem_content">
+                  <div className="teamItem_imgContainer">
+                    <img
+                      className="teamItem_img"
+                      src={collaborator.imgUrl}
+                      alt=""
+                    />
                   </div>
-                  <div className="mp-team__text">
+                  <div className="teamItem_text">
                     {/* {collaborator.textPresentation &&
                           collaborator.textPresentation
                             .split("\n")

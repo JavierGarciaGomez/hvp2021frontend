@@ -7,7 +7,7 @@ export const MainPageLayout = () => {
   return (
     <div className="mainPage">
       <MainPagesNavbar />
-      <main className="l-pageContent">
+      <main className="l-pageContent u-bgPrimaryLightest">
         <MainPageRouter />
         <MainPageFooter />
       </main>

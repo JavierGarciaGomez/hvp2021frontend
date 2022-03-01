@@ -5,13 +5,17 @@ import { MainPagesSectionHeader } from "../components/MainPagesSectionHeader";
 export const MainPagesServicesModel = ({ sectionTitle, imgName, content }) => {
   const navigate = useNavigate();
   return (
-    <section className="mainPages-service-only-page u-bgPrimaryLightest u-pb-6r u-pt-10r">
+    <section className="u-pb-6r u-pt-10r">
       <div className="container">
         <MainPagesSectionHeader title={sectionTitle} />
 
-        <div className="service-only-container">
-          <div className="service-only-image">
-            <img src={`assets/imgs/mainPage/services/${imgName}`} alt="" />
+        <div className="servicePage">
+          <div className="servicePage_imgContainer">
+            <img
+              className="servicePage_img"
+              src={`assets/imgs/mainPage/services/${imgName}`}
+              alt=""
+            />
           </div>
           <div className="service-only-text">{content}</div>
         </div>

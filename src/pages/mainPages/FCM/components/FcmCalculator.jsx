@@ -5,16 +5,14 @@ import { getCalcItems, getFCMTotal } from "../../../../helpers/utilities";
 import { useForm } from "../../../../hooks/useForm";
 import { procedureTypes } from "../../../../types/types";
 import {
-  Box,
   FormControl,
   InputLabel,
-  Link,
   MenuItem,
   Select,
   Switch,
   Tooltip,
 } from "@mui/material";
-import { Check, Info } from "@mui/icons-material";
+import { Info } from "@mui/icons-material";
 
 export const initialState = {
   puppiesNum: 0,
@@ -29,8 +27,7 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
 
   const [calcItems, setcalcItems] = useState([]);
 
-  const { values, handleInputChange, reset, setFullValues } =
-    useForm(initialState);
+  const { values, handleInputChange, reset } = useForm(initialState);
 
   const handleChange = (event) => {
     reset();

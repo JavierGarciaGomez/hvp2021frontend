@@ -7,7 +7,8 @@ export const MainPagesCompany = () => {
       <section className="u-bgPrimaryLightest u-pb-6r u-pt-10r">
         <div className="container">
           <MainPagesSectionHeader title="Empresa" />
-          <div className="mp-video-wrapper">
+          {/* VIDEO */}
+          <div className="l-flex u-mb-4r">
             <iframe
               width="727"
               height="409"
@@ -17,7 +18,7 @@ export const MainPagesCompany = () => {
               allowFullScreen
             ></iframe>
           </div>
-          <div className="mp-company__text">
+          <div className="companyText">
             <p>
               El Hospital Veterinario Peninsular es una empresa con más de 30
               años de experiencia y la primera en su tipo en el sureste de
@@ -55,19 +56,19 @@ export const MainPagesCompany = () => {
       <section className="u-bgPrimaryLighter u-pb-6r">
         <div className="container">
           <MainPagesSectionHeader title="Misión, visión y valores" />
-          <div className="mp-company__text">
-            <h3>Misión</h3>
+          <div className="companyText">
+            <h3 className="heading--tertiary">Misión</h3>
             <p>
               La misión de la empresa es ofrecer servicios veterinarios con la
               calidez y atención que merecen las mascotas, valorándolas por lo
               que son y lo que hoy representan.
             </p>
-            <h3>Visión</h3>
+            <h3 className="heading--tertiary">Visión</h3>
             <p>
               La visión es ser el modelo de atención veterinaria de todo el
               sureste del país.
             </p>
-            <h3>Valores</h3>
+            <h3 className="heading--tertiary">Valores</h3>
             <p>
               Los valores son el profesionalismo, la empatía, la calidad, el
               desarrollo de los trabajadores, la responsabilidad social y la
@@ -81,8 +82,8 @@ export const MainPagesCompany = () => {
         <div className="container">
           <MainPagesSectionHeader title="Logo, eslogan y mascota" />
 
-          <div className="mp-company__text">
-            <h3>Eslogan</h3>
+          <div className="companyText">
+            <h3 className="heading--tertiary">Eslogan</h3>
             <p>
               Soy Especialista en la Salud de las mascotas, disfruto mucho
               hacerlo, ademas soy filantropo (persona que ama al ser Humano). Si
@@ -103,12 +104,12 @@ export const MainPagesCompany = () => {
               recurrir con el especialista en cuestión, siempre es la mejor
               opción
             </p>
-            <h3>Logo</h3>
+            <h3 className="heading--tertiary">Logo</h3>
             <p>Nuestro logotipo contiene una triada:</p>
             <p>
               1.- de perfil es un Perro de Raza Terrier e inspirado en el
-              Terrier escoces de nombre “shandree” que existió en nuestras vidas
-              y lo hemos personificado con una botarga que es la mascota de la
+              Terrier escocés de nombre Shandree que existió en nuestras vidas y
+              lo hemos personificado con una botarga que es la mascota de la
               empresa y nos ayuda a promoverla.
             </p>
             <p>
@@ -125,7 +126,7 @@ export const MainPagesCompany = () => {
               que es nuestra profesión amada que nos dio los conocimientos para
               proporcionarles (a las mascotas) los cuidados que necesitan.
             </p>
-            <h3>Mascota</h3>
+            <h3 className="heading--tertiary">Mascota</h3>
             <p>
               Nombre de la mascota más significativa de nuestro director médico,
               Rafael A. García López, cuya silueta esta en el logotipo y en el
