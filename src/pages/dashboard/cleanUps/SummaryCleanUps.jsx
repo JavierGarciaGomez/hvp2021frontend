@@ -42,7 +42,9 @@ export const SummaryCleanUps = () => {
     <div className="m-5">
       {/* header */}
       <div className="row mb-3 d-flex justify-content-lg-around">
-        <h3 className="mb-4">Resumen mensual del control de limpieza</h3>
+        <h3 className="heading--tertiary">
+          Resumen mensual del control de limpieza
+        </h3>
       </div>
       <div className="row d-flex justify-content-evenly">
         <CleanUpSummaryBranch branch="Urban" data={branchesSummary} />
@@ -50,7 +52,7 @@ export const SummaryCleanUps = () => {
         <CleanUpSummaryBranch branch="Montejo" data={branchesSummary} />
       </div>
       <div className="row mb-3 d-flex justify-content-lg-around">
-        <h3 className="mb-4">
+        <h3 className="heading--tertiary">
           Resumen de participaciones en limpiezas en los últimos 30 días
         </h3>
       </div>
@@ -59,7 +61,7 @@ export const SummaryCleanUps = () => {
           return (
             <div key={data.imgUrl} className="col-2 mb-3">
               <img
-                className="collaboratorsImg mx-auto d-block mb-3"
+                className="c-avatar mx-auto d-block mb-3"
                 src={data.imgUrl}
                 alt=""
               />

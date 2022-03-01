@@ -60,19 +60,22 @@ Medium: 11px
 .heading--secondary {
   font-size: 3.2rem;
   font-weight: 700;
+  margin-bottom: 2rem;
   // display: inline-block;
 }
 
 .heading--tertiary {
   font-size: 2.4rem;
   font-weight: 500;
+  margin-bottom: 2rem;
   // display: inline-block;
 }
 
 .heading--quaternary {
   font-size: 2rem;
   font-weight: 500;
-  display: inline-block;
+  // display: inline-block;
+  margin-bottom: 3rem;
 }
 
 .paragraph {

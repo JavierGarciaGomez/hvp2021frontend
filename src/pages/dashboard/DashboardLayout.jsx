@@ -26,9 +26,9 @@ export const DashboardLayout = () => {
     <Fragment>
       <Topbar />
 
-      <div className="dashboard-bottom-container">
+      <div className="l-dashboardBottomContainer">
         <Sidebar />
-        <div className="dashboard-main">
+        <div className="l-dashboardMain">
           <DashboardRouter />
         </div>
       </div>

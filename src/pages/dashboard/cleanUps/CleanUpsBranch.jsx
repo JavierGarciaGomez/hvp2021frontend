@@ -17,9 +17,9 @@ export const CleanUpsBranch = () => {
     <Fragment>
       <div className="container border-top">
         <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-6 text-center fs-2">
+          <h3 className="heading--tertiary col-6">
             {`Control de limpieza profunda de ${branch}`}
-          </div>
+          </h3>
           <div className="col-4 text-start">
             <Link to="addNewDeepCleaning">
               <button type="button" className="btn btn-secondary mx-2">
@@ -30,15 +30,15 @@ export const CleanUpsBranch = () => {
         </div>
         <DeepCleanUpsDataGrid />
         <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-12 text-center fs-2">
+          <h3 className="heading--tertiary">
             {`Control de limpieza diaria de ${branch}`}
-          </div>
+          </h3>
         </div>
         <DailyCleanUpsDataGrid />
         <div className="row d-flex justify-content-center m-3 align-self-center">
-          <div className="col-6 text-center fs-2">
+          <h3 className="heading--tertiary col-6">
             {`Control de limpieza de quirófano de ${branch}`}
-          </div>
+          </h3>
           <div className="col-4 text-start">
             <button
               type="button"

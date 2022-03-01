@@ -1,17 +1,28 @@
-.l-singleCardContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-  justify-content: center;
-  margin: 0 auto;
-  align-items: center;
-}
-
+/* ************************************************************************************************ */
+/**************************************** PAGE LAYOUTS  ***************************************************/
+/* ************************************************************************************************ */
 .l-pageContent {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
+.l-dashboardBottomContainer {
+  display: flex;
+  width: 100%;
+}
+
+.l-dashboardMain {
+  padding: 2rem;
+  padding-top: 3rem;
+
+  flex: 1;
+  background-color: $backgroundPrimaryColor;
+  min-height: calc(100vh - 5rem);
+}
+
+/* ************************************************************************************************ */
+/**************************************** NAVBAR  ***************************************************/
+/* ************************************************************************************************ */
 
 .l-navbar {
   height: 6rem;
@@ -30,16 +41,14 @@
   }
 }
 
+/* ************************************************************************************************ */
+/**************************************** GRIDS AND FLEX  ***************************************************/
+/* ************************************************************************************************ */
+
 .l-grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 20%);
   justify-content: space-between;
-}
-
-.l-centerContent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .l-flex {
@@ -72,13 +81,6 @@
   }
 }
 
-.list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-}
-
 /* ************************************************************************************************ */
 /**************************************** FOOTER  ***************************************************/
 /* ************************************************************************************************ */
@@ -103,4 +105,30 @@
   &_icon:hover {
     color: lighten($primaryColor, 40%);
   }
+}
+
+/* ************************************************************************************************ */
+/**************************************** OTHER  ***************************************************/
+/* ************************************************************************************************ */
+
+.l-singleCardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  justify-content: center;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.l-centerContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
 }

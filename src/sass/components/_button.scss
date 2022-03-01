@@ -4,7 +4,7 @@
   &:link,
   &:visited {
     display: inline-block;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.5;
     color: $white;
     text-align: center;
@@ -47,5 +47,16 @@
 
   &.-light:hover {
     background-color: lighten($primary-color, 30%);
+  }
+
+  &.-danger {
+    background-color: $dangerColor;
+    color: $lightColor;
+  }
+
+  &.-outline {
+    color: $primaryFontColor;
+    background-color: inherit;
+    border: 1px $primaryColor solid;
   }
 }

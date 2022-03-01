@@ -10,6 +10,12 @@
   width: auto;
 }
 
+.navbar-dark,
+.navbar-nav,
+.nav-link {
+  color: inherit;
+}
+
 @media (max-width: $bp-md) {
   .carousel {
     margin: 0 4rem;

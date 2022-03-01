@@ -16,6 +16,7 @@ import {
   Article,
 } from "@mui/icons-material";
 import { setMenuState } from "../../../../actions/dbUiActions";
+import { SidebarLink } from "../SidebarLink";
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
@@ -37,193 +38,141 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className={`db-sidebar ${menuState}`}>
-      <div className="db-sidebar__wrapper">
-        <div className="db-sidebar__menu">
-          <h3 className="db-sidebar__title">Dashboard</h3>
-          <ul className="db-sidebar__list">
-            <NavLink
-              to="/dashboard/Home"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <LineStyle className="db-sidebar__icon" fontSize="large" />
-                <span>Home</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/collaborators"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <Badge className="db-sidebar__icon" fontSize="large" />
-                <span>Colaboradores</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/cleanups/summary"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <CleaningServices
-                  className="db-sidebar__icon"
-                  fontSize="large"
-                />
-                <span>Control de Limpieza</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/rfc"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <Grid3x3 className="db-sidebar__icon" fontSize="large" />
-                <span>RFC</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/users"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <PermIdentity className="db-sidebar__icon" fontSize="large" />
-                <span>Usuarios</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/authLogs"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <AccessTime className="db-sidebar__icon" fontSize="large" />
-                <span>Log de Acceso</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/activityRegister"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <WorkOutline className="db-sidebar__icon" fontSize="large" />
-                <span>Registro de actividades</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/misc"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <MiscellaneousServicesOutlined
-                  className="db-sidebar__icon"
-                  fontSize="large"
-                />
-                <span>Misc</span>
-              </li>
-            </NavLink>
-            <NavLink
-              to="/dashboard/documentation"
-              className={({ isActive }) => {
-                return `db-sidebar__navlink ${isActive ? "active" : ""}`;
-              }}
-              onClick={handleNavLinkClick}
-            >
-              <li className="db-sidebar__listItem">
-                <Article className="db-sidebar__icon" fontSize="large" />
-                <span>Documentación de apoyo</span>
-              </li>
-            </NavLink>
-          </ul>
-        </div>
-        {/* <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Inactivo</h3>
-          <ul className="sidebarList">
+    <div className={`c-sidebar ${menuState}`}>
+      <div className="c-sidebar_menu">
+        <h3 className="c-sidebar_title">Dashboard</h3>
+        <ul className="c-sidebar_linksWrapper">
+          <SidebarLink
+            link="/dashboard/Home"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<LineStyle className="c-sidebar_icon" />}
+            label="Home"
+          />
+          <SidebarLink
+            link="/dashboard/collaborators"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<Badge className="db-c-sidebar__icon" />}
+            label="Colaboradores"
+          />
+          <SidebarLink
+            link="/dashboard/cleanups/summary"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<CleaningServices className="db-c-sidebar__icon" />}
+            label="Limpieza"
+          />
+
+          <SidebarLink
+            link="/dashboard/rfc"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<Grid3x3 className="db-c-sidebar__icon" />}
+            label="RFC"
+          />
+
+          <SidebarLink
+            link="/dashboard/users"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<PermIdentity className="db-c-sidebar__icon" />}
+            label="Usuarios"
+          />
+
+          <SidebarLink
+            link="/dashboard/authLogs"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<AccessTime className="db-c-sidebar__icon" />}
+            label="Log de acceso"
+          />
+
+          <SidebarLink
+            link="/dashboard/activityRegister"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<WorkOutline className="db-c-sidebar__icon" />}
+            label="Registro de actividades"
+          />
+
+          <SidebarLink
+            link="/dashboard/misc"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={
+              <MiscellaneousServicesOutlined
+                className="db-c-sidebar__icon"
+                fontSize="large"
+              />
+            }
+            label="Misc"
+          />
+          <SidebarLink
+            link="/dashboard/documentation"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<Article className="db-c-sidebar__icon" />}
+            label="Documentación"
+          />
+        </ul>
+      </div>
+      {/* <div className="c-sidebarMenu">
+          <h3 className="c-sidebarTitle">Inactivo</h3>
+          <ul className="c-sidebarList">
             {isAuthorized && (
-              <li className="sidebarListItem">
-                <Timeline className="sidebarIcon" />
+              <li className="c-sidebarListItem">
+                <Timeline className="c-sidebarIcon" />
                 Analytics
               </li>
             )}
 
-            <li className="sidebarListItem">
-              <TrendingUp className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <TrendingUp className="c-sidebarIcon" />
               Sales
             </li>
 
             <Link to="/products" className="link">
-              <li className="sidebarListItem">
-                <Storefront className="sidebarIcon" />
+              <li className="c-sidebarListItem">
+                <Storefront className="c-sidebarIcon" />
                 Products
               </li>
             </Link>
-            <li className="sidebarListItem">
-              <AttachMoney className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <AttachMoney className="c-sidebarIcon" />
               Transactions
             </li>
-            <li className="sidebarListItem">
-              <BarChart className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <BarChart className="c-sidebarIcon" />
               Reports
             </li>
           </ul>
         </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Notifications</h3>
-          <ul className="sidebarList">
-            <li className="sidebarListItem">
-              <MailOutline className="sidebarIcon" />
+        <div className="c-sidebarMenu">
+          <h3 className="c-sidebarTitle">Notifications</h3>
+          <ul className="c-sidebarList">
+            <li className="c-sidebarListItem">
+              <MailOutline className="c-sidebarIcon" />
               Mail
             </li>
-            <li className="sidebarListItem">
-              <DynamicFeed className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <DynamicFeed className="c-sidebarIcon" />
               Feedback
             </li>
-            <li className="sidebarListItem">
-              <ChatBubbleOutline className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <ChatBubbleOutline className="c-sidebarIcon" />
               Messages
             </li>
           </ul>
         </div>
-        <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Staff</h3>
-          <ul className="sidebarList">
-            <li className="sidebarListItem">
-              <WorkOutline className="sidebarIcon" />
+        <div className="c-sidebarMenu">
+          <h3 className="c-sidebarTitle">Staff</h3>
+          <ul className="c-sidebarList">
+            <li className="c-sidebarListItem">
+              <WorkOutline className="c-sidebarIcon" />
               Manage
             </li>
-            <li className="sidebarListItem">
-              <Timeline className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <Timeline className="c-sidebarIcon" />
               Analytics
             </li>
-            <li className="sidebarListItem">
-              <Report className="sidebarIcon" />
+            <li className="c-sidebarListItem">
+              <Report className="c-sidebarIcon" />
               Reports
             </li>
           </ul>
         </div> */}
-      </div>
     </div>
   );
 };

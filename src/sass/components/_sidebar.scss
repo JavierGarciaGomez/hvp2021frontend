@@ -1,0 +1,59 @@
+.c-sidebar {
+  flex: 0;
+  height: calc(100vh - 50px);
+  position: sticky;
+  top: 50px;
+  background-color: $lightColor;
+  padding: 1rem;
+
+  &_menu {
+    margin-bottom: 1rem;
+  }
+
+  &_title {
+    font-size: 2.4rem;
+    color: $primaryColor;
+  }
+  &_linksWrapper {
+    list-style: none;
+    padding: 5px;
+  }
+  &_navlink {
+    color: #363636;
+    transition: all 0.5s;
+
+    &.active,
+    &:hover {
+      background-color: #24a1ac;
+      color: white;
+    }
+  }
+  &_listItem {
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: inherit;
+  }
+
+  &_icon {
+    margin-right: 5px;
+    font-size: 3rem;
+  }
+  &.minimized {
+    flex: none;
+    max-width: 10vw;
+
+    .c-sidebar_title {
+      display: none;
+    }
+
+    .c-sidebar_label {
+      display: none;
+    }
+  }
+  &.close {
+    display: none;
+  }
+}

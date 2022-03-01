@@ -11,14 +11,14 @@ export const CleanUpSummaryBranch = ({ branch, data }) => {
 
   return (
     <div className="col-12 col-lg-3 border-2 border rounded-3 u-borderPrimary mb-4">
-      <h4 className="fs-2 text-center pt-2 mb-3">{branch}</h4>
+      <h3 className="heading--tertiary l-centerContent u-mt-2r">{branch}</h3>
       <p className="mb-2">Porcentaje de cumplimiento del último mes: </p>
-      <div className="pie-chart-container mb-3">
+      <div className="pieChartContainer mb-3">
         <CustomPieChart
           data={[{ value: daysCleaned }, { value: daysNotCleaned }]}
         />
       </div>
-      <div className="mb-5 db-cleanups-sum-branch-card__content">
+      <div className="cleanupSummaryCard_data mb-5">
         <p>Días que no se limpió: </p>
         <p className="text-center">{daysNotCleaned}</p>
         <p>Limpiezas profundas realizadas en los últimos 30 días: </p>

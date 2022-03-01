@@ -244,7 +244,7 @@ export const ActivityRegisterCol = () => {
         return (
           <>
             <Link to={`${uid}/${params.row._id}`}>
-              <button className="btn btn-primary">Editar</button>
+              <button className="c-button">Editar</button>
             </Link>
             {
               <DeleteOutline
@@ -266,7 +266,7 @@ export const ActivityRegisterCol = () => {
       {/* Button to show other users */}
       <div className="activityRegisterTopButton right-content me-10r">
         <Link to="all">
-          <div className="btn btn-primary mb-3r">Ver otros</div>
+          <button className="c-button -large mb-3r">Ver otros</button>
         </Link>
       </div>
       <div className="activityRegisterHeading mb-3r">
@@ -278,7 +278,7 @@ export const ActivityRegisterCol = () => {
       {isTimerActive && !isObjectEmpty(currentRegister) && (
         <div className="activityRegisterActive l-singleCardContainer mb-3r">
           <div className="c-card">
-            <div className="c-card_top  card__top--col">
+            <div className="c-card_top  c-card_top-col">
               <h3 className="c-card_title">
                 {findLabelByValue(
                   activityRegisterTypes,
@@ -296,7 +296,7 @@ export const ActivityRegisterCol = () => {
                 Hora de inicio:{" "}
                 {dayjs(currentRegister.startingTime).format("HH:mm")}
               </p>
-              <div className="activityRegisterActive__time mb-2r">
+              <div className="activityRegisterActive_time mb-2r">
                 <span>{("0" + Math.floor((time / hour) % 60)).slice(-2)}:</span>
                 <span>
                   {("0" + Math.floor((time / minute) % 60)).slice(-2)}:
@@ -307,17 +307,14 @@ export const ActivityRegisterCol = () => {
               </div>
             </div>
             <div className="c-card_footer">
-              <button className="btn btn-primary" onClick={handleShowEditForm}>
+              <button className="c-button" onClick={handleShowEditForm}>
                 Editar tarea actual
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={handleFinishActivity}
-              >
+              <button className="c-button" onClick={handleFinishActivity}>
                 Terminar tarea actual
               </button>
               <button
-                className="btn btn-primary"
+                className="c-button"
                 onClick={handleFinishAndStartActivity}
               >
                 Terminar y empezar nueva tarea
@@ -345,22 +342,13 @@ export const ActivityRegisterCol = () => {
               <h3 className="c-card_title">Crear nueva actividad</h3>
             </div>
             <div className="c-card_footer">
-              <button
-                className="btn btn-primary"
-                onClick={handleContinueLastActivity}
-              >
+              <button className="c-button" onClick={handleContinueLastActivity}>
                 Continuar última actividad
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={handleCreateNewActivity}
-              >
+              <button className="c-button" onClick={handleCreateNewActivity}>
                 Crear nueva actividad
               </button>
-              <button
-                className="btn btn-primary"
-                onClick={handleShowCreateForm}
-              >
+              <button className="c-button" onClick={handleShowCreateForm}>
                 Registrar actividad ya concluida
               </button>
             </div>

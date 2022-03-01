@@ -56,7 +56,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
               {params.row.cleaners.map((cleaner, index) => {
                 return (
                   <img
-                    className="collaboratorsImg"
+                    className="c-avatar"
                     src={cleaner.cleaner?.imgUrl}
                     alt=""
                     key={cleaner.cleaner?.imgUrl}
@@ -65,7 +65,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
               })}
             </div>
             {/* <div className="d-flex align-items-center">
-            <img className="collaboratorsImg" src="" alt="" />
+            <img className="c-avatar" src="" alt="" />
             {getIdOrEmpty(params.row)}
           </div> */}
           </Fragment>
@@ -83,7 +83,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
               {params.row.supervisors.map((supervisor, index) => {
                 return (
                   <img
-                    className="collaboratorsImg"
+                    className="c-avatar"
                     src={supervisor.supervisor?.imgUrl}
                     alt=""
                     key={supervisor.supervisor?._id}
@@ -132,7 +132,7 @@ export const OperatingRoomCleanUpDataGrid = () => {
   return (
     <Fragment>
       <div
-        className="db-cleanUps__table-wrapper"
+        className="cleanUpsTableWrapper"
         style={{ height: "400px", width: "100%" }}
       >
         <DataGrid
@@ -147,22 +147,24 @@ export const OperatingRoomCleanUpDataGrid = () => {
           rowsPerPageOptions={[5, 50, 100]}
         />
       </div>
-      <div className="db-cleanUps__card-wrapper">
+      <div className="cleanUpsCardsWrapper">
         {/* TODO: do components */}
         {formattedOperRoomCleanUps.map((element) => {
           return (
-            <div className="db-cleanUps__dailyCard">
-              <div className="db-cleanUps__card-top">
-                <h3 className="db-cleanUps__date">{element.date}</h3>
+            <div className="c-card">
+              <div className="c-card_top">
+                <h3 className="heading--tertiary u-textPrimary">
+                  {element.date}
+                </h3>
               </div>
 
               <div className="db-cleanUps__card-body">
-                <p className="db-cleanUps__card-text">
+                <p className="">
                   Limpieza:{" "}
                   {element.cleaners.map((cleaner, index) => {
                     return (
                       <img
-                        className="db-cleanUps__img"
+                        className="c-avatar"
                         src={cleaner.cleaner?.imgUrl}
                         alt=""
                         key={cleaner.cleaner?.imgUrl}
@@ -170,12 +172,12 @@ export const OperatingRoomCleanUpDataGrid = () => {
                     );
                   })}
                 </p>
-                <p className="db-cleanUps__card-text">
+                <p className="">
                   Supervisión:{" "}
                   {element.supervisors.map((supervisor, index) => {
                     return (
                       <img
-                        className="db-cleanUps__img"
+                        className="c-avatar"
                         src={supervisor.supervisor?.imgUrl}
                         alt=""
                         key={supervisor.supervisor?.imgUrl}
@@ -184,16 +186,16 @@ export const OperatingRoomCleanUpDataGrid = () => {
                   })}
                 </p>
               </div>
-              <div className="db-cleanUps__card-footer">
+              <div className="c-card_footer">
                 <button
-                  className="btn btn-primary db-cleanUps__btn"
+                  className="btn btn-primary "
                   onClick={() => handleClean(element._id)}
                 >
                   Realicé
                 </button>
 
                 <button
-                  className="btn btn-danger db-cleanUps__btn"
+                  className="btn btn-danger "
                   onClick={() => handleSupervise(element._id)}
                 >
                   Supervisé

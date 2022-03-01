@@ -70,7 +70,7 @@ export const ActivityRegisterSelect = () => {
         return (
           <div className="d-flex align-items-center">
             <img
-              className="collaboratorsImg"
+              className="c-avatar"
               src={params.row.imgUrl}
               alt=""
               key={params.row.imgUrl}

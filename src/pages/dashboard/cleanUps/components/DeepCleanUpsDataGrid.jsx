@@ -37,7 +37,7 @@ export const DeepCleanUpsDataGrid = () => {
         return (
           <>
             <Link to={`${params.id}`}>
-              <button className="btn btn-success btn-sm">Ver</button>
+              <button className="c-button">Ver</button>
             </Link>
           </>
         );
@@ -54,7 +54,7 @@ export const DeepCleanUpsDataGrid = () => {
               {params.row.cleaners.map((cleaner, index) => {
                 return (
                   <img
-                    className="collaboratorsImg"
+                    className="c-avatar"
                     src={cleaner.cleaner?.imgUrl}
                     alt=""
                     key={cleaner.cleaner?.imgUrl}
@@ -77,7 +77,7 @@ export const DeepCleanUpsDataGrid = () => {
               {params.row.supervisors.map((supervisor, index) => {
                 return (
                   <img
-                    className="collaboratorsImg"
+                    className="c-avatar"
                     src={supervisor.supervisor?.imgUrl}
                     alt=""
                     key={supervisor.supervisor?.imgUrl}
@@ -108,7 +108,7 @@ export const DeepCleanUpsDataGrid = () => {
   return (
     <Fragment>
       <div
-        className="db-cleanUps__table-wrapper"
+        className="cleanUpsTableWrapper"
         style={{ height: "400px", width: "100%" }}
       >
         <DataGrid
@@ -122,22 +122,24 @@ export const DeepCleanUpsDataGrid = () => {
           rowHeight={40}
         />
       </div>
-      <div className="db-cleanUps__card-wrapper">
+      <div className="cleanUpsCardsWrapper">
         {/* TODO: do components */}
         {formattedDeepCleanUps.map((element) => {
           return (
-            <div className="db-cleanUps__dailyCard">
-              <div className="db-cleanUps__card-top">
-                <h3 className="db-cleanUps__date">{element.date}</h3>
+            <div className="c-card">
+              <div className="c-card_top">
+                <h3 className="heading--tertiary u-textPrimary">
+                  {element.date}
+                </h3>
               </div>
 
               <div className="db-cleanUps__card-body">
-                <p className="db-cleanUps__card-text">
+                <p className="">
                   Limpieza:{" "}
                   {element.cleaners.map((cleaner, index) => {
                     return (
                       <img
-                        className="db-cleanUps__img"
+                        className="c-avatar"
                         src={cleaner.cleaner?.imgUrl}
                         alt=""
                         key={cleaner.cleaner?.imgUrl}
@@ -145,12 +147,12 @@ export const DeepCleanUpsDataGrid = () => {
                     );
                   })}
                 </p>
-                <p className="db-cleanUps__card-text">
+                <p className="">
                   Supervisión:{" "}
                   {element.supervisors.map((supervisor, index) => {
                     return (
                       <img
-                        className="db-cleanUps__img"
+                        className="c-avatar"
                         src={supervisor.supervisor?.imgUrl}
                         alt=""
                         key={supervisor.supervisor?.imgUrl}
@@ -159,10 +161,10 @@ export const DeepCleanUpsDataGrid = () => {
                   })}
                 </p>
               </div>
-              <div className="db-cleanUps__card-footer">
+              <div className="c-card_footer">
                 <Link to={`${element._id}`}>
                   <button
-                    className="btn btn-primary db-cleanUps__btn"
+                    className="btn btn-primary "
                     // onClick={() => handleClean(dailyCleanUp._id)}
                   >
                     Ver

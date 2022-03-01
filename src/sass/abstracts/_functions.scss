@@ -8,7 +8,7 @@
   @if ($hue==darker) {
     @return darken($color, 10%);
   }
-  @if ($hue==lighter) {
+  @if ($hue==darkest) {
     @return darken($color, 20%);
   }
 }

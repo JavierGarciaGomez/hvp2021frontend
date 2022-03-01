@@ -1,41 +1,18 @@
 /****************************************/
+/****************************************/
 /***********GENERAL***********************/
 /****************************************/
+/****************************************/
 
-// todo add u-
-.a {
-  color: inherit;
-}
-
-.bg-light-blue {
-  background-color: var(--custom-lightblue);
-}
-
+/****************************************/
+/***********BACKGROUND*******************/
+/****************************************/
 .bg-default {
   background-color: var(--primary-bg-color);
 }
 
-.text-lightgray {
-  color: var(--custom-lightgray) !important;
-}
-
-/* inherit color */
-.navbar-dark,
-.navbar-nav,
-.nav-link {
-  color: inherit;
-}
-
-.u-textWhite {
-  color: $lightColor;
-}
-
-.u-textPrimary {
-  color: $primaryColor !important;
-}
-
-.u-defTextColor {
-  color: $textPrimaryColor !important;
+.bg-light-blue {
+  background-color: var(--custom-lightblue);
 }
 
 .u-bg-primary {
@@ -64,4 +41,37 @@
 
 .u-borderPrimary {
   border: $primary-color 3px solid;
+}
+
+/****************************************/
+/***********FONT COLOR*******************/
+/****************************************/
+.text-lightgray {
+  color: var(--custom-lightgray) !important;
+}
+
+.u-textWhite {
+  color: $lightColor;
+}
+
+.u-textPrimary {
+  color: $primaryColor !important;
+}
+
+.u-defTextColor {
+  color: $textPrimaryColor !important;
+}
+
+/****************************************/
+/***********OTHERS *******************/
+/****************************************/
+.u-center {
+  display: block !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+  text-align: center !important;
+}
+
+.u-textTransformNone {
+  text-transform: none !important;
 }

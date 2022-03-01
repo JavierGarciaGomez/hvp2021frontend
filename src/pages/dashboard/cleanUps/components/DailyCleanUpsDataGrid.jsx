@@ -58,7 +58,7 @@ export const DailyCleanUpsDataGrid = () => {
               {params.row.cleaners.map((cleaner, index) => {
                 return (
                   <img
-                    className="collaboratorsImg"
+                    className="c-avatar"
                     src={cleaner.cleaner?.imgUrl}
                     alt=""
                     key={cleaner.cleaner?.imgUrl}
@@ -67,7 +67,7 @@ export const DailyCleanUpsDataGrid = () => {
               })}
             </div>
             {/* <div className="d-flex align-items-center">
-            <img className="collaboratorsImg" src="" alt="" />
+            <img className="c-avatar" src="" alt="" />
             {getIdOrEmpty(params.row)}
           </div> */}
           </Fragment>
@@ -85,7 +85,7 @@ export const DailyCleanUpsDataGrid = () => {
               {params.row.supervisors.map((supervisor, index) => {
                 return (
                   <img
-                    className="collaboratorsImg"
+                    className="c-avatar"
                     src={supervisor.supervisor?.imgUrl}
                     alt=""
                     key={supervisor.supervisor?._id}
@@ -135,7 +135,7 @@ export const DailyCleanUpsDataGrid = () => {
     <Fragment>
       {/* Display bigger than smaller tablets */}
       <div
-        className="db-cleanUps__table-wrapper"
+        className="cleanUpsTableWrapper"
         style={{ height: "400px", width: "100%" }}
       >
         <DataGrid
@@ -151,22 +151,24 @@ export const DailyCleanUpsDataGrid = () => {
         />
       </div>
       {/* Display smaller than smaller tablets */}
-      <div className="db-cleanUps__card-wrapper">
+      <div className="cleanUpsCardsWrapper">
         {/* TODO: do components */}
         {formattedDailyCleanUps.map((dailyCleanUp) => {
           return (
-            <div className="db-cleanUps__dailyCard">
-              <div className="db-cleanUps__card-top">
-                <h3 className="db-cleanUps__date">{dailyCleanUp.date}</h3>
+            <div className="c-card">
+              <div className="c-card_top">
+                <h3 className="heading--tertiary u-textPrimary">
+                  {dailyCleanUp.date}
+                </h3>
               </div>
 
-              <div className="db-cleanUps__card-body">
-                <p className="db-cleanUps__card-text">
+              <div className="c-card_body">
+                <p className="">
                   Limpieza:{" "}
                   {dailyCleanUp.cleaners.map((cleaner, index) => {
                     return (
                       <img
-                        className="db-cleanUps__img"
+                        className="c-avatar"
                         src={cleaner.cleaner?.imgUrl}
                         alt=""
                         key={cleaner.cleaner?.imgUrl}
@@ -174,12 +176,12 @@ export const DailyCleanUpsDataGrid = () => {
                     );
                   })}
                 </p>
-                <p className="db-cleanUps__card-text">
+                <p className="">
                   Supervisión:{" "}
                   {dailyCleanUp.supervisors.map((supervisor, index) => {
                     return (
                       <img
-                        className="db-cleanUps__img"
+                        className="c-avatar"
                         src={supervisor.supervisor?.imgUrl}
                         alt=""
                         key={supervisor.supervisor?.imgUrl}
@@ -188,16 +190,16 @@ export const DailyCleanUpsDataGrid = () => {
                   })}
                 </p>
               </div>
-              <div className="db-cleanUps__card-footer">
+              <div className="c-card_footer">
                 <button
-                  className="btn btn-primary db-cleanUps__btn"
+                  className="btn btn-primary "
                   onClick={() => handleClean(dailyCleanUp._id)}
                 >
                   Realicé
                 </button>
 
                 <button
-                  className="btn btn-danger db-cleanUps__btn"
+                  className="btn btn-danger "
                   onClick={() => handleSupervise(dailyCleanUp._id)}
                 >
                   Supervisé

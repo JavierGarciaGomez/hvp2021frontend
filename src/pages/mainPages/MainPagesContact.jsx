@@ -49,39 +49,40 @@ export const MainPagesContact = () => {
               </MapContainer>
             </div>
           </div>
-          <div className="mainPages-sectionContact__branches">
-            <div className="mainPages-sectionContact__branch">
-              <p className="mainPages-sectionContact__branchName">Urban</p>
+          <div className="branchesWrapper">
+            <div className="branchCard c-card u-bgPrimaryLighter u-textWhite">
+              <p className="branchCard c-card_title">Urban</p>
               <p>
-                <i className="fas fa-phone"></i> 999 406 9174
+                <i className="branchCard_icon fas fa-phone"></i> 999 406 9174
               </p>
               <p>
                 {" "}
-                <i className="fab fa-whatsapp-square"></i> 999 510 1404
+                <i className="branchCard_icon fab fa-whatsapp-square"></i> 999
+                510 1404
               </p>
               <p>
-                <i className="fas fa-thumbtack"></i> Av. Cámara de Comercio 215,
-                Monterreal
-              </p>
-            </div>
-            <div className="mainPages-sectionContact__branch">
-              <p className="mainPages-sectionContact__branchName">Harbor</p>
-              <p>
-                <i className="fas fa-phone"></i> 999 925 0015
-              </p>
-              <p>
-                <i className="fas fa-thumbtack"></i> Calle 60 261, Zona
-                Industrial
+                <i className="branchCard_icon fas fa-thumbtack"></i> Av. Cámara
+                de Comercio 215, Monterreal
               </p>
             </div>
-            <div className="mainPages-sectionContact__branch">
-              <p className="mainPages-sectionContact__branchName">Montejo</p>
+            <div className="branchCard c-card u-bgPrimaryLighter u-textWhite">
+              <p className="branchCard c-card_title">Harbor</p>
               <p>
-                <i className="fas fa-phone"></i> 999 400 7974
+                <i className="branchCard_icon fas fa-phone"></i> 999 925 0015
               </p>
               <p>
-                <i className="fas fa-thumbtack"></i> Prol. Paseo Montejo 99,
-                Campestre
+                <i className="branchCard_icon fas fa-thumbtack"></i> Calle 60
+                261, Zona Industrial
+              </p>
+            </div>
+            <div className="branchCard c-card u-bgPrimaryLighter u-textWhite">
+              <p className="branchCard c-card_title">Montejo</p>
+              <p>
+                <i className="branchCard_icon fas fa-phone"></i> 999 400 7974
+              </p>
+              <p>
+                <i className="branchCard_icon fas fa-thumbtack"></i> Prol. Paseo
+                Montejo 99, Campestre
               </p>
             </div>
           </div>

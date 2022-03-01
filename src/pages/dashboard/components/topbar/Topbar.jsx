@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 // material icons
 import { NotificationsNone, Language, Settings } from "@mui/icons-material";
 import { Logout } from "@mui/icons-material";
@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Link, useNavigate } from "react-router-dom";
 import { startLogout } from "../../../../actions/authActions";
 import { toggleMenu } from "../../../../actions/dbUiActions";
+import { Icon } from "@mui/material";
 
 export const Topbar = () => {
   const { uid, imgUrl } = useSelector((state) => state.auth);
@@ -25,38 +26,49 @@ export const Topbar = () => {
   };
 
   return (
-    <div className="db-topbar">
-      <div className="db-topbar--main-wrapper">
-        <div className="db-topbar--hamb-container">
-          <MenuIcon className="db-topbar--hamb" onClick={handleMenuClick} />
-        </div>
-        <div className="db-topbar--wrapper">
-          <div className="db-topbar--topLeft">
-            <Link className="" to="/">
-              <img src="assets/imgs/Logo_HVP.png" alt="" />
-            </Link>
-            <span className="db-topbar--logo">Admin</span>
+    <Fragment>
+      <div className="topbar">
+        <div className="topbar_wrapper">
+          <div className="topbar_hambContainer">
+            <MenuIcon
+              className="topbar_hamb"
+              onClick={handleMenuClick}
+              sx={{ fontSize: "3.6rem" }}
+            />
           </div>
 
-          <div className="db-topbar--topRight">
-            {/* <div className="db-topbar--iconContainer">
-              <NotificationsNone />
-              <span className="db-topbar--topIconBadge">2</span>
+          <div className="topbar_logoContainer">
+            <Link className="" to="/">
+              <img
+                className="topbar_imgLogo"
+                src="assets/imgs/Logo_HVP.png"
+                alt=""
+              />
+            </Link>
+            <span className="topbar_title">Administración HVP</span>
+          </div>
+
+          <div className="topbar_right">
+            {/* <div className="topbar--iconContainer">
+            <NotificationsNone />
+            <span className="topbar--topIconBadge">2</span>
+          </div>
+          <div className="topbar--iconContainer">
+            <Language />
+            <span className="topbar--topIconBadge">2</span>
+          </div>
+          <div className="topbar--iconContainer">
+            <Settings />
+          </div> */}
+            <div className="topbar_iconContainer" onClick={handleLogout}>
+              <div className="topbar_icon">
+                <Logout />
+              </div>
             </div>
-            <div className="db-topbar--iconContainer">
-              <Language />
-              <span className="db-topbar--topIconBadge">2</span>
-            </div>
-            <div className="db-topbar--iconContainer">
-              <Settings />
-            </div> */}
-            <div className="db-topbar--iconContainer" onClick={handleLogout}>
-              <Logout />
-            </div>
-            <img src={imgUrl} alt="" className="db-topbar--topAvatar" />
+            <img src={imgUrl} alt="" className="c-avatar" />
           </div>
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 };

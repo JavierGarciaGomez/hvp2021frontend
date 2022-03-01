@@ -39,7 +39,7 @@ export default function Collaborators() {
       renderCell: (params) => {
         return (
           <div className="d-flex align-items-center">
-            <img className="collaboratorsImg" src={params.row.imgUrl} alt="" />
+            <img className="c-avatar u-me-1r" src={params.row.imgUrl} alt="" />
             {params.row.col_code}
           </div>
         );
@@ -59,11 +59,11 @@ export default function Collaborators() {
         return (
           <>
             <Link to={`${params.row._id}`}>
-              <button className="collaboratorsEdit">Ver</button>
+              <button className="c-button u-me-1r">Ver</button>
             </Link>
             {isAdmin && (
               <DeleteOutline
-                className="collaboratorsDelete"
+                sx={{ color: "error.main", cursor: "pointer" }}
                 onClick={() => handleDelete(params.id)}
               />
             )}
@@ -77,12 +77,9 @@ export default function Collaborators() {
 
   return (
     <Fragment>
-      <h1 className="text-center m-4">Colaboradores</h1>
+      <h1 className="heading--secondary">Colaboradores</h1>
       {/* Display bigger than smaller tablets */}
-      <div
-        className="db-collaborators__datagrid-wrapper"
-        style={{ width: "100%" }}
-      >
+      <div className="collaboratorsDataGridWrapper" style={{ width: "100%" }}>
         <DataGrid
           rows={collaborators}
           disableSelectionOnClick
@@ -94,41 +91,30 @@ export default function Collaborators() {
         />
       </div>
       {/* Display smaller than smaller tablets */}
-      <div className="db-collaborators__cards-wrapper">
+      <div className="collaboratorsCardsWrapper">
         {/* TODO: do components */}
         {collaborators.map((collaborator) => {
           return (
-            <div
-              className="db-collaborators__collaborator-card"
-              key={collaborator._id}
-            >
-              <div className="db-collaborators__card-top">
-                <div className="db-collaborators__img-container">
-                  <img
-                    className="db-collaborators__img"
-                    src={collaborator.imgUrl}
-                    alt=""
-                  />
+            <div className="c-card" key={collaborator._id}>
+              <div className="c-card_top">
+                <div className="">
+                  <img className="c-avatar" src={collaborator.imgUrl} alt="" />
                 </div>
-                <div className="db-collaborators__card-code">
-                  {collaborator.col_code}
-                </div>
+                <div className="collaboratorCode">{collaborator.col_code}</div>
               </div>
 
-              <div className="db-collaborators__card-body">
+              <div className="c-card_body">
                 <p>{`${collaborator.first_name} ${collaborator.last_name}`}</p>
                 <p>{collaborator.position}</p>
                 <p>{collaborator.role}</p>
               </div>
-              <div className="db-collaborators__card-footer">
+              <div className="c-card_footer">
                 <Link to={`${collaborator._id}`}>
-                  <button className="btn btn-primary db-collaborators__btn">
-                    Ver
-                  </button>
+                  <button className="c-button u-center">Ver</button>
                 </Link>
                 {isAdmin && (
                   <Link to={`${collaborator._id}`}>
-                    <button className="btn btn-danger db-collaborators__btn">
+                    <button className="c-button -danger u-center">
                       Eliminar
                     </button>
                   </Link>
@@ -139,7 +125,7 @@ export default function Collaborators() {
         })}
       </div>
       <Link to="newCollaborator">
-        <button className="createNewUserButton">
+        <button className="c-button -outline">
           Crear un nuevo colaborador
         </button>
       </Link>

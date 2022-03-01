@@ -107,55 +107,50 @@ export default function Collaborator() {
   }
 
   return (
-    <div className="db-collaborator">
-      <div className="db-collaborator__titleContainer">
-        <h1 className="db-collaborator__title">Edit Collaborator</h1>
-      </div>
-      <div className="db-collaborator__container">
-        <div className="db-collaborator__show">
-          <div className="db-collaborator__showTop">
-            <img
-              src={activeCollaborator.imgUrl}
-              alt=""
-              className="db-collaborator__showImg"
-            />
-            <div className="db-collaborator__showTopTitle">
-              <span className="db-collaborator__showUsername">
+    <Fragment>
+      <h2 className="heading--secondary">Editar colaborador</h2>
+
+      <div className="collaborator_container">
+        <div className="collaboratorShow">
+          <div className="collaboratorShow_header">
+            <img src={activeCollaborator.imgUrl} alt="" className="c-avatar" />
+            <div className="collaboratorShow_headerRight">
+              <span className="collaboratorShow_username mb-1r">
                 {activeCollaborator.first_name} {activeCollaborator.last_name}
               </span>
-              <span className="db-collaborator__showUserTitle">
+              <span className="collaboratorShow_position">
                 {activeCollaborator.position}
               </span>
             </div>
           </div>
-          <div className="db-collaborator__showBottom">
-            <span className="db-collaborator__showTitle">
+          <div className="collaboratorShow_content">
+            <span className="collaboratorShow_heading">
               Detalles de usuario
             </span>
-            <div className="db-collaborator__showInfo">
-              <Numbers className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">
+            <div className="collaboratorShow_infoContainer">
+              <Numbers className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">
                 {activeCollaborator.col_numId}
               </span>
             </div>
-            <div className="db-collaborator__showInfo">
-              <PermIdentity className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">
+            <div className="collaboratorShow_infoContainer">
+              <PermIdentity className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">
                 {activeCollaborator.col_code}
               </span>
             </div>
 
-            <div className="db-collaborator__showInfo">
-              <BadgeOutlined className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">
+            <div className="collaboratorShow_infoContainer">
+              <BadgeOutlined className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">
                 {activeCollaborator.role}
               </span>
             </div>
 
-            <div className="db-collaborator__showInfo">
-              <ToggleOnOutlined className="db-collaborator__showIcon" />
+            <div className="collaboratorShow_infoContainer">
+              <ToggleOnOutlined className="collaboratorShow_infoIcon" />
               <span
-                className={`db-collaborator__showInfoTitle ${
+                className={`collaboratorShow_infoLabel ${
                   activeCollaborator.isActive ? "text-success" : "text-danger"
                 }`}
               >
@@ -163,27 +158,27 @@ export default function Collaborator() {
               </span>
             </div>
 
-            <div className="db-collaborator__showInfo">
-              <TransgenderOutlined className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">
+            <div className="collaboratorShow_infoContainer">
+              <TransgenderOutlined className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">
                 {activeCollaborator.gender}
               </span>
             </div>
 
             {/* TODO */}
             {!activeCollaborator.isRegistered && (
-              <div className="db-collaborator__showInfo">
-                <KeyOutlined className="db-collaborator__showIcon" />
-                <span className="db-collaborator__showInfoTitle">
+              <div className="collaboratorShow_infoContainer">
+                <KeyOutlined className="collaboratorShow_infoIcon" />
+                <span className="collaboratorShow_infoLabel">
                   {activeCollaborator.accessCode}
                 </span>
               </div>
             )}
 
-            <div className="db-collaborator__showInfo">
-              <HowToRegOutlined className="db-collaborator__showIcon" />
+            <div className="collaboratorShow_infoContainer">
+              <HowToRegOutlined className="collaboratorShow_infoIcon" />
               <span
-                className={`db-collaborator__showInfoTitle ${
+                className={`collaboratorShow_infoLabel ${
                   activeCollaborator.isRegistered
                     ? "text-success"
                     : "text-danger"
@@ -195,17 +190,17 @@ export default function Collaborator() {
               </span>
             </div>
 
-            <div className="db-collaborator__showInfo">
-              <MailOutline className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">
+            <div className="collaboratorShow_infoContainer">
+              <MailOutline className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">
                 {activeCollaborator.email}
               </span>
             </div>
 
-            <div className="db-collaborator__showInfo">
-              <Http className="db-collaborator__showIcon" />
+            <div className="collaboratorShow_infoContainer">
+              <Http className="collaboratorShow_infoIcon" />
               <span
-                className={`db-collaborator__showInfoTitle ${
+                className={`collaboratorShow_infoLabel ${
                   activeCollaborator.isDisplayedWeb
                     ? "text-success"
                     : "text-danger"
@@ -217,46 +212,43 @@ export default function Collaborator() {
               </span>
             </div>
 
-            <span className="db-collaborator__showTitle">Contact Details</span>
-            <div className="db-collaborator__showInfo">
-              <CalendarToday className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">PENDIENTE</span>
+            <span className="collaboratorShow_heading">Contact Details</span>
+            <div className="collaboratorShow_infoContainer">
+              <CalendarToday className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">PENDIENTE</span>
             </div>
-            <div className="db-collaborator__showInfo">
-              <PhoneAndroid className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">PENDIENTE</span>
+            <div className="collaboratorShow_infoContainer">
+              <PhoneAndroid className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">PENDIENTE</span>
             </div>
 
-            <div className="db-collaborator__showInfo">
-              <LocationSearching className="db-collaborator__showIcon" />
-              <span className="db-collaborator__showInfoTitle">PENDIENTE</span>
+            <div className="collaboratorShow_infoContainer">
+              <LocationSearching className="collaboratorShow_infoIcon" />
+              <span className="collaboratorShow_infoLabel">PENDIENTE</span>
             </div>
           </div>
 
-          <div className="db-collaborator__showInfo">
-            <EmojiPeople className="db-collaborator__showIcon" />
-            <span className="db-collaborator__showInfoTitle">
+          <div className="collaboratorShow_infoContainer">
+            <EmojiPeople className="collaboratorShow_infoIcon" />
+            <span className="collaboratorShow_infoLabel">
               {activeCollaborator.textPresentation}
             </span>
           </div>
         </div>
 
-        <div className="db_collaborator__update">
-          <span className="db_collaborator__updateTitle">
-            Actualiza la información
-          </span>
-          <form className="db_collaborator__updateForm" onSubmit={handleSubmit}>
+        <div className="collaboratorUpdate">
+          <h3 className="heading--tertiary">Actualiza la información</h3>
+          <form className="collaboratorUpdate_form" onSubmit={handleSubmit}>
             {isManager && (
               <Fragment>
-                <div className="db_collaborator__updateUpload">
+                <div className="collaboratorUpdate_uploadImgContainer">
                   <img
-                    className="db_collaborator__updateImg"
+                    className="collaboratorUpdate_img"
                     src={activeCollaborator.imgUrl}
                     alt=""
                   />
                   <label htmlFor="file">
                     <Publish
-                      className="db_collaborator__updateIcon"
                       onClick={handlePictureUpload}
                       type="button"
                       sx={{ fontSize: 30 }}
@@ -271,21 +263,21 @@ export default function Collaborator() {
                   />
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Nombre (s)</label>
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">Nombre (s)</label>
                   <input
                     type="text"
-                    className="db_collaborator__updateInput"
+                    className="collaboratorUpdate_input"
                     name="first_name"
                     value={values.first_name}
                     onChange={handleInputChange}
                   />
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Apellidos:</label>
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">Apellidos:</label>
                   <input
-                    className="db_collaborator__updateInput"
+                    className="collaboratorUpdate_input"
                     type="text"
                     name="last_name"
                     value={values.last_name}
@@ -293,12 +285,12 @@ export default function Collaborator() {
                   />
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Posición</label>
-                  <div className="newCollaboratorRadio">
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">Posición</label>
+                  <div className="">
                     {Object.keys(positionTypes).map((key) => {
                       return (
-                        <div className="radio__group pb-3 pe-1" key={key}>
+                        <div className="c-inlineRadioGroup pb-3 pe-1" key={key}>
                           <input
                             type="radio"
                             name="position"
@@ -316,12 +308,12 @@ export default function Collaborator() {
                   </div>
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Género</label>
-                  <div className="newCollaboratorRadio">
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">Género</label>
+                  <div className="">
                     {Object.keys(genderTypes).map((key) => {
                       return (
-                        <div className="radio__group" key={key}>
+                        <div className="c-inlineRadioGroup" key={key}>
                           <input
                             type="radio"
                             name="gender"
@@ -339,12 +331,12 @@ export default function Collaborator() {
                   </div>
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Rol</label>
-                  <div className="newCollaboratorRadio">
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">Rol</label>
+                  <div className="">
                     {Object.keys(roleTypes).map((key) => {
                       return (
-                        <div className="radio__group" key={key}>
+                        <div className="c-inlineRadioGroup" key={key}>
                           <input
                             type="radio"
                             name="role"
@@ -362,8 +354,8 @@ export default function Collaborator() {
                   </div>
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Activo</label>
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">Activo</label>
                   <Switch
                     checked={values.isActive}
                     onChange={handleInputChange}
@@ -372,8 +364,10 @@ export default function Collaborator() {
                   />
                 </div>
 
-                <div className="db_collaborator__updateItem">
-                  <label>Se muestra en la web</label>
+                <div className="collaboratorUpdate_item">
+                  <label className="collaboratorUpdate_label">
+                    Se muestra en la web
+                  </label>
                   <Switch
                     // checked={values.isActive}
                     checked={values.isDisplayedWeb}
@@ -385,24 +379,23 @@ export default function Collaborator() {
               </Fragment>
             )}
 
-            <div className="db_collaborator__updateItem">
-              <label>Texto de presentación en la web:</label>
+            <div className="collaboratorUpdate_item">
+              <label className="collaboratorUpdate_label">
+                Texto de presentación en la web:
+              </label>
               <textarea
-                className="db_collaborator__updateInputTextArea"
+                className="collaboratorUpdate_textArea"
                 name="textPresentation"
                 value={values.textPresentation}
                 onChange={handleInputChange}
               />
             </div>
-            <button
-              className="db_collaborator__updateButton btn btn-primary"
-              type="submit"
-            >
+            <button className="c-button" type="submit">
               Actualizar
             </button>
           </form>
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 }

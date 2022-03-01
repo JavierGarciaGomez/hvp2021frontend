@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   getFormatIcon,
   getTxtClass,
@@ -52,7 +52,7 @@ export const Documentation = () => {
   const handleDelete = (id) => {};
 
   return (
-    <Container className="mt-5r">
+    <Fragment>
       <div className="heading__container mb-2r">
         <div className="heading--secondary">Documentación de apoyo</div>
       </div>
@@ -181,6 +181,6 @@ export const Documentation = () => {
           </div>
         );
       })}
-    </Container>
+    </Fragment>
   );
 };

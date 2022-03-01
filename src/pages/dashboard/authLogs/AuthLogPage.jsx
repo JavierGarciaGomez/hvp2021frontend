@@ -24,7 +24,7 @@ export const AuthLogPage = () => {
         return (
           <div className="d-flex align-items-center">
             <img
-              className="collaboratorsImg"
+              className="c-avatar"
               src={
                 params.row.collaborator
                   ? params.row.collaborator?.imgUrl

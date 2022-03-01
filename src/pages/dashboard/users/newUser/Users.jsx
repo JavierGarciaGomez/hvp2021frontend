@@ -41,7 +41,7 @@ export default function Users() {
       renderCell: (params) => {
         return (
           <div className="d-flex align-items-center">
-            <img className="collaboratorsImg" src={params.row.imgUrl} alt="" />
+            <img className="c-avatar" src={params.row.imgUrl} alt="" />
             {params.row.col_code}
           </div>
         );

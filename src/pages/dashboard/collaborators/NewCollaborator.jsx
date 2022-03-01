@@ -109,10 +109,10 @@ export default function NewCollaborator() {
 
         <div className="newCollaboratorItem">
           <label>Puesto de trabajo</label>
-          <div className="newCollaboratorRadio">
+          <div className="">
             {Object.keys(positionTypes).map((key) => {
               return (
-                <div className="radio__group pb-3 pe-1" key={key}>
+                <div className="c-inlineRadioGroup pb-3 pe-1" key={key}>
                   <input
                     type="radio"
                     name="position"
@@ -132,10 +132,10 @@ export default function NewCollaborator() {
 
         <div className="newCollaboratorItem">
           <label>Género</label>
-          <div className="newCollaboratorRadio">
+          <div className="">
             {Object.keys(genderTypes).map((key) => {
               return (
-                <div className="radio__group pb-3 pe-1" key={key}>
+                <div className="c-inlineRadioGroup pb-3 pe-1" key={key}>
                   <input
                     type="radio"
                     name="gender"
@@ -155,10 +155,10 @@ export default function NewCollaborator() {
 
         <div className="newCollaboratorItem">
           <label>Rol</label>
-          <div className="newCollaboratorRadio">
+          <div className="">
             {Object.keys(roleTypes).map((key) => {
               return (
-                <div className="radio__group pb-3 pe-1" key={key}>
+                <div className="c-inlineRadioGroup pb-3 pe-1" key={key}>
                   <input
                     type="radio"
                     name="role"
@@ -197,13 +197,13 @@ export default function NewCollaborator() {
           />
 
           <div>
-            <button className="btn btn-secondary" onClick={handlePictureUpload}>
+            <button className="c-button" onClick={handlePictureUpload}>
               Cargar imagen
             </button>
           </div>
         </div>
 
-        <button className="newCollaboratorButton" type="submit">
+        <button className="c-button" type="submit">
           Create
         </button>
       </form>

@@ -117,7 +117,7 @@ export default function NewUser() {
           <div className="newUserRadio">
             {Object.keys(genderTypes).map((key) => {
               return (
-                <div className="radio__group" key={key}>
+                <div className="c-inlineRadioGroup" key={key}>
                   <input
                     type="radio"
                     name="gender"
@@ -140,7 +140,7 @@ export default function NewUser() {
           <div className="newUserRadio">
             {Object.keys(roleTypes).map((key) => {
               return (
-                <div className="radio__group" key={key}>
+                <div className="c-inlineRadioGroup" key={key}>
                   <input
                     type="radio"
                     name="role"
