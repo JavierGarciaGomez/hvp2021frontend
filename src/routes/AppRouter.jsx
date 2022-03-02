@@ -12,6 +12,7 @@ import { roleTypes } from "../types/types";
 
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { checkAuthorization } from "../helpers/utilities";
+import { ClientLayout } from "../pages/clientsPages/ClientLayout";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -48,7 +49,10 @@ export const AppRouter = () => {
           )}
           <Route path="/auth" element={<AuthPage />}></Route>
           <Route path="/auth/:token" element={<AuthPage />}></Route>
-          <Route path="/clients" element={<ClientWelcome />}></Route>
+          {role === "User" && (
+            <Route path="/clients/*" element={<ClientLayout />}></Route>
+          )}
+
           <Route path="/*" element={<MainPageLayout />}></Route>
           <Route path="/test" element={<TestPage />}></Route>
 

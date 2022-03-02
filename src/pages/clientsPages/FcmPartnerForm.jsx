@@ -1,24 +1,17 @@
 import React, { Fragment } from "react";
-import { useState } from "react";
+
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { startLogout } from "../../actions/authActions";
+import { Link } from "react-router-dom";
+
 import { createFcmPartner } from "../../actions/fcmActions";
 import { InputGroupNew } from "../../components/ui/InputGroupNew";
 import { uploadImg } from "../../helpers/uploadImg";
-import {
-  fireSwalError,
-  getLabelsAndValuesFromCollection,
-  getRoleTypesLabelsAndValues,
-} from "../../helpers/utilities";
+import { fireSwalError } from "../../helpers/utilities";
 import { useForm } from "../../hooks/useForm";
-import { Topbar } from "../dashboard/components/topbar/Topbar";
-import { ClientsTopbar } from "./components/ClientsTopbar";
 
-export const ClientWelcome = () => {
+export const FcmPartnerForm = () => {
   const dispatch = useDispatch();
   const { values, handleInputChange, reset, setFullValues } = useForm();
-  const [imgUrl, setimgUrl] = useState(null);
 
   console.log("estos son values,", values);
 

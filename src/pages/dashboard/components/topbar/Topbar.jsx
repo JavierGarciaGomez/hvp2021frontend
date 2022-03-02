@@ -25,6 +25,8 @@ export const Topbar = () => {
     navigate("/");
   };
 
+  console.log("topbar", uid, imgUrl);
+
   return (
     <Fragment>
       <div className="topbar">
