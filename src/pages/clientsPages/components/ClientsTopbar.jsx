@@ -17,8 +17,8 @@ import { Logout } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 import { startLogout } from "../../../actions/authActions";
 
-const pages = ["Iniciar trámite", "Estado de trámites"];
 const pagesData = [
+  { label: "Ver perfil", value: "clientProfile" },
   { label: "Iniciar trámite", value: "fcmSelectProcedure" },
   { label: "Estado de trámites", value: "fcmDataProcedures" },
 ];

@@ -1,0 +1,24 @@
+.proceduresWrapper {
+}
+
+.procedure {
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  line-height: 1.5;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: $boxShadow1;
+  padding: 2rem;
+
+  &:hover {
+    // #0b2b71
+    transform: translateY(-3px);
+    box-shadow: 0 1rem 2rem rgba($color-black, 0.2);
+  }
+
+  &_name {
+    font-weight: 2rem;
+    text-transform: uppercase;
+  }
+}
