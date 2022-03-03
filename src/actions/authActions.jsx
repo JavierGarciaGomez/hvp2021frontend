@@ -13,17 +13,20 @@ export const authLogin = (user) => ({ type: types.authLogin, payload: user });
 export const startChecking = () => {
   return async (dispatch) => {
     try {
-      const resp = await fetchConToken("collaborators/renew");
+      // check if there is a token in local storage to renew
+      const token = localStorage.getItem("token") || "";
+      if (token === "") {
+        return dispatch(checkingFinish());
+      }
+      const resp = await fetchConToken("auth/renew");
       const body = await resp.json();
-
-      console.log("body", body);
 
       if (body.ok) {
         localStorage.setItem("token", body.token);
         localStorage.setItem("token-init-date", new Date().getTime());
 
         const { uid, col_code, role, imgUrl } = body;
-        dispatch(
+        return dispatch(
           authLogin({
             uid,
             col_code,
@@ -78,7 +81,7 @@ export const userStartLogin = (data) => {
 
 export const userStartRegister = (data) => {
   return async (dispatch) => {
-    const resp = await fetchSinToken("auth/create", { ...data }, "POST");
+    const resp = await fetchSinToken("users/create", { ...data }, "POST");
     const body = await resp.json();
 
     if (body.ok) {
@@ -97,187 +100,6 @@ export const userStartRegister = (data) => {
     }
   };
 };
-
-// export const startLogin = (email, password) => {
-//   return async (dispatch) => {
-//     const resp = await fetchSinToken("auth", { email, password }, "POST");
-//     const body = await resp.json();
-
-//     if (body.ok) {
-//       localStorage.setItem("token", body.token);
-//       localStorage.setItem("token-init-date", new Date().getTime());
-//       dispatch(
-//         login({
-//           uid: body.uid,
-//           name: body.name,
-//         })
-//       );
-//     } else {
-//       Swal.fire("Error", body.msg, "error");
-//     }
-//   };
-// };
-
-// 2022-01-07
-// export const collaboratorsStartLoading = ({ data }) => {
-//   return async (dispatch) => {
-//     try {
-//       const resp = await fetchSinToken("collaborators");
-//       const body = await resp.json();
-
-//       if (body.ok) {
-//         console.log("collaborators start loading", body.collaborators);
-//         dispatch(collaboratorsLoaded(body.collaborators));
-//         // event.id = body.evento.id;
-//         // event.user = { _id: uid, name };
-//         // dispatch(eventAddNew(event));
-//       }
-//     } catch (error) {
-//       console.log(error);
-//       Swal.fire("error", "error", "error");
-//     }
-//   };
-// };
-
-// export const collaboratorStartSetActive = (id) => {
-//   console.log("COLLABORATOR ACTIONS. Collaborator start set active", id);
-//   return async (dispatch) => {
-//     try {
-//       const resp = await fetchSinToken(`collaborators/${id}`, {
-//         collaboratorId: id,
-//       });
-
-//       const body = await resp.json();
-
-//       if (body.ok) {
-//         const collaborator = body.collaborator;
-//         console.log("mis fecth", collaborator);
-//         dispatch(collaboratorSetActive(collaborator));
-//       }
-//       console.log("COLLABORATOR ACTIONS. Collaborator finish set active");
-//     } catch (error) {
-//       console.log(error);
-//       Swal.fire("error", "error", "error");
-//     }
-//   };
-// };
-
-// const collaboratorSetActive = (collaborator) => {
-//   console.log("COLLABORATOR ACTIONS. Collaborator set active");
-
-//   return {
-//     type: types.collaboratorSetActive,
-//     payload: collaborator,
-//   };
-// };
-
-// const collaboratorsLoaded = (collaborators) => {
-//   console.log("collaborators loaded", collaborators);
-//   return {
-//     type: types.collaboratorsLoaded,
-//     payload: collaborators,
-//   };
-// };
-
-// 369
-// export const collaboratorStartCreate = async (data) => {
-//   console.log("START REGISTER");
-
-//   const resp = await fetchSinToken("collaborators/create", data, "POST");
-//   const body = await resp.json();
-//   if (body.ok) {
-//     // localStorage.setItem("token", body.token);
-//     // localStorage.setItem("token-init-date", new Date().getTime());
-//     // dispatch(
-//     //   login({
-//     //     uid: body.uid,
-//     //     name: body.name,
-//     //   })
-//     // );
-//   } else {
-//     Swal.fire("Error", body.msg, "error");
-//   }
-// };
-
-// export const collaboratorStartLogin = (data) => {
-//   return async (dispatch) => {
-//     const resp = await fetchSinToken("collaborators/", { ...data }, "POST");
-//     const body = await resp.json();
-//     console.log("collaboratorActions, body: ", body);
-//     if (body.ok) {
-//       Swal.fire({
-//         position: "top-end",
-//         icon: "success",
-//         title: "Login exitoso",
-//         showConfirmButton: false,
-//         timer: 1500,
-//       });
-//       localStorage.setItem("token", body.token);
-//       localStorage.setItem("token-init-date", new Date().getTime());
-//       // dispatch(
-//       //   login({
-//       //     uid: body.uid,
-//       //     name: body.name,
-//       //   })
-//       // );
-//     } else {
-//       Swal.fire("Error", body.msg, "error");
-//     }
-//   };
-// };
-
-// export const collaboratorStartRegister = (data) => {
-//   return async (dispatch) => {
-//     const resp = await fetchSinToken(
-//       "collaborators/register",
-//       { ...data },
-//       "PATCH"
-//     );
-//     const body = await resp.json();
-//     console.log("collaboratorActions, body: ", body);
-//     if (body.ok) {
-//       Swal.fire({
-//         position: "top-end",
-//         icon: "success",
-//         title: "Colaborador actualizado correctamente",
-//         showConfirmButton: false,
-//         timer: 1500,
-//       });
-//       // localStorage.setItem("token", body.token);
-//       // localStorage.setItem("token-init-date", new Date().getTime());
-//       // dispatch(
-//       //   login({
-//       //     uid: body.uid,
-//       //     name: body.name,
-//       //   })
-//       // );
-//     } else {
-//       Swal.fire("Error", body.msg, "error");
-//     }
-//   };
-// };
-
-// 363
-// export const startChecking = () => {
-//   return async (dispatch) => {
-//     const resp = await fetchConToken("auth/renew");
-
-//     const body = await resp.json();
-
-//     if (body.ok) {
-//       localStorage.setItem("token", body.token);
-//       localStorage.setItem("token-init-date", new Date().getTime());
-//       dispatch(
-//         login({
-//           uid: body.uid,
-//           name: body.name,
-//         })
-//       );
-//     } else {
-//       dispatch(checkingFinish());
-//     }
-//   };
-// };
 
 const checkingFinish = () => ({ type: types.authCheckingFinish });
 

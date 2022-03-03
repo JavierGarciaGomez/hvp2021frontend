@@ -1,8 +1,10 @@
-import React, { Fragment } from "react";
+import { CircularProgress } from "@mui/material";
+import React, { Fragment, useEffect } from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { startLogout } from "../../actions/authActions";
+import { clientStartLoading } from "../../actions/clientsActions";
 import { createFcmPartner } from "../../actions/fcmActions";
 import { InputGroupNew } from "../../components/ui/InputGroupNew";
 import { uploadImg } from "../../helpers/uploadImg";
@@ -17,22 +19,22 @@ import { Topbar } from "../dashboard/components/topbar/Topbar";
 import { ClientsTopbar } from "./components/ClientsTopbar";
 
 export const ClientLayout = () => {
+  const { uid } = useSelector((state) => state.auth);
+  const { clientsIsLoading } = useSelector((state) => state.clients);
+  console.log("Client Layout loading", clientsIsLoading);
+
   const dispatch = useDispatch();
-  const { values, handleInputChange, reset, setFullValues } = useForm();
-  const [imgUrl, setimgUrl] = useState(null);
-
-  console.log("estos son values,", values);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(createFcmPartner(values));
-  };
+  useEffect(() => {
+    dispatch(clientStartLoading(uid));
+  }, [dispatch]);
 
   return (
     <Fragment>
       <ClientsTopbar />
       <div className="l-clientsMain">
-        <ClientRouter />
+        <div className="container">
+          {clientsIsLoading ? <CircularProgress /> : <ClientRouter />}
+        </div>
       </div>
     </Fragment>
   );

@@ -41,7 +41,7 @@ const usersFinishedLoading = () => ({
 export const userDelete = (id) => {
   return async (dispatch) => {
     try {
-      const resp = await fetchConToken(`auth/${id}`, {}, "DELETE");
+      const resp = await fetchConToken(`users/${id}`, {}, "DELETE");
       const body = await resp.json();
 
       if (body.ok) {

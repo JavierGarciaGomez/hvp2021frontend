@@ -76,7 +76,7 @@ export default function Collaborators() {
   if (isLoading) return <CircularProgress />;
 
   return (
-    <Fragment>
+    <div className="container">
       <h1 className="heading--secondary">Colaboradores</h1>
       {/* Display bigger than smaller tablets */}
       <div className="collaboratorsDataGridWrapper" style={{ width: "100%" }}>
@@ -113,11 +113,12 @@ export default function Collaborators() {
                   <button className="c-button u-center">Ver</button>
                 </Link>
                 {isAdmin && (
-                  <Link to={`${collaborator._id}`}>
-                    <button className="c-button -danger u-center">
-                      Eliminar
-                    </button>
-                  </Link>
+                  <button
+                    className="c-button -danger u-center"
+                    onClick={() => handleDelete(collaborator._id)}
+                  >
+                    Eliminar
+                  </button>
                 )}
               </div>
             </div>
@@ -129,6 +130,6 @@ export default function Collaborators() {
           Crear un nuevo colaborador
         </button>
       </Link>
-    </Fragment>
+    </div>
   );
 }

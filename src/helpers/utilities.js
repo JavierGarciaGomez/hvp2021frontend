@@ -664,8 +664,7 @@ export const fireSwalError = (message) => {
     icon: "error",
     title: "ERROR",
     text: message,
-    showConfirmButton: false,
-    timer: 1500,
+    showConfirmButton: true,
   });
 };
 
@@ -675,7 +674,7 @@ export const fireSwalSuccess = (message) => {
     title: "ÉXITO",
     text: message,
     showConfirmButton: false,
-    timer: 1500,
+    timer: 2000,
   });
 };
 
@@ -968,6 +967,15 @@ export const formatDatePropertyToIsoString = (object, dateProperty) => {
   if (object[dateProperty]) {
     object[dateProperty] = dayjs(object[dateProperty]).toISOString();
   }
+};
+
+export const trimAllValues = (object) => {
+  const newObject = { ...object };
+  for (const [key, value] of Object.entries(object)) {
+    newObject[key] = value.trim();
+  }
+
+  return newObject;
 };
 
 // todo: Doing

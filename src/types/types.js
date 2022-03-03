@@ -73,6 +73,14 @@ export const types = {
   documentationIsLoading: "[documentation] is loading",
   documentationFinishedLoading: "[documentation] finished loading",
   allDocumentationLoaded: "[documentation] all loaded",
+
+  /************* Clients *********/
+  clientLoaded: "[client] client loaded",
+
+  clientsIsLoading: "[clients] is loading",
+  clientsFinishedLoading: "[clients] finished loading",
+  allclientsLoaded: "[clients] all loaded",
+  clientsFcmPartnersLoaded: "[clients] fcm partners loaded",
 };
 
 export const genderTypes = {

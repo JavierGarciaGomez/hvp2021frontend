@@ -3,6 +3,7 @@ import { activityRegisterReducer } from "./activityRegisterReducer";
 import { authLogReducer } from "./authLogReducer";
 import { authReducer } from "./authReducer";
 import { cleanUpsReducer } from "./cleanUpsReducer";
+import { clientsReducer } from "./clientsReducer";
 import { collaboratorReducer } from "./collaboratorReducer";
 import { dbUiReducer } from "./dbUiReducer";
 import { documentationReducer } from "./documentationReducer";
@@ -17,6 +18,7 @@ export const rootReducer = combineReducers({
   auth: authReducer,
   authLogs: authLogReducer,
   cleanups: cleanUpsReducer,
+  clients: clientsReducer,
   collaborator: collaboratorReducer,
   documentation: documentationReducer,
   dbUi: dbUiReducer,

@@ -23,17 +23,17 @@ export const AppRouter = () => {
   });
   const dispatch = useDispatch();
   const { checking, role } = useSelector((state) => state.auth);
-  const [isCollaborator, setisCollaborator] = useState(false);
+  // const [isCollaborator, setisCollaborator] = useState(false);
 
   // todo: doing google login
 
   useEffect(() => {
     dispatch(startChecking());
-  }, [dispatch, checking]);
+  }, [dispatch]);
 
-  useEffect(() => {
-    setisCollaborator(checkAuthorization(role, roleTypes.collaborator));
-  }, [role]);
+  // useEffect(() => {
+  //   setisCollaborator(checkAuthorization(role, roleTypes.collaborator));
+  // }, [role]);
 
   console.log("checking", checking);
   if (checking) {
@@ -44,7 +44,7 @@ export const AppRouter = () => {
     <ThemeProvider theme={theme}>
       <HashRouter>
         <Routes>
-          {isCollaborator && (
+          {checkAuthorization(role, roleTypes.collaborator) && (
             <Route path="/dashboard/*" element={<DashboardLayout />}></Route>
           )}
           <Route path="/auth" element={<AuthPage />}></Route>

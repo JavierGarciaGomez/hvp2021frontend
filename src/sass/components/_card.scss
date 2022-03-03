@@ -1,5 +1,5 @@
 .c-card {
-  position: relative;
+  position: static;
   display: flex;
   flex: 1;
 
@@ -50,7 +50,7 @@
 }
 
 .c-horizontalCard {
-  position: relative;
+  position: static;
   display: flex;
   flex: 1;
   gap: 2rem;

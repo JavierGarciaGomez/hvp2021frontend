@@ -9,6 +9,7 @@ export const InputGroupNew = ({
   name = "",
   value = "",
   onChange = () => {},
+  required = false,
 }) => {
   return (
     <div className={containerClasses}>
@@ -21,6 +22,7 @@ export const InputGroupNew = ({
         autoComplete="true"
         value={value}
         onChange={onChange}
+        required={required}
       />
     </div>
   );

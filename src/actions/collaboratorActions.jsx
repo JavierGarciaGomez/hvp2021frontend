@@ -154,47 +154,6 @@ export const collaboratorStartRegister = (data) => {
   };
 };
 
-// 363
-// export const startChecking = () => {
-//   return async (dispatch) => {
-//     const resp = await fetchConToken("auth/renew");
-
-//     const body = await resp.json();
-
-//     if (body.ok) {
-//       localStorage.setItem("token", body.token);
-//       localStorage.setItem("token-init-date", new Date().getTime());
-//       dispatch(
-//         login({
-//           uid: body.uid,
-//           name: body.name,
-//         })
-//       );
-//     } else {
-//       dispatch(checkingFinish());
-//     }
-//   };
-// };
-
-// const checkingFinish = () => ({ type: types.authCheckingFinish });
-
-// const login = (user) => ({
-//   type: types.authLogin,
-//   payload: user,
-// });
-
-// 373
-// export const startLogout = () => {
-//   return (dispatch) => {
-//     localStorage.clear();
-//     dispatch(logout());
-//     // clear events
-//     dispatch(eventLogout());
-//   };
-// };
-
-// const logout = () => ({ type: types.authLogout });
-
 export const collaboratorStartUpdate = (collaborator) => {
   return async (dispatch) => {
     try {

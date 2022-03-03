@@ -7,20 +7,13 @@ import { userStartLogin } from "../../../actions/authActions";
 
 export const LoginTab = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  // 369
   const { values, handleInputChange } = useForm({
     email: "",
     password: "",
   });
 
   const { email, password } = values;
-
-  // useEffect(() => {
-  //   if (isAuthenticated) navigate("/dashboard", { replace: true });
-  // }, [isAuthenticated]);
 
   const handleLogin = (e) => {
     e.preventDefault();
