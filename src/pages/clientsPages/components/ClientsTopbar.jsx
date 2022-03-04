@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link, useNavigate } from "react-router-dom";
 import { Logout } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { startLogout } from "../../../actions/authActions";
 
 const pagesData = [
@@ -26,6 +26,7 @@ const pagesData = [
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 export const ClientsTopbar = () => {
+  const { imgUrl } = useSelector((state) => state.auth);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
@@ -146,7 +147,7 @@ export const ClientsTopbar = () => {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 {/* Todo: pass prop */}
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src={imgUrl} />
               </IconButton>
             </Tooltip>
             {/* AVATAR MENU */}

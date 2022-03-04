@@ -1,17 +1,20 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-
-import { createFcmPartner } from "../../actions/fcmActions";
-import { InputGroupNew } from "../../components/ui/InputGroupNew";
+import { useDispatch, useSelector } from "react-redux";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { createFcmPartner, updateFcmPartner } from "../../actions/fcmActions";
 import { uploadImg } from "../../helpers/uploadImg";
-import {
-  fireSwalError,
-  trimAllElements,
-  trimAllValues,
-} from "../../helpers/utilities";
-import { useForm } from "../../hooks/useForm";
+import { fireSwalError, isObjectEmpty } from "../../helpers/utilities";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
+import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
+import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
+import { DragImageUpload } from "../../components/formsUI/DragImageUpload";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { clientStartLoading } from "../../actions/clientsActions";
+import dayjs from "dayjs";
 
 let initialValues = {
   firstName: "",
@@ -32,253 +35,254 @@ let initialValues = {
   url: "",
 };
 
-export const FcmPartnerForm = () => {
+let formValidation = Yup.object().shape({
+  firstName: Yup.string().trim().required("Es obligatorio"),
+  paternalSurname: Yup.string().trim().required("Es obligatorio"),
+  maternalSurname: Yup.string().trim().required("Es obligatorio"),
+  partnerNum: Yup.string().trim().required("Es obligatorio"),
+  expirationDate: Yup.date().required("Es obligatorio"),
+  postalCode: Yup.string()
+    .trim()
+    .length(5, "El código postal debe contar con cinco carácteres"),
+  city: Yup.string().trim(),
+  state: Yup.string().trim(),
+  country: Yup.string().trim(),
+  homePhone: Yup.string()
+    .trim()
+    .min(7, "Debe contar al menos con 7 carácteres"),
+  mobilePhone: Yup.string()
+    .trim()
+    .min(7, "Debe contar al menos con 7 carácteres"),
+  email: Yup.string().email("Debe ser una forma válida de email"),
+  url: "",
+});
+
+export const FcmPartnerFormik = () => {
   const dispatch = useDispatch();
-  console.log("initial", initialValues);
-  const { values, handleInputChange, reset, setFullValues } =
-    useForm(initialValues);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { client } = useSelector((state) => state.clients);
+  const { uid } = useSelector((state) => state.auth);
+  const [files, setFiles] = useState([]);
+  const [formValues, setformValues] = useState(initialValues);
+  const [imgUrl, setimgUrl] = useState(null);
 
-  console.log("estos son values,", values);
+  // Load client
+  useEffect(() => {
+    if (isObjectEmpty(client)) {
+      dispatch(clientStartLoading(uid));
+    }
+  }, [dispatch]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const trimmedValues = trimAllValues(values);
+  // find fcmPartner and set it active
+  useEffect(() => {
+    if (!isObjectEmpty(client)) {
+      let found = client.linkedFcmPartners.find((el) => el._id === id);
+      // set active fcmPartner
+      if (found) {
+        console.log("esto encontré", found);
+        // set the image found to be used in the component
+        setimgUrl(found.url);
+        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
+        const foundWithAddress = { ...found, ...found.address };
 
-    // Validation
-    let errors = [];
-    let formIsValid = false;
-
-    // first_name
-    if (trimmedValues.firstName.length < 2) {
-      errors.push("El nombre no puede estar vacío.");
-    }
-    if (trimmedValues.paternalSurname.length < 2) {
-      errors.push("El apellido no puede estar vacío.");
-    }
-    if (trimmedValues.partnerNum.length < 4) {
-      errors.push("El número de socio tiene muy pocos carácteres.");
-    }
-    if (trimmedValues.expirationDate.length < 4) {
-      errors.push("La fecha de expiración debe estar seleccionada.");
-    }
-    if (trimmedValues.mobilePhone.length < 7) {
-      errors.push("El número telefónico es muy corto.");
-    }
-    if (trimmedValues.email.length < 4) {
-      errors.push("El email no puede estar vacío.");
-    }
-    if (trimmedValues.url.length < 4) {
-      errors.push("Se debe anexar una fotografía de la tarjeta.");
-    }
-
-    if (errors.length > 0) {
-      return fireSwalError(errors.join(" "));
-    }
-
-    dispatch(createFcmPartner(values));
-  };
-  const handleFileChange = async (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-
-    if (file) {
-      if (file.size > 1000000) {
-        e.target.value = "";
-        return fireSwalError("El archivo no puede ser superior a 1mb");
+        return setformValues(foundWithAddress);
       }
-      if (file["type"].split("/")[0] !== "image") {
-        e.target.value = "";
-        return fireSwalError("El archivo tiene que ser una imagen");
+    }
+  }, [client]);
+
+  console.log("estos son los form values", formValues);
+
+  const handleSubmit = async (values) => {
+    // if there is no imgurl or no file, Error
+    if (files.length === 0 && !imgUrl) {
+      return fireSwalError("Se debe cargar la imagen de la tarjeta");
+    }
+    // if there is an imgUrl dont refresh the image
+    if (files.length > 0) {
+      const tempImgUrl = await uploadImg(files[0]);
+      values.url = tempImgUrl;
+    } else {
+      values.url = imgUrl;
+    }
+
+    // convert values to address properties
+
+    const { street, number, suburb, postalCode, city, state, country } = values;
+    values.address = {
+      street,
+      number,
+      suburb,
+      postalCode,
+      city,
+      state,
+      country,
+    };
+
+    // if there is an ID: update. If not: create
+    if (values._id) {
+      const succesfulDispatch = await dispatch(updateFcmPartner(values));
+
+      if (succesfulDispatch) {
+        // navigate to previous page or profile
+        // navigate(`/dashboard/documentation`);
       }
-      const tempImgUrl = await uploadImg(file);
-      setFullValues({ ...values, url: tempImgUrl });
+    } else {
+      const succesfulDispatch = await dispatch(createFcmPartner(values));
+      if (succesfulDispatch) {
+        // navigate(`/dashboard/documentation`);
+      }
     }
   };
 
   return (
     <Fragment>
-      {/* vincular luego */}
-      <h2 className="heading--tertiary">Agrega una identificación de socio</h2>
+      <Typography component="h2" variant="h4" mb="2rem">
+        Agrega una identificación de socio
+      </Typography>
 
-      <div className="c-card mb-5r">
-        <h4 className="heading--quaternary">Nota:</h4>
-        <p>
+      <Box
+        sx={{
+          bgcolor: "grey.300",
+          p: "2rem",
+          borderRadius: 2,
+          boxShadow: 5,
+          mb: "5rem",
+        }}
+      >
+        <Typography component="h3" variant="h5" mb="2rem" fontWeight="bold">
+          Nota:
+        </Typography>
+        <Typography mb="1rem">
           Solo es necesario llenar los datos marcados con un asterisco cuando se
           trate de vincular una tarjeta ajena a la cuenta.
-        </p>
-        <p>
+        </Typography>
+        <Typography>
           Cuando se trate de una tarjeta propia, de una nueva tarjeta o de una
           renovación, se deberán llenar todos los datos.
-        </p>
-      </div>
+        </Typography>
+        <p></p>
+      </Box>
 
-      <form className="row" onSubmit={handleSubmit}>
-        {/* TARJETA */}
-        <h4 className="heading--quaternary">Tarjeta</h4>
-        <div className="col-md-6 mb-3">
-          <label htmlFor="" className="form-label mb-3">
-            Imagen de la tarjeta*
-          </label>
-          <input
-            className="form-control"
-            type="file"
-            accept="image/*"
-            id="file"
-            onChange={handleFileChange}
-            name="file"
-          />
-        </div>
-        <div className="col-md-6 mb-3">
-          {/* todo classname */}
-          <img className="" src={values.url} alt="" />
-        </div>
-        <h4 className="heading--quaternary">Datos de identificación</h4>
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Nombre (s)*"
-          type="text"
-          name="firstName"
-          value={values.firstName}
-          onChange={handleInputChange}
-          required={true}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Apellido paterno*"
-          type="text"
-          name="paternalSurname"
-          value={values.paternalSurname}
-          onChange={handleInputChange}
-          required={true}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Apellido materno*"
-          type="text"
-          name="maternalSurname"
-          value={values.maternalSurname}
-          onChange={handleInputChange}
-          required={true}
-        />
-
-        <InputGroupNew
-          containerClasses="col-md-6 mb-3"
-          label="Número de socio*"
-          type="text"
-          name="partnerNum"
-          value={values.partnerNum}
-          onChange={handleInputChange}
-          required={true}
-        />
-
-        <InputGroupNew
-          containerClasses="col-md-6 mb-3"
-          label="Fecha de expiración*"
-          type="date"
-          name="expirationDate"
-          value={values.expirationDate}
-          onChange={handleInputChange}
-          required={true}
-        />
-
-        <h4 className="heading--quaternary u-mt-5r">Dirección</h4>
-        <InputGroupNew
-          containerClasses="col-md-3 mb-3"
-          label="Calle"
-          type="text"
-          name="street"
-          value={values.street}
-          onChange={handleInputChange}
-        />
-
-        <InputGroupNew
-          containerClasses="col-md-3 mb-3"
-          label="Número"
-          type="text"
-          name="number"
-          value={values.number}
-          onChange={handleInputChange}
-        />
-        <InputGroupNew
-          containerClasses="col-md-3 mb-3"
-          label="Colonia o fraccionamiento"
-          type="text"
-          name="suburb"
-          value={values.suburb}
-          onChange={handleInputChange}
-        />
-        <InputGroupNew
-          containerClasses="col-md-3 mb-3"
-          label="Código postal"
-          type="text"
-          name="postalCode"
-          value={values.postalCode}
-          onChange={handleInputChange}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Ciudad"
-          type="text"
-          name="city"
-          value={values.city}
-          onChange={handleInputChange}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Estado"
-          type="text"
-          name="state"
-          value={values.state}
-          onChange={handleInputChange}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="País"
-          type="text"
-          name="country"
-          value={values.country}
-          onChange={handleInputChange}
-        />
-
-        <h4 className="heading--quaternary u-mt-5r">Contacto</h4>
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Teléfono"
-          type="text"
-          name="homePhone"
-          value={values.homePhone}
-          onChange={handleInputChange}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Teléfono móvil*"
-          type="text"
-          name="mobilePhone"
-          value={values.mobilePhone}
-          onChange={handleInputChange}
-          required={true}
-        />
-        <InputGroupNew
-          containerClasses="col-md-4 mb-3"
-          label="Correo electrónico*"
-          type="email"
-          name="email"
-          value={values.email}
-          onChange={handleInputChange}
-          required={true}
-        />
-
-        <div className="d-flex justify-content-evenly u-mt-3r">
-          <button className="btn btn-primary" type="submit">
-            Guardar
-          </button>
-          <Link to={`/dashboard/documentation`}>
-            <button className="btn btn-danger" type="button">
-              Cancelar
-            </button>
-          </Link>
-        </div>
-      </form>
+      <Formik
+        initialValues={{ ...formValues }}
+        validationSchema={formValidation}
+        onSubmit={(values) => {
+          handleSubmit(values);
+        }}
+        enableReinitialize
+      >
+        <Form>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography component="h4" variant="h5" mb="2rem">
+                Tarjeta
+              </Typography>
+              <Grid item xs={12} md={6}>
+                <Typography mb="1rem">
+                  Inserta una imagen de la tarjeta con un tamaño máximo de 1mb.
+                  Si la tarjeta ya está vencida y cuentas con una nueva, es
+                  necesario reemplazar la imagen.
+                </Typography>
+                <DragImageUpload
+                  files={files}
+                  setFiles={setFiles}
+                  imgUrl={imgUrl}
+                  setimgUrl={setimgUrl}
+                ></DragImageUpload>
+              </Grid>
+            </Grid>
+            {/* DATOS DE IDENTIFICACIÓN */}
+            <Grid item xs={12}>
+              <Typography component="h4" variant="h5">
+                Datos de Identificación
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="firstName" label="Nombre (s)*" />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper
+                name="paternalSurname"
+                label="Apellido paterno*"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper
+                name="maternalSurname"
+                label="Apellido materno*"
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextFieldWrapper name="partnerNum" label="Número de socio*" />
+            </Grid>{" "}
+            <Grid item xs={12} md={6}>
+              <DatePickerFieldWrapper
+                name="expirationDate"
+                label="Fecha de expiración*"
+              />
+            </Grid>
+            {/* ADDRESS */}
+            <Grid item xs={12}>
+              <Typography component="h4" variant="h5">
+                Dirección
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextFieldWrapper name="street" label="Calle" />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextFieldWrapper name="number" label="Número" />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextFieldWrapper
+                name="suburb"
+                label="Colonia o fraccionamiento"
+              />
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <TextFieldWrapper name="postalCode" label="Código postal" />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="city" label="Ciudad" />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="state" label="State" />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="country" label="Country" />
+            </Grid>
+            {/* CONTACT */}
+            <Grid item xs={12}>
+              <Typography component="h4" variant="h5">
+                Contacto
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="homePhone" label="Teléfono" />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="mobilePhone" label="Teléfono móvil" />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <TextFieldWrapper name="email" label="Correo electrónico" />
+            </Grid>
+            <Grid item xs={6}>
+              <ButtonFormWrapper> Guardar</ButtonFormWrapper>
+            </Grid>
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                fullWidth={true}
+                // onClick={handleSubmit}
+                color="error"
+              >
+                Cancelar
+              </Button>
+            </Grid>
+          </Grid>
+        </Form>
+      </Formik>
     </Fragment>
   );
 };

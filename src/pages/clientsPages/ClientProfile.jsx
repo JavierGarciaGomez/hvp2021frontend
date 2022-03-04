@@ -51,7 +51,7 @@ export const ClientProfile = () => {
               </div>
               <div className="c-card_footer">
                 <div>
-                  <Link to={`${fcmPartner._id}`}>
+                  <Link to={`/clients/fcmPartner/${fcmPartner._id}`}>
                     <button className="c-button u-center">Editar</button>
                   </Link>
                 </div>

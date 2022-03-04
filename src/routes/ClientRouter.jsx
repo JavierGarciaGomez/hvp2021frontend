@@ -5,6 +5,7 @@ import { ClientProfile } from "../pages/clientsPages/ClientProfile";
 import { ClientSelectProcedure } from "../pages/clientsPages/ClientSelectProcedure";
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 import { FcmPartnerForm } from "../pages/clientsPages/FcmPartnerForm";
+import { FcmPartnerFormik } from "../pages/clientsPages/FcmPartnerFormik";
 
 export const ClientRouter = () => {
   return (
@@ -14,7 +15,7 @@ export const ClientRouter = () => {
 
       {/* FCMPartner */}
       {/* CreateNew */}
-      <Route path="fcmPartnerNew" element={<FcmPartnerForm />} />
+      <Route path="fcmPartner/:id" element={<FcmPartnerFormik />} />
       <Route path="fcmSelectProcedure" element={<ClientSelectProcedure />} />
       <Route path="clientProfile" element={<ClientProfile />} />
 
