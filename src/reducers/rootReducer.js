@@ -7,6 +7,7 @@ import { clientsReducer } from "./clientsReducer";
 import { collaboratorReducer } from "./collaboratorReducer";
 import { dbUiReducer } from "./dbUiReducer";
 import { documentationReducer } from "./documentationReducer";
+import { fcmReducer } from "./fcmReducer";
 import { miscReducer } from "./miscReducer";
 import { rfcReducer } from "./rfcReducer";
 import { userReducer } from "./userReducer";
@@ -22,6 +23,7 @@ export const rootReducer = combineReducers({
   collaborator: collaboratorReducer,
   documentation: documentationReducer,
   dbUi: dbUiReducer,
+  fcm: fcmReducer,
   misc: miscReducer,
   rfc: rfcReducer,
   users: userReducer,

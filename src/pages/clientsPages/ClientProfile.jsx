@@ -1,70 +1,151 @@
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Box, display } from "@mui/system";
 import dayjs from "dayjs";
 import React, { Fragment } from "react";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { userRemoveFcmPartner } from "../../actions/userActions";
+import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
+import { SearchAndLinkPartner } from "./components/SearchAndLinkPartner";
 
 export const ClientProfile = () => {
+  const dispatch = useDispatch();
   const { client } = useSelector((state) => state.clients);
+  const [showLinkPartnerForm, setshowLinkPartnerForm] = useState(false);
+
+  const handleShowLinkForm = () => {
+    setshowLinkPartnerForm((prev) => !prev);
+  };
+
+  const handleUnlink = (fcmPartnerId) => {
+    dispatch(userRemoveFcmPartner(client._id, fcmPartnerId));
+  };
 
   return (
     <Fragment>
-      <h2 className="heading--secondary">Perfil del cliente </h2>
-      <h3 className="heading--tertiary">Datos del perfil</h3>
-      <div className="profileData"></div>
-      <h3 className="heading--tertiary">
+      <Typography variant="h4" component="h2">
+        Perfil del cliente
+      </Typography>
+      <Typography variant="h5" component="h3">
+        Datos del perfil
+      </Typography>
+      <Typography variant="h5" component="h3" mb="2rem">
         Cuentas de socio asociadas a esta cuenta
-      </h3>
-      <div className="l-cardsWrapper">
+      </Typography>
+      {/* CardWrapper */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
+          },
+          gap: "2rem",
+          mb: "5rem",
+        }}
+      >
         {client.linkedFcmPartners.map((fcmPartner) => {
           return (
-            <div className="c-card" key={fcmPartner._id}>
-              <div className="c-card_top">
-                <div className="heading--tertiary">{fcmPartner.partnerNum}</div>
-              </div>
-              <div className="c-card_body">
-                <p>
-                  <span className="fw-bold">Nombre: </span>
+            <Card
+              key={fcmPartner._id}
+              sx={{ backgroundColor: "#d5c8c8", boxShadow: 3 }}
+            >
+              <CardContent>
+                <Typography
+                  variant="h5"
+                  component="h3"
+                  mb="2rem"
+                  sx={{
+                    textAlign: "center",
+                    borderBottom: "3px primary.main solid",
+                    borderBottomColor: "primary.main",
+                    borderBottomWidth: "3px",
+                    borderBottomStyle: "solid",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {fcmPartner.partnerNum}
+                </Typography>
+                <Typography mb="2rem">
+                  <span className="fw-bold">Nombre: </span>{" "}
                   {` ${fcmPartner.firstName} ${fcmPartner.paternalSurname} ${fcmPartner.maternalSurname}`}
-                </p>
-                <p>
+                </Typography>
+                <Typography mb="2rem">
                   <span className="fw-bold">Fecha de expiración: </span>
                   {` ${dayjs(fcmPartner.expirationDate).format("DD-MMM-YYYY")}`}
-                </p>
+                </Typography>
                 {fcmPartner.homePhone && (
-                  <p>
-                    <span className="fw-bold">Teléfono: </span>
+                  <Typography mb="2rem">
+                    <span className="fw-bold">Teléfono: </span>{" "}
                     {` ${fcmPartner.homePhone}`}
-                  </p>
+                  </Typography>
                 )}
                 {fcmPartner.mobilePhone && (
-                  <p>
-                    <span className="fw-bold">Teléfono móvil: </span>
+                  <Typography mb="2rem">
+                    <span className="fw-bold">Teléfono móvil: </span>{" "}
                     {` ${fcmPartner.mobilePhone}`}
-                  </p>
+                  </Typography>
                 )}
                 {fcmPartner.email && (
-                  <p>
-                    <span className="fw-bold">Teléfono móvil: </span>
+                  <Typography mb="2rem">
+                    <span className="fw-bold">Correo electrónico: </span>{" "}
                     {` ${fcmPartner.email}`}
-                  </p>
+                  </Typography>
                 )}
-              </div>
-              <div className="c-card_footer">
-                <div>
-                  <Link to={`/clients/fcmPartner/${fcmPartner._id}`}>
-                    <button className="c-button u-center">Editar</button>
-                  </Link>
-                </div>
-                <div>
-                  <button className="c-button -danger u-center">
-                    Desvincular
-                  </button>
-                </div>
-              </div>
-            </div>
+
+                <Typography mb="2rem">
+                  <span className="fw-bold">Teléfóno móvil: </span> Javier
+                  García
+                </Typography>
+                <Typography mb="2rem">
+                  <span className="fw-bold">Correo electrónico: </span> Javier
+                  García
+                </Typography>
+                <Grid container spacing={1}>
+                  <Grid item xs={6}>
+                    <Link to={`/clients/fcmPartner/${fcmPartner._id}`}>
+                      <Button
+                        variant="contained"
+                        fullWidth={true}
+                        // onClick={handleSubmit}
+                        color="primary"
+                      >
+                        Editar
+                      </Button>
+                    </Link>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      fullWidth={true}
+                      onClick={() => handleUnlink(fcmPartner._id)}
+                      color="error"
+                    >
+                      Desvincular
+                    </Button>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
           );
         })}
-      </div>
+      </Box>
+      {/* link new partner */}
+      <Box>
+        <Button
+          variant="contained"
+          onClick={handleShowLinkForm}
+          sx={{ mb: "2rem" }}
+        >
+          Vincula una nueva cuenta de socio
+        </Button>
+        {showLinkPartnerForm && <SearchAndLinkPartner />}
+      </Box>
+
+      <Box></Box>
+      {/* CardWrapper */}
     </Fragment>
   );
 };

@@ -980,3 +980,17 @@ export const trimAllValues = (object) => {
 
 // todo: Doing
 export const getCollaboratorCodeById = () => {};
+
+export const excludeFromCollection = (
+  collection,
+  collectionToExclude,
+  propertyName = "_id"
+) => {
+  const propertyArray = collectionToExclude.map((element) => {
+    return element[propertyName];
+  });
+
+  return collection.filter(
+    (element) => !propertyArray.includes(element[propertyName])
+  );
+};
