@@ -15,7 +15,11 @@ import { userAddFcmPartner } from "../../../actions/userActions";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 import { excludeFromCollection } from "../../../helpers/utilities";
 
-export const SearchAndLinkPartner = () => {
+export const SearchAndLinkPartner = ({
+  usedInProcedure = false,
+  handleSetFatherOwnerId,
+  handleNext,
+}) => {
   const dispatch = useDispatch();
   const { fcmPartners } = useSelector((state) => state.fcm);
   const { client } = useSelector((state) => state.clients);
@@ -43,8 +47,13 @@ export const SearchAndLinkPartner = () => {
     setfilteredFcmPartners(fcmPartnersFound);
   };
 
-  const handleLinkToAccount = (id) => {
-    dispatch(userAddFcmPartner(client._id, id));
+  const handleSubmit = (fcmPartner) => {
+    dispatch(userAddFcmPartner(client._id, fcmPartner));
+
+    if (usedInProcedure) {
+      handleNext();
+      handleSetFatherOwnerId(fcmPartner._id);
+    }
   };
 
   return (
@@ -114,11 +123,11 @@ export const SearchAndLinkPartner = () => {
                     variant="contained"
                     fullWidth={true}
                     onClick={() => {
-                      handleLinkToAccount(fcmPartner._id);
+                      handleSubmit(fcmPartner);
                     }}
                     color="primary"
                   >
-                    Vincular a mi cuenta
+                    {usedInProcedure ? "Seleccionar" : "Vincular a mi cuenta"}
                   </Button>
                 </CardContent>
               </Card>

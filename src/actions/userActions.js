@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import { types } from "../types/types";
-import { clientStartLoading } from "./clientsActions";
+import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
 export const usersStartLoading = () => {
   return async (dispatch) => {
@@ -91,18 +91,15 @@ export const userRemoveFcmPartner = (userId, fcmPartnerId) => {
   };
 };
 
-export const userAddFcmPartner = (userId, fcmPartnerId) => {
-  return async (dispatch) => {
+export const userAddFcmPartner = (userId, fcmPartner) => {
+  return async (dispatch, getState) => {
     try {
-      console.log("Voy por acá");
       const resp = await fetchConToken(
-        `users/${userId}/fcmPartner/link/${fcmPartnerId}`,
+        `users/${userId}/fcmPartner/link/${fcmPartner._id}`,
         {},
         "PATCH"
       );
       const body = await resp.json();
-
-      console.log("userAddFcmPartner este es el body", body);
 
       if (body.ok) {
         Swal.fire({
@@ -111,7 +108,10 @@ export const userAddFcmPartner = (userId, fcmPartnerId) => {
           showConfirmButton: false,
           timer: 1500,
         });
-        dispatch(clientStartLoading(userId));
+
+        const client = getState().clients.client;
+        client.linkedFcmPartners.push(fcmPartner);
+        dispatch(updateClientReducer({ ...client }));
       } else {
         Swal.fire("error", body.msg, "error");
       }

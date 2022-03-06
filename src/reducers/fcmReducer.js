@@ -21,7 +21,6 @@ export const fcmReducer = (state = initialState, action) => {
       return { ...state, fcmPartners: action.payload, fcmsIsLoading: false };
 
     case types.fcmSetPackage: {
-      console.log("reducer", action);
       return { ...state, fcmPackage: action.payload };
     }
 

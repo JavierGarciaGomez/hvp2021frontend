@@ -71,7 +71,9 @@ export const updateFcmPartner = (object) => {
       const body = await resp.json();
 
       if (body.ok) {
-        dispatch(clientStartLoading(getState().auth.uid));
+        const client = getState().clients.client;
+        client.linkedFcmPartners.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
         fireSwalSuccess(body.msg);
         return body.saved._id;
       } else {

@@ -12,26 +12,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFcmPackage } from "../../actions/fcmActions";
 import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
-// const steps = [
-//   "Select campaign settings",
-//   "Create an ad group",
-//   "Create an ad",
-// ];
-
 export const ProcedurePedigree = () => {
   const dispatch = useDispatch();
+  /*************************************************************************************************** */
+  /**************************usestates and useselectors ******** ***************************************/
+  /*************************************************************************************************** */
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [skipped, setSkipped] = React.useState(new Set());
+  // todo save the package in the reducer and in database
+  // fcmPackage is the main object created through the stepper
   const { fcmPackage } = useSelector((state) => state.fcm);
 
+  /*************************************************************************************************** */
+  /**************************Functions to update the fcmPackabe ***************************************/
+  /*************************************************************************************************** */
   const handleSetFatherOwnerId = (id) => {
-    console.log("ProcPed handleSet", id);
     dispatch(setFcmPackage({ ...fcmPackage, fcmFatherOwnerId: id }));
   };
 
-  console.log("Procedure pedigree", fcmPackage);
+  console.log("Procedure pedigree. This is the package", fcmPackage);
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
-
+  /*************************************************************************************************** */
+  /**************************Functions related to the stepper *******************************************/
+  /*************************************************************************************************** */
   // set the optional steps
   const isStepOptional = (step) => {
     return step === 0;
@@ -47,7 +50,6 @@ export const ProcedurePedigree = () => {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
@@ -62,7 +64,6 @@ export const ProcedurePedigree = () => {
       // it should never occur unless someone's actively trying to break something.
       throw new Error("You can't skip a step that isn't optional.");
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped((prevSkipped) => {
       const newSkipped = new Set(prevSkipped.values());
@@ -75,6 +76,9 @@ export const ProcedurePedigree = () => {
     setActiveStep(0);
   };
 
+  /*************************************************************************************************** */
+  /**************************Steps *********************************************************************/
+  /*************************************************************************************************** */
   const steps = [
     {
       label: "Propietario del padre",
@@ -89,6 +93,10 @@ export const ProcedurePedigree = () => {
     { label: "Propietario de la madre", component: <Box>Boxarrón</Box> },
     { label: "Madre camada", component: <Box>Boxarrón</Box> },
   ];
+
+  /*************************************************************************************************** */
+  /**************************RENDER *********************************************************************/
+  /*************************************************************************************************** */
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -131,8 +139,8 @@ export const ProcedurePedigree = () => {
       ) : (
         // When there are not completed show reset
         <React.Fragment>
-          {/* Main content */}
-          {/* <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography> */}
+          {/* Main content: the step component */}
+
           {steps[activeStep].component}
           {/* buttons */}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>

@@ -28,57 +28,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { clientStartLoading } from "../../actions/clientsActions";
 import dayjs from "dayjs";
 
-let initialValues = {
-  firstName: "",
-  paternalSurname: "",
-  maternalSurname: "",
-  partnerNum: "",
-  expirationDate: "",
-  street: "",
-  number: "",
-  suburb: "",
-  postalCode: "",
-  city: "",
-  state: "Yucatán",
-  country: "México",
-  homePhone: "",
-  mobilePhone: "",
-  email: "",
-  urlPartnerCard: "",
-  urlProofOfResidency: "",
-  urlFrontIne: "",
-  urlBackIne: "",
-};
-
-let formValidation = Yup.object().shape({
-  // firstName: Yup.string().trim().required("Es obligatorio"),
-  // paternalSurname: Yup.string().trim().required("Es obligatorio"),
-  // maternalSurname: Yup.string().trim().required("Es obligatorio"),
-  // partnerNum: Yup.string().trim().required("Es obligatorio"),
-  // expirationDate: Yup.date().required("Es obligatorio"),
-  // street: Yup.string().trim().required("Es obligatorio"),
-  // number: Yup.string().trim().required("Es obligatorio"),
-  // suburb: Yup.string().trim().required("Es obligatorio"),
-  // postalCode: Yup.string()
-  //   .trim()
-  //   .length(5, "El código postal debe contar con cinco carácteres")
-  //   .required("Es obligatorio"),
-  // city: Yup.string().trim().required("Es obligatorio"),
-  // state: Yup.string().trim().required("Es obligatorio"),
-  // country: Yup.string().trim().required("Es obligatorio"),
-  // homePhone: Yup.string()
-  //   .trim()
-  //   .min(7, "Debe contar al menos con 7 carácteres"),
-  // mobilePhone: Yup.string()
-  //   .trim()
-  //   .min(7, "Debe contar al menos con 7 carácteres"),
-  // email: Yup.string()
-  //   .email("Debe ser una forma válida de email")
-  //   .required("Es obligatorio"),
-  // url: "",
-});
-
-export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
+export const FcmPartnerFormik = ({
+  handleSetFatherOwnerId,
+  handleNext,
+  isFirstRegister = false,
+}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -92,6 +46,63 @@ export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
   const [imgUrlProofOfResidency, setImgUrlProofOfResidency] = useState(null);
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
+
+  let initialValues = {
+    firstName: "",
+    paternalSurname: "",
+    maternalSurname: "",
+    partnerNum: "",
+    expirationDate: "",
+    street: "",
+    number: "",
+    suburb: "",
+    postalCode: "",
+    city: "",
+    state: "Yucatán",
+    country: "México",
+    homePhone: "",
+    mobilePhone: "",
+    email: "",
+    urlPartnerCard: "",
+    urlProofOfResidency: "",
+    urlFrontIne: "",
+    urlBackIne: "",
+  };
+
+  let validationParams = {
+    firstName: Yup.string().trim().required("Es obligatorio"),
+    paternalSurname: Yup.string().trim().required("Es obligatorio"),
+    maternalSurname: Yup.string().trim().required("Es obligatorio"),
+    street: Yup.string().trim().required("Es obligatorio"),
+    number: Yup.string().trim().required("Es obligatorio"),
+    suburb: Yup.string().trim().required("Es obligatorio"),
+    postalCode: Yup.string()
+      .trim()
+      .length(5, "El código postal debe contar con cinco carácteres")
+      .required("Es obligatorio"),
+    city: Yup.string().trim().required("Es obligatorio"),
+    state: Yup.string().trim().required("Es obligatorio"),
+    country: Yup.string().trim().required("Es obligatorio"),
+    homePhone: Yup.string()
+      .trim()
+      .min(7, "Debe contar al menos con 7 carácteres"),
+    mobilePhone: Yup.string()
+      .trim()
+      .min(7, "Debe contar al menos con 7 carácteres"),
+    email: Yup.string()
+      .email("Debe ser una forma válida de email")
+      .required("Es obligatorio"),
+  };
+
+  if (!isFirstRegister) {
+    validationParams = {
+      ...validationParams,
+      partnerNum: Yup.string().trim().required("Es obligatorio"),
+      expirationDate: Yup.date().required("Es obligatorio"),
+    };
+  }
+
+  let formValidation = Yup.object().shape(validationParams);
 
   const [formValues, setformValues] = useState(initialValues);
 
@@ -121,48 +132,54 @@ export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
 
   const handleSubmit = async (values) => {
     // if there is no imgurl or no file, Error
-    // if (filesFcmPartnerCard.length === 0 && !imgUrlPartnerCard) {
-    //   return fireSwalError("Se debe cargar la imagen de la tarjeta");
-    // }
-    // if (filesProofOfResidency.length === 0 && !imgUrlProofOfResidency) {
-    //   return fireSwalError(
-    //     "Se debe cargar la imagen del comprobante domicilario"
-    //   );
-    // }
-    // if (filesFrontINE.length === 0 && !imgUrlFrontIne) {
-    //   return fireSwalError("Se debe cargar la imagen frontal del INE");
-    // }
-    // if (filesBackINE.length === 0 && !imgUrlBackIne) {
-    //   return fireSwalError("Se debe cargar la imagen trasera del INE");
-    // }
+    if (!isFirstRegister) {
+      if (filesFcmPartnerCard.length === 0 && !imgUrlPartnerCard) {
+        return fireSwalError("Se debe cargar la imagen de la tarjeta");
+      }
+    }
+    if (filesProofOfResidency.length === 0 && !imgUrlProofOfResidency) {
+      return fireSwalError(
+        "Se debe cargar la imagen del comprobante domicilario"
+      );
+    }
+    if (filesFrontINE.length === 0 && !imgUrlFrontIne) {
+      return fireSwalError("Se debe cargar la imagen frontal del INE");
+    }
+    if (filesBackINE.length === 0 && !imgUrlBackIne) {
+      return fireSwalError("Se debe cargar la imagen trasera del INE");
+    }
 
     let newValues = { ...values };
     // if there is a new file refresh the image
-    // newValues = await setUrlValueOrRefreshImage(
-    //   newValues,
-    //   filesFcmPartnerCard,
-    //   "urlPartnerCard",
-    //   imgUrlPartnerCard
-    // );
-    // console.log();
-    // newValues = await setUrlValueOrRefreshImage(
-    //   newValues,
-    //   filesProofOfResidency,
-    //   "urlProofOfResidency",
-    //   imgUrlProofOfResidency
-    // );
-    // newValues = await setUrlValueOrRefreshImage(
-    //   newValues,
-    //   filesFrontINE,
-    //   "urlFrontIne",
-    //   imgUrlFrontIne
-    // );
-    // newValues = await setUrlValueOrRefreshImage(
-    //   newValues,
-    //   filesBackINE,
-    //   "urlBackIne",
-    //   imgUrlBackIne
-    // );
+
+    if (!isFirstRegister) {
+      newValues = await setUrlValueOrRefreshImage(
+        newValues,
+        filesFcmPartnerCard,
+        "urlPartnerCard",
+        imgUrlPartnerCard
+      );
+    } else {
+      newValues.partnerNum = `En trámite - ${newValues.firstName} ${newValues.paternalSurname}`;
+    }
+    newValues = await setUrlValueOrRefreshImage(
+      newValues,
+      filesProofOfResidency,
+      "urlProofOfResidency",
+      imgUrlProofOfResidency
+    );
+    newValues = await setUrlValueOrRefreshImage(
+      newValues,
+      filesFrontINE,
+      "urlFrontIne",
+      imgUrlFrontIne
+    );
+    newValues = await setUrlValueOrRefreshImage(
+      newValues,
+      filesBackINE,
+      "urlBackIne",
+      imgUrlBackIne
+    );
 
     // convert values to address properties
 
@@ -251,9 +268,7 @@ export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
         initialValues={{ ...formValues }}
         validationSchema={formValidation}
         onSubmit={(values) => {
-          console.log("acá estoy");
           handleSubmit(values);
-          console.log("acá estoy");
         }}
         enableReinitialize
       >
@@ -266,15 +281,17 @@ export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
               </Typography>
             </Grid>
             {/* tarjeta de socio */}
-            <Grid item xs={12} md={6}>
-              <Typography mb="2rem">Tarjeta de socio</Typography>
-              <DragImageUpload
-                files={filesFcmPartnerCard}
-                setFiles={setfilesFcmPartnerCard}
-                imgUrl={imgUrlPartnerCard}
-                setimgUrl={setImgUrlPartnerCard}
-              ></DragImageUpload>
-            </Grid>
+            {!isFirstRegister && (
+              <Grid item xs={12} md={6}>
+                <Typography mb="2rem">Tarjeta de socio</Typography>
+                <DragImageUpload
+                  files={filesFcmPartnerCard}
+                  setFiles={setfilesFcmPartnerCard}
+                  imgUrl={imgUrlPartnerCard}
+                  setimgUrl={setImgUrlPartnerCard}
+                ></DragImageUpload>
+              </Grid>
+            )}
             <Grid item xs={12} md={6}>
               <Typography mb="2rem">Comprobante domicilario</Typography>
               <DragImageUpload
@@ -323,15 +340,23 @@ export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
                 label="Apellido materno*"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextFieldWrapper name="partnerNum" label="Número de socio*" />
-            </Grid>{" "}
-            <Grid item xs={12} md={6}>
-              <DatePickerFieldWrapper
-                name="expirationDate"
-                label="Fecha de expiración*"
-              />
-            </Grid>
+            {!isFirstRegister && (
+              <Fragment>
+                <Grid item xs={12} md={6}>
+                  <TextFieldWrapper
+                    name="partnerNum"
+                    label="Número de socio*"
+                  />
+                </Grid>{" "}
+                <Grid item xs={12} md={6}>
+                  <DatePickerFieldWrapper
+                    name="expirationDate"
+                    label="Fecha de expiración*"
+                  />
+                </Grid>
+              </Fragment>
+            )}
+
             {/* ADDRESS */}
             <Grid item xs={12}>
               <Typography component="h4" variant="h5">
