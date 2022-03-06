@@ -81,11 +81,13 @@ export const types = {
   clientsFinishedLoading: "[clients] finished loading",
   allclientsLoaded: "[clients] all loaded",
   clientsFcmPartnersLoaded: "[clients] fcm partners loaded",
+  updateClientReducer: "[clients] updateClientReducer",
 
   /************* FCM *********/
   fcmPartnersLoaded: "[fcm] partner loaded",
   fcmsIsLoading: "[fcms] is loading",
-  fcmsFinishedLoading: "[fcms] finished loading",
+  fcmsFinishedLoading: "[fcm] finished loading",
+  fcmSetPackage: "[fcm] setPackage",
 };
 
 export const genderTypes = {

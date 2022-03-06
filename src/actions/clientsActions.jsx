@@ -115,3 +115,8 @@ export const createclients = (object) => {
     }
   };
 };
+
+export const updateClientReducer = (data) => ({
+  type: types.updateClientReducer,
+  payload: data,
+});

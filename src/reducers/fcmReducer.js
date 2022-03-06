@@ -6,6 +6,7 @@ const initialState = {
   // client: {},
   fcmsIsLoading: true,
   fcmPartners: [],
+  fcmPackage: {},
 };
 
 export const fcmReducer = (state = initialState, action) => {
@@ -18,6 +19,11 @@ export const fcmReducer = (state = initialState, action) => {
 
     case types.fcmPartnersLoaded:
       return { ...state, fcmPartners: action.payload, fcmsIsLoading: false };
+
+    case types.fcmSetPackage: {
+      console.log("reducer", action);
+      return { ...state, fcmPackage: action.payload };
+    }
 
     default:
       return state;

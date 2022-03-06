@@ -14,6 +14,7 @@ import utc from "dayjs/plugin/utc";
 import isBetween from "dayjs/plugin/isBetween";
 import isYesterday from "dayjs/plugin/isYesterday";
 import Swal from "sweetalert2";
+import { uploadImg } from "./uploadImg";
 dayjs.extend(utc);
 dayjs.extend(isBetween);
 dayjs.extend(isYesterday);
@@ -993,4 +994,21 @@ export const excludeFromCollection = (
   return collection.filter(
     (element) => !propertyArray.includes(element[propertyName])
   );
+};
+
+export const setUrlValueOrRefreshImage = async (
+  values,
+  files,
+  urlProperty,
+  url
+) => {
+  let newValues = { ...values };
+  if (files.length > 0) {
+    const tempImgUrl = await uploadImg(files[0], false);
+    newValues[urlProperty] = tempImgUrl;
+  } else {
+    values[urlProperty] = url;
+  }
+
+  return { ...newValues };
 };

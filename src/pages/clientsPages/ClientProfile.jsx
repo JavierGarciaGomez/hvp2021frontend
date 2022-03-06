@@ -31,7 +31,7 @@ export const ClientProfile = () => {
         Datos del perfil
       </Typography>
       <Typography variant="h5" component="h3" mb="2rem">
-        Cuentas de socio asociadas a esta cuenta
+        Cuentas de socio FCM asociadas a esta cuenta
       </Typography>
       {/* CardWrapper */}
       <Box

@@ -1,15 +1,16 @@
 import Swal from "sweetalert2";
 import { fileUploadCloudinary } from "./fileUploadCloudinary";
 
-export const uploadImg = async (file) => {
-  Swal.fire({
-    title: "Uploading...",
-    text: "Please wait...",
-    allowOutsideClick: false,
-    onBeforeOpen: () => {
-      Swal.showLoading();
-    },
-  });
+export const uploadImg = async (file, fireSwal = true) => {
+  fireSwal &&
+    Swal.fire({
+      title: "Uploading...",
+      text: "Please wait...",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
   // cloudinary
   const cloudUrl = "https://api.cloudinary.com/v1_1/dwalcv9li/upload";
@@ -27,14 +28,14 @@ export const uploadImg = async (file) => {
       // get the response
       const cloudResp = await resp.json();
       // return the url
-      Swal.close();
+      fireSwal && Swal.close();
       return cloudResp.secure_url;
     } else {
-      Swal.close();
+      fireSwal && Swal.close();
       return null;
     }
   } catch (error) {
-    Swal.close();
+    fireSwal && Swal.close();
     throw error;
   }
 };

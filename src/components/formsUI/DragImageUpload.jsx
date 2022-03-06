@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 export const DragImageUpload = ({ files, setFiles, imgUrl, setimgUrl }) => {
-  console.log("esta imgurl recibí", imgUrl);
+  // console.log("esta imgurl recibí", imgUrl);
   const images = files.map((file) => (
     <div key={file.name}>
       <img src={file.preview} style={{ width: "100%" }} alt="preview" />

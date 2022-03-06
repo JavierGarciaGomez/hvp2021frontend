@@ -19,11 +19,10 @@ import { Topbar } from "../dashboard/components/topbar/Topbar";
 import { ClientsTopbar } from "./components/ClientsTopbar";
 
 export const ClientLayout = () => {
+  const dispatch = useDispatch();
   const { uid } = useSelector((state) => state.auth);
   const { clientsIsLoading } = useSelector((state) => state.clients);
-  console.log("Client Layout loading", clientsIsLoading);
 
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(clientStartLoading(uid));
   }, [dispatch]);

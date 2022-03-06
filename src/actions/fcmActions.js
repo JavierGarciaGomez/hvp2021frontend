@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import { fireSwalError, fireSwalSuccess } from "../helpers/utilities";
 import { types } from "../types/types";
-import { clientStartLoading } from "./clientsActions";
+import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
 // todo
 export const createFcmPartner = (object) => {
@@ -12,9 +12,12 @@ export const createFcmPartner = (object) => {
       const body = await resp.json();
 
       if (body.ok) {
-        dispatch(clientStartLoading(getState().auth.uid));
+        const client = getState().clients.client;
+        client.linkedFcmPartners.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
+
         fireSwalSuccess(body.msg);
-        return true;
+        return body.saved._id;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -61,7 +64,7 @@ export const updateFcmPartner = (object) => {
   return async (dispatch, getState) => {
     try {
       const resp = await fetchConToken(
-        `fcm/fcmPartner/${object._id}`,
+        `fcm/partners/${object._id}`,
         object,
         "PUT"
       );
@@ -70,7 +73,7 @@ export const updateFcmPartner = (object) => {
       if (body.ok) {
         dispatch(clientStartLoading(getState().auth.uid));
         fireSwalSuccess(body.msg);
-        return true;
+        return body.saved._id;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -81,3 +84,8 @@ export const updateFcmPartner = (object) => {
     }
   };
 };
+
+export const setFcmPackage = (object) => ({
+  type: types.fcmSetPackage,
+  payload: object,
+});

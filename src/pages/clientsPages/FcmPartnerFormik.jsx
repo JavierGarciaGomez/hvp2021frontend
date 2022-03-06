@@ -5,8 +5,20 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { createFcmPartner, updateFcmPartner } from "../../actions/fcmActions";
 import { uploadImg } from "../../helpers/uploadImg";
-import { fireSwalError, isObjectEmpty } from "../../helpers/utilities";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  fireSwalError,
+  isObjectEmpty,
+  setUrlValueOrRefreshImage,
+} from "../../helpers/utilities";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  InputLabel,
+  Typography,
+} from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
 import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
@@ -32,47 +44,56 @@ let initialValues = {
   homePhone: "",
   mobilePhone: "",
   email: "",
-  url: "",
+  urlPartnerCard: "",
+  urlProofOfResidency: "",
+  urlFrontIne: "",
+  urlBackIne: "",
 };
 
 let formValidation = Yup.object().shape({
-  firstName: Yup.string().trim().required("Es obligatorio"),
-  paternalSurname: Yup.string().trim().required("Es obligatorio"),
-  maternalSurname: Yup.string().trim().required("Es obligatorio"),
-  partnerNum: Yup.string().trim().required("Es obligatorio"),
-  expirationDate: Yup.date().required("Es obligatorio"),
-  postalCode: Yup.string()
-    .trim()
-    .length(5, "El código postal debe contar con cinco carácteres"),
-  city: Yup.string().trim(),
-  state: Yup.string().trim(),
-  country: Yup.string().trim(),
-  homePhone: Yup.string()
-    .trim()
-    .min(7, "Debe contar al menos con 7 carácteres"),
-  mobilePhone: Yup.string()
-    .trim()
-    .min(7, "Debe contar al menos con 7 carácteres"),
-  email: Yup.string().email("Debe ser una forma válida de email"),
-  url: "",
+  // firstName: Yup.string().trim().required("Es obligatorio"),
+  // paternalSurname: Yup.string().trim().required("Es obligatorio"),
+  // maternalSurname: Yup.string().trim().required("Es obligatorio"),
+  // partnerNum: Yup.string().trim().required("Es obligatorio"),
+  // expirationDate: Yup.date().required("Es obligatorio"),
+  // street: Yup.string().trim().required("Es obligatorio"),
+  // number: Yup.string().trim().required("Es obligatorio"),
+  // suburb: Yup.string().trim().required("Es obligatorio"),
+  // postalCode: Yup.string()
+  //   .trim()
+  //   .length(5, "El código postal debe contar con cinco carácteres")
+  //   .required("Es obligatorio"),
+  // city: Yup.string().trim().required("Es obligatorio"),
+  // state: Yup.string().trim().required("Es obligatorio"),
+  // country: Yup.string().trim().required("Es obligatorio"),
+  // homePhone: Yup.string()
+  //   .trim()
+  //   .min(7, "Debe contar al menos con 7 carácteres"),
+  // mobilePhone: Yup.string()
+  //   .trim()
+  //   .min(7, "Debe contar al menos con 7 carácteres"),
+  // email: Yup.string()
+  //   .email("Debe ser una forma válida de email")
+  //   .required("Es obligatorio"),
+  // url: "",
 });
 
-export const FcmPartnerFormik = () => {
+export const FcmPartnerFormik = ({ handleSetFatherOwnerId, handleNext }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { uid } = useSelector((state) => state.auth);
-  const [files, setFiles] = useState([]);
-  const [formValues, setformValues] = useState(initialValues);
-  const [imgUrl, setimgUrl] = useState(null);
+  const [filesFcmPartnerCard, setfilesFcmPartnerCard] = useState([]);
+  const [filesProofOfResidency, setfilesProofOfResidency] = useState([]);
+  const [filesFrontINE, setfilesFrontINE] = useState([]);
+  const [filesBackINE, setfilesBackINE] = useState([]);
+  const [imgUrlPartnerCard, setImgUrlPartnerCard] = useState(null);
+  const [imgUrlProofOfResidency, setImgUrlProofOfResidency] = useState(null);
+  const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
+  const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
 
-  // Load client
-  useEffect(() => {
-    if (isObjectEmpty(client)) {
-      dispatch(clientStartLoading(uid));
-    }
-  }, [dispatch]);
+  const [formValues, setformValues] = useState(initialValues);
 
   // find fcmPartner and set it active
   useEffect(() => {
@@ -82,34 +103,72 @@ export const FcmPartnerFormik = () => {
       if (found) {
         console.log("esto encontré", found);
         // set the image found to be used in the component
-        setimgUrl(found.url);
+        setImgUrlPartnerCard(found.urlPartnerCard);
+        setImgUrlProofOfResidency(found.urlProofOfResidency);
+        setImgUrlFrontIne(found.urlFrontIne);
+        setImgUrlBackIne(found.urlBackIne);
+
         found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
-        const foundWithAddress = { ...found, ...found.address };
+        const { address } = found;
+
+        const foundWithAddress = { ...found, ...address };
+        console.log("foundwithaddress", foundWithAddress);
 
         return setformValues(foundWithAddress);
       }
     }
   }, [client]);
 
-  console.log("estos son los form values", formValues);
-
   const handleSubmit = async (values) => {
     // if there is no imgurl or no file, Error
-    if (files.length === 0 && !imgUrl) {
-      return fireSwalError("Se debe cargar la imagen de la tarjeta");
-    }
-    // if there is an imgUrl dont refresh the image
-    if (files.length > 0) {
-      const tempImgUrl = await uploadImg(files[0]);
-      values.url = tempImgUrl;
-    } else {
-      values.url = imgUrl;
-    }
+    // if (filesFcmPartnerCard.length === 0 && !imgUrlPartnerCard) {
+    //   return fireSwalError("Se debe cargar la imagen de la tarjeta");
+    // }
+    // if (filesProofOfResidency.length === 0 && !imgUrlProofOfResidency) {
+    //   return fireSwalError(
+    //     "Se debe cargar la imagen del comprobante domicilario"
+    //   );
+    // }
+    // if (filesFrontINE.length === 0 && !imgUrlFrontIne) {
+    //   return fireSwalError("Se debe cargar la imagen frontal del INE");
+    // }
+    // if (filesBackINE.length === 0 && !imgUrlBackIne) {
+    //   return fireSwalError("Se debe cargar la imagen trasera del INE");
+    // }
+
+    let newValues = { ...values };
+    // if there is a new file refresh the image
+    // newValues = await setUrlValueOrRefreshImage(
+    //   newValues,
+    //   filesFcmPartnerCard,
+    //   "urlPartnerCard",
+    //   imgUrlPartnerCard
+    // );
+    // console.log();
+    // newValues = await setUrlValueOrRefreshImage(
+    //   newValues,
+    //   filesProofOfResidency,
+    //   "urlProofOfResidency",
+    //   imgUrlProofOfResidency
+    // );
+    // newValues = await setUrlValueOrRefreshImage(
+    //   newValues,
+    //   filesFrontINE,
+    //   "urlFrontIne",
+    //   imgUrlFrontIne
+    // );
+    // newValues = await setUrlValueOrRefreshImage(
+    //   newValues,
+    //   filesBackINE,
+    //   "urlBackIne",
+    //   imgUrlBackIne
+    // );
 
     // convert values to address properties
 
-    const { street, number, suburb, postalCode, city, state, country } = values;
-    values.address = {
+    const { street, number, suburb, postalCode, city, state, country } =
+      newValues;
+    newValues.address = {
       street,
       number,
       suburb,
@@ -120,16 +179,25 @@ export const FcmPartnerFormik = () => {
     };
 
     // if there is an ID: update. If not: create
-    if (values._id) {
-      const succesfulDispatch = await dispatch(updateFcmPartner(values));
+    if (newValues._id) {
+      const fcmPartnerId = await dispatch(updateFcmPartner(newValues));
 
-      if (succesfulDispatch) {
+      if (fcmPartnerId) {
+        if (handleSetFatherOwnerId) {
+          handleSetFatherOwnerId(fcmPartnerId);
+          handleNext();
+        }
         // navigate to previous page or profile
         // navigate(`/dashboard/documentation`);
       }
     } else {
-      const succesfulDispatch = await dispatch(createFcmPartner(values));
-      if (succesfulDispatch) {
+      const fcmPartnerId = await dispatch(createFcmPartner(newValues));
+      if (fcmPartnerId) {
+        // submit to parent
+        if (handleSetFatherOwnerId) {
+          handleSetFatherOwnerId(fcmPartnerId);
+          handleNext();
+        }
         // navigate(`/dashboard/documentation`);
       }
     }
@@ -141,6 +209,7 @@ export const FcmPartnerFormik = () => {
         Agrega una identificación de socio
       </Typography>
 
+      {/* Nota */}
       <Box
         sx={{
           bgcolor: "grey.300",
@@ -151,46 +220,87 @@ export const FcmPartnerFormik = () => {
         }}
       >
         <Typography component="h3" variant="h5" mb="2rem" fontWeight="bold">
-          Nota:
+          Notas:
         </Typography>
         <Typography mb="1rem">
           Solo es necesario llenar los datos marcados con un asterisco cuando se
           trate de vincular una tarjeta ajena a la cuenta.
         </Typography>
-        <Typography>
+        <Typography mb="1rem">
           Cuando se trate de una tarjeta propia, de una nueva tarjeta o de una
           renovación, se deberán llenar todos los datos.
         </Typography>
+        <Typography mb="1rem">
+          Las imágenes deben tener un tamaño máximo de 1mb.
+        </Typography>
+        <Typography mb="1rem">
+          Si la tarjeta ya está vencida y cuentas con una nueva, es necesario
+          reemplazar la imagen.
+        </Typography>
+        <Typography mb="1rem">
+          Si se va a realizar la renovación de un nuevo socio, es importante que
+          el comprobante domiciliario no sea anterior a 3 meses. En su caso,
+          reemplazar la imagen
+        </Typography>
         <p></p>
       </Box>
+
+      {/* Formik */}
 
       <Formik
         initialValues={{ ...formValues }}
         validationSchema={formValidation}
         onSubmit={(values) => {
+          console.log("acá estoy");
           handleSubmit(values);
+          console.log("acá estoy");
         }}
         enableReinitialize
       >
         <Form>
           <Grid container spacing={2}>
+            {/* SECTION IMAGES */}
             <Grid item xs={12}>
               <Typography component="h4" variant="h5" mb="2rem">
-                Tarjeta
+                Imágenes
               </Typography>
-              <Grid item xs={12} md={6}>
-                <Typography mb="1rem">
-                  Inserta una imagen de la tarjeta con un tamaño máximo de 1mb.
-                  Si la tarjeta ya está vencida y cuentas con una nueva, es
-                  necesario reemplazar la imagen.
-                </Typography>
-                <DragImageUpload
-                  files={files}
-                  setFiles={setFiles}
-                  imgUrl={imgUrl}
-                  setimgUrl={setimgUrl}
-                ></DragImageUpload>
-              </Grid>
+            </Grid>
+            {/* tarjeta de socio */}
+            <Grid item xs={12} md={6}>
+              <Typography mb="2rem">Tarjeta de socio</Typography>
+              <DragImageUpload
+                files={filesFcmPartnerCard}
+                setFiles={setfilesFcmPartnerCard}
+                imgUrl={imgUrlPartnerCard}
+                setimgUrl={setImgUrlPartnerCard}
+              ></DragImageUpload>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography mb="2rem">Comprobante domicilario</Typography>
+              <DragImageUpload
+                files={filesProofOfResidency}
+                setFiles={setfilesProofOfResidency}
+                imgUrl={imgUrlProofOfResidency}
+                setimgUrl={setImgUrlProofOfResidency}
+              ></DragImageUpload>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography mb="2rem">INE frente</Typography>
+              <DragImageUpload
+                files={filesFrontINE}
+                setFiles={setfilesFrontINE}
+                imgUrl={imgUrlFrontIne}
+                setimgUrl={setImgUrlFrontIne}
+              ></DragImageUpload>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Typography mb="2rem">INE reverso</Typography>
+              <DragImageUpload
+                files={filesBackINE}
+                setFiles={setfilesBackINE}
+                imgUrl={imgUrlBackIne}
+                setimgUrl={setImgUrlBackIne}
+              ></DragImageUpload>
             </Grid>
             {/* DATOS DE IDENTIFICACIÓN */}
             <Grid item xs={12}>

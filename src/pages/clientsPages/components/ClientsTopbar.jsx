@@ -58,7 +58,10 @@ export const ClientsTopbar = () => {
   };
 
   return (
-    <AppBar position="relative" sx={{ position: { md: "fixed" } }}>
+    <AppBar
+      position="relative"
+      sx={{ position: { md: "fixed" }, zIndex: "100" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* LOGO BOX */}
