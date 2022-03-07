@@ -11,11 +11,7 @@ import { findObjectByProperty } from "../../../helpers/utilities";
 import { FcmPartnerFormik } from "../FcmPartnerFormik";
 import { FcmPartnerCard } from "./FcmPartnerCard";
 
-export const SelectFcmPartnerFromAccount = ({
-  handleSetPackageData,
-  handleNext,
-  setneedsConfirmation,
-}) => {
+export const SelectFcmPartnerFromAccount = () => {
   const { client } = useSelector((state) => state.clients);
   const [selectedFcmPartnerId, setselectedFcmPartnerId] = useState("");
   const [selectedFcmPartner, setselectedFcmPartner] = useState({});
@@ -30,7 +26,7 @@ export const SelectFcmPartnerFromAccount = ({
         selectedFcmPartnerId
       );
       setselectedFcmPartner(found);
-      setneedsConfirmation(true);
+
       dispatch(
         setFcmPackage({
           ...fcmPackage,
@@ -47,15 +43,13 @@ export const SelectFcmPartnerFromAccount = ({
           selectedFcmPartnerId
         )
       );
-      // handleSetPackageData(selectedFcmPartnerId);
+
       dispatch(setFcmPackageProperty(selectedFcmPartnerId));
     }
   }, [selectedFcmPartnerId]);
 
   const handleSubmit = () => {
-    handleSetPackageData(selectedFcmPartnerId);
-
-    handleNext();
+    dispatch(setFcmPackageProperty(selectedFcmPartnerId));
   };
 
   const options = client.linkedFcmPartners.map((fcmPartner) => {

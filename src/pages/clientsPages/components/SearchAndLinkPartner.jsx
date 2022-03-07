@@ -10,20 +10,21 @@ import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { startLoadingFcmPartners } from "../../../actions/fcmActions";
+import {
+  setFcmPackageNeedsConfirmation,
+  setFcmPackageProperty,
+  startLoadingFcmPartners,
+} from "../../../actions/fcmActions";
 import { userAddFcmPartner } from "../../../actions/userActions";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 import { excludeFromCollection } from "../../../helpers/utilities";
 
-export const SearchAndLinkPartner = ({
-  usedInProcedure = false,
-  handleSetPackageData,
-  handleNext,
-  setneedsConfirmation,
-}) => {
+export const SearchAndLinkPartner = () => {
   const dispatch = useDispatch();
   const { fcmPartners } = useSelector((state) => state.fcm);
   const { client } = useSelector((state) => state.clients);
+  const { fcmPackage } = useSelector((state) => state.fcm);
+
   const [fieldValue, setfieldValue] = useState("");
   const [filteredFcmPartners, setfilteredFcmPartners] = useState([]);
 
@@ -51,10 +52,10 @@ export const SearchAndLinkPartner = ({
   const handleSubmit = async (fcmPartner) => {
     await dispatch(userAddFcmPartner(client._id, fcmPartner));
 
-    if (usedInProcedure) {
+    if (fcmPackage) {
       // handleNext();
-      handleSetPackageData(fcmPartner._id);
-      setneedsConfirmation(true);
+      dispatch(setFcmPackageProperty(fcmPartner._id));
+      dispatch(setFcmPackageNeedsConfirmation(true));
     }
   };
 
@@ -129,7 +130,7 @@ export const SearchAndLinkPartner = ({
                     }}
                     color="primary"
                   >
-                    {usedInProcedure ? "Seleccionar" : "Vincular a mi cuenta"}
+                    {fcmPackage ? "Seleccionar" : "Vincular a mi cuenta"}
                   </Button>
                 </CardContent>
               </Card>

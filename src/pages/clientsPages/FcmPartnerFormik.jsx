@@ -28,12 +28,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 
-export const FcmPartnerFormik = ({
-  formTitle = "Agrega una identificación de socio",
-  showCancel,
-
-  setneedsConfirmation,
-}) => {
+export const FcmPartnerFormik = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   /*************************************************************************************************** */
@@ -44,11 +39,12 @@ export const FcmPartnerFormik = ({
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { activeStep, currentProps } = fcmPackage;
   const {
-    handleSetPackageData,
     isFirstRegister,
     isEditable,
     packageProperty,
     needsConfirmation,
+    formTitle,
+    showCancel,
   } = currentProps;
 
   const [filesFcmPartnerCard, setfilesFcmPartnerCard] = useState([]);
@@ -354,10 +350,10 @@ export const FcmPartnerFormik = ({
           ),
         })
       );
-      dispatch(setFcmPackageNeedsConfirmation(false));
-      // setneedsConfirmation(false);
-      dispatch(setFcmPackageStep(activeStep + 1));
     }
+    dispatch(setFcmPackageNeedsConfirmation(false));
+    // setneedsConfirmation(false);
+    dispatch(setFcmPackageStep(activeStep + 1));
   };
 
   /*************************************************************************************************** */

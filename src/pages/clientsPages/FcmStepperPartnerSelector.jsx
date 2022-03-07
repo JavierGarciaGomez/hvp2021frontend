@@ -9,7 +9,7 @@ import { SearchAndLinkPartner } from "./components/SearchAndLinkPartner";
 import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAccount";
 import { FcmPartnerFormik } from "./FcmPartnerFormik";
 
-export const FcmStepperPartnerSelector = ({ ...props }) => {
+export const FcmStepperPartnerSelector = ({ label }) => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
@@ -21,7 +21,7 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
     {
       label: "Socio vinculado previamente a mi cuenta",
       value: "previousLinked",
-      component: <SelectFcmPartnerFromAccount {...props} />,
+      component: <SelectFcmPartnerFromAccount />,
       functions: () => {
         dispatch(
           setFcmPackage({
@@ -39,7 +39,7 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
       label:
         "Socio no vinculado a mi cuenta, pero registrado en esta plataforma",
       value: "previousDataBase",
-      component: <SearchAndLinkPartner {...props} />,
+      component: <SearchAndLinkPartner />,
       functions: () => {
         dispatch(
           setFcmPackage({
@@ -56,7 +56,7 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
     {
       label: "Socio no registrado en esta plataforma",
       value: "newPartner",
-      component: <FcmPartnerFormik {...props} />,
+      component: <FcmPartnerFormik />,
       functions: () => {
         dispatch(
           setFcmPackage({
@@ -73,7 +73,7 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
     {
       label: "Socio, con credencial extraviada",
       value: "withoutCredential",
-      component: <LostPartnerCard {...props} />,
+      component: <LostPartnerCard />,
       functions: () => {
         dispatch(
           setFcmPackage({
@@ -90,7 +90,7 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
     {
       label: "Dar de alta a un socio que no está registrado en la FCM",
       value: "notRegisteredPartner",
-      component: <FcmPartnerFormik {...props} isFirstRegister={true} />,
+      component: <FcmPartnerFormik />,
       functions: () => {
         dispatch(
           setFcmPackage({
@@ -111,6 +111,25 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
       findObjectByProperty(options, "value", selectedCase).functions();
   }, [selectedCase]);
 
+  useEffect(() => {
+    setselectedCase("");
+  }, [fcmPackage.activeStep]);
+
+  useEffect(() => {
+    if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            isFirstRegister: true,
+            isEditable: false,
+          },
+        })
+      );
+    }
+  }, [fcmPackage.currentProps.packageProperty]);
+
   /*************************************************************************************************** */
   /**************************RENDER *********************************************************************/
   /*************************************************************************************************** */
@@ -123,10 +142,10 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
   return (
     <Box>
       <Typography variant="h4" component="h2" mb="3rem">
-        Propietario del padre
+        {label}
       </Typography>
       {fcmPackage[fcmPackage.currentProps.packageProperty] !== "" ? (
-        <FcmPartnerFormik {...props} />
+        <FcmPartnerFormik />
       ) : (
         <Fragment>
           <SimpleSelectWrapper

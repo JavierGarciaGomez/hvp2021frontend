@@ -27,7 +27,7 @@ export const ProcedurePedigree = () => {
 
   // todo delete
   // const [skipped, setSkipped] = useState(new Set());
-  const [passedProps, setpassedProps] = useState({});
+  // const [passedProps, setpassedProps] = useState({});
   const [needsConfirmation, setneedsConfirmation] = useState(false);
 
   // todo save the package in the reducer and in database
@@ -106,54 +106,35 @@ export const ProcedurePedigree = () => {
   /**************************Use effects  *****************************************************/
   /*************************************************************************************************** */
 
-  // todo: Delete
-  useEffect(() => {
-    setpassedProps({
-      handleSetPackageData: handleSetFatherOwnerId,
-      handleNext: handleNext,
-      packageProperty: "fcmFatherOwnerId",
-      editable: true,
-      usedInProcedure: true,
-      formTitle: "Agrega una identificación de socio",
-      showCancel: false,
-      needsConfirmation: false,
-      setneedsConfirmation,
-    });
-  }, []);
+  const defaultFcmPackage = {
+    isFirstRegister: false,
+    packageProperty: "",
+    isEditable: true,
+    formTitle: "Llena el formulario",
+    showCancel: false,
+    needsConfirmation: false,
+  };
 
-  // default props
+  // props according to step
   useEffect(() => {
-    console.log("esto acá");
+    // default
     dispatch(
       setFcmPackage({
         ...fcmPackage,
         currentProps: {
-          ...fcmPackage.currentProps,
-          setneedsConfirmation,
-          packageProperty: "",
-          iseditable: true,
-          usedInProcedure: true,
-          formTitle: "Llena el formulario",
-          showCancel: false,
-          needsConfirmation: false,
-          isFirstRegister: false,
+          ...defaultFcmPackage,
         },
       })
     );
-  }, []);
 
-  // props according to step
-  useEffect(() => {
     if (activeStep === 0) {
       dispatch(
         setFcmPackage({
           ...fcmPackage,
           currentProps: {
             ...fcmPackage.currentProps,
-            // handleNexto: handleNext,
-            handleSetPackageData: handleSetFatherOwnerId,
             packageProperty: "fatherOwnerId",
-            formTitle: "Identificación de socio...",
+            formTitle: "Identificación de socio",
           },
         })
       );
@@ -165,8 +146,8 @@ export const ProcedurePedigree = () => {
           ...fcmPackage,
           currentProps: {
             ...fcmPackage.currentProps,
-            handleSetPackageData: handleSetMotherOwnerId,
             packageProperty: "motherOwnerId",
+            formTitle: "Identificación de socio",
           },
         })
       );
@@ -177,43 +158,7 @@ export const ProcedurePedigree = () => {
     }
   }, [activeStep]);
 
-  console.log("**********Este es el paquete", fcmPackage, passedProps);
-
   // props according to situations
-
-  useEffect(() => {
-    if (fcmPackage.fcmFatherOwnerId) {
-      setpassedProps((prev) => ({
-        ...prev,
-        iseditable: false,
-        formTitle: "Paso cumplido",
-      }));
-    }
-
-    if (!fcmPackage.fcmFatherOwnerId) {
-      setpassedProps((prev) => ({
-        ...prev,
-        iseditable: true,
-        formTitle: "Agrega una identificación de socio",
-      }));
-    }
-
-    if (needsConfirmation) {
-      setpassedProps((prev) => ({
-        ...prev,
-        needsConfirmation: true,
-        formTitle: "Confirma al socio",
-      }));
-    }
-    if (!needsConfirmation) {
-      setpassedProps((prev) => ({
-        ...prev,
-        needsConfirmation: false,
-      }));
-    }
-  }, [fcmPackage.fcmFatherOwnerId, needsConfirmation]);
-
-  console.log("PASSED PROPS", passedProps);
 
   /*************************************************************************************************** */
   /**************************Steps *********************************************************************/
@@ -221,11 +166,11 @@ export const ProcedurePedigree = () => {
   const steps = [
     {
       label: "Propietario del padre",
-      component: <FcmStepperPartnerSelector {...passedProps} />,
+      component: <FcmStepperPartnerSelector label="Propietario del padre" />,
     },
     {
       label: "Propietario de la madre",
-      component: <FcmStepperPartnerSelector {...passedProps} />,
+      component: <FcmStepperPartnerSelector label="Propietario de la madre" />,
     },
     { label: "Padre camada", component: <Box>Boxarrón</Box> },
     { label: "Madre camada", component: <Box>Boxarrón</Box> },

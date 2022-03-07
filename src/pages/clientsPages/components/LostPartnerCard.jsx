@@ -6,7 +6,7 @@ import { setFcmPackage } from "../../../actions/fcmActions";
 import { fireSwalSuccess, includeInPackage } from "../../../helpers/utilities";
 import { FcmPartnerFormik } from "../FcmPartnerFormik";
 
-export const LostPartnerCard = ({ ...props }) => {
+export const LostPartnerCard = () => {
   const dispatch = useDispatch();
   const { fcmPackage } = useSelector((state) => state.fcm);
   const [showForm, setshowForm] = useState(false);
@@ -69,13 +69,7 @@ export const LostPartnerCard = ({ ...props }) => {
         </Box>
       )}
 
-      {showForm && (
-        <FcmPartnerFormik
-          {...props}
-          isFirstRegister={true}
-          formTitle="Llena el formulario"
-        />
-      )}
+      {showForm && <FcmPartnerFormik />}
     </Fragment>
   );
 };

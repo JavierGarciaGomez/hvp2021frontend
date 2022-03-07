@@ -11,12 +11,10 @@ const initialState = {
     activeStep: 0,
     skippedSteps: new Set(),
     currentProps: {
-      handleSetPackageData: () => {},
-      setneedsConfirmation: () => {},
       isFirstRegister: false,
       packageProperty: "",
       isEditable: true,
-      formTitle: "Agrega una identificación de socio.",
+      formTitle: "Llena el formulario",
       showCancel: false,
       needsConfirmation: false,
     },
