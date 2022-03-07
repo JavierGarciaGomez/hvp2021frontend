@@ -104,7 +104,7 @@ export const userAddFcmPartner = (userId, fcmPartner) => {
       if (body.ok) {
         Swal.fire({
           icon: "success",
-          title: "Registro desvinculado correctamente",
+          title: "Registro vinculado correctamente",
           showConfirmButton: false,
           timer: 1500,
         });

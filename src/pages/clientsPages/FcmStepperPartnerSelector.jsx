@@ -9,7 +9,7 @@ import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAc
 import { FcmPartnerFormik } from "./FcmPartnerFormik";
 
 export const FcmStepperPartnerSelector = ({ ...props }) => {
-  const { packageProperty, needsConfirmation } = { ...props };
+  const { packageProperty } = { ...props };
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
@@ -36,12 +36,12 @@ export const FcmStepperPartnerSelector = ({ ...props }) => {
     {
       label: "Socio, con credencial extraviada",
       value: "withoutCredential",
-      component: <LostPartnerCard />,
+      component: <LostPartnerCard {...props} />,
     },
     {
       label: "Dar de alta a un socio que no está registrado en la FCM",
       value: "notRegisteredPartner",
-      component: <FcmPartnerFormik {...props} />,
+      component: <FcmPartnerFormik {...props} isFirstRegister={true} />,
     },
   ];
 

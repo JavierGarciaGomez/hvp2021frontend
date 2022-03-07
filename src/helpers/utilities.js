@@ -1022,3 +1022,29 @@ export const replaceElementInCollection = (object, collection) => {
     }
   });
 };
+
+export const includeInPackage = (collection = [], object, propertyName) => {
+  console.log(
+    "*****************esto recibo, ",
+    "collection",
+    collection,
+    "object",
+    object,
+    "propName",
+    propertyName
+  );
+  if (!collection) {
+    return [object];
+  }
+  const index = collection.findIndex(
+    (element) => element[propertyName] === object[propertyName]
+  );
+
+  if (index >= 0) {
+    collection[index] = object;
+  } else {
+    collection.push(object);
+  }
+  console.log("++++++++++++Esto devolveré", [...collection]);
+  return [...collection];
+};

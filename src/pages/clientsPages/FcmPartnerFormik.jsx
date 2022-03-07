@@ -11,6 +11,7 @@ import {
 import {
   fireSwalConfirmation,
   fireSwalError,
+  includeInPackage,
   isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
@@ -23,7 +24,6 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
-import { includeInCollectionIfDoesntExist } from "../../reducers/fcmReducer";
 
 export const FcmPartnerFormik = ({
   handleSetPackageData,
@@ -55,6 +55,15 @@ export const FcmPartnerFormik = ({
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
   const [isEditable, setIsEditable] = useState(editable);
   const [fcmPartner, setfcmPartner] = useState(null);
+  const [isPending, setisPending] = useState(false);
+
+  /*************************************************************************************************** */
+  /**************************use effects  **************************************************************/
+  /*************************************************************************************************** */
+
+  useEffect(() => {
+    setIsEditable(editable);
+  }, [editable]);
 
   // find fcmPartner and set it active (searching from id)
   useEffect(() => {
@@ -77,9 +86,7 @@ export const FcmPartnerFormik = ({
         return setformValues(foundWithAddress);
       }
     }
-  }, [client]);
-
-  console.log("FCM FORMIK fcmpartner", fcmPartner);
+  }, []);
 
   // find fcmPartner and set it active (searching from package)
   useEffect(() => {
@@ -88,6 +95,7 @@ export const FcmPartnerFormik = ({
       let found = client.linkedFcmPartners.find(
         (el) => el._id === fcmPackage[packageProperty]
       );
+      console.log("esto encontré", found);
       setfcmPartner(found);
 
       // set active fcmPartner
@@ -108,6 +116,20 @@ export const FcmPartnerFormik = ({
       }
     }
   }, [fcmPackage]);
+
+  useEffect(() => {
+    if (fcmPartner && fcmPartner.isPending) {
+      setisPending(fcmPartner.isPending);
+    } else {
+      setisPending(isFirstRegister);
+    }
+  }, [isFirstRegister, fcmPartner]);
+
+  console.log("isPending", isPending, fcmPartner);
+
+  /*************************************************************************************************** */
+  /************************** Initial values and validation *******************************************************/
+  /*************************************************************************************************** */
 
   let initialValues = {
     firstName: "",
@@ -156,7 +178,7 @@ export const FcmPartnerFormik = ({
       .required("Es obligatorio"),
   };
 
-  if (!isFirstRegister) {
+  if (!isPending) {
     validationParams = {
       ...validationParams,
       partnerNum: Yup.string().trim().required("Es obligatorio"),
@@ -170,13 +192,12 @@ export const FcmPartnerFormik = ({
 
   console.log("estos son los form values", formValues);
 
-  const handleSubmit = async (values) => {
-    // if the date is going to expire in the next 2 weeks ask confirmation
+  /*************************************************************************************************** */
+  /************************** Handlers *******************************************************/
+  /*************************************************************************************************** */
 
-    console.log(
-      "a ver al cine",
-      dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))
-    );
+  const handleSubmit = async (values) => {
+    // if the date is going to expire in the next 2 weeks ask confirmatio
 
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
@@ -185,13 +206,19 @@ export const FcmPartnerFormik = ({
       if (!confirmation) {
         return;
       }
+      console.log("+++++++++++++esto es el packageproperty", packageProperty);
       dispatch(
         setFcmPackage({
           ...fcmPackage,
-          procedures: includeInCollectionIfDoesntExist(fcmPackage.procedures, {
-            procedure: "fcmRenewal",
-            _id: values._id,
-          }),
+          procedures: includeInPackage(
+            fcmPackage.procedures,
+            {
+              packageProperty,
+              procedure: "fcmRenewal",
+              _id: values._id,
+            },
+            packageProperty
+          ),
         })
       );
     }
@@ -204,7 +231,7 @@ export const FcmPartnerFormik = ({
       },
     });
 
-    if (!isFirstRegister) {
+    if (!isPending) {
       if (filesFcmPartnerCard.length === 0 && !imgUrlPartnerCard) {
         return fireSwalError("Se debe cargar la imagen de la tarjeta");
       }
@@ -224,15 +251,20 @@ export const FcmPartnerFormik = ({
     let newValues = { ...values };
     // if there is a new file refresh the image
 
-    if (!isFirstRegister) {
+    if (!isPending) {
       newValues = await setUrlValueOrRefreshImage(
         newValues,
         filesFcmPartnerCard,
         "urlPartnerCard",
         imgUrlPartnerCard
       );
+      newValues.isPending = false;
     } else {
-      newValues.partnerNum = `En trámite - ${newValues.firstName} ${newValues.paternalSurname}`;
+      newValues.partnerNum = `En trámite - ${newValues.firstName} ${
+        newValues.paternalSurname
+      } - ${dayjs()}`;
+      newValues.isPending = true;
+      newValues.expirationDate = "";
     }
     newValues = await setUrlValueOrRefreshImage(
       newValues,
@@ -270,9 +302,9 @@ export const FcmPartnerFormik = ({
     // if there is an ID: update. If not: create
     if (newValues._id) {
       console.log("FCM PARTNER FORMIK, llegué");
+      Swal.close();
       const fcmPartnerId = await dispatch(updateFcmPartner(newValues));
 
-      Swal.close();
       if (fcmPartnerId) {
         if (handleSetPackageData) {
           handleSetPackageData(fcmPartnerId);
@@ -283,8 +315,8 @@ export const FcmPartnerFormik = ({
         // navigate(`/dashboard/documentation`);
       }
     } else {
-      const fcmPartnerId = await dispatch(createFcmPartner(newValues));
       Swal.close();
+      const fcmPartnerId = await dispatch(createFcmPartner(newValues));
       if (fcmPartnerId) {
         // submit to parent
         if (handleSetPackageData) {
@@ -309,16 +341,25 @@ export const FcmPartnerFormik = ({
       dispatch(
         setFcmPackage({
           ...fcmPackage,
-          procedures: includeInCollectionIfDoesntExist(fcmPackage.procedures, {
-            procedure: "fcmRenewal",
-            _id: values._id,
-          }),
+          procedures: includeInPackage(
+            fcmPackage.procedures,
+            {
+              packageProperty,
+              procedure: "fcmRenewal",
+              _id: values._id,
+            },
+            "packageProperty"
+          ),
         })
       );
       setneedsConfirmation(false);
       handleNext();
     }
   };
+
+  /*************************************************************************************************** */
+  /************************** RENDER *******************************************************/
+  /*************************************************************************************************** */
 
   return (
     <Fragment>
@@ -428,7 +469,7 @@ export const FcmPartnerFormik = ({
               </Typography>
             </Grid>
             {/* tarjeta de socio */}
-            {!isFirstRegister && (
+            {!isPending && (
               <Grid item xs={12} md={6}>
                 <Typography mb="2rem">Tarjeta de socio</Typography>
                 <DragImageUpload
@@ -497,7 +538,7 @@ export const FcmPartnerFormik = ({
                 disabled={!isEditable}
               />
             </Grid>
-            {!isFirstRegister && (
+            {!isPending && (
               <Fragment>
                 <Grid item xs={12} md={6}>
                   <TextFieldWrapper

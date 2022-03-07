@@ -30,16 +30,3 @@ export const fcmReducer = (state = initialState, action) => {
       return state;
   }
 };
-
-export const includeInCollectionIfDoesntExist = (collection, object) => {
-  let alreadyExists = false;
-  collection.map((element) => {
-    if (element._id === object._id) {
-      alreadyExists = true;
-    }
-  });
-  if (!alreadyExists) {
-    collection.push(object);
-  }
-  return collection;
-};

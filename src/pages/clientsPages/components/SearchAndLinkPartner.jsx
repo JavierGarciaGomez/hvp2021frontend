@@ -17,8 +17,9 @@ import { excludeFromCollection } from "../../../helpers/utilities";
 
 export const SearchAndLinkPartner = ({
   usedInProcedure = false,
-  handleSetFatherOwnerId,
+  handleSetPackageData,
   handleNext,
+  setneedsConfirmation,
 }) => {
   const dispatch = useDispatch();
   const { fcmPartners } = useSelector((state) => state.fcm);
@@ -47,12 +48,13 @@ export const SearchAndLinkPartner = ({
     setfilteredFcmPartners(fcmPartnersFound);
   };
 
-  const handleSubmit = (fcmPartner) => {
-    dispatch(userAddFcmPartner(client._id, fcmPartner));
+  const handleSubmit = async (fcmPartner) => {
+    await dispatch(userAddFcmPartner(client._id, fcmPartner));
 
     if (usedInProcedure) {
-      handleNext();
-      handleSetFatherOwnerId(fcmPartner._id);
+      // handleNext();
+      handleSetPackageData(fcmPartner._id);
+      setneedsConfirmation(true);
     }
   };
 

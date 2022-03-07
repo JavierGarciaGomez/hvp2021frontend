@@ -95,7 +95,7 @@ export const ProcedurePedigree = () => {
       packageProperty: "fcmFatherOwnerId",
       editable: true,
       usedInProcedure: true,
-      formTitle: "Agrega una identificación de socio...",
+      formTitle: "Agrega una identificación de socio",
       showCancel: false,
       needsConfirmation: false,
       setneedsConfirmation,
@@ -110,6 +110,14 @@ export const ProcedurePedigree = () => {
         ...prev,
         editable: false,
         formTitle: "Paso cumplido",
+      }));
+    }
+
+    if (!fcmPackage.fcmFatherOwnerId) {
+      setpassedProps((prev) => ({
+        ...prev,
+        editable: true,
+        formTitle: "Agrega una identificación de socio",
       }));
     }
 
