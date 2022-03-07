@@ -1,68 +1,47 @@
 import { Box, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
+import { useSelector } from "react-redux";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";
+import { LostPartnerCard } from "./components/LostPartnerCard";
 import { SearchAndLinkPartner } from "./components/SearchAndLinkPartner";
 import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAccount";
 import { FcmPartnerFormik } from "./FcmPartnerFormik";
 
-export const FcmStepperPartnerSelector = ({
-  handleSetFatherOwnerId,
-  handleNext,
-}) => {
+export const FcmStepperPartnerSelector = ({ ...props }) => {
+  const { packageProperty } = { ...props };
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-
   const [selectedCase, setselectedCase] = useState("");
+  const { fcmPackage } = useSelector((state) => state.fcm);
 
   const options = [
     {
       label: "Socio vinculado previamente a mi cuenta",
       value: "previousLinked",
-      component: (
-        <SelectFcmPartnerFromAccount
-          handleSetFatherOwnerId={handleSetFatherOwnerId}
-          handleNext={handleNext}
-        />
-      ),
+      component: <SelectFcmPartnerFromAccount {...props} />,
     },
     {
       label:
         "Socio no vinculado a mi cuenta, pero registrado en esta plataforma",
       value: "previousDataBase",
-      component: (
-        <SearchAndLinkPartner
-          handleSetFatherOwnerId={handleSetFatherOwnerId}
-          handleNext={handleNext}
-          usedInProcedure={true}
-        />
-      ),
+      component: <SearchAndLinkPartner {...props} />,
     },
     {
       label: "Socio no registrado en esta plataforma",
       value: "newPartner",
-      component: (
-        <FcmPartnerFormik
-          handleSetFatherOwnerId={handleSetFatherOwnerId}
-          handleNext={handleNext}
-        />
-      ),
+      component: <FcmPartnerFormik {...props} />,
     },
     {
       label: "Socio, con credencial extraviada",
       value: "withoutCredential",
+      component: <LostPartnerCard />,
     },
     {
       label: "Dar de alta a un socio que no está registrado en la FCM",
       value: "notRegisteredPartner",
-      component: (
-        <FcmPartnerFormik
-          handleSetFatherOwnerId={handleSetFatherOwnerId}
-          handleNext={handleNext}
-          isFirstRegister={true}
-        />
-      ),
+      component: <FcmPartnerFormik {...props} />,
     },
   ];
 
@@ -72,18 +51,24 @@ export const FcmStepperPartnerSelector = ({
 
   return (
     <Box>
-      <Typography variant="h5" component="h2" mb="3rem">
+      <Typography variant="h4" component="h2" mb="3rem">
         Propietario del padre
       </Typography>
-      <SimpleSelectWrapper
-        options={options}
-        label="Selecciona el caso"
-        value={selectedCase}
-        setValue={setselectedCase}
-      />
-      {/* change according to selection */}
-      {selectedCase !== "" &&
-        findObjectByProperty(options, "value", selectedCase).component}
+      {fcmPackage[packageProperty] && <FcmPartnerFormik {...props} />}
+      {!fcmPackage[packageProperty] && (
+        <Fragment>
+          <SimpleSelectWrapper
+            options={options}
+            label="Selecciona el caso"
+            value={selectedCase}
+            setValue={setselectedCase}
+          />
+          {/* change according to selection */}
+          {selectedCase !== "" &&
+            findObjectByProperty(options, "value", selectedCase).component}
+        </Fragment>
+      )}
+
       {/* <FormControl fullWidth>
         <InputLabel>Selecciona el trámite</InputLabel>
         <Select label="Propietario del Padre" onChange={handleSelect}>

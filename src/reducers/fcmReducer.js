@@ -6,7 +6,9 @@ const initialState = {
   // client: {},
   fcmsIsLoading: true,
   fcmPartners: [],
-  fcmPackage: {},
+  fcmPackage: {
+    procedures: [],
+  },
 };
 
 export const fcmReducer = (state = initialState, action) => {
@@ -27,4 +29,17 @@ export const fcmReducer = (state = initialState, action) => {
     default:
       return state;
   }
+};
+
+export const includeInCollectionIfDoesntExist = (collection, object) => {
+  let alreadyExists = false;
+  collection.map((element) => {
+    if (element._id === object._id) {
+      alreadyExists = true;
+    }
+  });
+  if (!alreadyExists) {
+    collection.push(object);
+  }
+  return collection;
 };

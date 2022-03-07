@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFcmPackage } from "../../actions/fcmActions";
@@ -17,9 +18,11 @@ export const ProcedurePedigree = () => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [passedProps, setpassedProps] = useState({});
   // todo save the package in the reducer and in database
+
   // fcmPackage is the main object created through the stepper
   const { fcmPackage } = useSelector((state) => state.fcm);
 
@@ -29,8 +32,6 @@ export const ProcedurePedigree = () => {
   const handleSetFatherOwnerId = (id) => {
     dispatch(setFcmPackage({ ...fcmPackage, fcmFatherOwnerId: id }));
   };
-
-  console.log("Procedure pedigree. This is the package", fcmPackage);
 
   /*************************************************************************************************** */
   /**************************Functions related to the stepper *******************************************/
@@ -45,6 +46,7 @@ export const ProcedurePedigree = () => {
   };
 
   const handleNext = () => {
+    console.log("PROCPEDIGREE NEXT");
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -79,15 +81,39 @@ export const ProcedurePedigree = () => {
   /*************************************************************************************************** */
   /**************************Steps *********************************************************************/
   /*************************************************************************************************** */
+
+  /*************************************************************************************************** */
+  /**************************Use effects  *****************************************************/
+  /*************************************************************************************************** */
+
+  useEffect(() => {
+    setpassedProps({
+      handleSetPackageData: handleSetFatherOwnerId,
+      handleNext,
+      packageProperty: "fcmFatherOwnerId",
+      editable: true,
+      usedInProcedure: true,
+      formTitle: "Agrega una identificación de socio...",
+      showCancel: false,
+    });
+  }, []);
+
+  console.log("Este es el paquete", fcmPackage, passedProps);
+
+  useEffect(() => {
+    if (fcmPackage.fcmFatherOwnerId) {
+      setpassedProps((prev) => ({
+        ...prev,
+        editable: false,
+        formTitle: "Paso cumplido",
+      }));
+    }
+  }, [fcmPackage.fcmFatherOwnerId]);
+
   const steps = [
     {
       label: "Propietario del padre",
-      component: (
-        <FcmStepperPartnerSelector
-          handleSetFatherOwnerId={handleSetFatherOwnerId}
-          handleNext={handleNext}
-        />
-      ),
+      component: <FcmStepperPartnerSelector {...passedProps} />,
     },
     { label: "Padre camada", component: <Box>Boxarrón</Box> },
     { label: "Propietario de la madre", component: <Box>Boxarrón</Box> },

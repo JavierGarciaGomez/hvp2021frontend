@@ -1,6 +1,10 @@
 import Swal from "sweetalert2";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
-import { fireSwalError, fireSwalSuccess } from "../helpers/utilities";
+import {
+  fireSwalError,
+  fireSwalSuccess,
+  replaceElementInCollection,
+} from "../helpers/utilities";
 import { types } from "../types/types";
 import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
@@ -72,10 +76,13 @@ export const updateFcmPartner = (object) => {
 
       if (body.ok) {
         const client = getState().clients.client;
-        client.linkedFcmPartners.push(body.saved);
+        client.linkedFcmPartners = replaceElementInCollection(
+          object,
+          client.linkedFcmPartners
+        );
         dispatch(updateClientReducer({ ...client }));
         fireSwalSuccess(body.msg);
-        return body.saved._id;
+        return body.updatedData._id;
       } else {
         fireSwalError(body.msg);
         return false;

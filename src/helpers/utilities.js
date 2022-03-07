@@ -1012,3 +1012,13 @@ export const setUrlValueOrRefreshImage = async (
 
   return { ...newValues };
 };
+
+export const replaceElementInCollection = (object, collection) => {
+  return collection.map((element) => {
+    if (element._id === object._id) {
+      return object;
+    } else {
+      return element;
+    }
+  });
+};

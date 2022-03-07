@@ -3,41 +3,46 @@ import React, { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { createFcmPartner, updateFcmPartner } from "../../actions/fcmActions";
-import { uploadImg } from "../../helpers/uploadImg";
 import {
+  createFcmPartner,
+  setFcmPackage,
+  updateFcmPartner,
+} from "../../actions/fcmActions";
+import {
+  fireSwalConfirmation,
   fireSwalError,
   isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Grid,
-  InputLabel,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
 import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
 import { DragImageUpload } from "../../components/formsUI/DragImageUpload";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { clientStartLoading } from "../../actions/clientsActions";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
+import { includeInCollectionIfDoesntExist } from "../../reducers/fcmReducer";
 
 export const FcmPartnerFormik = ({
-  handleSetFatherOwnerId,
+  handleSetPackageData,
   handleNext,
   isFirstRegister = false,
+  packageProperty,
+  editable = true,
+  formTitle = "Agrega una identificación de socio",
+  showCancel,
 }) => {
+  console.log("FCM FORMIK editable", editable);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  /*************************************************************************************************** */
+  /**************************usestates and useselectors ******** ***************************************/
+  /*************************************************************************************************** */
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
-  const { uid } = useSelector((state) => state.auth);
+  const { fcmPackage } = useSelector((state) => state.fcm);
   const [filesFcmPartnerCard, setfilesFcmPartnerCard] = useState([]);
   const [filesProofOfResidency, setfilesProofOfResidency] = useState([]);
   const [filesFrontINE, setfilesFrontINE] = useState([]);
@@ -46,6 +51,57 @@ export const FcmPartnerFormik = ({
   const [imgUrlProofOfResidency, setImgUrlProofOfResidency] = useState(null);
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
+  const [isEditable, setIsEditable] = useState(editable);
+
+  // find fcmPartner and set it active (searching from id)
+  useEffect(() => {
+    if (!isObjectEmpty(client)) {
+      let found = client.linkedFcmPartners.find((el) => el._id === id);
+      // set active fcmPartner
+      if (found) {
+        // set the image found to be used in the component
+        setImgUrlPartnerCard(found.urlPartnerCard);
+        setImgUrlProofOfResidency(found.urlProofOfResidency);
+        setImgUrlFrontIne(found.urlFrontIne);
+        setImgUrlBackIne(found.urlBackIne);
+
+        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
+        const { address } = found;
+
+        const foundWithAddress = { ...found, ...address };
+        console.log("foundwithaddress", foundWithAddress);
+
+        return setformValues(foundWithAddress);
+      }
+    }
+  }, [client]);
+
+  // find fcmPartner and set it active (searching from package)
+  useEffect(() => {
+    console.log("Formik", fcmPackage);
+    if (fcmPackage[packageProperty]) {
+      let found = client.linkedFcmPartners.find(
+        (el) => el._id === fcmPackage[packageProperty]
+      );
+      console.log("Adentro del if", found);
+      // set active fcmPartner
+      if (found) {
+        // set the image found to be used in the component
+        setImgUrlPartnerCard(found.urlPartnerCard);
+        setImgUrlProofOfResidency(found.urlProofOfResidency);
+        setImgUrlFrontIne(found.urlFrontIne);
+        setImgUrlBackIne(found.urlBackIne);
+
+        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
+        const { address } = found;
+
+        const foundWithAddress = { ...found, ...address };
+        console.log("foundwithaddress", foundWithAddress);
+
+        return setformValues(foundWithAddress);
+      }
+    }
+  }, [fcmPackage]);
 
   let initialValues = {
     firstName: "",
@@ -106,32 +162,42 @@ export const FcmPartnerFormik = ({
 
   const [formValues, setformValues] = useState(initialValues);
 
-  // find fcmPartner and set it active
-  useEffect(() => {
-    if (!isObjectEmpty(client)) {
-      let found = client.linkedFcmPartners.find((el) => el._id === id);
-      // set active fcmPartner
-      if (found) {
-        console.log("esto encontré", found);
-        // set the image found to be used in the component
-        setImgUrlPartnerCard(found.urlPartnerCard);
-        setImgUrlProofOfResidency(found.urlProofOfResidency);
-        setImgUrlFrontIne(found.urlFrontIne);
-        setImgUrlBackIne(found.urlBackIne);
-
-        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
-        const { address } = found;
-
-        const foundWithAddress = { ...found, ...address };
-        console.log("foundwithaddress", foundWithAddress);
-
-        return setformValues(foundWithAddress);
-      }
-    }
-  }, [client]);
+  console.log("estos son los form values", formValues);
 
   const handleSubmit = async (values) => {
-    // if there is no imgurl or no file, Error
+    // if the date is going to expire in the next 2 weeks ask confirmation
+
+    console.log(
+      "a ver al cine",
+      dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))
+    );
+
+    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
+      const confirmation = await fireSwalConfirmation(
+        "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
+      );
+      if (!confirmation) {
+        return;
+      }
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          procedures: includeInCollectionIfDoesntExist(fcmPackage.procedures, {
+            procedure: "fcmRenewal",
+            _id: values._id,
+          }),
+        })
+      );
+    }
+    Swal.fire({
+      title: "Cargando información",
+      text: "Por favor, espere",
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     if (!isFirstRegister) {
       if (filesFcmPartnerCard.length === 0 && !imgUrlPartnerCard) {
         return fireSwalError("Se debe cargar la imagen de la tarjeta");
@@ -197,22 +263,26 @@ export const FcmPartnerFormik = ({
 
     // if there is an ID: update. If not: create
     if (newValues._id) {
+      console.log("FCM PARTNER FORMIK, llegué");
       const fcmPartnerId = await dispatch(updateFcmPartner(newValues));
 
+      Swal.close();
       if (fcmPartnerId) {
-        if (handleSetFatherOwnerId) {
-          handleSetFatherOwnerId(fcmPartnerId);
+        if (handleSetPackageData) {
+          handleSetPackageData(fcmPartnerId);
           handleNext();
+          console.log("TERMINÉ");
         }
         // navigate to previous page or profile
         // navigate(`/dashboard/documentation`);
       }
     } else {
       const fcmPartnerId = await dispatch(createFcmPartner(newValues));
+      Swal.close();
       if (fcmPartnerId) {
         // submit to parent
-        if (handleSetFatherOwnerId) {
-          handleSetFatherOwnerId(fcmPartnerId);
+        if (handleSetPackageData) {
+          handleSetPackageData(fcmPartnerId);
           handleNext();
         }
         // navigate(`/dashboard/documentation`);
@@ -222,9 +292,51 @@ export const FcmPartnerFormik = ({
 
   return (
     <Fragment>
-      <Typography component="h2" variant="h4" mb="2rem">
-        Agrega una identificación de socio
+      <Typography component="h2" variant="h5" mb="2rem">
+        {formTitle}
       </Typography>
+
+      {!isEditable && (
+        <Box sx={{ mb: "3rem" }}>
+          <Typography sx={{ mb: "2rem", lineHeight: "1.5" }}>
+            Los datos de socio del propietario del padre han sido llenados,
+            puedes continuar con el paso siguiente, editar los datos o remover
+            la selección.
+          </Typography>
+          <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
+            <Button
+              variant="contained"
+              fullWidth={true}
+              onClick={() => {
+                handleNext();
+              }}
+              color="primary"
+            >
+              Siguiente paso
+            </Button>
+            <Button
+              variant="contained"
+              fullWidth={true}
+              onClick={() => {
+                setIsEditable((prev) => !prev);
+              }}
+              color="primary"
+            >
+              Editar información
+            </Button>
+            <Button
+              variant="contained"
+              fullWidth={true}
+              onClick={() => {
+                handleSetPackageData("");
+              }}
+              color="error"
+            >
+              Remover
+            </Button>
+          </Box>
+        </Box>
+      )}
 
       {/* Nota */}
       <Box
@@ -236,16 +348,8 @@ export const FcmPartnerFormik = ({
           mb: "5rem",
         }}
       >
-        <Typography component="h3" variant="h5" mb="2rem" fontWeight="bold">
+        <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
           Notas:
-        </Typography>
-        <Typography mb="1rem">
-          Solo es necesario llenar los datos marcados con un asterisco cuando se
-          trate de vincular una tarjeta ajena a la cuenta.
-        </Typography>
-        <Typography mb="1rem">
-          Cuando se trate de una tarjeta propia, de una nueva tarjeta o de una
-          renovación, se deberán llenar todos los datos.
         </Typography>
         <Typography mb="1rem">
           Las imágenes deben tener un tamaño máximo de 1mb.
@@ -259,7 +363,6 @@ export const FcmPartnerFormik = ({
           el comprobante domiciliario no sea anterior a 3 meses. En su caso,
           reemplazar la imagen
         </Typography>
-        <p></p>
       </Box>
 
       {/* Formik */}
@@ -289,6 +392,7 @@ export const FcmPartnerFormik = ({
                   setFiles={setfilesFcmPartnerCard}
                   imgUrl={imgUrlPartnerCard}
                   setimgUrl={setImgUrlPartnerCard}
+                  editable={isEditable}
                 ></DragImageUpload>
               </Grid>
             )}
@@ -299,6 +403,7 @@ export const FcmPartnerFormik = ({
                 setFiles={setfilesProofOfResidency}
                 imgUrl={imgUrlProofOfResidency}
                 setimgUrl={setImgUrlProofOfResidency}
+                editable={isEditable}
               ></DragImageUpload>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -308,6 +413,7 @@ export const FcmPartnerFormik = ({
                 setFiles={setfilesFrontINE}
                 imgUrl={imgUrlFrontIne}
                 setimgUrl={setImgUrlFrontIne}
+                editable={isEditable}
               ></DragImageUpload>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -317,6 +423,7 @@ export const FcmPartnerFormik = ({
                 setFiles={setfilesBackINE}
                 imgUrl={imgUrlBackIne}
                 setimgUrl={setImgUrlBackIne}
+                editable={isEditable}
               ></DragImageUpload>
             </Grid>
             {/* DATOS DE IDENTIFICACIÓN */}
@@ -326,18 +433,24 @@ export const FcmPartnerFormik = ({
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="firstName" label="Nombre (s)*" />
+              <TextFieldWrapper
+                name="firstName"
+                label="Nombre (s)*"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextFieldWrapper
                 name="paternalSurname"
                 label="Apellido paterno*"
+                disabled={!isEditable}
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextFieldWrapper
                 name="maternalSurname"
                 label="Apellido materno*"
+                disabled={!isEditable}
               />
             </Grid>
             {!isFirstRegister && (
@@ -346,12 +459,14 @@ export const FcmPartnerFormik = ({
                   <TextFieldWrapper
                     name="partnerNum"
                     label="Número de socio*"
+                    disabled={!isEditable}
                   />
                 </Grid>{" "}
                 <Grid item xs={12} md={6}>
                   <DatePickerFieldWrapper
                     name="expirationDate"
                     label="Fecha de expiración*"
+                    disabled={!isEditable}
                   />
                 </Grid>
               </Fragment>
@@ -364,28 +479,53 @@ export const FcmPartnerFormik = ({
               </Typography>
             </Grid>
             <Grid item xs={12} md={3}>
-              <TextFieldWrapper name="street" label="Calle" />
+              <TextFieldWrapper
+                name="street"
+                label="Calle"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={3}>
-              <TextFieldWrapper name="number" label="Número" />
+              <TextFieldWrapper
+                name="number"
+                label="Número"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={3}>
               <TextFieldWrapper
                 name="suburb"
                 label="Colonia o fraccionamiento"
+                disabled={!isEditable}
               />
             </Grid>
             <Grid item xs={12} md={3}>
-              <TextFieldWrapper name="postalCode" label="Código postal" />
+              <TextFieldWrapper
+                name="postalCode"
+                label="Código postal"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="city" label="Ciudad" />
+              <TextFieldWrapper
+                name="city"
+                label="Ciudad"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="state" label="State" />
+              <TextFieldWrapper
+                name="state"
+                label="State"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="country" label="Country" />
+              <TextFieldWrapper
+                name="country"
+                label="Country"
+                disabled={!isEditable}
+              />
             </Grid>
             {/* CONTACT */}
             <Grid item xs={12}>
@@ -394,27 +534,43 @@ export const FcmPartnerFormik = ({
               </Typography>
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="homePhone" label="Teléfono" />
+              <TextFieldWrapper
+                name="homePhone"
+                label="Teléfono"
+                disabled={!isEditable}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="mobilePhone" label="Teléfono móvil" />
+              <TextFieldWrapper
+                name="mobilePhone"
+                label="Teléfono móvil"
+                disabled={!isEditable}
+              />
             </Grid>
-            <Grid item xs={12} md={4}>
-              <TextFieldWrapper name="email" label="Correo electrónico" />
+            <Grid item xs={12} md={4} mb={2}>
+              <TextFieldWrapper
+                name="email"
+                label="Correo electrónico"
+                disabled={!isEditable}
+              />
             </Grid>
-            <Grid item xs={6}>
-              <ButtonFormWrapper> Guardar</ButtonFormWrapper>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                fullWidth={true}
-                // onClick={handleSubmit}
-                color="error"
-              >
-                Cancelar
-              </Button>
-            </Grid>
+            {isEditable && (
+              <Grid item xs={12} mb={2}>
+                <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
+                  <ButtonFormWrapper> Guardar</ButtonFormWrapper>
+                  {showCancel && (
+                    <Button
+                      variant="contained"
+                      fullWidth={true}
+                      // onClick={handleSubmit}
+                      color="error"
+                    >
+                      Cancelar
+                    </Button>
+                  )}
+                </Box>
+              </Grid>
+            )}
           </Grid>
         </Form>
       </Formik>

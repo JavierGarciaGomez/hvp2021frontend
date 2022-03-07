@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-export const DragImageUpload = ({ files, setFiles, imgUrl, setimgUrl }) => {
+export const DragImageUpload = ({
+  files,
+  setFiles,
+  imgUrl,
+  setimgUrl,
+  editable,
+}) => {
   // console.log("esta imgurl recibí", imgUrl);
   const images = files.map((file) => (
     <div key={file.name}>
@@ -26,17 +32,23 @@ export const DragImageUpload = ({ files, setFiles, imgUrl, setimgUrl }) => {
 
   return (
     <div>
-      <div {...getRootProps({ className: "c-dropzone" })}>
-        <input {...getInputProps()} />
+      {editable ? (
+        <div {...getRootProps({ className: "c-dropzone" })}>
+          <input {...getInputProps()} />
 
-        {files.length > 0 ? (
-          <div>{images}</div>
-        ) : imgUrl ? (
+          {files.length > 0 ? (
+            <div>{images}</div>
+          ) : imgUrl ? (
+            <img src={imgUrl} />
+          ) : (
+            <p>Arrastra acá la imagen o da click para seleccionar una</p>
+          )}
+        </div>
+      ) : (
+        <div className="">
           <img src={imgUrl} />
-        ) : (
-          <p>Arrastra acá la imagen o da click para seleccionar una</p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

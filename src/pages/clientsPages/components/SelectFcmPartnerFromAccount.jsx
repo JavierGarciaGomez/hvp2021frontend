@@ -7,7 +7,7 @@ import { FcmPartnerFormik } from "../FcmPartnerFormik";
 import { FcmPartnerCard } from "./FcmPartnerCard";
 
 export const SelectFcmPartnerFromAccount = ({
-  handleSetFatherOwnerId,
+  handleSetPackageData,
   handleNext,
 }) => {
   const { client } = useSelector((state) => state.clients);
@@ -26,8 +26,7 @@ export const SelectFcmPartnerFromAccount = ({
   }, [selectedFcmPartnerId]);
 
   const handleSubmit = () => {
-    console.log("select, handle", handleSetFatherOwnerId);
-    handleSetFatherOwnerId(selectedFcmPartnerId);
+    handleSetPackageData(selectedFcmPartnerId);
     handleNext();
   };
 
