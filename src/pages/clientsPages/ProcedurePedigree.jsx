@@ -21,6 +21,8 @@ export const ProcedurePedigree = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const [passedProps, setpassedProps] = useState({});
+  const [needsConfirmation, setneedsConfirmation] = useState(false);
+
   // todo save the package in the reducer and in database
 
   // fcmPackage is the main object created through the stepper
@@ -95,6 +97,8 @@ export const ProcedurePedigree = () => {
       usedInProcedure: true,
       formTitle: "Agrega una identificación de socio...",
       showCancel: false,
+      needsConfirmation: false,
+      setneedsConfirmation,
     });
   }, []);
 
@@ -108,7 +112,23 @@ export const ProcedurePedigree = () => {
         formTitle: "Paso cumplido",
       }));
     }
-  }, [fcmPackage.fcmFatherOwnerId]);
+
+    if (needsConfirmation) {
+      setpassedProps((prev) => ({
+        ...prev,
+        needsConfirmation: true,
+        formTitle: "Confirma al socio",
+      }));
+    }
+    if (!needsConfirmation) {
+      setpassedProps((prev) => ({
+        ...prev,
+        needsConfirmation: false,
+      }));
+    }
+  }, [fcmPackage.fcmFatherOwnerId, needsConfirmation]);
+
+  console.log("PASSED PROPS", passedProps);
 
   const steps = [
     {

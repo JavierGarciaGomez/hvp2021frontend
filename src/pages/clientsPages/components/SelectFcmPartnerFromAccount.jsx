@@ -9,6 +9,7 @@ import { FcmPartnerCard } from "./FcmPartnerCard";
 export const SelectFcmPartnerFromAccount = ({
   handleSetPackageData,
   handleNext,
+  setneedsConfirmation,
 }) => {
   const { client } = useSelector((state) => state.clients);
   const [selectedFcmPartnerId, setselectedFcmPartnerId] = useState("");
@@ -22,11 +23,14 @@ export const SelectFcmPartnerFromAccount = ({
         selectedFcmPartnerId
       );
       setselectedFcmPartner(found);
+      setneedsConfirmation(true);
+      handleSetPackageData(selectedFcmPartnerId);
     }
   }, [selectedFcmPartnerId]);
 
   const handleSubmit = () => {
     handleSetPackageData(selectedFcmPartnerId);
+
     handleNext();
   };
 

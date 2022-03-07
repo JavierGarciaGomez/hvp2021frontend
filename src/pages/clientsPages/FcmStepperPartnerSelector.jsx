@@ -9,7 +9,7 @@ import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAc
 import { FcmPartnerFormik } from "./FcmPartnerFormik";
 
 export const FcmStepperPartnerSelector = ({ ...props }) => {
-  const { packageProperty } = { ...props };
+  const { packageProperty, needsConfirmation } = { ...props };
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */

@@ -33,6 +33,8 @@ export const FcmPartnerFormik = ({
   editable = true,
   formTitle = "Agrega una identificación de socio",
   showCancel,
+  needsConfirmation,
+  setneedsConfirmation,
 }) => {
   console.log("FCM FORMIK editable", editable);
   const dispatch = useDispatch();
@@ -52,6 +54,7 @@ export const FcmPartnerFormik = ({
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
   const [isEditable, setIsEditable] = useState(editable);
+  const [fcmPartner, setfcmPartner] = useState(null);
 
   // find fcmPartner and set it active (searching from id)
   useEffect(() => {
@@ -76,6 +79,8 @@ export const FcmPartnerFormik = ({
     }
   }, [client]);
 
+  console.log("FCM FORMIK fcmpartner", fcmPartner);
+
   // find fcmPartner and set it active (searching from package)
   useEffect(() => {
     console.log("Formik", fcmPackage);
@@ -83,7 +88,8 @@ export const FcmPartnerFormik = ({
       let found = client.linkedFcmPartners.find(
         (el) => el._id === fcmPackage[packageProperty]
       );
-      console.log("Adentro del if", found);
+      setfcmPartner(found);
+
       // set active fcmPartner
       if (found) {
         // set the image found to be used in the component
@@ -290,6 +296,30 @@ export const FcmPartnerFormik = ({
     }
   };
 
+  const handleConfirmation = async () => {
+    const values = { ...fcmPartner };
+
+    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
+      const confirmation = await fireSwalConfirmation(
+        "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
+      );
+      if (!confirmation) {
+        return;
+      }
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          procedures: includeInCollectionIfDoesntExist(fcmPackage.procedures, {
+            procedure: "fcmRenewal",
+            _id: values._id,
+          }),
+        })
+      );
+      setneedsConfirmation(false);
+      handleNext();
+    }
+  };
+
   return (
     <Fragment>
       <Typography component="h2" variant="h5" mb="2rem">
@@ -304,16 +334,30 @@ export const FcmPartnerFormik = ({
             la selección.
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
-            <Button
-              variant="contained"
-              fullWidth={true}
-              onClick={() => {
-                handleNext();
-              }}
-              color="primary"
-            >
-              Siguiente paso
-            </Button>
+            {needsConfirmation ? (
+              <Button
+                variant="contained"
+                fullWidth={true}
+                onClick={() => {
+                  handleConfirmation();
+                }}
+                color="primary"
+              >
+                Confirmar
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                fullWidth={true}
+                onClick={() => {
+                  handleNext();
+                }}
+                color="primary"
+              >
+                Siguiente paso
+              </Button>
+            )}
+
             <Button
               variant="contained"
               fullWidth={true}
