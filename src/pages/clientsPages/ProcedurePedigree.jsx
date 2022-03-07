@@ -10,7 +10,13 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFcmPackage } from "../../actions/fcmActions";
+import {
+  handleBack,
+  handleNext,
+  setFcmPackage,
+  setFcmPackageSkipped,
+} from "../../actions/fcmActions";
+import { isStepSkipped } from "../../helpers/utilities";
 import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
 export const ProcedurePedigree = () => {
@@ -18,8 +24,9 @@ export const ProcedurePedigree = () => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-  const [activeStep, setActiveStep] = useState(0);
-  const [skipped, setSkipped] = useState(new Set());
+
+  // todo delete
+  // const [skipped, setSkipped] = useState(new Set());
   const [passedProps, setpassedProps] = useState({});
   const [needsConfirmation, setneedsConfirmation] = useState(false);
 
@@ -27,6 +34,11 @@ export const ProcedurePedigree = () => {
 
   // fcmPackage is the main object created through the stepper
   const { fcmPackage } = useSelector((state) => state.fcm);
+  console.log(
+    "1111111111111111111 ESTE ES EL PAQUETE AHORA Y CURRENT PROP ES: ",
+    fcmPackage.currentProps.isEditable
+  );
+  const { activeStep, skippedSteps } = fcmPackage;
 
   /*************************************************************************************************** */
   /**************************Functions to update the fcmPackabe ***************************************/
@@ -35,32 +47,39 @@ export const ProcedurePedigree = () => {
     dispatch(setFcmPackage({ ...fcmPackage, fcmFatherOwnerId: id }));
   };
 
+  const handleSetMotherOwnerId = (id) => {
+    dispatch(setFcmPackage({ ...fcmPackage, fcmMotherOwnerId: id }));
+  };
+
   /*************************************************************************************************** */
   /**************************Functions related to the stepper *******************************************/
   /*************************************************************************************************** */
   // set the optional steps
   const isStepOptional = (step) => {
-    return step === 0;
+    return true;
   };
 
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+  // const isStepSkipped = (step) => {
+  //   return skipped.has(step);
+  // };
 
-  const handleNext = () => {
-    console.log("PROCPEDIGREE NEXT");
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
+  // const handleNext = () => {
+  //   // removes the step if is skipped
+  //   let newSkipped = skipped;
+  //   if (isStepSkipped(activeStep)) {
+  //     newSkipped = new Set(newSkipped.values());
+  //     newSkipped.delete(activeStep);
+  //   }
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  //   // set active step to 2
+
+  //   dispatch(
+  //     setFcmPackage({ ...fcmPackage, activeStep: fcmPackage.activeStep + 1 })
+  //   );
+
+  //   // set the new skipped
+  //   setSkipped(newSkipped);
+  // };
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
@@ -68,30 +87,30 @@ export const ProcedurePedigree = () => {
       // it should never occur unless someone's actively trying to break something.
       throw new Error("You can't skip a step that isn't optional.");
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
+
+    dispatch(
+      setFcmPackage({ ...fcmPackage, activeStep: fcmPackage.activeStep + 1 })
+    );
+
+    const newSkipped = new Set(skippedSteps.values());
+    newSkipped.add(activeStep);
+
+    dispatch(setFcmPackageSkipped(newSkipped));
   };
 
   const handleReset = () => {
-    setActiveStep(0);
+    dispatch(setFcmPackage({ ...fcmPackage, activeStep: 0 }));
   };
-
-  /*************************************************************************************************** */
-  /**************************Steps *********************************************************************/
-  /*************************************************************************************************** */
 
   /*************************************************************************************************** */
   /**************************Use effects  *****************************************************/
   /*************************************************************************************************** */
 
+  // todo: Delete
   useEffect(() => {
     setpassedProps({
       handleSetPackageData: handleSetFatherOwnerId,
-      handleNext,
+      handleNext: handleNext,
       packageProperty: "fcmFatherOwnerId",
       editable: true,
       usedInProcedure: true,
@@ -102,13 +121,71 @@ export const ProcedurePedigree = () => {
     });
   }, []);
 
-  console.log("Este es el paquete", fcmPackage, passedProps);
+  // default props
+  useEffect(() => {
+    console.log("esto acá");
+    dispatch(
+      setFcmPackage({
+        ...fcmPackage,
+        currentProps: {
+          ...fcmPackage.currentProps,
+          setneedsConfirmation,
+          packageProperty: "",
+          iseditable: true,
+          usedInProcedure: true,
+          formTitle: "Llena el formulario",
+          showCancel: false,
+          needsConfirmation: false,
+          isFirstRegister: false,
+        },
+      })
+    );
+  }, []);
+
+  // props according to step
+  useEffect(() => {
+    if (activeStep === 0) {
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            // handleNexto: handleNext,
+            handleSetPackageData: handleSetFatherOwnerId,
+            packageProperty: "fatherOwnerId",
+            formTitle: "Identificación de socio...",
+          },
+        })
+      );
+    }
+
+    if (activeStep === 1) {
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            handleSetPackageData: handleSetMotherOwnerId,
+            packageProperty: "motherOwnerId",
+          },
+        })
+      );
+    }
+    if (activeStep === 2) {
+    }
+    if (activeStep === 3) {
+    }
+  }, [activeStep]);
+
+  console.log("**********Este es el paquete", fcmPackage, passedProps);
+
+  // props according to situations
 
   useEffect(() => {
     if (fcmPackage.fcmFatherOwnerId) {
       setpassedProps((prev) => ({
         ...prev,
-        editable: false,
+        iseditable: false,
         formTitle: "Paso cumplido",
       }));
     }
@@ -116,7 +193,7 @@ export const ProcedurePedigree = () => {
     if (!fcmPackage.fcmFatherOwnerId) {
       setpassedProps((prev) => ({
         ...prev,
-        editable: true,
+        iseditable: true,
         formTitle: "Agrega una identificación de socio",
       }));
     }
@@ -138,13 +215,19 @@ export const ProcedurePedigree = () => {
 
   console.log("PASSED PROPS", passedProps);
 
+  /*************************************************************************************************** */
+  /**************************Steps *********************************************************************/
+  /*************************************************************************************************** */
   const steps = [
     {
       label: "Propietario del padre",
       component: <FcmStepperPartnerSelector {...passedProps} />,
     },
+    {
+      label: "Propietario de la madre",
+      component: <FcmStepperPartnerSelector {...passedProps} />,
+    },
     { label: "Padre camada", component: <Box>Boxarrón</Box> },
-    { label: "Propietario de la madre", component: <Box>Boxarrón</Box> },
     { label: "Madre camada", component: <Box>Boxarrón</Box> },
   ];
 
@@ -166,7 +249,7 @@ export const ProcedurePedigree = () => {
             );
           }
           // if skipped dont show the completed icon
-          if (isStepSkipped(index)) {
+          if (isStepSkipped(skippedSteps, index)) {
             stepProps.completed = false;
           }
 
@@ -201,7 +284,9 @@ export const ProcedurePedigree = () => {
             <Button
               color="inherit"
               disabled={activeStep === 0}
-              onClick={handleBack}
+              onClick={() => {
+                dispatch(handleBack());
+              }}
               sx={{ mr: 1 }}
             >
               Back
@@ -213,7 +298,11 @@ export const ProcedurePedigree = () => {
               </Button>
             )}
 
-            <Button onClick={handleNext}>
+            <Button
+              onClick={() => {
+                dispatch(handleNext());
+              }}
+            >
               {activeStep === steps.length - 1 ? "Finish" : "Next"}
             </Button>
           </Box>

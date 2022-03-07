@@ -1,6 +1,11 @@
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setFcmPackage,
+  setFcmPackageProp,
+  setFcmPackageProperty,
+} from "../../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../../helpers/utilities";
 import { FcmPartnerFormik } from "../FcmPartnerFormik";
@@ -14,6 +19,8 @@ export const SelectFcmPartnerFromAccount = ({
   const { client } = useSelector((state) => state.clients);
   const [selectedFcmPartnerId, setselectedFcmPartnerId] = useState("");
   const [selectedFcmPartner, setselectedFcmPartner] = useState({});
+  const dispatch = useDispatch();
+  const { fcmPackage } = useSelector((state) => state.fcm);
 
   useEffect(() => {
     if (selectedFcmPartnerId !== "") {
@@ -24,7 +31,24 @@ export const SelectFcmPartnerFromAccount = ({
       );
       setselectedFcmPartner(found);
       setneedsConfirmation(true);
-      handleSetPackageData(selectedFcmPartnerId);
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            isEditable: false,
+            needsConfirmation: true,
+          },
+        })
+      );
+      dispatch(
+        setFcmPackageProp(
+          fcmPackage.currentProps.packageProperty,
+          selectedFcmPartnerId
+        )
+      );
+      // handleSetPackageData(selectedFcmPartnerId);
+      dispatch(setFcmPackageProperty(selectedFcmPartnerId));
     }
   }, [selectedFcmPartnerId]);
 

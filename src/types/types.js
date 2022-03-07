@@ -88,6 +88,10 @@ export const types = {
   fcmsIsLoading: "[fcms] is loading",
   fcmsFinishedLoading: "[fcm] finished loading",
   fcmSetPackage: "[fcm] setPackage",
+  fcmPackageSetStep: "[fcm] package setStep",
+  fcmPackageSetSkipped: "[fcm] package setSkipped",
+  fcmPackageCurPropNeedsConfirmation:
+    "[fcm] package current properties needs confirmation",
 };
 
 export const genderTypes = {

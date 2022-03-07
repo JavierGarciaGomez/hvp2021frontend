@@ -735,12 +735,7 @@ export const getColsActivityRegisters = (activityRegisters) => {
     if (!activityRegister.endingTime) {
       return;
     }
-    console.log(
-      "activityRegister",
-      activityRegister,
-      "esta duración",
-      getDuration(activityRegister.startingTime, activityRegister.endingTime)
-    );
+
     let foundOne = false;
     for (let col of colArray) {
       if (col.col_code === activityRegister.collaborator.col_code) {
@@ -774,7 +769,7 @@ export const getColsActivityRegisters = (activityRegisters) => {
         ),
         registers: [activityRegister],
       };
-      console.log("nuevo elemento", newElement);
+
       colArray.push(newElement);
     }
   });
@@ -1024,15 +1019,6 @@ export const replaceElementInCollection = (object, collection) => {
 };
 
 export const includeInPackage = (collection = [], object, propertyName) => {
-  console.log(
-    "*****************esto recibo, ",
-    "collection",
-    collection,
-    "object",
-    object,
-    "propName",
-    propertyName
-  );
   if (!collection) {
     return [object];
   }
@@ -1045,6 +1031,11 @@ export const includeInPackage = (collection = [], object, propertyName) => {
   } else {
     collection.push(object);
   }
-  console.log("++++++++++++Esto devolveré", [...collection]);
+
   return [...collection];
+};
+
+export const isStepSkipped = (set = new Set(), step) => {
+  console.log("set", set);
+  return set.has(step);
 };

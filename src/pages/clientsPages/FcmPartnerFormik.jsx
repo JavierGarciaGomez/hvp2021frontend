@@ -6,6 +6,9 @@ import * as Yup from "yup";
 import {
   createFcmPartner,
   setFcmPackage,
+  setFcmPackageNeedsConfirmation,
+  setFcmPackageProperty,
+  setFcmPackageStep,
   updateFcmPartner,
 } from "../../actions/fcmActions";
 import {
@@ -26,17 +29,11 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 
 export const FcmPartnerFormik = ({
-  handleSetPackageData,
-  handleNext,
-  isFirstRegister = false,
-  packageProperty,
-  editable = true,
   formTitle = "Agrega una identificación de socio",
   showCancel,
-  needsConfirmation,
+
   setneedsConfirmation,
 }) => {
-  console.log("FCM FORMIK editable", editable);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   /*************************************************************************************************** */
@@ -45,6 +42,15 @@ export const FcmPartnerFormik = ({
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
+  const { activeStep, currentProps } = fcmPackage;
+  const {
+    handleSetPackageData,
+    isFirstRegister,
+    isEditable,
+    packageProperty,
+    needsConfirmation,
+  } = currentProps;
+
   const [filesFcmPartnerCard, setfilesFcmPartnerCard] = useState([]);
   const [filesProofOfResidency, setfilesProofOfResidency] = useState([]);
   const [filesFrontINE, setfilesFrontINE] = useState([]);
@@ -53,17 +59,13 @@ export const FcmPartnerFormik = ({
   const [imgUrlProofOfResidency, setImgUrlProofOfResidency] = useState(null);
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
-  const [isEditable, setIsEditable] = useState(editable);
+
   const [fcmPartner, setfcmPartner] = useState(null);
   const [isPending, setisPending] = useState(false);
 
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
-
-  useEffect(() => {
-    setIsEditable(editable);
-  }, [editable]);
 
   // find fcmPartner and set it active (searching from id)
   useEffect(() => {
@@ -81,7 +83,6 @@ export const FcmPartnerFormik = ({
         const { address } = found;
 
         const foundWithAddress = { ...found, ...address };
-        console.log("foundwithaddress", foundWithAddress);
 
         return setformValues(foundWithAddress);
       }
@@ -90,12 +91,11 @@ export const FcmPartnerFormik = ({
 
   // find fcmPartner and set it active (searching from package)
   useEffect(() => {
-    console.log("Formik", fcmPackage);
     if (fcmPackage[packageProperty]) {
       let found = client.linkedFcmPartners.find(
         (el) => el._id === fcmPackage[packageProperty]
       );
-      console.log("esto encontré", found);
+
       setfcmPartner(found);
 
       // set active fcmPartner
@@ -110,7 +110,6 @@ export const FcmPartnerFormik = ({
         const { address } = found;
 
         const foundWithAddress = { ...found, ...address };
-        console.log("foundwithaddress", foundWithAddress);
 
         return setformValues(foundWithAddress);
       }
@@ -124,8 +123,6 @@ export const FcmPartnerFormik = ({
       setisPending(isFirstRegister);
     }
   }, [isFirstRegister, fcmPartner]);
-
-  console.log("isPending", isPending, fcmPartner);
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
@@ -190,8 +187,6 @@ export const FcmPartnerFormik = ({
 
   const [formValues, setformValues] = useState(initialValues);
 
-  console.log("estos son los form values", formValues);
-
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
@@ -206,7 +201,7 @@ export const FcmPartnerFormik = ({
       if (!confirmation) {
         return;
       }
-      console.log("+++++++++++++esto es el packageproperty", packageProperty);
+
       dispatch(
         setFcmPackage({
           ...fcmPackage,
@@ -301,15 +296,22 @@ export const FcmPartnerFormik = ({
 
     // if there is an ID: update. If not: create
     if (newValues._id) {
-      console.log("FCM PARTNER FORMIK, llegué");
       Swal.close();
       const fcmPartnerId = await dispatch(updateFcmPartner(newValues));
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            isEditable: false,
+          },
+        })
+      );
 
       if (fcmPartnerId) {
-        if (handleSetPackageData) {
-          handleSetPackageData(fcmPartnerId);
-          handleNext();
-          console.log("TERMINÉ");
+        if (fcmPackage) {
+          dispatch(setFcmPackageProperty(fcmPartnerId));
+          dispatch(setFcmPackageStep(activeStep + 1));
         }
         // navigate to previous page or profile
         // navigate(`/dashboard/documentation`);
@@ -319,9 +321,9 @@ export const FcmPartnerFormik = ({
       const fcmPartnerId = await dispatch(createFcmPartner(newValues));
       if (fcmPartnerId) {
         // submit to parent
-        if (handleSetPackageData) {
-          handleSetPackageData(fcmPartnerId);
-          handleNext();
+        if (fcmPackage) {
+          dispatch(setFcmPackageProperty(fcmPartnerId));
+          dispatch(setFcmPackageStep(activeStep + 1));
         }
         // navigate(`/dashboard/documentation`);
       }
@@ -352,8 +354,9 @@ export const FcmPartnerFormik = ({
           ),
         })
       );
-      setneedsConfirmation(false);
-      handleNext();
+      dispatch(setFcmPackageNeedsConfirmation(false));
+      // setneedsConfirmation(false);
+      dispatch(setFcmPackageStep(activeStep + 1));
     }
   };
 
@@ -391,7 +394,7 @@ export const FcmPartnerFormik = ({
                 variant="contained"
                 fullWidth={true}
                 onClick={() => {
-                  handleNext();
+                  dispatch(setFcmPackageStep(activeStep + 1));
                 }}
                 color="primary"
               >
@@ -403,7 +406,15 @@ export const FcmPartnerFormik = ({
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                setIsEditable((prev) => !prev);
+                dispatch(
+                  setFcmPackage({
+                    ...fcmPackage,
+                    currentProps: {
+                      ...fcmPackage.currentProps,
+                      isEditable: true,
+                    },
+                  })
+                );
               }}
               color="primary"
             >
@@ -413,7 +424,8 @@ export const FcmPartnerFormik = ({
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                handleSetPackageData("");
+                console.log("clicking");
+                dispatch(setFcmPackageProperty(""));
               }}
               color="error"
             >

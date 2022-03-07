@@ -3,6 +3,7 @@ import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import {
   fireSwalError,
   fireSwalSuccess,
+  isStepSkipped,
   replaceElementInCollection,
 } from "../helpers/utilities";
 import { types } from "../types/types";
@@ -98,3 +99,60 @@ export const setFcmPackage = (object) => ({
   type: types.fcmSetPackage,
   payload: object,
 });
+
+export const setFcmPackageStep = (step) => ({
+  type: types.fcmPackageSetStep,
+  payload: step,
+});
+
+export const setFcmPackageSkipped = (object) => ({
+  type: types.fcmPackageSetSkipped,
+  payload: object,
+});
+
+export const handleNext = () => {
+  return async (dispatch, getState) => {
+    let newSkipped = getState().fcm.fcmPackage.skippedSteps;
+    let activeStep = getState().fcm.fcmPackage.activeStep;
+
+    if (isStepSkipped(newSkipped, activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+    // set active step to 2
+    dispatch(setFcmPackageStep(activeStep + 1));
+
+    // set the new skipped
+    dispatch(setFcmPackageSkipped(newSkipped));
+  };
+};
+
+export const handleBack = () => {
+  return async (dispatch, getState) => {
+    console.log("***************solo quiero probar que esto acá", getState());
+    let activeStep = getState().fcm.fcmPackage.activeStep;
+    dispatch(setFcmPackageStep(activeStep - 1));
+  };
+};
+
+export const setFcmPackageProp = (propertyName, value) => {
+  return async (dispatch, getState) => {
+    let fcmPackage = getState().fcm.fcmPackage;
+    fcmPackage[propertyName] = value;
+    return { type: types.fcmSetPackage, payload: { ...fcmPackage } };
+  };
+};
+
+export const setFcmPackageNeedsConfirmation = (boolean) => ({
+  type: types.fcmPackageCurPropNeedsConfirmation,
+  payload: boolean,
+});
+
+export const setFcmPackageProperty = (value) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { packageProperty } = fcmPackage.currentProps;
+    fcmPackage[packageProperty] = value;
+    dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
