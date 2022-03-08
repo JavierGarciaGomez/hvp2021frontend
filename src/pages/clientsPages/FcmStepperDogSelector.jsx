@@ -113,7 +113,7 @@ export const FcmStepperDogSelector = ({ label }) => {
         {label}
       </Typography>
       {fcmPackage[fcmPackage.currentProps.packageProperty] !== "" ? (
-        <FcmPartnerFormik />
+        <FcmDogFormik />
       ) : (
         <Fragment>
           <SimpleSelectWrapper

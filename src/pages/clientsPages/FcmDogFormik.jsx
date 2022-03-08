@@ -87,6 +87,7 @@ export const FcmDogFormik = () => {
       );
 
       setfcmDog(found);
+      console.log("este perro encontré", found);
 
       // set active
       if (found) {
