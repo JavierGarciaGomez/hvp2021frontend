@@ -6,6 +6,7 @@ const initialState = {
   // client: {},
   fcmsIsLoading: true,
   fcmPartners: [],
+  fcmDogs: [],
   fcmPackage: {
     procedures: [],
     activeStep: 0,
@@ -20,10 +21,12 @@ const initialState = {
     },
     fatherFcm: {},
     motherFcm: {},
-    maleDogFcm: {},
-    femaleDogFcm: {},
+    fatherDogFcm: {},
+    motherDogFcm: {},
     fatherOwnerId: "",
     motherOwnerId: "",
+    dogFatherId: "",
+    dogMotherId: "",
   },
 };
 
@@ -37,6 +40,9 @@ export const fcmReducer = (state = initialState, action) => {
 
     case types.fcmPartnersLoaded:
       return { ...state, fcmPartners: action.payload, fcmsIsLoading: false };
+
+    case types.fcmDogsLoaded:
+      return { ...state, fcmDogs: action.payload, fcmsIsLoading: false };
 
     case types.fcmSetPackage: {
       console.log("esto he recibido", action);

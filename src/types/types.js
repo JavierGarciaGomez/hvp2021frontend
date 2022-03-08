@@ -92,6 +92,8 @@ export const types = {
   fcmPackageSetSkipped: "[fcm] package setSkipped",
   fcmPackageCurPropNeedsConfirmation:
     "[fcm] package current properties needs confirmation",
+
+  fcmDogsLoaded: "[fcm] dogs loaded",
 };
 
 export const genderTypes = {

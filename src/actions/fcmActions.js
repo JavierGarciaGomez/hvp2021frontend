@@ -9,7 +9,9 @@ import {
 import { types } from "../types/types";
 import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
-// todo
+/***************************************************************/
+/**********************FCM PARTNER *****************************/
+/***************************************************************/
 export const createFcmPartner = (object) => {
   return async (dispatch, getState) => {
     try {
@@ -95,6 +97,86 @@ export const updateFcmPartner = (object) => {
   };
 };
 
+/***************************************************************/
+/**********************FCM DOGS    *****************************/
+/***************************************************************/
+
+export const createFcmDog = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(`fcm/dogs/`, object, "POST");
+      const body = await resp.json();
+
+      if (body.ok) {
+        const client = getState().clients.client;
+        client.linkedDogs.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
+
+        fireSwalSuccess(body.msg);
+        return body.saved._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+export const startLoadingFcmDogs = () => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(fcmIsLoading());
+      let resp = await fetchConToken(`fcm/dogs/`);
+      let body = await resp.json();
+
+      if (body.ok) {
+        dispatch(fcmDogsLoaded(body.allDogs));
+      }
+    } catch (error) {
+      console.log(error);
+      fireSwalError(error.message);
+    }
+    dispatch(fcmFinishedLoading());
+  };
+};
+
+export const fcmDogsLoaded = (data) => ({
+  type: types.fcmDogsLoaded,
+  payload: data,
+});
+
+export const updateFcmDog = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(`fcm/dogs/${object._id}`, object, "PUT");
+      const body = await resp.json();
+
+      if (body.ok) {
+        const client = getState().clients.client;
+        client.linkedPets = replaceElementInCollection(
+          object,
+          client.linkedPets
+        );
+        dispatch(updateClientReducer({ ...client }));
+        fireSwalSuccess(body.msg);
+        return body.updatedData._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+/***************************************************************/
+/**********************FCM PACKAGES*****************************/
+/***************************************************************/
 export const setFcmPackage = (object) => ({
   type: types.fcmSetPackage,
   payload: object,

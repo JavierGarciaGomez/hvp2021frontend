@@ -47,7 +47,7 @@ export const FcmPartnerFormik = () => {
     showCancel,
   } = currentProps;
 
-  const [filesFcmPartnerCard, setfilesFcmPartnerCard] = useState([]);
+  const [filesPedigreeFront, setfilesPedigreeFront] = useState([]);
   const [filesProofOfResidency, setfilesProofOfResidency] = useState([]);
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
@@ -223,7 +223,7 @@ export const FcmPartnerFormik = () => {
     });
 
     if (!isPending) {
-      if (filesFcmPartnerCard.length === 0 && !imgUrlPartnerCard) {
+      if (filesPedigreeFront.length === 0 && !imgUrlPartnerCard) {
         return fireSwalError("Se debe cargar la imagen de la tarjeta");
       }
     }
@@ -245,7 +245,7 @@ export const FcmPartnerFormik = () => {
     if (!isPending) {
       newValues = await setUrlValueOrRefreshImage(
         newValues,
-        filesFcmPartnerCard,
+        filesPedigreeFront,
         "urlPartnerCard",
         imgUrlPartnerCard
       );
@@ -481,8 +481,8 @@ export const FcmPartnerFormik = () => {
               <Grid item xs={12} md={6}>
                 <Typography mb="2rem">Tarjeta de socio</Typography>
                 <DragImageUpload
-                  files={filesFcmPartnerCard}
-                  setFiles={setfilesFcmPartnerCard}
+                  files={filesPedigreeFront}
+                  setFiles={setfilesPedigreeFront}
                   imgUrl={imgUrlPartnerCard}
                   setimgUrl={setImgUrlPartnerCard}
                   editable={isEditable}

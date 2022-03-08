@@ -17,6 +17,7 @@ import {
   setFcmPackageSkipped,
 } from "../../actions/fcmActions";
 import { isStepSkipped } from "../../helpers/utilities";
+import { FcmStepperDogSelector } from "./FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
 export const ProcedurePedigree = () => {
@@ -28,28 +29,12 @@ export const ProcedurePedigree = () => {
   // todo delete
   // const [skipped, setSkipped] = useState(new Set());
   // const [passedProps, setpassedProps] = useState({});
-  const [needsConfirmation, setneedsConfirmation] = useState(false);
 
   // todo save the package in the reducer and in database
 
   // fcmPackage is the main object created through the stepper
   const { fcmPackage } = useSelector((state) => state.fcm);
-  console.log(
-    "1111111111111111111 ESTE ES EL PAQUETE AHORA Y CURRENT PROP ES: ",
-    fcmPackage.currentProps.isEditable
-  );
   const { activeStep, skippedSteps } = fcmPackage;
-
-  /*************************************************************************************************** */
-  /**************************Functions to update the fcmPackabe ***************************************/
-  /*************************************************************************************************** */
-  const handleSetFatherOwnerId = (id) => {
-    dispatch(setFcmPackage({ ...fcmPackage, fcmFatherOwnerId: id }));
-  };
-
-  const handleSetMotherOwnerId = (id) => {
-    dispatch(setFcmPackage({ ...fcmPackage, fcmMotherOwnerId: id }));
-  };
 
   /*************************************************************************************************** */
   /**************************Functions related to the stepper *******************************************/
@@ -58,28 +43,6 @@ export const ProcedurePedigree = () => {
   const isStepOptional = (step) => {
     return true;
   };
-
-  // const isStepSkipped = (step) => {
-  //   return skipped.has(step);
-  // };
-
-  // const handleNext = () => {
-  //   // removes the step if is skipped
-  //   let newSkipped = skipped;
-  //   if (isStepSkipped(activeStep)) {
-  //     newSkipped = new Set(newSkipped.values());
-  //     newSkipped.delete(activeStep);
-  //   }
-
-  //   // set active step to 2
-
-  //   dispatch(
-  //     setFcmPackage({ ...fcmPackage, activeStep: fcmPackage.activeStep + 1 })
-  //   );
-
-  //   // set the new skipped
-  //   setSkipped(newSkipped);
-  // };
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
@@ -153,12 +116,20 @@ export const ProcedurePedigree = () => {
       );
     }
     if (activeStep === 2) {
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            packageProperty: "dogFatherId",
+            formTitle: "Identificación del perro",
+          },
+        })
+      );
     }
     if (activeStep === 3) {
     }
   }, [activeStep]);
-
-  // props according to situations
 
   /*************************************************************************************************** */
   /**************************Steps *********************************************************************/
@@ -172,7 +143,10 @@ export const ProcedurePedigree = () => {
       label: "Propietario de la madre",
       component: <FcmStepperPartnerSelector label="Propietario de la madre" />,
     },
-    { label: "Padre camada", component: <Box>Boxarrón</Box> },
+    {
+      label: "Padre camada",
+      component: <FcmStepperDogSelector label="Padre de la camada" />,
+    },
     { label: "Madre camada", component: <Box>Boxarrón</Box> },
   ];
 

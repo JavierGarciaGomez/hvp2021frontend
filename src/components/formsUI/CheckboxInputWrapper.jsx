@@ -23,6 +23,7 @@ export const CheckboxInputWrapper = ({
   };
 
   const configCheckbox = {
+    ...otherProps,
     ...field,
     onChange: handleChange,
   };
