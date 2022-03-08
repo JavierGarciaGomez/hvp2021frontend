@@ -120,3 +120,60 @@ export const userAddFcmPartner = (userId, fcmPartner) => {
     }
   };
 };
+
+export const userRemoveFcmDog = (userId, fcmDogId) => {
+  return async (dispatch) => {
+    try {
+      const resp = await fetchConToken(
+        `users/${userId}/dogs/unlink/${fcmDogId}`,
+        {},
+        "PATCH"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Registro desvinculado correctamente",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        dispatch(clientStartLoading(userId));
+      } else {
+        Swal.fire("error", body.msg, "error");
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
+export const userAddFcmDog = (userId, fcmDog) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(
+        `users/${userId}/dogs/link/${fcmDog._id}`,
+        {},
+        "PATCH"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Registro vinculado correctamente",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        const client = getState().clients.client;
+        client.linkedDogs.push(fcmDog);
+        dispatch(updateClientReducer({ ...client }));
+      } else {
+        Swal.fire("error", body.msg, "error");
+      }
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};

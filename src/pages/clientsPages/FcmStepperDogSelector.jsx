@@ -5,6 +5,7 @@ import { setFcmPackage } from "../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";
 import { LostPartnerCard } from "./components/LostPartnerCard";
+import { SearchAndLinkDog } from "./components/SearchAndLinkDog";
 import { SearchAndLinkPartner } from "./components/SearchAndLinkPartner";
 import { SelectDogFromAccount } from "./components/SelectDogFromAccount";
 import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAccount";
@@ -41,7 +42,7 @@ export const FcmStepperDogSelector = ({ label }) => {
       label:
         "Perro no vinculado a mi cuenta, pero registrado en esta plataforma",
       value: "previousDataBase",
-      component: <SearchAndLinkPartner />,
+      component: <SearchAndLinkDog />,
       functions: () => {
         dispatch(
           setFcmPackage({
@@ -102,11 +103,6 @@ export const FcmStepperDogSelector = ({ label }) => {
   /**************************RENDER *********************************************************************/
   /*************************************************************************************************** */
 
-  console.log(
-    "22222222222 a ver",
-    fcmPackage[fcmPackage.currentProps.packageProperty],
-    "está facío"
-  );
   return (
     <Box>
       <Typography variant="h4" component="h2" mb="3rem">
@@ -127,20 +123,6 @@ export const FcmStepperDogSelector = ({ label }) => {
             findObjectByProperty(options, "value", selectedCase).component}
         </Fragment>
       )}
-
-      {/* <FormControl fullWidth>
-        <InputLabel>Selecciona el trámite</InputLabel>
-        <Select label="Propietario del Padre" onChange={handleSelect}>
-          {options.map((element) => {
-            return (
-              <MenuItem key={element.value} value={element.value}>
-                {element.label}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl> */}
-      {/* <FcmPartnerFormik /> */}
     </Box>
   );
 };

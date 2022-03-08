@@ -154,13 +154,19 @@ export const updateFcmDog = (object) => {
       const resp = await fetchConToken(`fcm/dogs/${object._id}`, object, "PUT");
       const body = await resp.json();
 
+      console.log("esta respuesta tengo", body);
+
       if (body.ok) {
+        console.log("****LLEGUÉ 0");
         const client = getState().clients.client;
-        client.linkedPets = replaceElementInCollection(
+        console.log("****LLEGUÉ 1", client);
+        client.linkedDogs = replaceElementInCollection(
           object,
-          client.linkedPets
+          client.linkedDogs
         );
+        console.log("****LLEGUÉ 1.5", client);
         dispatch(updateClientReducer({ ...client }));
+        console.log("****LLEGUÉ 2");
         fireSwalSuccess(body.msg);
         return body.updatedData._id;
       } else {

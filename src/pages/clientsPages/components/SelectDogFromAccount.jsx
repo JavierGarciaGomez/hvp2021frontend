@@ -54,7 +54,7 @@ export const SelectDogFromAccount = () => {
 
   const options = client.linkedDogs.map((element) => {
     return {
-      label: `${element.partnerNum} - ${element.firstName} ${element.paternalSurname}`,
+      label: `${element.registerNum} - ${element.petName}`,
       value: element._id,
       component: (
         <FcmPartnerCard

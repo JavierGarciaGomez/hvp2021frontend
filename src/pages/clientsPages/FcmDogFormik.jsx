@@ -57,7 +57,6 @@ export const FcmDogFormik = () => {
   const [imgUrlPedigreeBack, setImgUrlPedigreeBack] = useState(null);
 
   const [fcmDog, setfcmDog] = useState(null);
-  const [isPending, setisPending] = useState(false);
 
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
@@ -73,8 +72,8 @@ export const FcmDogFormik = () => {
         setImgUrlPedigreeFront(found.urlFront);
         setImgUrlPedigreeBack(found.urlBack);
 
-        found.birthDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
-        return setformValues(...found);
+        found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
+        return setformValues({ ...found });
       }
     }
   }, []);
@@ -95,8 +94,8 @@ export const FcmDogFormik = () => {
         setImgUrlPedigreeFront(found.urlFront);
         setImgUrlPedigreeBack(found.urlBack);
 
-        found.birthDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
-        return setformValues(...found);
+        found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
+        return setformValues({ ...found });
       }
     }
   }, [fcmPackage]);

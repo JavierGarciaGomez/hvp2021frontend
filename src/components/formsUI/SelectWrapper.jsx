@@ -19,8 +19,6 @@ export const SelectWrapper = ({ name, options, ...otherProps }) => {
     setFieldValue(name, value);
   };
 
-  console.log("el field", field, "el meta", meta, "los otherprops", otherProps);
-
   const configSelect = {
     ...field,
     ...otherProps,
@@ -35,7 +33,6 @@ export const SelectWrapper = ({ name, options, ...otherProps }) => {
     configSelect.helperText = meta.error;
   }
 
-  console.log("este es el config", configSelect);
   return (
     <Fragment>
       <FormControl fullWidth variant="outlined">

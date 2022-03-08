@@ -129,6 +129,20 @@ export const ProcedurePedigree = () => {
     }
     if (activeStep === 3) {
     }
+    if (activeStep === 3) {
+      dispatch(
+        setFcmPackage({
+          ...fcmPackage,
+          currentProps: {
+            ...fcmPackage.currentProps,
+            packageProperty: "dogMotherId",
+            formTitle: "Identificación del perro",
+          },
+        })
+      );
+    }
+    if (activeStep === 3) {
+    }
   }, [activeStep]);
 
   /*************************************************************************************************** */
@@ -147,7 +161,10 @@ export const ProcedurePedigree = () => {
       label: "Padre camada",
       component: <FcmStepperDogSelector label="Padre de la camada" />,
     },
-    { label: "Madre camada", component: <Box>Boxarrón</Box> },
+    {
+      label: "Madre camada",
+      component: <FcmStepperDogSelector label="Madre de la camada" />,
+    },
   ];
 
   /*************************************************************************************************** */
