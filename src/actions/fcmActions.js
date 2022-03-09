@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import { areAllStepsCompleted, isLastStep } from "../helpers/fcmUtilities";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import {
   fireSwalError,
@@ -198,24 +199,34 @@ export const setFcmPackageSkipped = (object) => ({
   payload: object,
 });
 
-export const handleNext = () => {
+export const handleNextFcmPackageStep = () => {
+  console.log("******estoy acá");
   return async (dispatch, getState) => {
-    let newSkipped = getState().fcm.fcmPackage.skippedSteps;
-    let activeStep = getState().fcm.fcmPackage.activeStep;
+    const fcmPackage = getState().fcm.fcmPackage;
+    const { activeStep, skippedSteps, steps, completedSteps } = fcmPackage;
 
-    if (isStepSkipped(newSkipped, activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+    // It's the last step, but not all steps have been completed,
+    // find the first step that hasnt been completed
+    const newActiveStep =
+      isLastStep(activeStep, steps) &&
+      areAllStepsCompleted(completedSteps, steps)
+        ? steps.findIndex((step, i) => !(i in completedSteps))
+        : activeStep + 1;
+
+    // Todo: ¿Delete?
+    if (isStepSkipped(skippedSteps, activeStep)) {
+      skippedSteps = new Set(skippedSteps.values());
+      skippedSteps.delete(activeStep);
     }
     // set active step to 2
-    dispatch(setFcmPackageStep(activeStep + 1));
+    dispatch(setFcmPackageStep(newActiveStep));
 
-    // set the new skipped
-    dispatch(setFcmPackageSkipped(newSkipped));
+    // Todo: ¿Delete?
+    dispatch(setFcmPackageSkipped(skippedSteps));
   };
 };
 
-export const handleBack = () => {
+export const handleBackFcmPackageStep = () => {
   return async (dispatch, getState) => {
     console.log("***************solo quiero probar que esto acá", getState());
     let activeStep = getState().fcm.fcmPackage.activeStep;
@@ -223,11 +234,67 @@ export const handleBack = () => {
   };
 };
 
+export const handleFcmCompleteStep = () => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const { activeStep, completedSteps } = fcmPackage;
+    const newCompletedSteps = completedSteps;
+    newCompletedSteps[activeStep] = true;
+    dispatch(setFcmPackageProp, "completedSteps", newCompletedSteps);
+    dispatch(handleNextFcmPackageStep());
+  };
+};
+
+export const setFcmCompletedSteps = (object) => {
+  return async (dispatch, getState) => {
+    dispatch(setFcmPackageProp("completedSteps", object));
+  };
+};
+
+export const addFcmProcedure = (object) => {
+  return async (dispatch, getState) => {
+    let fcmPackage = getState().fcm.fcmPackage;
+    let { procedures = [] } = fcmPackage;
+
+    // check if procedure exists
+    let newProcedures = [...procedures];
+    let index = newProcedures.findIndex(
+      (element) => element.step === object.step
+    );
+    // if exists. Replace it.
+    if (index !== -1) {
+      newProcedures[index] = object;
+      // if not. Add it.
+    } else {
+      newProcedures.push(object);
+    }
+    dispatch(setFcmPackageProp("procedures", newProcedures));
+  };
+};
+
 export const setFcmPackageProp = (propertyName, value) => {
+  console.log("estoy acá 4", propertyName, value);
   return async (dispatch, getState) => {
     let fcmPackage = getState().fcm.fcmPackage;
     fcmPackage[propertyName] = value;
+    console.log("estoy acá 5", fcmPackage);
     return { type: types.fcmSetPackage, payload: { ...fcmPackage } };
+  };
+};
+
+export const setFcmPackageCurrentProps = (object) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    fcmPackage.currentProps = object;
+    dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const setFcmPackageCurrentPropsProperty = (propertyName, value) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    fcmPackage.currentProps[propertyName] = value;
+    dispatch(setFcmPackage({ ...fcmPackage }));
   };
 };
 
@@ -241,6 +308,15 @@ export const setFcmPackageProperty = (value) => {
     const { fcmPackage } = getState().fcm;
     const { packageProperty } = fcmPackage.currentProps;
     fcmPackage[packageProperty] = value;
+    dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const setFcmPackageEditable = (boolean) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+
+    fcmPackage.currentProps.isEditable = boolean;
     dispatch(setFcmPackage({ ...fcmPackage }));
   };
 };

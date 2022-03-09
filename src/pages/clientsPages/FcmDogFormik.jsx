@@ -4,9 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
+  addFcmProcedure,
   createFcmDog,
   createFcmPartner,
+  handleFcmCompleteStep,
+  handleNextFcmPackageStep,
   setFcmPackage,
+  setFcmPackageEditable,
   setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
   setFcmPackageStep,
@@ -149,17 +153,10 @@ export const FcmDogFormik = () => {
 
     if (values.isTransferPending) {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          procedures: includeInPackage(
-            fcmPackage.procedures,
-            {
-              packageProperty,
-              procedure: "transfer",
-              _id: values._id,
-            },
-            packageProperty
-          ),
+        addFcmProcedure({
+          step: activeStep,
+          procedureType: "transfer",
+          dataId: values._id,
         })
       );
     }
@@ -195,20 +192,12 @@ export const FcmDogFormik = () => {
     if (newValues._id) {
       Swal.close();
       const fcmDogId = await dispatch(updateFcmDog(newValues));
-      dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            isEditable: false,
-          },
-        })
-      );
+      await dispatch(setFcmPackageEditable(false));
 
       if (fcmDogId) {
         if (fcmPackage) {
           dispatch(setFcmPackageProperty(fcmDogId));
-          dispatch(setFcmPackageStep(activeStep + 1));
+          dispatch(handleFcmCompleteStep());
         }
         // navigate to previous page or profile
         // navigate(`/dashboard/documentation`);
@@ -220,7 +209,7 @@ export const FcmDogFormik = () => {
         // submit to parent
         if (fcmPackage) {
           dispatch(setFcmPackageProperty(fcmDogId));
-          dispatch(setFcmPackageStep(activeStep + 1));
+          dispatch(handleFcmCompleteStep());
         }
         // navigate(`/dashboard/documentation`);
       }
@@ -232,24 +221,17 @@ export const FcmDogFormik = () => {
 
     if (values.isTransferPending) {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          procedures: includeInPackage(
-            fcmPackage.procedures,
-            {
-              packageProperty,
-              procedure: "transfer",
-              _id: values._id,
-            },
-            packageProperty
-          ),
+        addFcmProcedure({
+          step: activeStep,
+          procedureType: "transfer",
+          dataId: values._id,
         })
       );
     }
 
     dispatch(setFcmPackageNeedsConfirmation(false));
     // setneedsConfirmation(false);
-    dispatch(setFcmPackageStep(activeStep + 1));
+    dispatch(handleFcmCompleteStep());
   };
 
   /*************************************************************************************************** */
@@ -286,7 +268,7 @@ export const FcmDogFormik = () => {
                 variant="contained"
                 fullWidth={true}
                 onClick={() => {
-                  dispatch(setFcmPackageStep(activeStep + 1));
+                  dispatch(handleNextFcmPackageStep());
                 }}
                 color="primary"
               >
@@ -298,15 +280,7 @@ export const FcmDogFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                dispatch(
-                  setFcmPackage({
-                    ...fcmPackage,
-                    currentProps: {
-                      ...fcmPackage.currentProps,
-                      isEditable: true,
-                    },
-                  })
-                );
+                dispatch(setFcmPackageEditable(true));
               }}
               color="primary"
             >

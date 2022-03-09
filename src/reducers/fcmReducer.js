@@ -1,5 +1,7 @@
 // 366
 
+import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
+import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { types } from "../types/types";
 
 const initialState = {
@@ -8,9 +10,30 @@ const initialState = {
   fcmPartners: [],
   fcmDogs: [],
   fcmPackage: {
+    steps: [
+      {
+        label: "Propietario del padre",
+        component: <FcmStepperPartnerSelector label="Propietario del padre" />,
+      },
+      {
+        label: "Propietario de la madre",
+        component: (
+          <FcmStepperPartnerSelector label="Propietario de la madre" />
+        ),
+      },
+      {
+        label: "Padre camada",
+        component: <FcmStepperDogSelector label="Padre de la camada" />,
+      },
+      {
+        label: "Madre camada",
+        component: <FcmStepperDogSelector label="Madre de la camada" />,
+      },
+    ],
     procedures: [],
     activeStep: 0,
     skippedSteps: new Set(),
+    completedSteps: {},
     currentProps: {
       isFirstRegister: false,
       packageProperty: "",
@@ -19,6 +42,7 @@ const initialState = {
       showCancel: false,
       needsConfirmation: false,
     },
+
     fatherFcm: {},
     motherFcm: {},
     fatherDogFcm: {},
@@ -45,7 +69,7 @@ export const fcmReducer = (state = initialState, action) => {
       return { ...state, fcmDogs: action.payload, fcmsIsLoading: false };
 
     case types.fcmSetPackage: {
-      console.log("esto he recibido", action);
+      console.log("***************esto he recibido", action);
       return { ...state, fcmPackage: action.payload };
     }
 

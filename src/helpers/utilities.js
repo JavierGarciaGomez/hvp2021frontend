@@ -1036,6 +1036,5 @@ export const includeInPackage = (collection = [], object, propertyName) => {
 };
 
 export const isStepSkipped = (set = new Set(), step) => {
-  console.log("set", set);
   return set.has(step);
 };

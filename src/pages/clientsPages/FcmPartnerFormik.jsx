@@ -4,10 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
+  addFcmProcedure,
   createFcmPartner,
+  handleFcmCompleteStep,
+  handleNextFcmPackageStep,
   setFcmPackage,
+  setFcmPackageCurrentProps,
+  setFcmPackageEditable,
+  setFcmPackageEditable2,
   setFcmPackageNeedsConfirmation,
+  setFcmPackageProp,
   setFcmPackageProperty,
+  setFcmPackageProperty2,
   setFcmPackageStep,
   updateFcmPartner,
 } from "../../actions/fcmActions";
@@ -197,19 +205,11 @@ export const FcmPartnerFormik = () => {
       if (!confirmation) {
         return;
       }
-
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          procedures: includeInPackage(
-            fcmPackage.procedures,
-            {
-              packageProperty,
-              procedure: "fcmRenewal",
-              _id: values._id,
-            },
-            packageProperty
-          ),
+        addFcmProcedure({
+          step: activeStep,
+          procedureType: "renewal",
+          dataId: values._id,
         })
       );
     }
@@ -294,20 +294,12 @@ export const FcmPartnerFormik = () => {
     if (newValues._id) {
       Swal.close();
       const fcmPartnerId = await dispatch(updateFcmPartner(newValues));
-      dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            isEditable: false,
-          },
-        })
-      );
+      await dispatch(setFcmPackageEditable(false));
 
       if (fcmPartnerId) {
         if (fcmPackage) {
           dispatch(setFcmPackageProperty(fcmPartnerId));
-          dispatch(setFcmPackageStep(activeStep + 1));
+          dispatch(handleFcmCompleteStep());
         }
         // navigate to previous page or profile
         // navigate(`/dashboard/documentation`);
@@ -319,7 +311,7 @@ export const FcmPartnerFormik = () => {
         // submit to parent
         if (fcmPackage) {
           dispatch(setFcmPackageProperty(fcmPartnerId));
-          dispatch(setFcmPackageStep(activeStep + 1));
+          dispatch(handleFcmCompleteStep());
         }
         // navigate(`/dashboard/documentation`);
       }
@@ -337,23 +329,16 @@ export const FcmPartnerFormik = () => {
         return;
       }
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          procedures: includeInPackage(
-            fcmPackage.procedures,
-            {
-              packageProperty,
-              procedure: "fcmRenewal",
-              _id: values._id,
-            },
-            "packageProperty"
-          ),
+        addFcmProcedure({
+          step: activeStep,
+          procedureType: "renewal",
+          dataId: values._id,
         })
       );
     }
     dispatch(setFcmPackageNeedsConfirmation(false));
     // setneedsConfirmation(false);
-    dispatch(setFcmPackageStep(activeStep + 1));
+    dispatch(handleFcmCompleteStep());
   };
 
   /*************************************************************************************************** */
@@ -390,7 +375,7 @@ export const FcmPartnerFormik = () => {
                 variant="contained"
                 fullWidth={true}
                 onClick={() => {
-                  dispatch(setFcmPackageStep(activeStep + 1));
+                  dispatch(handleNextFcmPackageStep());
                 }}
                 color="primary"
               >
@@ -402,15 +387,7 @@ export const FcmPartnerFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                dispatch(
-                  setFcmPackage({
-                    ...fcmPackage,
-                    currentProps: {
-                      ...fcmPackage.currentProps,
-                      isEditable: true,
-                    },
-                  })
-                );
+                dispatch(setFcmPackageEditable(true));
               }}
               color="primary"
             >
@@ -420,7 +397,6 @@ export const FcmPartnerFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                console.log("clicking");
                 dispatch(setFcmPackageProperty(""));
               }}
               color="error"

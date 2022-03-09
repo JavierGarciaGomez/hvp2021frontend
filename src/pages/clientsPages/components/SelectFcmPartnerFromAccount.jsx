@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFcmPackage,
+  setFcmPackageCurrentProps,
   setFcmPackageProp,
   setFcmPackageProperty,
 } from "../../../actions/fcmActions";
@@ -28,22 +29,12 @@ export const SelectFcmPartnerFromAccount = () => {
       setselectedFcmPartner(found);
 
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            isEditable: false,
-            needsConfirmation: true,
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          isEditable: false,
+          needsConfirmation: true,
         })
       );
-      dispatch(
-        setFcmPackageProp(
-          fcmPackage.currentProps.packageProperty,
-          selectedFcmPartnerId
-        )
-      );
-
       dispatch(setFcmPackageProperty(selectedFcmPartnerId));
     }
   }, [selectedFcmPartnerId]);

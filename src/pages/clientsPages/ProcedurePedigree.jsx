@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Step,
+  StepButton,
   StepLabel,
   Stepper,
   Typography,
@@ -11,11 +12,19 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  handleBack,
-  handleNext,
+  handleBackFcmPackageStep,
+  handleFcmCompleteStep,
+  handleNextFcmPackageStep,
+  setFcmCompletedSteps,
   setFcmPackage,
+  setFcmPackageCurrentProps,
   setFcmPackageSkipped,
+  setFcmPackageStep,
 } from "../../actions/fcmActions";
+import {
+  areAllStepsCompleted,
+  totalCompletedSteps,
+} from "../../helpers/fcmUtilities";
 import { isStepSkipped } from "../../helpers/utilities";
 import { FcmStepperDogSelector } from "./FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
@@ -34,7 +43,23 @@ export const ProcedurePedigree = () => {
 
   // fcmPackage is the main object created through the stepper
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, skippedSteps } = fcmPackage;
+  const { steps, activeStep, skippedSteps, completedSteps } = fcmPackage;
+
+  // TODO: PENDING
+
+  // const totalSteps = () => {
+  //   return steps.length;
+  // }
+
+  // const completedSteps = () => {
+  //   return Object.keys(completed).length;
+  // };
+  // const isLastStep = () => {
+  //   return activeStep === totalSteps() - 1;
+  // };
+  // const allStepsCompleted = () => {
+  //   return completedSteps() === totalSteps();
+  // };
 
   /*************************************************************************************************** */
   /**************************Functions related to the stepper *******************************************/
@@ -51,9 +76,7 @@ export const ProcedurePedigree = () => {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    dispatch(
-      setFcmPackage({ ...fcmPackage, activeStep: fcmPackage.activeStep + 1 })
-    );
+    dispatch(handleNextFcmPackageStep());
 
     const newSkipped = new Set(skippedSteps.values());
     newSkipped.add(activeStep);
@@ -62,7 +85,8 @@ export const ProcedurePedigree = () => {
   };
 
   const handleReset = () => {
-    dispatch(setFcmPackage({ ...fcmPackage, activeStep: 0 }));
+    dispatch(setFcmPackageStep(0));
+    dispatch(setFcmCompletedSteps({}));
   };
 
   /*************************************************************************************************** */
@@ -78,6 +102,7 @@ export const ProcedurePedigree = () => {
     needsConfirmation: false,
   };
 
+  // TODO: Here i am
   // props according to step
   useEffect(() => {
     // default
@@ -92,80 +117,64 @@ export const ProcedurePedigree = () => {
 
     if (activeStep === 0) {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            packageProperty: "fatherOwnerId",
-            formTitle: "Identificación de socio",
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          packageProperty: "fatherOwnerId",
+          formTitle: "Identificación de socio",
         })
       );
     }
 
     if (activeStep === 1) {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            packageProperty: "motherOwnerId",
-            formTitle: "Identificación de socio",
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          packageProperty: "motherOwnerId",
+          formTitle: "Identificación de socio",
         })
       );
     }
     if (activeStep === 2) {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            packageProperty: "dogFatherId",
-            formTitle: "Identificación del perro",
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          packageProperty: "dogFatherId",
+          formTitle: "Identificación del perro",
         })
       );
-    }
-    if (activeStep === 3) {
     }
     if (activeStep === 3) {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            packageProperty: "dogMotherId",
-            formTitle: "Identificación del perro",
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          packageProperty: "dogMotherId",
+          formTitle: "Identificación del perro",
         })
       );
-    }
-    if (activeStep === 3) {
     }
   }, [activeStep]);
 
   /*************************************************************************************************** */
   /**************************Steps *********************************************************************/
   /*************************************************************************************************** */
-  const steps = [
-    {
-      label: "Propietario del padre",
-      component: <FcmStepperPartnerSelector label="Propietario del padre" />,
-    },
-    {
-      label: "Propietario de la madre",
-      component: <FcmStepperPartnerSelector label="Propietario de la madre" />,
-    },
-    {
-      label: "Padre camada",
-      component: <FcmStepperDogSelector label="Padre de la camada" />,
-    },
-    {
-      label: "Madre camada",
-      component: <FcmStepperDogSelector label="Madre de la camada" />,
-    },
-  ];
+  // const steps = [
+  //   {
+  //     label: "Propietario del padre",
+  //     component: <FcmStepperPartnerSelector label="Propietario del padre" />,
+  //   },
+  //   {
+  //     label: "Propietario de la madre",
+  //     component: <FcmStepperPartnerSelector label="Propietario de la madre" />,
+  //   },
+  //   {
+  //     label: "Padre camada",
+  //     component: <FcmStepperDogSelector label="Padre de la camada" />,
+  //   },
+  //   {
+  //     label: "Madre camada",
+  //     component: <FcmStepperDogSelector label="Madre de la camada" />,
+  //   },
+  // ];
 
   /*************************************************************************************************** */
   /**************************RENDER *********************************************************************/
@@ -174,7 +183,7 @@ export const ProcedurePedigree = () => {
   return (
     <Box sx={{ width: "100%" }}>
       {/* stepper (numbers and labels) */}
-      <Stepper activeStep={activeStep} sx={{ mb: "3rem" }}>
+      <Stepper nonLinear activeStep={activeStep} sx={{ mb: "3rem" }}>
         {steps.map((step, index) => {
           const stepProps = {};
           const labelProps = {};
@@ -190,15 +199,35 @@ export const ProcedurePedigree = () => {
           }
 
           return (
-            <Step key={step.label} {...stepProps}>
-              <StepLabel {...labelProps}>{step.label}</StepLabel>
+            <Step
+              key={step.label}
+              {...stepProps}
+              completed={completedSteps[index]}
+            >
+              <StepButton
+                color="inherit"
+                onClick={() => {
+                  dispatch(setFcmPackageStep(index));
+                }}
+              >
+                {step.label}
+              </StepButton>
+              {/* <StepLabel {...labelProps}>{step.label}</StepLabel> */}
             </Step>
           );
         })}
       </Stepper>
+      {console.log(
+        "activeStep",
+        activeStep,
+        "stepslength",
+        steps.length,
+        "stepscompleted",
+        completedSteps
+      )}
 
       {/* Main content */}
-      {activeStep === steps.length ? (
+      {areAllStepsCompleted(completedSteps, steps) ? (
         //When all steps are completed
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>
@@ -213,7 +242,7 @@ export const ProcedurePedigree = () => {
         // When there are not completed show reset
         <React.Fragment>
           {/* Main content: the step component */}
-
+          {console.log("******acá", steps[activeStep].component)}
           {steps[activeStep].component}
           {/* buttons */}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -221,12 +250,13 @@ export const ProcedurePedigree = () => {
               color="inherit"
               disabled={activeStep === 0}
               onClick={() => {
-                dispatch(handleBack());
+                dispatch(handleBackFcmPackageStep());
               }}
               sx={{ mr: 1 }}
             >
               Back
             </Button>
+
             <Box sx={{ flex: "1 1 auto" }} />
             {isStepOptional(activeStep) && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
@@ -234,13 +264,34 @@ export const ProcedurePedigree = () => {
               </Button>
             )}
 
+            {/* change next after */}
+            {/* <Button onClick={handleNext} sx={{ mr: 1 }}>
+                Next
+              </Button> */}
+
             <Button
               onClick={() => {
-                dispatch(handleNext());
+                dispatch(handleNextFcmPackageStep());
               }}
             >
               {activeStep === steps.length - 1 ? "Finish" : "Next"}
             </Button>
+            {activeStep !== steps.length &&
+              (completedSteps[activeStep] ? (
+                <Typography variant="caption" sx={{ display: "inline-block" }}>
+                  Step {activeStep + 1} already completed
+                </Typography>
+              ) : (
+                <Button
+                  onClick={() => {
+                    dispatch(handleFcmCompleteStep());
+                  }}
+                >
+                  {totalCompletedSteps(completedSteps) === steps.length - 1
+                    ? "Finish"
+                    : "Complete Step"}
+                </Button>
+              ))}
           </Box>
         </React.Fragment>
       )}

@@ -1,7 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFcmPackage } from "../../actions/fcmActions";
+import {
+  setFcmPackage,
+  setFcmPackageCurrentProps,
+} from "../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";
 import { LostPartnerCard } from "./components/LostPartnerCard";
@@ -24,13 +27,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <SelectFcmPartnerFromAccount />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: false,
-              isEditable: false,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
           })
         );
       },
@@ -42,13 +42,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <SearchAndLinkPartner />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: false,
-              isEditable: false,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
           })
         );
       },
@@ -59,13 +56,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <FcmPartnerFormik />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: false,
-              isEditable: true,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
           })
         );
       },
@@ -76,13 +70,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <LostPartnerCard />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: true,
-              isEditable: true,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: true,
+            isEditable: true,
           })
         );
       },
@@ -93,13 +84,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <FcmPartnerFormik />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: true,
-              isEditable: true,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: true,
+            isEditable: true,
           })
         );
       },
@@ -118,13 +106,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
   useEffect(() => {
     if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            isFirstRegister: true,
-            isEditable: false,
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          isFirstRegister: true,
+          isEditable: false,
         })
       );
     }

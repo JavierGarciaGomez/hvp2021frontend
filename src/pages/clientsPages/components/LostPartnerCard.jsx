@@ -2,26 +2,22 @@ import { Box, Button, FormControl, Typography } from "@mui/material";
 import React, { Fragment } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFcmPackage } from "../../../actions/fcmActions";
+import { addFcmProcedure, setFcmPackage } from "../../../actions/fcmActions";
 import { fireSwalSuccess, includeInPackage } from "../../../helpers/utilities";
 import { FcmPartnerFormik } from "../FcmPartnerFormik";
 
 export const LostPartnerCard = () => {
   const dispatch = useDispatch();
   const { fcmPackage } = useSelector((state) => state.fcm);
+  const { activeStep, currentProps } = fcmPackage;
   const [showForm, setshowForm] = useState(false);
   const handleSubmit = () => {
     fireSwalSuccess("Carta responsiva agregada al paquete");
     dispatch(
-      setFcmPackage({
-        ...fcmPackage,
-        procedures: includeInPackage(
-          fcmPackage.procedures,
-          {
-            procedure: "responsive",
-          },
-          "packageProperty"
-        ),
+      addFcmProcedure({
+        step: activeStep,
+        procedureType: "responsiveLetter",
+        dataId: "responsiveLetter",
       })
     );
     setshowForm(true);

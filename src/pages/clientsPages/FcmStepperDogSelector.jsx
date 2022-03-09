@@ -1,7 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFcmPackage } from "../../actions/fcmActions";
+import {
+  setFcmPackage,
+  setFcmPackageCurrentProps,
+} from "../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";
 import { LostPartnerCard } from "./components/LostPartnerCard";
@@ -27,13 +30,10 @@ export const FcmStepperDogSelector = ({ label }) => {
       component: <SelectDogFromAccount />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: false,
-              isEditable: false,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
           })
         );
       },
@@ -45,13 +45,10 @@ export const FcmStepperDogSelector = ({ label }) => {
       component: <SearchAndLinkDog />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: false,
-              isEditable: false,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
           })
         );
       },
@@ -62,13 +59,10 @@ export const FcmStepperDogSelector = ({ label }) => {
       component: <FcmDogFormik />,
       functions: () => {
         dispatch(
-          setFcmPackage({
-            ...fcmPackage,
-            currentProps: {
-              ...fcmPackage.currentProps,
-              isFirstRegister: false,
-              isEditable: true,
-            },
+          setFcmPackageCurrentProps({
+            ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
           })
         );
       },
@@ -87,13 +81,10 @@ export const FcmStepperDogSelector = ({ label }) => {
   useEffect(() => {
     if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
       dispatch(
-        setFcmPackage({
-          ...fcmPackage,
-          currentProps: {
-            ...fcmPackage.currentProps,
-            isFirstRegister: true,
-            isEditable: false,
-          },
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          isFirstRegister: false,
+          isEditable: false,
         })
       );
     }
