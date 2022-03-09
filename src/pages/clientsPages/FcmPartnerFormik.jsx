@@ -5,6 +5,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
   addFcmProcedure,
+  cleanFcmStep,
+  cleanStep,
   createFcmPartner,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
@@ -397,7 +399,7 @@ export const FcmPartnerFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                dispatch(setFcmPackageProperty(""));
+                dispatch(cleanFcmStep());
               }}
               color="error"
             >

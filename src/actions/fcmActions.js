@@ -200,7 +200,6 @@ export const setFcmPackageSkipped = (object) => ({
 });
 
 export const handleNextFcmPackageStep = () => {
-  console.log("******estoy acá");
   return async (dispatch, getState) => {
     const fcmPackage = getState().fcm.fcmPackage;
     const { activeStep, skippedSteps, steps, completedSteps } = fcmPackage;
@@ -209,9 +208,11 @@ export const handleNextFcmPackageStep = () => {
     // find the first step that hasnt been completed
     const newActiveStep =
       isLastStep(activeStep, steps) &&
-      areAllStepsCompleted(completedSteps, steps)
+      !areAllStepsCompleted(completedSteps, steps)
         ? steps.findIndex((step, i) => !(i in completedSteps))
         : activeStep + 1;
+
+    console.log("99999999999999new active step", newActiveStep);
 
     // Todo: ¿Delete?
     if (isStepSkipped(skippedSteps, activeStep)) {
@@ -318,5 +319,42 @@ export const setFcmPackageEditable = (boolean) => {
 
     fcmPackage.currentProps.isEditable = boolean;
     dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const cleanFcmStep = () => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { activeStep, procedures, completedSteps, currentProps } = fcmPackage;
+
+    // search and remove procedures
+    const newProcedures = procedures.filter(
+      (element) => element.step !== activeStep
+    );
+    // search and remove completed steps
+    const newCompletedSteps = { ...completedSteps };
+    newCompletedSteps[activeStep] = false;
+    // search and remove packageproperty
+    const newFcmPackage = { ...fcmPackage };
+    newFcmPackage[currentProps.packageProperty] = "";
+
+    dispatch(
+      setFcmPackage({
+        ...newFcmPackage,
+        procedures: newProcedures,
+        completedSteps: newCompletedSteps,
+      })
+    );
+  };
+};
+
+export const addNewFcmStep = (object) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps } = fcmPackage;
+    const newSteps = [...steps];
+    newSteps.push(object);
+    console.log("estos son los nuevos steps", newSteps);
+    dispatch(setFcmPackageProp("steps", newSteps));
   };
 };

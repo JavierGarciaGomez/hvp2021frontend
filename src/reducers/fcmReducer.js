@@ -1,5 +1,6 @@
 // 366
 
+import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
 import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { types } from "../types/types";
@@ -28,6 +29,10 @@ const initialState = {
       {
         label: "Madre camada",
         component: <FcmStepperDogSelector label="Madre de la camada" />,
+      },
+      {
+        label: "Formato de cruza",
+        component: <FcmBreedingFormik label="Formato de cruza" />,
       },
     ],
     procedures: [],

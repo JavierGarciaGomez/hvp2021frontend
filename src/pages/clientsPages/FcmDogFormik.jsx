@@ -5,6 +5,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
   addFcmProcedure,
+  addNewFcmStep,
+  cleanFcmStep,
   createFcmDog,
   createFcmPartner,
   handleFcmCompleteStep,
@@ -36,6 +38,7 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
+import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
 export const FcmDogFormik = () => {
   const dispatch = useDispatch();
@@ -157,6 +160,13 @@ export const FcmDogFormik = () => {
           step: activeStep,
           procedureType: "transfer",
           dataId: values._id,
+        })
+      );
+      console.log("hola");
+      dispatch(
+        addNewFcmStep({
+          label: "Toma perro",
+          component: <FcmStepperPartnerSelector label="Toma perro" />,
         })
       );
     }
@@ -291,7 +301,7 @@ export const FcmDogFormik = () => {
               fullWidth={true}
               onClick={() => {
                 console.log("clicking");
-                dispatch(setFcmPackageProperty(""));
+                dispatch(cleanFcmStep());
               }}
               color="error"
             >

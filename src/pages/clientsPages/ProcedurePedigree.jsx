@@ -3,13 +3,12 @@ import {
   Button,
   Step,
   StepButton,
-  StepLabel,
   Stepper,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { useEffect } from "react";
-import { useState } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleBackFcmPackageStep,
@@ -26,8 +25,6 @@ import {
   totalCompletedSteps,
 } from "../../helpers/fcmUtilities";
 import { isStepSkipped } from "../../helpers/utilities";
-import { FcmStepperDogSelector } from "./FcmStepperDogSelector";
-import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
 export const ProcedurePedigree = () => {
   const dispatch = useDispatch();
@@ -242,8 +239,7 @@ export const ProcedurePedigree = () => {
         // When there are not completed show reset
         <React.Fragment>
           {/* Main content: the step component */}
-          {console.log("******acá", steps[activeStep].component)}
-          {steps[activeStep].component}
+
           {/* buttons */}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button
@@ -254,45 +250,28 @@ export const ProcedurePedigree = () => {
               }}
               sx={{ mr: 1 }}
             >
-              Back
+              PASO ANTERIOR
             </Button>
 
             <Box sx={{ flex: "1 1 auto" }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
-
-            {/* change next after */}
-            {/* <Button onClick={handleNext} sx={{ mr: 1 }}>
-                Next
-              </Button> */}
-
             <Button
               onClick={() => {
                 dispatch(handleNextFcmPackageStep());
               }}
             >
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+              PASO SIGUIENTE
             </Button>
+            {/* if this step is not equal to the steps lenght and is not completed: show "STEP COMPLETED". */}
             {activeStep !== steps.length &&
               (completedSteps[activeStep] ? (
                 <Typography variant="caption" sx={{ display: "inline-block" }}>
-                  Step {activeStep + 1} already completed
+                  Paso {activeStep + 1} completado
                 </Typography>
               ) : (
-                <Button
-                  onClick={() => {
-                    dispatch(handleFcmCompleteStep());
-                  }}
-                >
-                  {totalCompletedSteps(completedSteps) === steps.length - 1
-                    ? "Finish"
-                    : "Complete Step"}
-                </Button>
+                ""
               ))}
           </Box>
+          {steps[activeStep].component}
         </React.Fragment>
       )}
     </Box>
