@@ -14,7 +14,6 @@ export const FcmPartnerCard = ({
   usedInProcedure = false,
   handleClickBtn,
 }) => {
-  console.log("este es recibido", fcmPartner);
   return (
     <Card
       key={fcmPartner._id}

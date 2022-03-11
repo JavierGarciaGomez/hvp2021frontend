@@ -183,7 +183,7 @@ export const ProcedurePedigree = () => {
 
           return (
             <Step
-              key={step.label}
+              key={`${index} ${step.label}.`}
               {...stepProps}
               completed={completedSteps[index]}
             >

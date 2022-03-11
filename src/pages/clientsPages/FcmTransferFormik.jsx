@@ -120,6 +120,7 @@ export const FcmTransferFormik = () => {
 
   // set fcmpartner and fcmdog
   useEffect(() => {
+    console.log("fcmpackage", fcmPackage);
     if (checkIfPreviousStepsAreFilled(fcmPackage, activeStep)) {
       const fcmDogId = getFcmDogIdByOriginStep(fcmPackage, activeStep);
       const found = client.linkedDogs.find((el) => el._id === fcmDogId);
@@ -141,6 +142,8 @@ export const FcmTransferFormik = () => {
       setisPreviousDataLoaded(false);
     }
   }, [fcmDog, fcmPartner]);
+
+  console.log("FCMDOG FCM PARTNER", fcmDog, fcmPartner);
 
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/

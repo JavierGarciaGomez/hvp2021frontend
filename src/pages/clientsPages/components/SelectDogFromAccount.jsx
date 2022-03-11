@@ -2,6 +2,8 @@ import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepDataId,
   setFcmPackage,
   setFcmPackageCurrentProps,
   setFcmPackageProp,
@@ -28,19 +30,18 @@ export const SelectDogFromAccount = () => {
       );
       setselectedDog(found);
 
-      dispatch(
-        setFcmPackageCurrentProps({
-          ...fcmPackage.currentProps,
-          isEditable: false,
-          needsConfirmation: true,
-        })
-      );
       dispatch(setFcmPackageProperty(selectedDogId));
+
+      dispatch(
+        setFcmCurrentStepConfig({ isEditable: false, needsConfirmation: true })
+      );
+      dispatch(setFcmCurrentStepDataId(selectedDogId));
     }
   }, [selectedDogId]);
 
   const handleSubmit = () => {
     dispatch(setFcmPackageProperty(selectedDogId));
+    dispatch(setFcmCurrentStepDataId(selectedDogId));
   };
 
   const options = client.linkedDogs.map((element) => {

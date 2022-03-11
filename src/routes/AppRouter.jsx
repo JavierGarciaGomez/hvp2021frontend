@@ -35,7 +35,6 @@ export const AppRouter = () => {
   //   setisCollaborator(checkAuthorization(role, roleTypes.collaborator));
   // }, [role]);
 
-  console.log("checking", checking);
   if (checking) {
     return <CircularProgress />;
   }

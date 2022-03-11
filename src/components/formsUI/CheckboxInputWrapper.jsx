@@ -22,8 +22,6 @@ export const CheckboxInputWrapper = ({
     setFieldValue(name, checked);
   };
 
-  console.log("CHECKBOX INP", field, meta);
-
   const configCheckbox = {
     ...otherProps,
     ...field,

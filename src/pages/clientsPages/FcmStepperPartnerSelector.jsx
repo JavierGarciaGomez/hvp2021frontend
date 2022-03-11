@@ -22,6 +22,9 @@ export const FcmStepperPartnerSelector = ({ label }) => {
   const dispatch = useDispatch();
   const [selectedCase, setselectedCase] = useState("");
   const { fcmPackage } = useSelector((state) => state.fcm);
+  const { activeStep, steps } = fcmPackage;
+  const { componentName, props, stepFromOrigin, dataId, config } =
+    steps[activeStep];
 
   const options = [
     {
@@ -29,14 +32,6 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       value: "previousLinked",
       component: <SelectFcmPartnerFromAccount />,
       functions: () => {
-        // todo delete
-        dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: false,
-            isEditable: false,
-          })
-        );
         dispatch(
           setFcmCurrentStepConfig({
             isFirstRegister: false,
@@ -52,13 +47,6 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <SearchAndLinkPartner />,
       functions: () => {
         dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: false,
-            isEditable: false,
-          })
-        );
-        dispatch(
           setFcmCurrentStepConfig({
             isFirstRegister: false,
             isEditable: false,
@@ -71,13 +59,6 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       value: "newPartner",
       component: <FcmPartnerFormik />,
       functions: () => {
-        dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: false,
-            isEditable: true,
-          })
-        );
         dispatch(
           setFcmCurrentStepConfig({
             isFirstRegister: false,
@@ -92,13 +73,6 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       component: <LostPartnerCard />,
       functions: () => {
         dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: true,
-            isEditable: true,
-          })
-        );
-        dispatch(
           setFcmCurrentStepConfig({
             isFirstRegister: true,
             isEditable: true,
@@ -111,13 +85,6 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       value: "notRegisteredPartner",
       component: <FcmPartnerFormik />,
       functions: () => {
-        dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: true,
-            isEditable: true,
-          })
-        );
         dispatch(
           setFcmCurrentStepConfig({
             isFirstRegister: true,
@@ -137,28 +104,16 @@ export const FcmStepperPartnerSelector = ({ label }) => {
     setselectedCase("");
   }, [fcmPackage.activeStep]);
 
-  useEffect(() => {
-    if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
-      dispatch(setFcmPackageEditable(false));
-      dispatch(setFcmCurrentStepEditable(false));
-    }
-  }, [fcmPackage.currentProps.packageProperty]);
-
   /*************************************************************************************************** */
   /**************************RENDER *********************************************************************/
   /*************************************************************************************************** */
 
-  console.log(
-    "22222222222 a ver",
-    fcmPackage[fcmPackage.currentProps.packageProperty],
-    "está facío"
-  );
   return (
     <Box>
       <Typography variant="h4" component="h2" mb="3rem">
         {label}
       </Typography>
-      {fcmPackage[fcmPackage.currentProps.packageProperty] !== "" ? (
+      {dataId ? (
         <FcmPartnerFormik />
       ) : (
         <Fragment>
@@ -173,20 +128,6 @@ export const FcmStepperPartnerSelector = ({ label }) => {
             findObjectByProperty(options, "value", selectedCase).component}
         </Fragment>
       )}
-
-      {/* <FormControl fullWidth>
-        <InputLabel>Selecciona el trámite</InputLabel>
-        <Select label="Propietario del Padre" onChange={handleSelect}>
-          {options.map((element) => {
-            return (
-              <MenuItem key={element.value} value={element.value}>
-                {element.label}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl> */}
-      {/* <FcmPartnerFormik /> */}
     </Box>
   );
 };

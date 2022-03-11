@@ -158,16 +158,15 @@ export const updateFcmDog = (object) => {
       console.log("esta respuesta tengo", body);
 
       if (body.ok) {
-        console.log("****LLEGUÉ 0");
         const client = getState().clients.client;
-        console.log("****LLEGUÉ 1", client);
+
         client.linkedDogs = replaceElementInCollection(
           object,
           client.linkedDogs
         );
-        console.log("****LLEGUÉ 1.5", client);
+
         dispatch(updateClientReducer({ ...client }));
-        console.log("****LLEGUÉ 2");
+
         fireSwalSuccess(body.msg);
         return body.updatedData._id;
       } else {
@@ -416,6 +415,11 @@ export const cleanFcmStep = () => {
     const newProcedures = procedures.filter(
       (element) => element.step !== activeStep
     );
+
+    // search and remove steps
+    const newSteps = steps.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
     // search and remove completed steps
     const newCompletedSteps = { ...completedSteps };
     newCompletedSteps[activeStep] = false;
@@ -423,17 +427,18 @@ export const cleanFcmStep = () => {
     const newFcmPackage = { ...fcmPackage };
     newFcmPackage[currentProps.packageProperty] = "";
     // new data set delete
-    if (activeStep > 4 || activeStep < 2) {
-      steps[activeStep].dataId = null;
-      steps[activeStep].config.isEditable = true;
-    }
+
+    console.log("newSteps", newSteps, "steps", steps);
+
+    newSteps[activeStep].dataId = null;
+    newSteps[activeStep].config.isEditable = true;
 
     dispatch(
       setFcmPackage({
         ...newFcmPackage,
         procedures: newProcedures,
         completedSteps: newCompletedSteps,
-        steps,
+        steps: newSteps,
       })
     );
   };
@@ -559,13 +564,13 @@ export const setFcmCurrentStepDataId = (dataId) => {
 };
 
 export const setFcmCurrentStepConfig = (data = {}) => {
-  console.log("***********STEFCMCURRENT STEP", data);
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
     const { steps, activeStep } = fcmPackage;
     const newSteps = [...steps];
     const newConfig = { ...newSteps[activeStep].config, ...data };
     newSteps[activeStep].config = { ...newConfig };
+    console.log("new config", newConfig);
     fcmPackage.steps = newSteps;
     dispatch(setFcmPackage({ ...fcmPackage }));
   };

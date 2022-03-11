@@ -2,6 +2,8 @@ import { Box, Typography } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepEditable,
   setFcmPackage,
   setFcmPackageCurrentProps,
 } from "../../actions/fcmActions";
@@ -29,6 +31,7 @@ export const FcmStepperDogSelector = ({ label }) => {
       value: "previousLinked",
       component: <SelectDogFromAccount />,
       functions: () => {
+        // todo: delete
         dispatch(
           setFcmPackageCurrentProps({
             ...fcmPackage.currentProps,
@@ -36,6 +39,7 @@ export const FcmStepperDogSelector = ({ label }) => {
             isEditable: false,
           })
         );
+        dispatch(setFcmCurrentStepEditable(false));
       },
     },
     {
@@ -44,6 +48,7 @@ export const FcmStepperDogSelector = ({ label }) => {
       value: "previousDataBase",
       component: <SearchAndLinkDog />,
       functions: () => {
+        // todo: delete
         dispatch(
           setFcmPackageCurrentProps({
             ...fcmPackage.currentProps,
@@ -51,6 +56,7 @@ export const FcmStepperDogSelector = ({ label }) => {
             isEditable: false,
           })
         );
+        dispatch(setFcmCurrentStepEditable(false));
       },
     },
     {
@@ -65,6 +71,7 @@ export const FcmStepperDogSelector = ({ label }) => {
             isEditable: false,
           })
         );
+        dispatch(setFcmCurrentStepEditable(true));
       },
     },
   ];
@@ -88,6 +95,7 @@ export const FcmStepperDogSelector = ({ label }) => {
         })
       );
     }
+    dispatch(setFcmCurrentStepEditable(false));
   }, [fcmPackage.currentProps.packageProperty]);
 
   /*************************************************************************************************** */

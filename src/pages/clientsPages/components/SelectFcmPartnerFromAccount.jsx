@@ -29,14 +29,6 @@ export const SelectFcmPartnerFromAccount = () => {
         selectedFcmPartnerId
       );
       setselectedFcmPartner(found);
-      // todo: delete
-      dispatch(
-        setFcmPackageCurrentProps({
-          ...fcmPackage.currentProps,
-          isEditable: false,
-          needsConfirmation: true,
-        })
-      );
       dispatch(setFcmPackageProperty(selectedFcmPartnerId));
 
       dispatch(
@@ -47,7 +39,6 @@ export const SelectFcmPartnerFromAccount = () => {
   }, [selectedFcmPartnerId]);
 
   const handleSubmit = () => {
-    dispatch(setFcmPackageProperty(selectedFcmPartnerId));
     dispatch(setFcmCurrentStepDataId(selectedFcmPartnerId));
   };
 

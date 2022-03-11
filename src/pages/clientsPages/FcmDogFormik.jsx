@@ -10,6 +10,9 @@ import {
   createFcmDog,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepDataId,
+  setFcmCurrentStepEditable,
   setFcmPackageEditable,
   setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
@@ -44,62 +47,42 @@ export const FcmDogFormik = () => {
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, currentProps } = fcmPackage;
-  const {
-    isEditable,
-    packageProperty,
-    needsConfirmation,
-    formTitle,
-    showCancel,
-  } = currentProps;
+  const { activeStep, steps, currentProps } = fcmPackage;
 
   const [filesPedigreeFront, setfilesPedigreeFront] = useState([]);
   const [filesPedigreeBack, setfilesPedigreeBack] = useState([]);
   const [imgUrlPedigreeFront, setImgUrlPedigreeFront] = useState(null);
   const [imgUrlPedigreeBack, setImgUrlPedigreeBack] = useState(null);
 
-  const [fcmDog, setfcmDog] = useState(null);
+  const { label, componentName, props, stepFromOrigin, dataId, config } =
+    steps[activeStep];
+  const { isEditable, needsConfirmation, formTitle, showCancel } = config;
+  const [componentData, setcomponentData] = useState({});
 
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
 
-  // find fcmPartner and set it active (searching from id)
   useEffect(() => {
-    if (!isObjectEmpty(client)) {
-      let found = client.linkedDogs.find((el) => el._id === id);
-      // set active
+    if (dataId) {
+      let found = client.linkedDogs.find((el) => el._id === dataId);
+
       if (found) {
-        // set the image found to be used in the component
-        setImgUrlPedigreeFront(found.urlFront);
-        setImgUrlPedigreeBack(found.urlBack);
-        found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
-        return setformValues({ ...found });
-      }
-    }
-  }, []);
-
-  // find fcmPartner and set it active (searching from package)
-  useEffect(() => {
-    if (fcmPackage[packageProperty]) {
-      let found = client.linkedDogs.find(
-        (el) => el._id === fcmPackage[packageProperty]
-      );
-
-      setfcmDog(found);
-      console.log("este perro encontré", found);
-
-      // set active
-      if (found) {
-        // set the image found to be used in the component
         setImgUrlPedigreeFront(found.urlFront);
         setImgUrlPedigreeBack(found.urlBack);
 
+        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
         found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
-        return setformValues({ ...found });
+
+        setcomponentData({ ...found });
+        setformValues({ ...found });
       }
+    } else {
+      setcomponentData(null);
+      setImgUrlPedigreeFront(null);
+      setImgUrlPedigreeBack(null);
     }
-  }, [fcmPackage]);
+  }, [dataId]);
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
@@ -174,7 +157,7 @@ export const FcmDogFormik = () => {
     return true;
   };
   const handleSubmit = async (values) => {
-    if (!handleConfirmTransfer(values)) {
+    if (!(await handleConfirmTransfer(values))) {
       return;
     }
     fireSwalWait();
@@ -218,17 +201,28 @@ export const FcmDogFormik = () => {
     } else {
       fcmDogId = await dispatch(createFcmDog(newValues));
     }
-    dispatch(setFcmPackageEditable(false));
+    // if there is an error in the dispach return
+    if (!fcmDogId) {
+      return;
+    }
+    // todo delete
     dispatch(setFcmPackageProperty(fcmDogId));
+
+    dispatch(
+      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
+    );
+    dispatch(setFcmCurrentStepDataId(fcmDogId));
     dispatch(handleFcmCompleteStep());
   };
 
   const handleConfirmation = async () => {
-    const values = { ...fcmDog };
-    if (!handleConfirmTransfer(values)) {
+    const values = { ...componentData };
+    if (!(await handleConfirmTransfer(values))) {
       return;
     }
-    dispatch(setFcmPackageNeedsConfirmation(false));
+    dispatch(
+      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
+    );
     dispatch(handleFcmCompleteStep());
   };
 
@@ -245,9 +239,9 @@ export const FcmDogFormik = () => {
       {!isEditable && (
         <Box sx={{ mb: "3rem" }}>
           <Typography sx={{ mb: "2rem", lineHeight: "1.5" }}>
-            Los datos de socio del propietario del padre han sido llenados,
-            puedes continuar con el paso siguiente, editar los datos o remover
-            la selección.
+            {needsConfirmation
+              ? "Perro seleccionado. Confirma los datos, edítalos o remueve para seleccionar otro."
+              : "Los datos de la FCM del perro han sido llenados, puedes continuar con el paso siguiente, editar los datos o remover la selección."}
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
             {needsConfirmation ? (
@@ -278,7 +272,7 @@ export const FcmDogFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                dispatch(setFcmPackageEditable(true));
+                dispatch(setFcmCurrentStepEditable(true));
               }}
               color="primary"
             >
@@ -288,7 +282,6 @@ export const FcmDogFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                console.log("clicking");
                 dispatch(cleanFcmStep());
               }}
               color="error"

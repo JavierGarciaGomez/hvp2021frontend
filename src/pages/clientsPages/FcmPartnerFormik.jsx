@@ -13,7 +13,6 @@ import {
   setFcmCurrentStepDataId,
   setFcmCurrentStepEditable,
   setFcmPackageEditable,
-  setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
   updateFcmPartner,
 } from "../../actions/fcmActions";
@@ -56,12 +55,10 @@ export const FcmPartnerFormik = () => {
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
 
   const [isPending, setisPending] = useState(false);
-  const { label, componentName, props, stepFromOrigin, dataId, config } =
-    steps[activeStep];
+  const { dataId, config } = steps[activeStep];
   const {
     isEditable,
     isFirstRegister,
-    packageProperty,
     needsConfirmation,
     formTitle,
     showCancel,
@@ -136,10 +133,12 @@ export const FcmPartnerFormik = () => {
   /*************************************************************************************************** */
 
   const handleConfirmRenewal = async (values) => {
+    console.log("HANDLE CONFIRM RENEWAL");
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
         "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
       );
+      console.log("confirmation", confirmation);
       if (!confirmation) {
         return false;
       }
@@ -156,7 +155,7 @@ export const FcmPartnerFormik = () => {
 
   const handleSubmit = async (values) => {
     // if the date is going to expire in the next 2 weeks ask confirmatio
-    if (!handleConfirmRenewal(values)) {
+    if (!(await handleConfirmRenewal(values))) {
       return;
     }
     fireSwalWait();
@@ -237,11 +236,17 @@ export const FcmPartnerFormik = () => {
     } else {
       fcmPartnerId = await dispatch(createFcmPartner(newValues));
     }
+
+    // if there is an error in the dispach return
+    if (!fcmPartnerId) {
+      return;
+    }
     // TODO DELETE
-    dispatch(setFcmPackageEditable(false));
     dispatch(setFcmPackageProperty(fcmPartnerId));
 
-    dispatch(setFcmCurrentStepEditable(false));
+    dispatch(
+      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
+    );
     dispatch(setFcmCurrentStepDataId(fcmPartnerId));
     dispatch(handleFcmCompleteStep());
   };
@@ -249,23 +254,9 @@ export const FcmPartnerFormik = () => {
   const handleConfirmation = async () => {
     const values = { ...componentData };
 
-    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
-      const confirmation = await fireSwalConfirmation(
-        "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
-      );
-      if (!confirmation) {
-        return;
-      }
-      dispatch(
-        addFcmProcedure({
-          step: activeStep,
-          procedureType: "renewal",
-          dataId: values._id,
-        })
-      );
+    if (!(await handleConfirmRenewal(values))) {
+      return;
     }
-    // Todo Delete
-    dispatch(setFcmPackageNeedsConfirmation(false));
 
     dispatch(setFcmCurrentStepConfig({ needsConfirmation: false }));
     // setneedsConfirmation(false);
@@ -311,8 +302,6 @@ export const FcmPartnerFormik = () => {
     }
   }, [isFirstRegister, componentData]);
 
-  console.log("11111111111 is pending", componentData);
-
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
   /*************************************************************************************************** */
@@ -326,9 +315,9 @@ export const FcmPartnerFormik = () => {
       {!isEditable && (
         <Box sx={{ mb: "3rem" }}>
           <Typography sx={{ mb: "2rem", lineHeight: "1.5" }}>
-            Los datos de socio del propietario del padre han sido llenados,
-            puedes continuar con el paso siguiente, editar los datos o remover
-            la selección.
+            {needsConfirmation
+              ? "Socio seleccionado. Confirma los datos, edítalos o remueve para seleccionar otro socio."
+              : "Los datos de socio del propietario del han sido llenados, puedes continuar con el paso siguiente, editar los datos o remover la selección."}
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
             {needsConfirmation ? (

@@ -7,20 +7,13 @@ import {
   addFcmProcedure,
   addNewFcmStep,
   cleanFcmStep,
-  createFcmDog,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
   setFcmBreedingForm,
   setFcmPackageEditable,
   setFcmPackageNeedsConfirmation,
-  setFcmPackageProperty,
-  updateFcmDog,
 } from "../../actions/fcmActions";
-import {
-  fireSwalError,
-  isObjectEmpty,
-  setUrlValueOrRefreshImage,
-} from "../../helpers/utilities";
+import { fireSwalError, isObjectEmpty } from "../../helpers/utilities";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
@@ -28,15 +21,14 @@ import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
 
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
-import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 import {
   generatePuppiesValidationParams,
   generatePuppiesValues,
 } from "../../helpers/fcmUtilities";
+import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 
 export const FcmBreedingFormik = ({ label }) => {
   const dispatch = useDispatch();
@@ -47,14 +39,16 @@ export const FcmBreedingFormik = ({ label }) => {
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, currentProps } = fcmPackage;
+  const { activeStep, steps } = fcmPackage;
+  const { config } = steps[activeStep];
   const {
     isEditable,
+    isFirstRegister,
     packageProperty,
     needsConfirmation,
     formTitle,
     showCancel,
-  } = currentProps;
+  } = config;
 
   const [fcmDog, setfcmDog] = useState(null);
   const [registersAmount, setregistersAmount] = useState("");
@@ -94,20 +88,6 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
-
-  // find fcmPartner and set it active (searching from id)
-  useEffect(() => {
-    if (!isObjectEmpty(client)) {
-      // let found = client.linkedDogs.find((el) => el._id === id);
-      // // set active
-      // if (found) {
-      //   // set the image found to be used in the component
-      //   found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
-      //   return setformValues({ ...found });
-      // }
-    }
-  }, []);
-
   // todo: Doing
   // add initialValues if the register num change
   useEffect(() => {
@@ -135,40 +115,12 @@ export const FcmBreedingFormik = ({ label }) => {
     setformValidation(Yup.object().shape(validationParams));
   }, [validationParams]);
 
-  // find fcmPartner and set it active (searching from package)
-  useEffect(() => {
-    if (fcmPackage[packageProperty]) {
-      let found = client.linkedDogs.find(
-        (el) => el._id === fcmPackage[packageProperty]
-      );
-
-      setfcmDog(found);
-
-      // set active
-      if (found) {
-        // set the image found to be used in the component
-
-        // found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
-        return setformValues({ ...found });
-      }
-    }
-  }, [fcmPackage]);
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
 
   const handleSubmit = async (values) => {
-    // if the date is going to expire in the next 2 weeks ask confirmation
-
-    console.log("values", values);
-    Swal.fire({
-      title: "Cargando información",
-      text: "Por favor, espere",
-      allowOutsideClick: false,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    fireSwalWait();
     // todo
     if (values.puppyNeedsTransfer1) {
       dispatch(
@@ -200,8 +152,6 @@ export const FcmBreedingFormik = ({ label }) => {
     dispatch(setFcmBreedingForm(newValues));
 
     dispatch(handleFcmCompleteStep());
-
-    // navigate(`/dashboard/documentation`);
   };
 
   const handleConfirmation = async () => {
