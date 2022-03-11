@@ -4,46 +4,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
-  addFcmProcedure,
   cleanFcmStep,
-  createFcmPartner,
   createFcmtransfer,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  setFcmCurrentStepDataId,
+  setFcmCurrentStepEditable,
   setFcmPackageEditable,
-  setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
-  updateFcmPartner,
   updateFcmtransfer,
 } from "../../actions/fcmActions";
 import {
-  fireSwalConfirmation,
   fireSwalError,
   isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
-import {
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
-import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
+
 import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
 import { DragImageUpload } from "../../components/formsUI/DragImageUpload";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import dayjs from "dayjs";
+
 import Swal from "sweetalert2";
 import {
   checkIfPreviousStepsAreFilled,
   getFcmDogIdByOriginStep,
   getFcmParterIdByOriginStep,
 } from "../../helpers/fcmUtilities";
+import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 
 export const FcmTransferFormik = () => {
   const dispatch = useDispatch();
@@ -57,7 +47,7 @@ export const FcmTransferFormik = () => {
   const { activeStep, currentProps, steps } = fcmPackage;
   const {
     isFirstRegister,
-    isEditable,
+
     packageProperty,
     needsConfirmation,
     formTitle,
@@ -71,10 +61,62 @@ export const FcmTransferFormik = () => {
   const [isPending, setisPending] = useState(false);
   const [fcmDog, setfcmDog] = useState({});
   const [isPreviousDataLoaded, setisPreviousDataLoaded] = useState(false);
+  const { label, componentName, props, stepFromOrigin, dataId, config } =
+    steps[activeStep];
+  const { isEditable } = config;
+  const [componentData, setcomponentData] = useState({});
+
+  /*************************************************************************************************** */
+  /************************** Initial values and validation *******************************************************/
+  /*************************************************************************************************** */
+
+  let initialValues = {
+    firstName: "",
+    paternalSurname: "",
+    maternalSurname: "",
+    urlFrontIne: "",
+    urlBackIne: "",
+  };
+
+  let validationParams = {
+    firstName: Yup.string().trim().required("Es obligatorio"),
+    paternalSurname: Yup.string().trim().required("Es obligatorio"),
+    maternalSurname: Yup.string().trim().required("Es obligatorio"),
+  };
+
+  let formValidation = Yup.object().shape(validationParams);
+
+  const [formValues, setformValues] = useState(initialValues);
 
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
+
+  // check if there is already a saved transfer
+  useEffect(() => {
+    if (dataId) {
+      let found = client.linkedFcmTransfers.find((el) => el._id === dataId);
+      console.log("found", found);
+      if (found) {
+        setcomponentData({ ...found });
+
+        setImgUrlFrontIne(found.previousOwner.urlFrontIne);
+        setImgUrlBackIne(found.previousOwner.urlBackIne);
+      }
+    } else {
+      setcomponentData(null);
+      setImgUrlBackIne(null);
+      setImgUrlFrontIne(null);
+    }
+  }, [dataId]);
+
+  useEffect(() => {
+    if (!isObjectEmpty(componentData)) {
+      setformValues({ ...componentData.previousOwner });
+    } else {
+      setformValues({ ...initialValues });
+    }
+  }, [componentData]);
 
   // set fcmpartner and fcmdog
   useEffect(() => {
@@ -101,32 +143,11 @@ export const FcmTransferFormik = () => {
   }, [fcmDog, fcmPartner]);
 
   /*************************************************************************************************** */
-  /************************** Initial values and validation *******************************************************/
-  /*************************************************************************************************** */
-
-  let initialValues = {
-    firstName: "",
-    paternalSurname: "",
-    maternalSurname: "",
-    urlFrontIne: "",
-    urlBackIne: "",
-  };
-
-  let validationParams = {
-    firstName: Yup.string().trim().required("Es obligatorio"),
-    paternalSurname: Yup.string().trim().required("Es obligatorio"),
-    maternalSurname: Yup.string().trim().required("Es obligatorio"),
-  };
-
-  let formValidation = Yup.object().shape(validationParams);
-
-  const [formValues, setformValues] = useState(initialValues);
-
-  /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
 
   const handleSubmit = async (values) => {
+    fireSwalWait("Cargando información", "Por favor, espere");
     Swal.fire({
       title: "Cargando información",
       text: "Por favor, espere",
@@ -136,6 +157,7 @@ export const FcmTransferFormik = () => {
       },
     });
 
+    // check if the images are loaded
     if (filesFrontINE.length === 0 && !imgUrlFrontIne) {
       return fireSwalError("Se debe cargar la imagen frontal del INE");
     }
@@ -165,56 +187,22 @@ export const FcmTransferFormik = () => {
       dog: { ...fcmDog },
     };
 
+    // close sweet alert
+    Swal.close();
+    // set current step not editable
     // if there is an ID: update. If not: create
-    if (finalValues._id) {
-      Swal.close();
-      const fcmTransferId = await dispatch(updateFcmtransfer(finalValues));
-      await dispatch(setFcmPackageEditable(false));
-
-      if (fcmTransferId) {
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmTransferId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate to previous page or profile
-        // navigate(`/dashboard/documentation`);
-      }
+    let fcmTransferId = null;
+    if (!finalValues._id) {
+      fcmTransferId = await dispatch(createFcmtransfer(finalValues));
     } else {
-      Swal.close();
-      const fcmTransferId = await dispatch(createFcmtransfer(finalValues));
-      if (fcmTransferId) {
-        // submit to parent
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmTransferId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate(`/dashboard/documentation`);
-      }
+      fcmTransferId = await dispatch(updateFcmtransfer(finalValues));
     }
+    dispatch(setFcmCurrentStepEditable(false));
+    dispatch(setFcmCurrentStepDataId(fcmTransferId));
+    dispatch(handleFcmCompleteStep());
+
+    // navigate(`/dashboard/documentation`);
   };
-
-  // const handleConfirmation = async () => {
-  //   const values = { ...fcmPartner };
-
-  //   if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
-  //     const confirmation = await fireSwalConfirmation(
-  //       "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
-  //     );
-  //     if (!confirmation) {
-  //       return;
-  //     }
-  //     dispatch(
-  //       addFcmProcedure({
-  //         step: activeStep,
-  //         procedureType: "renewal",
-  //         dataId: values._id,
-  //       })
-  //     );
-  //   }
-  //   dispatch(setFcmPackageNeedsConfirmation(false));
-  //   // setneedsConfirmation(false);
-  //   dispatch(handleFcmCompleteStep());
-  // };
 
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
@@ -246,35 +234,22 @@ export const FcmTransferFormik = () => {
               <Box
                 sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}
               >
-                {needsConfirmation ? (
-                  <Button
-                    variant="contained"
-                    fullWidth={true}
-                    // onClick={() => {
-                    //   handleConfirmation();
-                    // }}
-                    color="primary"
-                  >
-                    Confirmar
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    fullWidth={true}
-                    onClick={() => {
-                      dispatch(handleNextFcmPackageStep());
-                    }}
-                    color="primary"
-                  >
-                    Siguiente paso
-                  </Button>
-                )}
+                <Button
+                  variant="contained"
+                  fullWidth={true}
+                  onClick={() => {
+                    dispatch(handleNextFcmPackageStep());
+                  }}
+                  color="primary"
+                >
+                  Siguiente paso
+                </Button>
 
                 <Button
                   variant="contained"
                   fullWidth={true}
                   onClick={() => {
-                    dispatch(setFcmPackageEditable(true));
+                    dispatch(setFcmCurrentStepEditable(true));
                   }}
                   color="primary"
                 >

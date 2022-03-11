@@ -6,25 +6,20 @@ import * as Yup from "yup";
 import {
   addFcmProcedure,
   cleanFcmStep,
-  cleanStep,
   createFcmPartner,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
-  setFcmPackage,
-  setFcmPackageCurrentProps,
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepDataId,
+  setFcmCurrentStepEditable,
   setFcmPackageEditable,
-  setFcmPackageEditable2,
   setFcmPackageNeedsConfirmation,
-  setFcmPackageProp,
   setFcmPackageProperty,
-  setFcmPackageProperty2,
-  setFcmPackageStep,
   updateFcmPartner,
 } from "../../actions/fcmActions";
 import {
   fireSwalConfirmation,
   fireSwalError,
-  includeInPackage,
   isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
@@ -37,25 +32,19 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 
 export const FcmPartnerFormik = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, currentProps } = fcmPackage;
-  const {
-    isFirstRegister,
-    isEditable,
-    packageProperty,
-    needsConfirmation,
-    formTitle,
-    showCancel,
-  } = currentProps;
+  const { activeStep, steps } = fcmPackage;
 
   const [filesFcmPartner, setfilesFcmPartner] = useState([]);
   const [filesProofOfResidency, setfilesProofOfResidency] = useState([]);
@@ -66,72 +55,18 @@ export const FcmPartnerFormik = () => {
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
 
-  const [fcmPartner, setfcmPartner] = useState(null);
   const [isPending, setisPending] = useState(false);
-
-  /*************************************************************************************************** */
-  /**************************use effects  **************************************************************/
-  /*************************************************************************************************** */
-
-  // find fcmPartner and set it active (searching from id)
-  useEffect(() => {
-    if (!isObjectEmpty(client)) {
-      let found = client.linkedFcmPartners.find((el) => el._id === id);
-      // set active fcmPartner
-      if (found) {
-        // set the image found to be used in the component
-        setImgUrlPartnerCard(found.urlPartnerCard);
-        setImgUrlProofOfResidency(found.urlProofOfResidency);
-        setImgUrlFrontIne(found.urlFrontIne);
-        setImgUrlBackIne(found.urlBackIne);
-
-        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
-        const { address } = found;
-
-        const foundWithAddress = { ...found, ...address };
-
-        return setformValues(foundWithAddress);
-      }
-    }
-  }, []);
-
-  // find fcmPartner and set it active (searching from package)
-  useEffect(() => {
-    if (fcmPackage[packageProperty]) {
-      let found = client.linkedFcmPartners.find(
-        (el) => el._id === fcmPackage[packageProperty]
-      );
-
-      setfcmPartner(found);
-
-      // set active fcmPartner
-      if (found) {
-        // set the image found to be used in the component
-        setImgUrlPartnerCard(found.urlPartnerCard);
-        setImgUrlProofOfResidency(found.urlProofOfResidency);
-        setImgUrlFrontIne(found.urlFrontIne);
-        setImgUrlBackIne(found.urlBackIne);
-
-        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
-        const { address } = found;
-
-        const foundWithAddress = { ...found, ...address };
-
-        return setformValues(foundWithAddress);
-      }
-    }
-  }, [fcmPackage]);
-
-  useEffect(() => {
-    console.log("fcmPartnerFormik use effect is pending", fcmPartner);
-    if (fcmPartner) {
-      setisPending(fcmPartner.isPending);
-    } else {
-      setisPending(isFirstRegister);
-    }
-  }, [isFirstRegister, fcmPartner]);
-
-  console.log("11111111111 is pending", isPending);
+  const { label, componentName, props, stepFromOrigin, dataId, config } =
+    steps[activeStep];
+  const {
+    isEditable,
+    isFirstRegister,
+    packageProperty,
+    needsConfirmation,
+    formTitle,
+    showCancel,
+  } = config;
+  const [componentData, setcomponentData] = useState({});
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
@@ -200,15 +135,13 @@ export const FcmPartnerFormik = () => {
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
 
-  const handleSubmit = async (values) => {
-    // if the date is going to expire in the next 2 weeks ask confirmatio
-
+  const handleConfirmRenewal = async (values) => {
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
         "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
       );
       if (!confirmation) {
-        return;
+        return false;
       }
       dispatch(
         addFcmProcedure({
@@ -218,14 +151,15 @@ export const FcmPartnerFormik = () => {
         })
       );
     }
-    Swal.fire({
-      title: "Cargando información",
-      text: "Por favor, espere",
-      allowOutsideClick: false,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    return true;
+  };
+
+  const handleSubmit = async (values) => {
+    // if the date is going to expire in the next 2 weeks ask confirmatio
+    if (!handleConfirmRenewal(values)) {
+      return;
+    }
+    fireSwalWait();
 
     if (!isPending) {
       if (filesFcmPartner.length === 0 && !imgUrlPartnerCard) {
@@ -295,36 +229,25 @@ export const FcmPartnerFormik = () => {
       country,
     };
 
+    Swal.close();
+    let fcmPartnerId = null;
     // if there is an ID: update. If not: create
     if (newValues._id) {
-      Swal.close();
-      const fcmPartnerId = await dispatch(updateFcmPartner(newValues));
-      await dispatch(setFcmPackageEditable(false));
-
-      if (fcmPartnerId) {
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmPartnerId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate to previous page or profile
-        // navigate(`/dashboard/documentation`);
-      }
+      fcmPartnerId = await dispatch(updateFcmPartner(newValues));
     } else {
-      Swal.close();
-      const fcmPartnerId = await dispatch(createFcmPartner(newValues));
-      if (fcmPartnerId) {
-        // submit to parent
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmPartnerId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate(`/dashboard/documentation`);
-      }
+      fcmPartnerId = await dispatch(createFcmPartner(newValues));
     }
+    // TODO DELETE
+    dispatch(setFcmPackageEditable(false));
+    dispatch(setFcmPackageProperty(fcmPartnerId));
+
+    dispatch(setFcmCurrentStepEditable(false));
+    dispatch(setFcmCurrentStepDataId(fcmPartnerId));
+    dispatch(handleFcmCompleteStep());
   };
 
   const handleConfirmation = async () => {
-    const values = { ...fcmPartner };
+    const values = { ...componentData };
 
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
@@ -341,10 +264,54 @@ export const FcmPartnerFormik = () => {
         })
       );
     }
+    // Todo Delete
     dispatch(setFcmPackageNeedsConfirmation(false));
+
+    dispatch(setFcmCurrentStepConfig({ needsConfirmation: false }));
     // setneedsConfirmation(false);
     dispatch(handleFcmCompleteStep());
   };
+
+  /*************************************************************************************************** */
+  /**************************use effects  **************************************************************/
+  /*************************************************************************************************** */
+
+  // find fcmPartner and set it active (searching from id)
+  useEffect(() => {
+    if (dataId) {
+      let found = client.linkedFcmPartners.find((el) => el._id === dataId);
+
+      if (found) {
+        setImgUrlPartnerCard(found.urlPartnerCard);
+        setImgUrlProofOfResidency(found.urlProofOfResidency);
+        setImgUrlFrontIne(found.urlFrontIne);
+        setImgUrlBackIne(found.urlBackIne);
+        found.expirationDate = dayjs(found.expirationDate).format("YYYY-MM-DD");
+        const { address } = found;
+
+        const foundWithAddress = { ...found, ...address };
+
+        setcomponentData({ ...foundWithAddress });
+        setformValues({ ...foundWithAddress });
+      }
+    } else {
+      setcomponentData(null);
+      setImgUrlPartnerCard(null);
+      setImgUrlProofOfResidency(null);
+      setImgUrlFrontIne(null);
+      setImgUrlBackIne(null);
+    }
+  }, [dataId]);
+
+  useEffect(() => {
+    if (!isObjectEmpty(componentData)) {
+      setisPending(componentData.isPending);
+    } else {
+      setisPending(isFirstRegister);
+    }
+  }, [isFirstRegister, componentData]);
+
+  console.log("11111111111 is pending", componentData);
 
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
@@ -392,7 +359,9 @@ export const FcmPartnerFormik = () => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
+                // todo delete
                 dispatch(setFcmPackageEditable(true));
+                dispatch(setFcmCurrentStepEditable(true));
               }}
               color="primary"
             >

@@ -409,7 +409,8 @@ export const setFcmPackageEditable = (boolean) => {
 export const cleanFcmStep = () => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
-    const { activeStep, procedures, completedSteps, currentProps } = fcmPackage;
+    const { activeStep, procedures, completedSteps, currentProps, steps } =
+      fcmPackage;
 
     // search and remove procedures
     const newProcedures = procedures.filter(
@@ -421,12 +422,18 @@ export const cleanFcmStep = () => {
     // search and remove packageproperty
     const newFcmPackage = { ...fcmPackage };
     newFcmPackage[currentProps.packageProperty] = "";
+    // new data set delete
+    if (activeStep > 4 || activeStep < 2) {
+      steps[activeStep].dataId = null;
+      steps[activeStep].config.isEditable = true;
+    }
 
     dispatch(
       setFcmPackage({
         ...newFcmPackage,
         procedures: newProcedures,
         completedSteps: newCompletedSteps,
+        steps,
       })
     );
   };
@@ -526,5 +533,40 @@ export const setFcmBreedingForm = (values) => {
     dispatch(setFcmPackageProp, "breedingForm", values);
 
     fireSwalSuccess("Éxito");
+  };
+};
+
+export const setFcmCurrentStepEditable = (boolean) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = [...steps];
+    newSteps[activeStep].config.isEditable = boolean;
+    fcmPackage.steps = newSteps;
+    dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const setFcmCurrentStepDataId = (dataId) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = [...steps];
+    newSteps[activeStep].dataId = dataId;
+    fcmPackage.steps = newSteps;
+    dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const setFcmCurrentStepConfig = (data = {}) => {
+  console.log("***********STEFCMCURRENT STEP", data);
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = [...steps];
+    const newConfig = { ...newSteps[activeStep].config, ...data };
+    newSteps[activeStep].config = { ...newConfig };
+    fcmPackage.steps = newSteps;
+    dispatch(setFcmPackage({ ...fcmPackage }));
   };
 };

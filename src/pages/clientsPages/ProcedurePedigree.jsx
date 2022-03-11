@@ -16,7 +16,6 @@ import {
   handleNextFcmPackageStep,
   saveFcmPackage,
   setFcmCompletedSteps,
-  setFcmPackage,
   setFcmPackageCurrentProps,
   setFcmPackageSkipped,
   setFcmPackageStep,
@@ -45,20 +44,6 @@ export const ProcedurePedigree = () => {
   const { steps, activeStep, skippedSteps, completedSteps } = fcmPackage;
 
   // TODO: PENDING
-
-  // const totalSteps = () => {
-  //   return steps.length;
-  // }
-
-  // const completedSteps = () => {
-  //   return Object.keys(completed).length;
-  // };
-  // const isLastStep = () => {
-  //   return activeStep === totalSteps() - 1;
-  // };
-  // const allStepsCompleted = () => {
-  //   return completedSteps() === totalSteps();
-  // };
 
   /*************************************************************************************************** */
   /**************************Functions related to the stepper *******************************************/
@@ -92,6 +77,15 @@ export const ProcedurePedigree = () => {
   /**************************Use effects  *****************************************************/
   /*************************************************************************************************** */
 
+  // TODO DELETE
+  const defaultConfig = {
+    isFirstRegister: false,
+    packageProperty: "",
+    isEditable: true,
+    formTitle: "Llena el formulario",
+    showCancel: false,
+    needsConfirmation: false,
+  };
   // find fcmPartner and set it active (searching from id)
   useEffect(() => {
     if (id) {
@@ -99,11 +93,20 @@ export const ProcedurePedigree = () => {
     }
   }, [dispatch]);
 
-  // TODO: Here i am
   // props according to step
 
+  // TODO: DELETE
   useEffect(() => {
     if (activeStep === 0) {
+      // todo delete
+      dispatch(
+        setFcmPackageCurrentProps({
+          ...fcmPackage.currentProps,
+          packageProperty: "fatherOwnerId",
+          formTitle: "Identificación de socio",
+        })
+      );
+      // todo
       dispatch(
         setFcmPackageCurrentProps({
           ...fcmPackage.currentProps,
@@ -136,6 +139,8 @@ export const ProcedurePedigree = () => {
         setFcmPackageCurrentProps({
           ...fcmPackage.currentProps,
           packageProperty: "dogMotherId",
+          ...defaultConfig,
+          packageProperty: "dogMotherId",
           formTitle: "Identificación del perro",
         })
       );
@@ -153,28 +158,6 @@ export const ProcedurePedigree = () => {
     // si no: crear nuevo
     // si es nuevo navegar a la página
   };
-
-  /*************************************************************************************************** */
-  /**************************Steps *********************************************************************/
-  /*************************************************************************************************** */
-  // const steps = [
-  //   {
-  //     label: "Propietario del padre",
-  //     component: <FcmStepperPartnerSelector label="Propietario del padre" />,
-  //   },
-  //   {
-  //     label: "Propietario de la madre",
-  //     component: <FcmStepperPartnerSelector label="Propietario de la madre" />,
-  //   },
-  //   {
-  //     label: "Padre camada",
-  //     component: <FcmStepperDogSelector label="Padre de la camada" />,
-  //   },
-  //   {
-  //     label: "Madre camada",
-  //     component: <FcmStepperDogSelector label="Madre de la camada" />,
-  //   },
-  // ];
 
   /*************************************************************************************************** */
   /**************************RENDER *********************************************************************/

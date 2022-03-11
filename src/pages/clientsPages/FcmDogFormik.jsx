@@ -8,22 +8,16 @@ import {
   addNewFcmStep,
   cleanFcmStep,
   createFcmDog,
-  createFcmPartner,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
-  setFcmPackage,
   setFcmPackageEditable,
   setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
-  setFcmPackageStep,
-  updateDog,
   updateFcmDog,
-  updateFcmPartner,
 } from "../../actions/fcmActions";
 import {
   fireSwalConfirmation,
   fireSwalError,
-  includeInPackage,
   isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
@@ -38,8 +32,8 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
-import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 import { getTransferStepLabel } from "../../helpers/fcmUtilities";
+import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 
 export const FcmDogFormik = () => {
   const dispatch = useDispatch();
@@ -79,10 +73,7 @@ export const FcmDogFormik = () => {
         // set the image found to be used in the component
         setImgUrlPedigreeFront(found.urlFront);
         setImgUrlPedigreeBack(found.urlBack);
-
         found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
-
-        console.log("estos son los form values", found);
         return setformValues({ ...found });
       }
     }
@@ -145,19 +136,15 @@ export const FcmDogFormik = () => {
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
 
-  const handleSubmit = async (values) => {
-    // if the date is going to expire in the next 2 weeks ask confirmation
-
-    Swal.fire({
-      title: "Cargando información",
-      text: "Por favor, espere",
-      allowOutsideClick: false,
-      onBeforeOpen: () => {
-        Swal.showLoading();
-      },
-    });
-
+  const handleConfirmTransfer = async (values) => {
+    // check if there is a pending transfer
     if (values.isTransferPending) {
+      const confirmation = await fireSwalConfirmation(
+        "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
+      );
+      if (!confirmation) {
+        return false;
+      }
       dispatch(
         addFcmProcedure({
           step: activeStep,
@@ -174,23 +161,39 @@ export const FcmDogFormik = () => {
             label: "Formato de transferencia",
           },
           stepFromOrigin: activeStep,
+          stepDataId: "",
+          config: {
+            isEditable: true,
+            formTitle: "Transferencia del ...",
+            showCancel: false,
+            needsConfirmation: false,
+          },
         })
       );
     }
+    return true;
+  };
+  const handleSubmit = async (values) => {
+    if (!handleConfirmTransfer(values)) {
+      return;
+    }
+    fireSwalWait();
 
     if (filesPedigreeFront.length === 0 && !imgUrlPedigreeFront) {
-      return fireSwalError("Se debe cargar la imagen de la tarjeta");
+      return fireSwalError(
+        "Se debe cargar la imagen frontal del certificado del perro"
+      );
     }
 
     if (filesPedigreeBack.length === 0 && !imgUrlPedigreeBack) {
       return fireSwalError(
-        "Se debe cargar la imagen del comprobante domicilario"
+        "Se debe cargar la imagen trasera del certificado del perro"
       );
     }
 
     let newValues = { ...values };
-    // if there is a new file refresh the image
 
+    // if there is a new file refresh the image
     newValues = await setUrlValueOrRefreshImage(
       newValues,
       filesPedigreeFront,
@@ -205,59 +208,27 @@ export const FcmDogFormik = () => {
       imgUrlPedigreeBack
     );
 
+    // close sweet alert
+    Swal.close();
+    let fcmDogId = null;
+
     // if there is an ID: update. If not: create
     if (newValues._id) {
-      Swal.close();
-      const fcmDogId = await dispatch(updateFcmDog(newValues));
-      await dispatch(setFcmPackageEditable(false));
-
-      if (fcmDogId) {
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmDogId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate to previous page or profile
-        // navigate(`/dashboard/documentation`);
-      }
+      fcmDogId = await dispatch(updateFcmDog(newValues));
     } else {
-      Swal.close();
-      const fcmDogId = await dispatch(createFcmDog(newValues));
-      if (fcmDogId) {
-        // submit to parent
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmDogId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate(`/dashboard/documentation`);
-      }
+      fcmDogId = await dispatch(createFcmDog(newValues));
     }
+    dispatch(setFcmPackageEditable(false));
+    dispatch(setFcmPackageProperty(fcmDogId));
+    dispatch(handleFcmCompleteStep());
   };
 
   const handleConfirmation = async () => {
     const values = { ...fcmDog };
-
-    if (values.isTransferPending) {
-      dispatch(
-        addFcmProcedure({
-          step: activeStep,
-          procedureType: "transfer",
-          dataId: values._id,
-        })
-      );
-      dispatch(
-        addNewFcmStep({
-          label: getTransferStepLabel(activeStep),
-          componentName: "FcmTransferFormik",
-          props: {
-            label: "Formato de transferencia",
-          },
-          stepFromOrigin: activeStep,
-        })
-      );
+    if (!handleConfirmTransfer(values)) {
+      return;
     }
-
     dispatch(setFcmPackageNeedsConfirmation(false));
-    // setneedsConfirmation(false);
     dispatch(handleFcmCompleteStep());
   };
 

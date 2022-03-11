@@ -2,6 +2,8 @@ import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepDataId,
   setFcmPackage,
   setFcmPackageCurrentProps,
   setFcmPackageProp,
@@ -27,7 +29,7 @@ export const SelectFcmPartnerFromAccount = () => {
         selectedFcmPartnerId
       );
       setselectedFcmPartner(found);
-
+      // todo: delete
       dispatch(
         setFcmPackageCurrentProps({
           ...fcmPackage.currentProps,
@@ -36,11 +38,17 @@ export const SelectFcmPartnerFromAccount = () => {
         })
       );
       dispatch(setFcmPackageProperty(selectedFcmPartnerId));
+
+      dispatch(
+        setFcmCurrentStepConfig({ isEditable: false, needsConfirmation: true })
+      );
+      dispatch(setFcmCurrentStepDataId(selectedFcmPartnerId));
     }
   }, [selectedFcmPartnerId]);
 
   const handleSubmit = () => {
     dispatch(setFcmPackageProperty(selectedFcmPartnerId));
+    dispatch(setFcmCurrentStepDataId(selectedFcmPartnerId));
   };
 
   const options = client.linkedFcmPartners.map((fcmPartner) => {

@@ -5,8 +5,17 @@ import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelect
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { types } from "../types/types";
 
+const defaultConfig = {
+  isFirstRegister: false,
+  packageProperty: "",
+  isEditable: true,
+  formTitle: "Llena el formulario",
+  showCancel: false,
+  needsConfirmation: false,
+};
+
 const initialState = {
-  // client: {},
+  // step: {label, componentName, props, stepFromOrigin, dataId, config {isFirstRegister, packageProperty, isEditable, formTitle, showCancel, needsConfirmation}},
   fcmsIsLoading: true,
   fcmPartners: [],
   fcmDogs: [],
@@ -14,31 +23,57 @@ const initialState = {
     steps: [
       {
         label: "Propietario del padre",
-        component: <FcmStepperPartnerSelector label="Propietario del padre" />,
         componentName: "FcmStepperPartnerSelector",
         props: { label: "Propietario del padre" },
+        dataId: null,
+        config: {
+          ...defaultConfig,
+          packageProperty: "fatherOwnerId",
+          formTitle: "Identificación de socio",
+        },
       },
       {
         label: "Propietario de la madre",
         componentName: "FcmStepperPartnerSelector",
         props: { label: "Propietario de la madre" },
+        dataId: null,
+        config: {
+          ...defaultConfig,
+          packageProperty: "motherOwnerId",
+          formTitle: "Identificación de socio",
+        },
       },
       {
-        label: "Padre camada",
-        component: <FcmStepperDogSelector label="Padre de la camada" />,
+        label: "Padre de la camada",
         componentName: "FcmStepperDogSelector",
         props: { label: "Padre de la camada" },
+        dataId: null,
+        config: {
+          ...defaultConfig,
+          packageProperty: "dogFatherId",
+          formTitle: "Identificación del perro",
+        },
       },
       {
         label: "Madre camada",
         componentName: "FcmStepperDogSelector",
         props: { label: "Madre de la camada" },
+        dataId: null,
+        config: {
+          ...defaultConfig,
+          packageProperty: "dogMotherId",
+          formTitle: "Identificación del perro",
+        },
       },
       {
         label: "Formato de cruza",
-        component: <FcmBreedingFormik label="Formato de cruza" />,
         componentName: "FcmBreedingFormik",
         props: { label: "Formato de cruza" },
+        dataId: null,
+        config: {
+          ...defaultConfig,
+          formTitle: "Formato de cruza",
+        },
       },
     ],
     procedures: [],

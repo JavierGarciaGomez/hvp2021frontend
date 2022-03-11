@@ -2,6 +2,8 @@ import { Box, Typography } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepEditable,
   setFcmPackage,
   setFcmPackageCurrentProps,
   setFcmPackageEditable,
@@ -27,9 +29,16 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       value: "previousLinked",
       component: <SelectFcmPartnerFromAccount />,
       functions: () => {
+        // todo delete
         dispatch(
           setFcmPackageCurrentProps({
             ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: false,
+          })
+        );
+        dispatch(
+          setFcmCurrentStepConfig({
             isFirstRegister: false,
             isEditable: false,
           })
@@ -49,6 +58,12 @@ export const FcmStepperPartnerSelector = ({ label }) => {
             isEditable: false,
           })
         );
+        dispatch(
+          setFcmCurrentStepConfig({
+            isFirstRegister: false,
+            isEditable: false,
+          })
+        );
       },
     },
     {
@@ -59,6 +74,12 @@ export const FcmStepperPartnerSelector = ({ label }) => {
         dispatch(
           setFcmPackageCurrentProps({
             ...fcmPackage.currentProps,
+            isFirstRegister: false,
+            isEditable: true,
+          })
+        );
+        dispatch(
+          setFcmCurrentStepConfig({
             isFirstRegister: false,
             isEditable: true,
           })
@@ -77,6 +98,12 @@ export const FcmStepperPartnerSelector = ({ label }) => {
             isEditable: true,
           })
         );
+        dispatch(
+          setFcmCurrentStepConfig({
+            isFirstRegister: true,
+            isEditable: true,
+          })
+        );
       },
     },
     {
@@ -87,6 +114,12 @@ export const FcmStepperPartnerSelector = ({ label }) => {
         dispatch(
           setFcmPackageCurrentProps({
             ...fcmPackage.currentProps,
+            isFirstRegister: true,
+            isEditable: true,
+          })
+        );
+        dispatch(
+          setFcmCurrentStepConfig({
             isFirstRegister: true,
             isEditable: true,
           })
@@ -107,6 +140,7 @@ export const FcmStepperPartnerSelector = ({ label }) => {
   useEffect(() => {
     if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
       dispatch(setFcmPackageEditable(false));
+      dispatch(setFcmCurrentStepEditable(false));
     }
   }, [fcmPackage.currentProps.packageProperty]);
 

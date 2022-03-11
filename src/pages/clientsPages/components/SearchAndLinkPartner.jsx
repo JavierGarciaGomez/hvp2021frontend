@@ -11,6 +11,8 @@ import dayjs from "dayjs";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepDataId,
   setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
   startLoadingFcmPartners,
@@ -54,8 +56,12 @@ export const SearchAndLinkPartner = () => {
 
     if (fcmPackage) {
       // handleNext();
+      // todo Delete
       dispatch(setFcmPackageProperty(fcmPartner._id));
       dispatch(setFcmPackageNeedsConfirmation(true));
+
+      dispatch(setFcmCurrentStepConfig({ needsConfirmation: true }));
+      dispatch(setFcmCurrentStepDataId(fcmPartner._id));
     }
   };
 
