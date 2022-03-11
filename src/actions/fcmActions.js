@@ -182,6 +182,90 @@ export const updateFcmDog = (object) => {
 };
 
 /***************************************************************/
+/**********************FcmTransfers    *****************************/
+/***************************************************************/
+
+export const createFcmtransfer = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(`fcm/fcmTransfers/`, object, "POST");
+      const body = await resp.json();
+
+      if (body.ok) {
+        const client = getState().clients.client;
+        client.linkedFcmTransfers.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
+
+        fireSwalSuccess(body.msg);
+        return body.saved._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+// export const startLoadingFcmtransfers = () => {
+//   return async (dispatch, getState) => {
+//     try {
+//       dispatch(fcmIsLoading());
+//       let resp = await fetchConToken(`fcm/fcmtransfers/`);
+//       let body = await resp.json();
+
+//       if (body.ok) {
+//         dispatch(fcmtransfersLoaded(body.allFcmTransfers));
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       fireSwalError(error.message);
+//     }
+//     dispatch(fcmFinishedLoading());
+//   };
+// };
+
+// export const fcmtransfersLoaded = (data) => ({
+//   type: types.fcmtransfersLoaded,
+//   payload: data,
+// });
+
+export const updateFcmtransfer = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(
+        `fcm/fcmTransfers/${object._id}`,
+        object,
+        "PUT"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        const client = getState().clients.client;
+
+        client.linkedFcmTransfers = replaceElementInCollection(
+          object,
+          client.linkedFcmTransfers
+        );
+
+        dispatch(updateClientReducer({ ...client }));
+
+        fireSwalSuccess(body.msg);
+        return body.updatedData._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+/***************************************************************/
 /**********************FCM PACKAGES*****************************/
 /***************************************************************/
 export const setFcmPackage = (object) => ({
@@ -356,5 +440,91 @@ export const addNewFcmStep = (object) => {
     newSteps.push(object);
     console.log("estos son los nuevos steps", newSteps);
     dispatch(setFcmPackageProp("steps", newSteps));
+  };
+};
+
+export const startLoadingFcmPackage = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(fcmIsLoading());
+      const resp = await fetchConToken(`fcm/fcmPackages/${id}`);
+      const body = await resp.json();
+
+      if (body.ok) {
+        return dispatch(fcmPackageLoaded(body.data));
+      } else {
+        return fireSwalError(body.msg);
+      }
+    } catch (error) {
+      return fireSwalError(error.message);
+    }
+  };
+};
+
+export const fcmPackageLoaded = (data) => ({
+  type: types.fcmPackageLoaded,
+  payload: data,
+});
+
+export const saveFcmPackage = () => {
+  return async (dispatch, getState) => {
+    try {
+      const { fcmPackage } = getState().fcm;
+      const resp = await fetchConToken(`fcm/fcmPackages/`, fcmPackage, "POST");
+      const body = await resp.json();
+
+      if (body.ok) {
+        console.log("saved, LLegué acá, client", body.saved);
+        const client = getState().clients.client;
+        client.linkedFcmPackages.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
+
+        console.log(body.saved, body.saved._id);
+
+        fireSwalSuccess(body.msg);
+        return body.saved._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+export const updateFcmPackage = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      const { fcmPackage } = getState().fcm;
+      const resp = await fetchConToken(
+        `fcm/fcmPackages/${id}`,
+        fcmPackage,
+        "PUT"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        fireSwalSuccess(body.msg);
+        return body.updatedData._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+export const setFcmBreedingForm = (values) => {
+  return async (dispatch, getState) => {
+    // const client = getState().clients.client;
+    // dispatch(updateClientReducer({ ...client }));
+    dispatch(setFcmPackageProp, "breedingForm", values);
+
+    fireSwalSuccess("Éxito");
   };
 };

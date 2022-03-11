@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setFcmPackage,
   setFcmPackageCurrentProps,
+  setFcmPackageEditable,
 } from "../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";
@@ -59,7 +60,7 @@ export const FcmStepperPartnerSelector = ({ label }) => {
           setFcmPackageCurrentProps({
             ...fcmPackage.currentProps,
             isFirstRegister: false,
-            isEditable: false,
+            isEditable: true,
           })
         );
       },
@@ -105,13 +106,7 @@ export const FcmStepperPartnerSelector = ({ label }) => {
 
   useEffect(() => {
     if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
-      dispatch(
-        setFcmPackageCurrentProps({
-          ...fcmPackage.currentProps,
-          isFirstRegister: true,
-          isEditable: false,
-        })
-      );
+      dispatch(setFcmPackageEditable(false));
     }
   }, [fcmPackage.currentProps.packageProperty]);
 

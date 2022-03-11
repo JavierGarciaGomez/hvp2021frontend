@@ -39,6 +39,7 @@ import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
 import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
+import { getTransferStepLabel } from "../../helpers/fcmUtilities";
 
 export const FcmDogFormik = () => {
   const dispatch = useDispatch();
@@ -80,6 +81,8 @@ export const FcmDogFormik = () => {
         setImgUrlPedigreeBack(found.urlBack);
 
         found.birthDate = dayjs(found.birthDate).format("YYYY-MM-DD");
+
+        console.log("estos son los form values", found);
         return setformValues({ ...found });
       }
     }
@@ -162,11 +165,15 @@ export const FcmDogFormik = () => {
           dataId: values._id,
         })
       );
-      console.log("hola");
+
       dispatch(
         addNewFcmStep({
-          label: "Toma perro",
-          component: <FcmStepperPartnerSelector label="Toma perro" />,
+          label: getTransferStepLabel(activeStep),
+          componentName: "FcmTransferFormik",
+          props: {
+            label: "Formato de transferencia",
+          },
+          stepFromOrigin: activeStep,
         })
       );
     }
@@ -235,6 +242,16 @@ export const FcmDogFormik = () => {
           step: activeStep,
           procedureType: "transfer",
           dataId: values._id,
+        })
+      );
+      dispatch(
+        addNewFcmStep({
+          label: getTransferStepLabel(activeStep),
+          componentName: "FcmTransferFormik",
+          props: {
+            label: "Formato de transferencia",
+          },
+          stepFromOrigin: activeStep,
         })
       );
     }

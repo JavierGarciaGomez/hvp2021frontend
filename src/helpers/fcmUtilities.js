@@ -1,4 +1,8 @@
 import * as Yup from "yup";
+import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
+import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
+import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
+import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
 
 export const isLastStep = (activeStep, steps) => {
   return activeStep === steps.length - 1;
@@ -75,4 +79,94 @@ export const generatePuppiesValidationParams = (
   }
 
   return newValidationParams;
+};
+
+export const getComponent = (componentName, props) => {
+  switch (componentName) {
+    case "FcmStepperPartnerSelector":
+      return <FcmStepperPartnerSelector {...props} />;
+
+    case "FcmStepperDogSelector":
+      return <FcmStepperDogSelector {...props} />;
+
+    case "FcmBreedingFormik":
+      return <FcmBreedingFormik {...props} />;
+
+    case "FcmBreedingFormik":
+      return <FcmBreedingFormik {...props} />;
+
+    case "FcmTransferFormik":
+      return <FcmTransferFormik {...props} />;
+
+    default:
+      return null;
+  }
+};
+
+export const getFcmDogIdByOriginStep = (fcmPackage, activeStep) => {
+  const { steps } = fcmPackage;
+  const { stepFromOrigin } = steps[activeStep];
+
+  switch (stepFromOrigin) {
+    case 2:
+      return fcmPackage.dogFatherId;
+
+    case 3:
+      return fcmPackage.dogMotherId;
+  }
+};
+
+export const getFcmParterIdByOriginStep = (fcmPackage, activeStep) => {
+  const { steps } = fcmPackage;
+  const { stepFromOrigin } = steps[activeStep];
+
+  switch (stepFromOrigin) {
+    case 2:
+      return fcmPackage.fatherOwnerId;
+
+    case 3:
+      return fcmPackage.motherOwnerId;
+
+    case 4:
+      return fcmPackage.motherOwnerId;
+  }
+};
+
+export const getTransferStepLabel = (activeStep) => {
+  if (activeStep === 2) {
+    return "Transferencia del padre";
+  }
+  if (activeStep === 3) {
+    return "Transferencia de la madre";
+  }
+};
+
+export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
+  const { steps, fatherOwnerId, motherOwnerId, dogFatherId, dogMotherId } =
+    fcmPackage;
+  const { stepFromOrigin } = steps[activeStep];
+
+  console.log(
+    "a ver",
+    "padre ",
+    fatherOwnerId,
+    dogFatherId,
+    "madre",
+    motherOwnerId,
+    dogMotherId
+  );
+
+  switch (stepFromOrigin) {
+    case 2:
+      if (!fatherOwnerId || !dogFatherId) {
+        return false;
+      }
+      return fatherOwnerId !== "" && dogFatherId !== "";
+
+    case 3:
+      if (!motherOwnerId || !dogMotherId) {
+        return false;
+      }
+      return motherOwnerId !== "" && dogMotherId !== "";
+  }
 };

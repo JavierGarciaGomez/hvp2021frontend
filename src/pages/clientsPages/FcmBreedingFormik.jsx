@@ -10,6 +10,7 @@ import {
   createFcmDog,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  setFcmBreedingForm,
   setFcmPackageEditable,
   setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
@@ -159,6 +160,7 @@ export const FcmBreedingFormik = ({ label }) => {
   const handleSubmit = async (values) => {
     // if the date is going to expire in the next 2 weeks ask confirmation
 
+    console.log("values", values);
     Swal.fire({
       title: "Cargando información",
       text: "Por favor, espere",
@@ -167,8 +169,8 @@ export const FcmBreedingFormik = ({ label }) => {
         Swal.showLoading();
       },
     });
-
-    if (values.isTransferPending) {
+    // todo
+    if (values.puppyNeedsTransfer1) {
       dispatch(
         addFcmProcedure({
           step: activeStep,
@@ -179,41 +181,27 @@ export const FcmBreedingFormik = ({ label }) => {
 
       dispatch(
         addNewFcmStep({
-          label: "Toma perro",
-          component: <FcmStepperPartnerSelector label="Toma perro" />,
+          label: "Transferencia",
+          componentName: "FcmTransferFormik",
+          props: {
+            label: "Formato de transferencia",
+          },
+          stepFromOrigin: activeStep,
         })
       );
     }
+    Swal.close();
 
     let newValues = { ...values };
-    // if there is a new file refresh the image
 
     // if there is an ID: update. If not: create
-    if (newValues._id) {
-      Swal.close();
-      const fcmDogId = await dispatch(updateFcmDog(newValues));
-      await dispatch(setFcmPackageEditable(false));
 
-      if (fcmDogId) {
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmDogId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate to previous page or profile
-        // navigate(`/dashboard/documentation`);
-      }
-    } else {
-      Swal.close();
-      const fcmDogId = await dispatch(createFcmDog(newValues));
-      if (fcmDogId) {
-        // submit to parent
-        if (fcmPackage) {
-          dispatch(setFcmPackageProperty(fcmDogId));
-          dispatch(handleFcmCompleteStep());
-        }
-        // navigate(`/dashboard/documentation`);
-      }
-    }
+    Swal.close();
+    dispatch(setFcmBreedingForm(newValues));
+
+    dispatch(handleFcmCompleteStep());
+
+    // navigate(`/dashboard/documentation`);
   };
 
   const handleConfirmation = async () => {

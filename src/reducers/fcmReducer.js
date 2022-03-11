@@ -15,30 +15,36 @@ const initialState = {
       {
         label: "Propietario del padre",
         component: <FcmStepperPartnerSelector label="Propietario del padre" />,
+        componentName: "FcmStepperPartnerSelector",
+        props: { label: "Propietario del padre" },
       },
       {
         label: "Propietario de la madre",
-        component: (
-          <FcmStepperPartnerSelector label="Propietario de la madre" />
-        ),
+        componentName: "FcmStepperPartnerSelector",
+        props: { label: "Propietario de la madre" },
       },
       {
         label: "Padre camada",
         component: <FcmStepperDogSelector label="Padre de la camada" />,
+        componentName: "FcmStepperDogSelector",
+        props: { label: "Padre de la camada" },
       },
       {
         label: "Madre camada",
-        component: <FcmStepperDogSelector label="Madre de la camada" />,
+        componentName: "FcmStepperDogSelector",
+        props: { label: "Madre de la camada" },
       },
       {
         label: "Formato de cruza",
         component: <FcmBreedingFormik label="Formato de cruza" />,
+        componentName: "FcmBreedingFormik",
+        props: { label: "Formato de cruza" },
       },
     ],
     procedures: [],
     activeStep: 0,
     skippedSteps: new Set(),
-    completedSteps: {},
+    completedSteps: { 0: false },
     currentProps: {
       isFirstRegister: false,
       packageProperty: "",
@@ -56,6 +62,11 @@ const initialState = {
     motherOwnerId: "",
     dogFatherId: "",
     dogMotherId: "",
+    breedingForm: {},
+    extraSteps: [],
+    documentation: [],
+    status: "",
+    creator: "",
   },
 };
 
@@ -108,6 +119,14 @@ export const fcmReducer = (state = initialState, action) => {
             needsConfirmation: action.payload,
           },
         },
+      };
+    }
+
+    case types.fcmPackageLoaded: {
+      return {
+        ...state,
+        fcmPackage: action.payload,
+        fcmsIsLoading: false,
       };
     }
 

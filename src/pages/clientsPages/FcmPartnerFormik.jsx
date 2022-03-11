@@ -57,7 +57,7 @@ export const FcmPartnerFormik = () => {
     showCancel,
   } = currentProps;
 
-  const [filesPedigreeFront, setfilesPedigreeFront] = useState([]);
+  const [filesFcmPartner, setfilesFcmPartner] = useState([]);
   const [filesProofOfResidency, setfilesProofOfResidency] = useState([]);
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
@@ -123,12 +123,15 @@ export const FcmPartnerFormik = () => {
   }, [fcmPackage]);
 
   useEffect(() => {
-    if (fcmPartner && fcmPartner.isPending) {
+    console.log("fcmPartnerFormik use effect is pending", fcmPartner);
+    if (fcmPartner) {
       setisPending(fcmPartner.isPending);
     } else {
       setisPending(isFirstRegister);
     }
   }, [isFirstRegister, fcmPartner]);
+
+  console.log("11111111111 is pending", isPending);
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
@@ -225,7 +228,7 @@ export const FcmPartnerFormik = () => {
     });
 
     if (!isPending) {
-      if (filesPedigreeFront.length === 0 && !imgUrlPartnerCard) {
+      if (filesFcmPartner.length === 0 && !imgUrlPartnerCard) {
         return fireSwalError("Se debe cargar la imagen de la tarjeta");
       }
     }
@@ -247,7 +250,7 @@ export const FcmPartnerFormik = () => {
     if (!isPending) {
       newValues = await setUrlValueOrRefreshImage(
         newValues,
-        filesPedigreeFront,
+        filesFcmPartner,
         "urlPartnerCard",
         imgUrlPartnerCard
       );
@@ -459,8 +462,8 @@ export const FcmPartnerFormik = () => {
               <Grid item xs={12} md={6}>
                 <Typography mb="2rem">Tarjeta de socio</Typography>
                 <DragImageUpload
-                  files={filesPedigreeFront}
-                  setFiles={setfilesPedigreeFront}
+                  files={filesFcmPartner}
+                  setFiles={setfilesFcmPartner}
                   imgUrl={imgUrlPartnerCard}
                   setimgUrl={setImgUrlPartnerCard}
                   editable={isEditable}
@@ -506,21 +509,21 @@ export const FcmPartnerFormik = () => {
             <Grid item xs={12} md={4}>
               <TextFieldWrapper
                 name="firstName"
-                label="Nombre (s)*"
+                label="Nombre (s)"
                 disabled={!isEditable}
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextFieldWrapper
                 name="paternalSurname"
-                label="Apellido paterno*"
+                label="Apellido paterno"
                 disabled={!isEditable}
               />
             </Grid>
             <Grid item xs={12} md={4}>
               <TextFieldWrapper
                 name="maternalSurname"
-                label="Apellido materno*"
+                label="Apellido materno"
                 disabled={!isEditable}
               />
             </Grid>

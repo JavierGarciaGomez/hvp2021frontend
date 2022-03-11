@@ -10,23 +10,25 @@ import React from "react";
 import { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   handleBackFcmPackageStep,
-  handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  saveFcmPackage,
   setFcmCompletedSteps,
   setFcmPackage,
   setFcmPackageCurrentProps,
   setFcmPackageSkipped,
   setFcmPackageStep,
+  startLoadingFcmPackage,
+  updateFcmPackage,
 } from "../../actions/fcmActions";
-import {
-  areAllStepsCompleted,
-  totalCompletedSteps,
-} from "../../helpers/fcmUtilities";
+import { areAllStepsCompleted, getComponent } from "../../helpers/fcmUtilities";
 import { isStepSkipped } from "../../helpers/utilities";
 
 export const ProcedurePedigree = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch();
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
@@ -90,28 +92,17 @@ export const ProcedurePedigree = () => {
   /**************************Use effects  *****************************************************/
   /*************************************************************************************************** */
 
-  const defaultFcmPackage = {
-    isFirstRegister: false,
-    packageProperty: "",
-    isEditable: true,
-    formTitle: "Llena el formulario",
-    showCancel: false,
-    needsConfirmation: false,
-  };
+  // find fcmPartner and set it active (searching from id)
+  useEffect(() => {
+    if (id) {
+      dispatch(startLoadingFcmPackage(id));
+    }
+  }, [dispatch]);
 
   // TODO: Here i am
   // props according to step
-  useEffect(() => {
-    // default
-    dispatch(
-      setFcmPackage({
-        ...fcmPackage,
-        currentProps: {
-          ...defaultFcmPackage,
-        },
-      })
-    );
 
+  useEffect(() => {
     if (activeStep === 0) {
       dispatch(
         setFcmPackageCurrentProps({
@@ -150,6 +141,18 @@ export const ProcedurePedigree = () => {
       );
     }
   }, [activeStep]);
+
+  const handleSaveFcmPackage = async () => {
+    if (id) {
+      dispatch(updateFcmPackage(id));
+    } else {
+      const savedId = await dispatch(saveFcmPackage());
+      navigate(`${savedId}`);
+    }
+    // si existe id: actualizar
+    // si no: crear nuevo
+    // si es nuevo navegar a la página
+  };
 
   /*************************************************************************************************** */
   /**************************Steps *********************************************************************/
@@ -214,14 +217,6 @@ export const ProcedurePedigree = () => {
           );
         })}
       </Stepper>
-      {console.log(
-        "activeStep",
-        activeStep,
-        "stepslength",
-        steps.length,
-        "stepscompleted",
-        completedSteps
-      )}
 
       {/* Main content */}
       {areAllStepsCompleted(completedSteps, steps) ? (
@@ -241,7 +236,14 @@ export const ProcedurePedigree = () => {
           {/* Main content: the step component */}
 
           {/* buttons */}
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              pt: 2,
+              justifyContent: "space-between",
+            }}
+          >
             <Button
               color="inherit"
               disabled={activeStep === 0}
@@ -253,7 +255,14 @@ export const ProcedurePedigree = () => {
               PASO ANTERIOR
             </Button>
 
-            <Box sx={{ flex: "1 1 auto" }} />
+            <Button
+              color="inherit"
+              onClick={handleSaveFcmPackage}
+              sx={{ mr: 1 }}
+            >
+              GUARDAR AVANCES
+            </Button>
+
             <Button
               onClick={() => {
                 dispatch(handleNextFcmPackageStep());
@@ -271,7 +280,11 @@ export const ProcedurePedigree = () => {
                 ""
               ))}
           </Box>
-          {steps[activeStep].component}
+          {/* esto es */}
+          {getComponent(
+            steps[activeStep].componentName,
+            steps[activeStep].props
+          )}
         </React.Fragment>
       )}
     </Box>

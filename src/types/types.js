@@ -94,6 +94,7 @@ export const types = {
     "[fcm] package current properties needs confirmation",
 
   fcmDogsLoaded: "[fcm] dogs loaded",
+  fcmPackageLoaded: "[fcm] package loaded",
 };
 
 export const genderTypes = {

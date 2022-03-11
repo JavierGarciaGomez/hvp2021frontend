@@ -21,6 +21,7 @@ export const ClientRouter = () => {
       <Route path="fcmSelectProcedure" element={<ClientSelectProcedure />} />
       <Route path="clientProfile" element={<ClientProfile />} />
       <Route path="procedure/pedigree" element={<ProcedurePedigree />} />
+      <Route path="procedure/pedigree/:id" element={<ProcedurePedigree />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />
