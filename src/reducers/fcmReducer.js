@@ -77,12 +77,11 @@ const initialState = {
       },
       {
         label: "Resumen",
-        componentName: "FcmStepperPartnerSelector",
+        componentName: "FcmPackageSummary",
         props: { label: "Resumen" },
         dataId: null,
         config: {
           ...defaultConfig,
-          packageProperty: "fatherOwnerId",
           formTitle: "Identificación de socio",
         },
       },

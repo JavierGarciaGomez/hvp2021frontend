@@ -123,9 +123,9 @@ export const FcmBreedingFormik = ({ label }) => {
           dispatch(
             addNewFcmStep({
               label: getTransferStepLabel(activeStep, element.puppyName),
-              componentName: "FcmPartnerFormik",
+              componentName: "FcmTransferPuppy",
               props: {
-                label: "Formato de transferencia",
+                label: getTransferStepLabel(activeStep, element.puppyName),
               },
               stepFromOrigin: activeStep,
               stepDataId: "",

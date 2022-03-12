@@ -100,6 +100,7 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       findObjectByProperty(options, "value", selectedCase).functions();
   }, [selectedCase]);
 
+  // when the step changes. erase selection.
   useEffect(() => {
     setselectedCase("");
   }, [fcmPackage.activeStep]);
@@ -113,6 +114,7 @@ export const FcmStepperPartnerSelector = ({ label }) => {
       <Typography variant="h4" component="h2" mb="3rem">
         {label}
       </Typography>
+
       {dataId ? (
         <FcmPartnerFormik />
       ) : (

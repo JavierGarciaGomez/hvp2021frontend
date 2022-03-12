@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import dayjs from "dayjs";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFcmCurrentStepConfig,
@@ -18,7 +18,6 @@ import {
   startLoadingFcmPartners,
 } from "../../../actions/fcmActions";
 import { userAddFcmPartner } from "../../../actions/userActions";
-import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 import { excludeFromCollection } from "../../../helpers/utilities";
 
 export const SearchAndLinkPartner = () => {
@@ -30,8 +29,7 @@ export const SearchAndLinkPartner = () => {
   const [fieldValue, setfieldValue] = useState("");
   const [filteredFcmPartners, setfilteredFcmPartners] = useState([]);
 
-  // todo: load the fcmpartners
-  // start loading rfc
+  // loading fcm partners
   useEffect(() => {
     dispatch(startLoadingFcmPartners());
   }, [dispatch]);
@@ -54,14 +52,12 @@ export const SearchAndLinkPartner = () => {
   const handleSubmit = async (fcmPartner) => {
     await dispatch(userAddFcmPartner(client._id, fcmPartner));
 
+    // if is from a package
     if (fcmPackage) {
       // handleNext();
-      // todo Delete
       dispatch(setFcmPackageProperty(fcmPartner._id));
-      dispatch(setFcmPackageNeedsConfirmation(true));
-
-      dispatch(setFcmCurrentStepConfig({ needsConfirmation: true }));
       dispatch(setFcmCurrentStepDataId(fcmPartner._id));
+      dispatch(setFcmCurrentStepConfig({ needsConfirmation: true }));
     }
   };
 

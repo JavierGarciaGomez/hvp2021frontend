@@ -1,8 +1,11 @@
 import * as Yup from "yup";
+import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSummary";
+import { FcmTransferPuppy } from "../pages/clientsPages/components/FcmTransferPuppy";
 import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
 import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
+import { isObjectEmpty } from "./utilities";
 
 export const isLastStep = (activeStep, steps) => {
   return activeStep === steps.length - 1;
@@ -98,6 +101,12 @@ export const getComponent = (componentName, props) => {
     case "FcmTransferFormik":
       return <FcmTransferFormik {...props} />;
 
+    case "FcmTransferPuppy":
+      return <FcmTransferPuppy {...props} />;
+
+    case "FcmPackageSummary":
+      return <FcmPackageSummary {...props} />;
+
     default:
       return null;
   }
@@ -172,4 +181,71 @@ export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
       }
       return motherOwnerId !== "" && dogMotherId !== "";
   }
+};
+
+export const getGeneralData = (fcmPackage, client) => {
+  const {
+    fatherOwnerId,
+    motherOwnerId,
+    dogFatherId,
+    dogMotherId,
+    breedingForm,
+  } = fcmPackage;
+
+  const generalData = {
+    fatherOwnerFullName: "",
+    fatherOwnerPartnerNum: "",
+    motherOwnerFullName: "",
+    motherOwnerPartnerNum: "",
+    fatherFcmDogName: "",
+    fatherFcmDogRegisterNum: "",
+    motherFcmDogName: "",
+    motherFcmDogRegisterNum: "",
+    puppies: [],
+  };
+  const fatherOwnerFcm = client.linkedFcmPartners.find(
+    (element) => element._id === fatherOwnerId
+  );
+  const motherOwnerFcm = client.linkedFcmPartners.find(
+    (element) => element._id === motherOwnerId
+  );
+  const dogFatherFcm = client.linkedDogs.find(
+    (element) => element._id === dogFatherId
+  );
+  const dogMotherFcm = client.linkedDogs.find(
+    (element) => element._id === dogMotherId
+  );
+
+  if (fatherOwnerFcm) {
+    generalData.fatherOwnerFullName = `${fatherOwnerFcm.firstName} ${fatherOwnerFcm.paternalSurname} ${fatherOwnerFcm.maternalSurname} `;
+    generalData.fatherOwnerPartnerNum = fatherOwnerFcm.partnerNum;
+  }
+  if (motherOwnerFcm) {
+    generalData.motherOwnerFullName = `${motherOwnerFcm.firstName} ${motherOwnerFcm.paternalSurname} ${motherOwnerFcm.maternalSurname} `;
+    generalData.motherOwnerPartnerNum = motherOwnerFcm.partnerNum;
+  }
+  if (dogFatherFcm) {
+    generalData.fatherFcmDogName = dogFatherFcm.petName;
+    generalData.fatherFcmDogRegisterNum = dogFatherFcm.registerNum;
+  }
+  if (dogMotherFcm) {
+    generalData.motherFcmDogName = dogMotherFcm.petName;
+    generalData.motherFcmDogRegisterNum = dogMotherFcm.registerNum;
+  }
+  if (!isObjectEmpty(breedingForm)) {
+    generalData.puppies = [...breedingForm.puppies];
+  }
+
+  return generalData;
+};
+
+export const getProcedures = (fcmPackage, client) => {
+  const procedures = {
+    partnersRegistrations: [],
+    partnersRenewals: [],
+    transfers: [],
+    certificates: [],
+  };
+
+  return procedures;
 };
