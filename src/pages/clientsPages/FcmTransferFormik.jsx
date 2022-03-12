@@ -45,14 +45,7 @@ export const FcmTransferFormik = () => {
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { activeStep, currentProps, steps } = fcmPackage;
-  const {
-    isFirstRegister,
-
-    packageProperty,
-    needsConfirmation,
-    formTitle,
-    showCancel,
-  } = currentProps;
+  const { formTitle, showCancel } = currentProps;
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
@@ -99,14 +92,12 @@ export const FcmTransferFormik = () => {
       console.log("found", found);
       if (found) {
         setcomponentData({ ...found });
-
         setImgUrlFrontIne(found.previousOwner.urlFrontIne);
         setImgUrlBackIne(found.previousOwner.urlBackIne);
       }
     } else {
       setcomponentData(null);
-      setImgUrlBackIne(null);
-      setImgUrlFrontIne(null);
+      clearImgsData();
     }
   }, [dataId]);
 
@@ -143,11 +134,25 @@ export const FcmTransferFormik = () => {
     }
   }, [fcmDog, fcmPartner]);
 
-  console.log("FCMDOG FCM PARTNER", fcmDog, fcmPartner);
+  console.log(
+    "FCMDOG FCM PARTNER",
+    fcmDog,
+    fcmPartner,
+    componentData,
+    imgUrlBackIne,
+    filesFrontINE
+  );
 
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
+
+  const clearImgsData = () => {
+    setImgUrlBackIne(null);
+    setImgUrlFrontIne(null);
+    setfilesBackINE([]);
+    setfilesFrontINE([]);
+  };
 
   const handleSubmit = async (values) => {
     fireSwalWait("Cargando información", "Por favor, espere");
@@ -203,6 +208,7 @@ export const FcmTransferFormik = () => {
     dispatch(setFcmCurrentStepEditable(false));
     dispatch(setFcmCurrentStepDataId(fcmTransferId));
     dispatch(handleFcmCompleteStep());
+    clearImgsData();
 
     // navigate(`/dashboard/documentation`);
   };

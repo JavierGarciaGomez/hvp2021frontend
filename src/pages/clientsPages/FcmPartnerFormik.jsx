@@ -349,7 +349,6 @@ export const FcmPartnerFormik = () => {
               fullWidth={true}
               onClick={() => {
                 // todo delete
-                dispatch(setFcmPackageEditable(true));
                 dispatch(setFcmCurrentStepEditable(true));
               }}
               color="primary"

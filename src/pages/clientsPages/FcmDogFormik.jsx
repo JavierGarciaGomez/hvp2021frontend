@@ -10,6 +10,7 @@ import {
   createFcmDog,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  removeFcmSteps,
   setFcmCurrentStepConfig,
   setFcmCurrentStepDataId,
   setFcmCurrentStepEditable,
@@ -153,6 +154,9 @@ export const FcmDogFormik = () => {
           },
         })
       );
+      // if there are no pending transfers. Remove from step if they were previously included
+    } else {
+      dispatch(removeFcmSteps());
     }
     return true;
   };
@@ -211,6 +215,7 @@ export const FcmDogFormik = () => {
     dispatch(
       setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
     );
+
     dispatch(setFcmCurrentStepDataId(fcmDogId));
     dispatch(handleFcmCompleteStep());
   };

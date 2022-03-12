@@ -75,6 +75,17 @@ const initialState = {
           formTitle: "Formato de cruza",
         },
       },
+      {
+        label: "Resumen",
+        componentName: "FcmStepperPartnerSelector",
+        props: { label: "Resumen" },
+        dataId: null,
+        config: {
+          ...defaultConfig,
+          packageProperty: "fatherOwnerId",
+          formTitle: "Identificación de socio",
+        },
+      },
     ],
     procedures: [],
     activeStep: 0,

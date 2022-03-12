@@ -1,7 +1,7 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { Formik, Form } from "formik";
+import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
   addFcmProcedure,
@@ -9,11 +9,12 @@ import {
   cleanFcmStep,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  removeFcmPuppiesTransfersSteps,
   setFcmBreedingForm,
-  setFcmPackageEditable,
-  setFcmPackageNeedsConfirmation,
+  setFcmCurrentStepConfig,
+  setFcmCurrentStepEditable,
 } from "../../actions/fcmActions";
-import { fireSwalError, isObjectEmpty } from "../../helpers/utilities";
+import { fireSwalConfirmation, isObjectEmpty } from "../../helpers/utilities";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
@@ -24,10 +25,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
-import {
-  generatePuppiesValidationParams,
-  generatePuppiesValues,
-} from "../../helpers/fcmUtilities";
+import { getTransferStepLabel } from "../../helpers/fcmUtilities";
 import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 
 export const FcmBreedingFormik = ({ label }) => {
@@ -36,21 +34,12 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-  const { id } = useParams();
-  const { client } = useSelector((state) => state.clients);
-  const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, steps } = fcmPackage;
-  const { config } = steps[activeStep];
-  const {
-    isEditable,
-    isFirstRegister,
-    packageProperty,
-    needsConfirmation,
-    formTitle,
-    showCancel,
-  } = config;
 
-  const [fcmDog, setfcmDog] = useState(null);
+  const { fcmPackage } = useSelector((state) => state.fcm);
+  const { activeStep, steps, breedingForm } = fcmPackage;
+  const { config } = steps[activeStep];
+  const { isEditable, formTitle, showCancel } = config;
+
   const [registersAmount, setregistersAmount] = useState("");
   const [puppiesRegisters, setpuppiesRegisters] = useState([]);
 
@@ -58,6 +47,12 @@ export const FcmBreedingFormik = ({ label }) => {
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
 
+  let emptyPuppy = {
+    puppyName: "",
+    puppySex: "",
+    puppyNeedsTransfer: false,
+    puppyColor: "",
+  };
   let initialValues = {
     breedingDate: "",
     birthDate: "",
@@ -65,7 +60,7 @@ export const FcmBreedingFormik = ({ label }) => {
     malesAlive: "",
     femalesAlive: "",
     death: "",
-    registersAmount: "",
+    puppies: [emptyPuppy],
   };
 
   let initialValidationParams = {
@@ -75,104 +70,107 @@ export const FcmBreedingFormik = ({ label }) => {
     malesAlive: Yup.number().required("Es obligatorio"),
     femalesAlive: Yup.number().required("Es obligatorio"),
     death: Yup.number().required("Es obligatorio"),
+    puppies: Yup.array(
+      Yup.object({
+        puppyName: Yup.string().required("Es obligatorio"),
+        puppySex: Yup.string().required("Es obligatorio"),
+        puppyNeedsTransfer: Yup.boolean(),
+        puppyColor: Yup.string().required("Es obligatorio"),
+      })
+    )
+      .min(1, "Al menos debe haber un cachorro")
+      .max(14, "No pueden haber más de catorce cachorros"),
   };
 
-  const [validationParams, setvalidationParams] = useState(
-    initialValidationParams
-  );
-  const [formValidation, setformValidation] = useState(
-    Yup.object().shape(validationParams)
-  );
   const [formValues, setformValues] = useState(initialValues);
 
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
-  // todo: Doing
-  // add initialValues if the register num change
-  useEffect(() => {
-    setformValues(generatePuppiesValues(formValues, Number(registersAmount)));
-    setvalidationParams(
-      generatePuppiesValidationParams(validationParams, Number(registersAmount))
-    );
-  }, [registersAmount]);
 
   useEffect(() => {
-    if (registersAmount > 14) {
-      setregistersAmount(14);
-      return fireSwalError("No se pueden registrar más de catorce cachorros");
+    if (!isObjectEmpty(breedingForm)) {
+      setformValues({ ...breedingForm });
+    } else {
+      setformValues(initialValues);
     }
-    if (registersAmount >= 0) {
-      let tempPuppiesRegisters = [];
-      for (let i = 0; i < registersAmount; i++) {
-        tempPuppiesRegisters.push({ name: `puppy${i}` });
-      }
-      setpuppiesRegisters(tempPuppiesRegisters);
-    }
-  }, [formValues]);
-
-  useEffect(() => {
-    setformValidation(Yup.object().shape(validationParams));
-  }, [validationParams]);
+  }, [breedingForm]);
 
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
+  const handleConfirmPuppiesTransfer = async (values) => {
+    // get the puppies with transfers
+    let puppiesTransfers = values.puppies.filter(
+      (element) => element.puppyNeedsTransfer
+    );
+
+    if (puppiesTransfers.length > 0) {
+      const confirmation = await fireSwalConfirmation(
+        `Se está solicitando la transferencia de ${puppiesTransfers.length} cachorros. Por lo que se agregarán los trámites correspondientes`
+      );
+      if (!confirmation) {
+        return false;
+      } else {
+        puppiesTransfers.map((element, index) => {
+          dispatch(
+            addFcmProcedure({
+              step: activeStep,
+              procedureType: "transfer",
+              puppyData: element,
+            })
+          );
+          dispatch(
+            addNewFcmStep({
+              label: getTransferStepLabel(activeStep, element.puppyName),
+              componentName: "FcmPartnerFormik",
+              props: {
+                label: "Formato de transferencia",
+              },
+              stepFromOrigin: activeStep,
+              stepDataId: "",
+              config: {
+                isFirstRegister: false,
+                isEditable: true,
+                formTitle: "Llena el formulario",
+                showCancel: false,
+                needsConfirmation: false,
+              },
+              stepObject: element,
+            })
+          );
+        });
+      }
+    }
+    // remove puppies without transfers
+    dispatch(removeFcmPuppiesTransfersSteps(puppiesTransfers));
+
+    return true;
+  };
 
   const handleSubmit = async (values) => {
-    fireSwalWait();
-    // todo
-    if (values.puppyNeedsTransfer1) {
-      dispatch(
-        addFcmProcedure({
-          step: activeStep,
-          procedureType: "transfer",
-          dataId: values._id,
-        })
-      );
-
-      dispatch(
-        addNewFcmStep({
-          label: "Transferencia",
-          componentName: "FcmTransferFormik",
-          props: {
-            label: "Formato de transferencia",
-          },
-          stepFromOrigin: activeStep,
-        })
-      );
+    if (!(await handleConfirmPuppiesTransfer(values))) {
+      return;
     }
-    Swal.close();
+    fireSwalWait();
+    // check transfer puppies
+    for (let i = 0; i < registersAmount; i++) {
+      if (values[`puppyNeedsTransfer${i + 1}`]) {
+      }
+    }
 
+    Swal.close();
     let newValues = { ...values };
+    newValues.registersAmount = registersAmount;
 
     // if there is an ID: update. If not: create
-
     Swal.close();
     dispatch(setFcmBreedingForm(newValues));
-
+    dispatch(
+      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
+    );
     dispatch(handleFcmCompleteStep());
   };
-
-  const handleConfirmation = async () => {
-    const values = { ...fcmDog };
-
-    if (values.isTransferPending) {
-      dispatch(
-        addFcmProcedure({
-          step: activeStep,
-          procedureType: "transfer",
-          dataId: values._id,
-        })
-      );
-    }
-
-    dispatch(setFcmPackageNeedsConfirmation(false));
-    // setneedsConfirmation(false);
-    dispatch(handleFcmCompleteStep());
-  };
-
-  console.log("form values", formValues);
 
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
@@ -194,35 +192,22 @@ export const FcmBreedingFormik = ({ label }) => {
             editar los datos o remover la selección.
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
-            {needsConfirmation ? (
-              <Button
-                variant="contained"
-                fullWidth={true}
-                onClick={() => {
-                  handleConfirmation();
-                }}
-                color="primary"
-              >
-                Confirmar
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                fullWidth={true}
-                onClick={() => {
-                  dispatch(handleNextFcmPackageStep());
-                }}
-                color="primary"
-              >
-                Siguiente paso
-              </Button>
-            )}
+            <Button
+              variant="contained"
+              fullWidth={true}
+              onClick={() => {
+                dispatch(handleNextFcmPackageStep());
+              }}
+              color="primary"
+            >
+              Siguiente paso
+            </Button>
 
             <Button
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                dispatch(setFcmPackageEditable(true));
+                dispatch(setFcmCurrentStepEditable(true));
               }}
               color="primary"
             >
@@ -232,8 +217,9 @@ export const FcmBreedingFormik = ({ label }) => {
               variant="contained"
               fullWidth={true}
               onClick={() => {
-                console.log("clicking");
                 dispatch(cleanFcmStep());
+                setformValues(initialValues);
+                setregistersAmount(0);
               }}
               color="error"
             >
@@ -257,9 +243,8 @@ export const FcmBreedingFormik = ({ label }) => {
           Notas:
         </Typography>
         <Typography mb="1rem">
-          En número de registros se establece a cuántos de los cachorros se
-          expedirá pedigrí. Si se cambia este número se reiniciará el
-          formulario.
+          Solo llenar los datos de los cachorros de los cuales se pretenda
+          obtener el registro.
         </Typography>
         <Typography mb="1rem">
           En el llenado de los cachorros, primero poner los machos y después las
@@ -271,159 +256,175 @@ export const FcmBreedingFormik = ({ label }) => {
 
       <Formik
         initialValues={{ ...formValues }}
-        validationSchema={formValidation}
+        validationSchema={Yup.object().shape(initialValidationParams)}
         onSubmit={(values) => {
           handleSubmit(values);
         }}
         enableReinitialize
       >
-        <Form>
-          <Grid container spacing={2}>
-            {/* DATOS DE IDENTIFICACIÓN */}
-            <Grid item xs={12}>
-              <Typography component="h4" variant="h5">
-                Número de registros
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                name="registersAmount"
-                label="Número de registros"
-                disabled={!isEditable}
-                type="number"
-                value={registersAmount}
-                onChange={(e) => {
-                  setregistersAmount(e.target.value);
-                }}
-              />
-            </Grid>
-            {registersAmount > 0 && (
-              <Fragment>
-                <Grid item xs={12}>
-                  <Typography component="h4" variant="h5">
-                    Datos de la cruza
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <DatePickerFieldWrapper
-                    name="breedingDate"
-                    label="Fecha de cruza"
-                    disabled={!isEditable}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <DatePickerFieldWrapper
-                    name="birthDate"
-                    label="Fecha de nacimiento"
-                    disabled={!isEditable}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="birthPlace"
-                    label="Lugar de nacimiento"
-                    disabled={!isEditable}
-                  />
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <TextFieldWrapper
-                    name="malesAlive"
-                    label="Machos vivos"
-                    disabled={!isEditable}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <TextFieldWrapper
-                    name="femalesAlive"
-                    label="Hembras vivas"
-                    disabled={!isEditable}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <TextFieldWrapper
-                    name="death"
-                    label="Muertos"
-                    disabled={!isEditable}
-                    type="number"
-                  />
-                </Grid>
-                <Grid item xs={12} mt="4rem">
-                  <Typography component="h4" variant="h5">
-                    Datos de los cachorros
-                  </Typography>
-                </Grid>
-                {console.log("este es el puppysex", formValues)}
-                {puppiesRegisters.map((element, index) => {
-                  return (
-                    <Fragment key={element.name}>
-                      <Grid item xs={12}>
-                        <Typography
-                          component="h5"
-                          variant="h6"
-                          textAlign={"center"}
+        {({ values, errors, isSubmitting, isValid }) => (
+          <Form>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography component="h4" variant="h5">
+                  Datos de la cruza
+                </Typography>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <DatePickerFieldWrapper
+                  name="breedingDate"
+                  label="Fecha de cruza"
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <DatePickerFieldWrapper
+                  name="birthDate"
+                  label="Fecha de nacimiento"
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <TextFieldWrapper
+                  name="birthPlace"
+                  label="Lugar de nacimiento"
+                  disabled={!isEditable}
+                />
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <TextFieldWrapper
+                  name="malesAlive"
+                  label="Machos vivos"
+                  disabled={!isEditable}
+                  type="number"
+                />
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <TextFieldWrapper
+                  name="femalesAlive"
+                  label="Hembras vivas"
+                  disabled={!isEditable}
+                  type="number"
+                />
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <TextFieldWrapper
+                  name="death"
+                  label="Muertos"
+                  disabled={!isEditable}
+                  type="number"
+                />
+              </Grid>
+              <Grid item xs={12} mt="4rem">
+                <Typography component="h4" variant="h5">
+                  Datos de los cachorros
+                </Typography>
+              </Grid>
+
+              <FieldArray name="puppies">
+                {({ push, remove }) => (
+                  <Fragment>
+                    {values.puppies.map((_, index) => (
+                      <Fragment key={index}>
+                        <Grid item xs={12}>
+                          <Typography
+                            component="h5"
+                            variant="h6"
+                            textAlign={"center"}
+                          >
+                            {`Cachorro ${index + 1}`}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={4} md={3}>
+                          <TextFieldWrapper
+                            name={`puppies.${index}.puppyName`}
+                            label="Nombre"
+                            disabled={!isEditable}
+                          />
+                        </Grid>
+                        <Grid item xs={4} md={2}>
+                          <SelectWrapper
+                            name={`puppies.${index}.puppySex`}
+                            label="Sexo"
+                            disabled={!isEditable}
+                            options={{
+                              male: "Macho",
+                              female: "Hembra",
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={4} md={2}>
+                          <TextFieldWrapper
+                            name={`puppies.${index}.puppyColor`}
+                            label="Color"
+                            disabled={!isEditable}
+                          />
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                          <CheckboxInputWrapper
+                            name={`puppies.${index}.puppyNeedsTransfer`}
+                            label="Se realizará cambio de propietario"
+                            disabled={!isEditable}
+                          />
+                        </Grid>
+                        <Grid
+                          item
+                          xs={6}
+                          md={2}
+                          sx={{ display: "flex", justifyContent: "center" }}
                         >
-                          {`Cachorro ${index + 1}`}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <TextFieldWrapper
-                          name={`puppyName${index + 1}`}
-                          label="Nombre"
-                          disabled={!isEditable}
-                        />
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <SelectWrapper
-                          name={`puppySex${index + 1}`}
-                          label="Sexo"
-                          disabled={!isEditable}
-                          options={{
-                            male: "Macho",
-                            female: "Hembra",
-                          }}
-                        />
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <TextFieldWrapper
-                          name={`puppyColor${index + 1}`}
-                          label="Color"
-                          disabled={!isEditable}
-                        />
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <CheckboxInputWrapper
-                          name={`puppyNeedsTransfer${index + 1}`}
-                          label="Se realizará cambio de propietario"
-                          disabled={!isEditable}
-                        />
-                      </Grid>
-                    </Fragment>
-                  );
-                })}
-                {isEditable && (
-                  <Grid item xs={12} mb={2}>
-                    <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
-                      <ButtonFormWrapper> Guardar</ButtonFormWrapper>
-                      {showCancel && (
+                          {isEditable && (
+                            <Button
+                              disabled={isSubmitting}
+                              onClick={() => {
+                                if (values.puppies.length === 1) {
+                                  return;
+                                }
+                                remove(index);
+                              }}
+                              color="error"
+                            >
+                              Eliminar
+                            </Button>
+                          )}
+                        </Grid>
+                      </Fragment>
+                    ))}
+                    {isEditable && (
+                      <Grid
+                        item
+                        xs={12}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          mb: "4rem",
+                        }}
+                      >
                         <Button
+                          disabled={isSubmitting}
                           variant="contained"
-                          fullWidth={true}
-                          // onClick={handleSubmit}
-                          color="error"
+                          color="secondary"
+                          onClick={() => push(emptyPuppy)}
                         >
-                          Cancelar
+                          Agrega cachorro
                         </Button>
-                      )}
-                    </Box>
-                  </Grid>
+                      </Grid>
+                    )}
+                  </Fragment>
                 )}
-              </Fragment>
-            )}
-          </Grid>
-        </Form>
+              </FieldArray>
+
+              {isEditable && (
+                <Grid item xs={12} mb={2}>
+                  <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
+                    <ButtonFormWrapper> Guardar</ButtonFormWrapper>
+                  </Box>
+                </Grid>
+              )}
+            </Grid>
+            <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+          </Form>
+        )}
       </Formik>
     </Fragment>
   );

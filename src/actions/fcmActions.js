@@ -408,8 +408,14 @@ export const setFcmPackageEditable = (boolean) => {
 export const cleanFcmStep = () => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
-    const { activeStep, procedures, completedSteps, currentProps, steps } =
-      fcmPackage;
+    const {
+      activeStep,
+      procedures,
+      completedSteps,
+      currentProps,
+      steps,
+      breedingForm,
+    } = fcmPackage;
 
     // search and remove procedures
     const newProcedures = procedures.filter(
@@ -433,12 +439,19 @@ export const cleanFcmStep = () => {
     newSteps[activeStep].dataId = null;
     newSteps[activeStep].config.isEditable = true;
 
+    // if the step is 5 clean breeding
+    let newBreedingForm = { ...breedingForm };
+    if (activeStep === 4) {
+      newBreedingForm = null;
+    }
+
     dispatch(
       setFcmPackage({
         ...newFcmPackage,
         procedures: newProcedures,
         completedSteps: newCompletedSteps,
         steps: newSteps,
+        breedingForm: newBreedingForm,
       })
     );
   };
@@ -447,10 +460,34 @@ export const cleanFcmStep = () => {
 export const addNewFcmStep = (object) => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
-    const { steps } = fcmPackage;
+    const { steps, activeStep } = fcmPackage;
     const newSteps = [...steps];
-    newSteps.push(object);
-    console.log("estos son los nuevos steps", newSteps);
+
+    // check if the steps are renewed
+    // filters the steps that came from this step
+
+    // in case of parents transfers dont add step if existed previously
+    if (activeStep === 2 || activeStep === 3) {
+      const existentStep = newSteps.find(
+        (step) => step.stepFromOrigin === activeStep
+      );
+      if (!existentStep) {
+        newSteps.splice(newSteps.length - 1, 0, object);
+      }
+    }
+
+    if (activeStep === 4) {
+      const existentStep = newSteps.find(
+        (step) =>
+          step.stepFromOrigin === activeStep &&
+          step.stepObject.puppyName === object.stepObject.puppyName
+      );
+      if (!existentStep) {
+        newSteps.splice(newSteps.length - 1, 0, object);
+      }
+    }
+
+    // newSteps.splice(newSteps.length - 1, 0, object);
     dispatch(setFcmPackageProp("steps", newSteps));
   };
 };
@@ -535,7 +572,7 @@ export const setFcmBreedingForm = (values) => {
   return async (dispatch, getState) => {
     // const client = getState().clients.client;
     // dispatch(updateClientReducer({ ...client }));
-    dispatch(setFcmPackageProp, "breedingForm", values);
+    dispatch(setFcmPackageProp("breedingForm", values));
 
     fireSwalSuccess("Éxito");
   };
@@ -573,5 +610,42 @@ export const setFcmCurrentStepConfig = (data = {}) => {
     console.log("new config", newConfig);
     fcmPackage.steps = newSteps;
     dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const removeFcmSteps = () => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = steps.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
+    // newSteps.splice(newSteps.length - 1, 0, object);
+    dispatch(setFcmPackageProp("steps", newSteps));
+  };
+};
+
+export const removeFcmPuppiesTransfersSteps = (puppiesTransfers = []) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const puppiesTransfersNames = puppiesTransfers.map(
+      (element) => element.puppyName
+    );
+
+    console.log("puppiesTransferNames", puppiesTransfersNames);
+    const newSteps = steps.filter((element) => {
+      if (element.stepFromOrigin !== 4) {
+        return element;
+      } else {
+        console.log("ESTE ES EL PASO ACTUAL", element.stepObject);
+        if (puppiesTransfersNames.includes(element.stepObject.puppyName)) {
+          return element;
+        }
+      }
+    });
+    console.log("newsteps", newSteps);
+
+    dispatch(setFcmPackageProp("steps", newSteps));
   };
 };

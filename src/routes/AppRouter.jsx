@@ -13,6 +13,8 @@ import { roleTypes } from "../types/types";
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { checkAuthorization } from "../helpers/utilities";
 import { ClientLayout } from "../pages/clientsPages/ClientLayout";
+import { TestDynamicFormik } from "../pages/test/TestDynamicFormik";
+import { FcmBreedingFormik2 } from "../pages/clientsPages/FcmBreedingFormik2";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -53,7 +55,7 @@ export const AppRouter = () => {
           )}
 
           <Route path="/*" element={<MainPageLayout />}></Route>
-          <Route path="/test" element={<TestPage />}></Route>
+          <Route path="/test" element={<FcmBreedingFormik2 />}></Route>
 
           {/* <Route path="*" element={<LoginPage />} /> */}
 

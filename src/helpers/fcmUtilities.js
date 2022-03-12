@@ -132,12 +132,15 @@ export const getFcmParterIdByOriginStep = (fcmPackage, activeStep) => {
   }
 };
 
-export const getTransferStepLabel = (activeStep) => {
+export const getTransferStepLabel = (activeStep, puppyName) => {
   if (activeStep === 2) {
     return "Transferencia del padre";
   }
   if (activeStep === 3) {
     return "Transferencia de la madre";
+  }
+  if (activeStep === 4) {
+    return `Transferencia de ${puppyName}`;
   }
 };
 
