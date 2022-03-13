@@ -1,0 +1,162 @@
+import React, { Fragment } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+
+import { Box, Button, Card, Grid, Typography } from "@mui/material";
+import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
+
+import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
+import { useState } from "react";
+import { ButtonFormWrapper } from "../../../components/formsUI/ButtonFormWrapper";
+import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
+import {
+  fireSwalError,
+  setUrlValueOrRefreshImage,
+} from "../../../helpers/utilities";
+import Swal from "sweetalert2";
+
+export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
+  const [filesFrontINE, setfilesFrontINE] = useState([]);
+  const [filesBackINE, setfilesBackINE] = useState([]);
+
+  let initialValues = {
+    firstName: "",
+    paternalSurname: "",
+    maternalSurname: "",
+    urlFrontIne: "",
+    urlBackIne: "",
+  };
+
+  let validationParams = {
+    firstName: Yup.string().trim().required("Es obligatorio"),
+    paternalSurname: Yup.string().trim().required("Es obligatorio"),
+    maternalSurname: Yup.string().trim().required("Es obligatorio"),
+  };
+
+  let formValidation = Yup.object().shape(validationParams);
+
+  const handleSubmit = async (values) => {
+    fireSwalWait("Cargando información", "Por favor, espere");
+
+    if (filesFrontINE.length === 0) {
+      return fireSwalError("Se debe cargar la imagen frontal del INE");
+    }
+    if (filesBackINE.length === 0) {
+      return fireSwalError("Se debe cargar la imagen trasera del INE");
+    }
+
+    let newValues = { ...values };
+
+    // if there is a new file refresh the image
+    newValues = await setUrlValueOrRefreshImage(
+      newValues,
+      filesFrontINE,
+      "urlFrontIne"
+    );
+    newValues = await setUrlValueOrRefreshImage(
+      newValues,
+      filesBackINE,
+      "urlBackIne"
+    );
+
+    handleSubmitForm(newValues);
+    Swal.close();
+  };
+
+  return (
+    <Fragment>
+      <Fragment>
+        {/* Nota */}
+        <Box
+          sx={{
+            bgcolor: "grey.300",
+            p: "2rem",
+            borderRadius: 2,
+            boxShadow: 5,
+            mb: "5rem",
+          }}
+        >
+          <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
+            Notas:
+          </Typography>
+          <Typography mb="1rem">
+            Las imágenes deben tener un tamaño máximo de 1mb.
+          </Typography>
+        </Box>
+
+        {/* Formik */}
+
+        <Formik
+          initialValues={{ ...initialValues }}
+          validationSchema={formValidation}
+          onSubmit={(values) => {
+            handleSubmit(values);
+          }}
+          enableReinitialize
+        >
+          {({ values, errors, isSubmitting, isValid }) => (
+            <Form>
+              <Grid container spacing={2}>
+                {/* DATOS DE IDENTIFICACIÓN */}
+
+                {/* SECTION IMAGES */}
+                <Grid item xs={12}>
+                  <Typography component="h4" variant="h5" mb="2rem">
+                    Datos del propietario anterior
+                  </Typography>
+                </Grid>
+                {/* tarjeta de socio */}
+                <Grid item xs={12} md={4}>
+                  <TextFieldWrapper name="firstName" label="Nombre (s)" />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextFieldWrapper
+                    name="paternalSurname"
+                    label="Apellido paterno"
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextFieldWrapper
+                    name="maternalSurname"
+                    label="Apellido materno"
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography mb="2rem">INE frente</Typography>
+                  <DragImageUpload
+                    files={filesFrontINE}
+                    setFiles={setfilesFrontINE}
+                  ></DragImageUpload>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Typography mb="2rem">INE reverso</Typography>
+                  <DragImageUpload
+                    files={filesBackINE}
+                    setFiles={setfilesBackINE}
+                  ></DragImageUpload>
+                </Grid>
+                <Grid item xs={12} mb={2}>
+                  <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
+                    <ButtonFormWrapper> Guardar</ButtonFormWrapper>
+
+                    <Button
+                      variant="contained"
+                      fullWidth={true}
+                      // onClick={handleSubmit}
+                      color="error"
+                    >
+                      Cancelar
+                    </Button>
+                  </Box>
+                </Grid>
+                {/* DATOS DE IDENTIFICACIÓN */}
+              </Grid>
+
+              <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+            </Form>
+          )}
+        </Formik>
+      </Fragment>
+    </Fragment>
+  );
+};

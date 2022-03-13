@@ -1,23 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setFcmCurrentStepConfig,
-  setFcmCurrentStepEditable,
-  setFcmPackage,
-  setFcmPackageCurrentProps,
-  setFcmPackageEditable,
-} from "../../actions/fcmActions";
-import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
-import { findObjectByProperty } from "../../helpers/utilities";
-import { FcmPartnerFormWrapper } from "./components/FcmPartnerFormWrapper";
-import { LostPartnerCard } from "./components/LostPartnerCard";
-import { SearchAndLinkPartner } from "./components/SearchAndLinkPartner";
-import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAccount";
-import { FcmPartnerFormik } from "./FcmPartnerFormik";
-import { FcmPartnerFormikNew } from "./components/FcmPartnerFormikNew";
+import { setFcmCurrentStepConfig } from "../../../actions/fcmActions";
+import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
+import { findObjectByProperty } from "../../../helpers/utilities";
+import { FcmPartnerFormik } from "../FcmPartnerFormik";
+import { FcmPartnerFormikNew } from "./FcmPartnerFormikNew";
+import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
+import { LostPartnerCard } from "./LostPartnerCard";
+import { SearchAndLinkPartner } from "./SearchAndLinkPartner";
+import { SelectFcmPartnerFromAccount } from "./SelectFcmPartnerFromAccount";
 
-export const FcmStepperPartnerSelector = ({ label }) => {
+export const FcmSelectPartnerOptions = ({ label }) => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
@@ -27,6 +21,10 @@ export const FcmStepperPartnerSelector = ({ label }) => {
   const { activeStep, steps } = fcmPackage;
   const { componentName, props, stepFromOrigin, dataId, config } =
     steps[activeStep];
+
+  const handleCancelSelection = () => {
+    setselectedCase("");
+  };
 
   const options = [
     {
@@ -61,7 +59,7 @@ export const FcmStepperPartnerSelector = ({ label }) => {
     {
       label: "Socio no registrado en esta plataforma",
       value: "newPartner",
-      component: <FcmPartnerFormWrapper />,
+      component: <FcmPartnerFormWrapper handleCancel={handleCancelSelection} />,
       functions: () => {
         dispatch(
           setFcmCurrentStepConfig({

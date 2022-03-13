@@ -1,10 +1,12 @@
 import * as Yup from "yup";
 import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSummary";
+import { FcmSelectPartnerOptions } from "../pages/clientsPages/components/FcmSelectPartnerOptions";
 import { FcmTransferPuppy } from "../pages/clientsPages/components/FcmTransferPuppy";
 import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
 import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
+import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
 import { isObjectEmpty } from "./utilities";
 
 export const isLastStep = (activeStep, steps) => {
@@ -87,7 +89,7 @@ export const generatePuppiesValidationParams = (
 export const getComponent = (componentName, props) => {
   switch (componentName) {
     case "FcmStepperPartnerSelector":
-      return <FcmStepperPartnerSelector {...props} />;
+      return <FcmSelectPartnerOptions {...props} />;
 
     case "FcmStepperDogSelector":
       return <FcmStepperDogSelector {...props} />;
@@ -99,7 +101,7 @@ export const getComponent = (componentName, props) => {
       return <FcmBreedingFormik {...props} />;
 
     case "FcmTransferFormik":
-      return <FcmTransferFormik {...props} />;
+      return <FcmTransferFormikNew {...props} />;
 
     case "FcmTransferPuppy":
       return <FcmTransferPuppy {...props} />;

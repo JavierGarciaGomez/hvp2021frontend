@@ -9,7 +9,6 @@ import {
   createFcmtransfer,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
-  setFcmCurrentStepDataId,
   setFcmCurrentStepEditable,
   updateFcmtransfer,
   updateStepReferences,
@@ -20,10 +19,7 @@ import {
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
 import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
-import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 
-import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
-import { DragImageUpload } from "../../components/formsUI/DragImageUpload";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -34,8 +30,10 @@ import {
   getFcmParterIdByOriginStep,
 } from "../../helpers/fcmUtilities";
 import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
+import { FcmPrevOwnerFormik } from "./components/FcmPrevOwnerFormik";
+import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
-export const FcmTransferFormik = () => {
+export const FcmTransferFormikNew = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   /*************************************************************************************************** */
@@ -58,23 +56,51 @@ export const FcmTransferFormik = () => {
     steps[activeStep];
   const { isEditable } = config;
   const [componentData, setcomponentData] = useState({});
+  const [prevOwner, setprevOwner] = useState(null);
+  const [newOwner, setnewOwner] = useState(null);
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
 
+  const dog = {
+    petName: "Nombre Perro",
+    registerNum: "12345",
+  };
+
+  useEffect(() => {
+    setprevOwner({
+      firstName: "Javier",
+      paternalSurname: "García",
+      maternalSurname: "Gómez",
+    });
+  }, []);
+
+  // const dog = null;
+
+  // const newOwner = {
+  //   fullName: "Nombre Paterno Materno",
+  //   partnerNum: "XYZ",
+  // };
+
+  const [fullDataHaveBeenFilled, setfullDataHaveBeenFilled] = useState(false);
+
   let initialValues = {
-    firstName: "",
-    paternalSurname: "",
-    maternalSurname: "",
-    urlFrontIne: "",
-    urlBackIne: "",
+    previousOwner: {
+      firstName: "",
+      paternalSurname: "",
+      maternalSurname: "",
+      urlFrontIne: "",
+      urlBackIne: "",
+    },
   };
 
   let validationParams = {
-    firstName: Yup.string().trim().required("Es obligatorio"),
-    paternalSurname: Yup.string().trim().required("Es obligatorio"),
-    maternalSurname: Yup.string().trim().required("Es obligatorio"),
+    previousOwner: Yup.object({
+      firstName: Yup.string().trim().required("Es obligatorio"),
+      paternalSurname: Yup.string().trim().required("Es obligatorio"),
+      maternalSurname: Yup.string().trim().required("Es obligatorio"),
+    }),
   };
 
   let formValidation = Yup.object().shape(validationParams);
@@ -130,18 +156,10 @@ export const FcmTransferFormik = () => {
     if (fcmDog && fcmPartner) {
       setisPreviousDataLoaded(true);
     } else {
-      setisPreviousDataLoaded(false);
+      // setisPreviousDataLoaded(false);
+      setisPreviousDataLoaded(true);
     }
   }, [fcmDog, fcmPartner]);
-
-  console.log(
-    "FCMDOG FCM PARTNER",
-    fcmDog,
-    fcmPartner,
-    componentData,
-    imgUrlBackIne,
-    filesFrontINE
-  );
 
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
@@ -227,6 +245,34 @@ export const FcmTransferFormik = () => {
   /************************** RENDER *******************************************************/
   /*************************************************************************************************** */
 
+  if (!dog) {
+    return (
+      <div>
+        No se puede llenar este formulario, sin antes haber registrado la
+        información del perro
+      </div>
+    );
+  }
+
+  if (!prevOwner) {
+    return (
+      <Fragment>
+        <div>FALTA EL PREVOWNER</div>
+        <FcmPrevOwnerFormik handleSubmitForm={setprevOwner} />
+      </Fragment>
+    );
+    // prevOwner Component
+  }
+
+  if (!newOwner) {
+    return (
+      <Fragment>
+        <div>Hola</div>
+        <FcmStepperPartnerSelector></FcmStepperPartnerSelector>
+      </Fragment>
+    );
+  }
+
   return (
     <Fragment>
       {!isPreviousDataLoaded && (
@@ -288,164 +334,28 @@ export const FcmTransferFormik = () => {
             </Box>
           )}
 
-          {/* Nota */}
-          <Box
-            sx={{
-              bgcolor: "grey.300",
-              p: "2rem",
-              borderRadius: 2,
-              boxShadow: 5,
-              mb: "5rem",
-            }}
-          >
-            <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
-              Notas:
+          <Box mb="3rem">
+            <Typography component="h4" variant="h5" mb="2rem">
+              Datos del perro a transferir
             </Typography>
-            <Typography mb="1rem">
-              Las imágenes deben tener un tamaño máximo de 1mb.
-            </Typography>
-            <Typography mb="1rem">
-              Si los datos del nuevo propietario o del perro a transferir son
-              incorrectos, es necesario desvincular o editar el formato que da
-              origen a este.
-            </Typography>
+
+            <Typography>Nombre: {dog.petName}</Typography>
+            <Typography>Número de registro: {dog.registerNum}</Typography>
           </Box>
 
-          {/* Formik */}
-
-          <Grid container spacing={2} mb="3rem">
-            <Grid item xs={12}>
-              <Typography component="h4" variant="h5">
-                Datos del perro a transferir
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                name="petName"
-                label="Nombre"
-                disabled={true}
-                value={fcmDog.petName}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                name="registerNum"
-                label="Número de registro"
-                disabled={true}
-                value={fcmDog.registerNum}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={2} mb="3rem">
-            <Grid item xs={12}>
-              <Typography component="h4" variant="h5">
-                Datos del nuevo propietario
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                name="fullName"
-                label="Nombre"
-                disabled={true}
-                value={`${fcmPartner.firstName} ${fcmPartner.paternalSurname} ${fcmPartner.maternalSurname}`}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                name="partnerNum"
-                label="Número de socio"
-                disabled={true}
-                value={fcmPartner.partnerNum}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-
-          <Formik
-            initialValues={{ ...formValues }}
-            validationSchema={formValidation}
-            onSubmit={(values) => {
-              handleSubmit(values);
-            }}
-            enableReinitialize
-          >
-            <Form>
-              <Grid container spacing={2}>
-                {/* DATOS DE IDENTIFICACIÓN */}
-
-                {/* SECTION IMAGES */}
-                <Grid item xs={12}>
-                  <Typography component="h4" variant="h5" mb="2rem">
-                    Datos del propietario anterior
-                  </Typography>
-                </Grid>
-                {/* tarjeta de socio */}
-                <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="firstName"
-                    label="Nombre (s)"
-                    disabled={!isEditable}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="paternalSurname"
-                    label="Apellido paterno"
-                    disabled={!isEditable}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="maternalSurname"
-                    label="Apellido materno"
-                    disabled={!isEditable}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography mb="2rem">INE frente</Typography>
-                  <DragImageUpload
-                    files={filesFrontINE}
-                    setFiles={setfilesFrontINE}
-                    imgUrl={imgUrlFrontIne}
-                    setimgUrl={setImgUrlFrontIne}
-                    editable={isEditable}
-                  ></DragImageUpload>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography mb="2rem">INE reverso</Typography>
-                  <DragImageUpload
-                    files={filesBackINE}
-                    setFiles={setfilesBackINE}
-                    imgUrl={imgUrlBackIne}
-                    setimgUrl={setImgUrlBackIne}
-                    editable={isEditable}
-                  ></DragImageUpload>
-                </Grid>
-                {/* DATOS DE IDENTIFICACIÓN */}
-                {isEditable && (
-                  <Grid item xs={12} mb={2}>
-                    <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
-                      <ButtonFormWrapper> Guardar</ButtonFormWrapper>
-                      {showCancel && (
-                        <Button
-                          variant="contained"
-                          fullWidth={true}
-                          // onClick={handleSubmit}
-                          color="error"
-                        >
-                          Cancelar
-                        </Button>
-                      )}
-                    </Box>
-                  </Grid>
-                )}
-              </Grid>
-            </Form>
-          </Formik>
+          <Box mb="3rem">
+            <Typography component="h4" variant="h5" mb="2rem">
+              Datos del nuevo propietario
+            </Typography>
+            <Typography>Nombre: {newOwner.fullName}</Typography>
+            <Typography>Número de registro: {newOwner.partnerNum}</Typography>
+          </Box>
+          <Box mb="3rem">
+            <Typography component="h4" variant="h5" mb="2rem">
+              Datos del propietario anterior
+            </Typography>
+            <Typography>{`Nombre: ${prevOwner.firstName} ${prevOwner.paternalSurname} ${prevOwner.maternalSurname}`}</Typography>
+          </Box>
         </Fragment>
       )}
     </Fragment>

@@ -53,11 +53,12 @@ export const FcmPartnerFormik = () => {
   const [imgUrlFrontIne, setImgUrlFrontIne] = useState(null);
   const [imgUrlBackIne, setImgUrlBackIne] = useState(null);
 
-  const [isPending, setisPending] = useState(false);
+  const [isIncomplete, setisIncomplete] = useState(false);
   const { dataId, config } = steps[activeStep];
   const {
     isEditable,
     isFirstRegister,
+    isCardLost,
     needsConfirmation,
     formTitle,
     showCancel,
@@ -67,7 +68,7 @@ export const FcmPartnerFormik = () => {
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
-
+  //#region
   let initialValues = {
     firstName: "",
     paternalSurname: "",
@@ -115,7 +116,7 @@ export const FcmPartnerFormik = () => {
       .required("Es obligatorio"),
   };
 
-  if (!isPending) {
+  if (!isIncomplete) {
     validationParams = {
       ...validationParams,
       partnerNum: Yup.string().trim().required("Es obligatorio"),
@@ -127,10 +128,11 @@ export const FcmPartnerFormik = () => {
 
   const [formValues, setformValues] = useState(initialValues);
 
+  //#endregion
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
-
+  //#region
   console.log("Voy a imprimir procedures");
   console.table(fcmPackage.procedures);
   const handleConfirmRenewal = async (values) => {
@@ -168,7 +170,7 @@ export const FcmPartnerFormik = () => {
     }
     fireSwalWait();
 
-    if (!isPending) {
+    if (!isIncomplete) {
       if (filesFcmPartner.length === 0 && !imgUrlPartnerCard) {
         return fireSwalError("Se debe cargar la imagen de la tarjeta");
       }
@@ -188,7 +190,7 @@ export const FcmPartnerFormik = () => {
     let newValues = { ...values };
     // if there is a new file refresh the image
 
-    if (!isPending) {
+    if (!isIncomplete) {
       newValues = await setUrlValueOrRefreshImage(
         newValues,
         filesFcmPartner,
@@ -197,11 +199,22 @@ export const FcmPartnerFormik = () => {
       );
       newValues.isPending = false;
     } else {
-      newValues.partnerNum = `En trámite - ${newValues.firstName} ${
-        newValues.paternalSurname
-      } - ${dayjs()}`;
-      newValues.isPending = true;
-      newValues.expirationDate = "";
+      // if is incomplete: or is a first register or is a cardLost
+      newValues.expirationDate = null;
+      if (isCardLost) {
+        newValues.partnerNum = `Extravío - ${newValues.firstName} ${
+          newValues.paternalSurname
+        } - ${dayjs().format("DD-MMM-YYYY HH:mm")}`;
+        newValues.isCardLost = true;
+        newValues.isPending = false;
+      }
+      if (isFirstRegister) {
+        newValues.partnerNum = `En trámite - ${newValues.firstName} ${
+          newValues.paternalSurname
+        } - ${dayjs()}`;
+        newValues.isCardLost = false;
+        newValues.isPending = true;
+      }
     }
     newValues = await setUrlValueOrRefreshImage(
       newValues,
@@ -249,7 +262,30 @@ export const FcmPartnerFormik = () => {
     if (!fcmPartner) {
       return;
     }
+    handleProcedures(fcmPartner);
 
+    dispatch(updateStepReferences(fcmPartner));
+    dispatch(
+      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
+    );
+    dispatch(handleFcmCompleteStep());
+  };
+
+  const handleConfirmation = async () => {
+    const values = { ...componentData };
+
+    if (!(await handleConfirmRenewal(values))) {
+      return;
+    }
+    handleProcedures(values);
+    dispatch(updateStepReferences(values));
+
+    dispatch(setFcmCurrentStepConfig({ needsConfirmation: false }));
+    // setneedsConfirmation(false);
+    dispatch(handleFcmCompleteStep());
+  };
+
+  const handleProcedures = async (fcmPartner) => {
     // add or remove a procedure
     console.log("este es el fcm procedure", fcmPartner.isPending);
     if (fcmPartner.isPending) {
@@ -269,30 +305,30 @@ export const FcmPartnerFormik = () => {
         })
       );
     }
-
-    dispatch(updateStepReferences(fcmPartner));
-    dispatch(
-      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
-    );
-    dispatch(handleFcmCompleteStep());
-  };
-
-  const handleConfirmation = async () => {
-    const values = { ...componentData };
-
-    if (!(await handleConfirmRenewal(values))) {
-      return;
+    if (fcmPartner.isCardLost) {
+      dispatch(
+        addFcmProcedure({
+          stepFromOrigin: activeStep,
+          type: "responsiveLetter",
+          data: fcmPartner,
+          dataId: fcmPartner._id,
+        })
+      );
+    } else {
+      dispatch(
+        removeFcmProcedure({
+          stepFromOrigin: activeStep,
+          type: "responsiveLetter",
+        })
+      );
     }
-
-    dispatch(setFcmCurrentStepConfig({ needsConfirmation: false }));
-    // setneedsConfirmation(false);
-    dispatch(handleFcmCompleteStep());
   };
 
+  //#endregion
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
-
+  //#region
   // find fcmPartner and set it active (searching from id)
   useEffect(() => {
     if (dataId) {
@@ -322,12 +358,13 @@ export const FcmPartnerFormik = () => {
 
   useEffect(() => {
     if (!isObjectEmpty(componentData)) {
-      setisPending(componentData.isPending);
+      setisIncomplete(componentData.isPending || componentData.isCardLost);
     } else {
-      setisPending(isFirstRegister);
+      setisIncomplete(isFirstRegister || isCardLost);
     }
-  }, [isFirstRegister, componentData]);
+  }, [isFirstRegister, isCardLost, componentData]);
 
+  //#endregion
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
   /*************************************************************************************************** */
@@ -441,7 +478,7 @@ export const FcmPartnerFormik = () => {
               </Typography>
             </Grid>
             {/* tarjeta de socio */}
-            {!isPending && (
+            {!isIncomplete && (
               <Grid item xs={12} md={6}>
                 <Typography mb="2rem">Tarjeta de socio</Typography>
                 <DragImageUpload
@@ -510,7 +547,7 @@ export const FcmPartnerFormik = () => {
                 disabled={!isEditable}
               />
             </Grid>
-            {!isPending && (
+            {!isIncomplete && (
               <Fragment>
                 <Grid item xs={12} md={6}>
                   <TextFieldWrapper

@@ -15,6 +15,8 @@ import { checkAuthorization } from "../helpers/utilities";
 import { ClientLayout } from "../pages/clientsPages/ClientLayout";
 import { TestDynamicFormik } from "../pages/test/TestDynamicFormik";
 import { FcmBreedingFormik2 } from "../pages/clientsPages/FcmBreedingFormik2";
+import { TestFormikUpload } from "../pages/test/TestFormikUpload";
+import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -55,7 +57,7 @@ export const AppRouter = () => {
           )}
 
           <Route path="/*" element={<MainPageLayout />}></Route>
-          <Route path="/test" element={<FcmBreedingFormik2 />}></Route>
+          <Route path="/test" element={<FcmTransferFormikNew />}></Route>
 
           {/* <Route path="*" element={<LoginPage />} /> */}
 

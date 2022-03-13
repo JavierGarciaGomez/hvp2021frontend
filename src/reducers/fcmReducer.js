@@ -7,6 +7,7 @@ import { types } from "../types/types";
 
 const defaultConfig = {
   isFirstRegister: false,
+  isCardLost: false,
   packageProperty: "",
   isEditable: true,
   formTitle: "Llena el formulario",

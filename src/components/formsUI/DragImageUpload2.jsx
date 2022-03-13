@@ -6,7 +6,7 @@ export const DragImageUpload = ({
   setFiles,
   imgUrl,
   setimgUrl,
-  editable = true,
+  editable,
 }) => {
   // console.log("esta imgurl recibí", imgUrl);
   const images = files.map((file) => (

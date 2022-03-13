@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
+  addFcmCertificateProcedure,
+  addFcmProcedure,
   addNewFcmStep,
   cleanFcmStep,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  removeFcmProcedure,
   removeFcmPuppiesTransfersSteps,
   setFcmBreedingForm,
   setFcmCurrentStepConfig,
@@ -158,6 +161,21 @@ export const FcmBreedingFormik = ({ label }) => {
 
     // if there is an ID: update. If not: create
     Swal.close();
+
+    dispatch(
+      removeFcmProcedure({ stepFromOrigin: activeStep, type: "certificate" })
+    );
+    newValues.puppies.map((element) => {
+      dispatch(
+        addFcmCertificateProcedure({
+          stepFromOrigin: activeStep,
+          type: "certificate",
+          data: element.puppyName,
+          dataId: newValues._id,
+        })
+      );
+    });
+
     dispatch(setFcmBreedingForm(newValues));
     dispatch(setFcmCurrentStepObject(newValues));
     dispatch(

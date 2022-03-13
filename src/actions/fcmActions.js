@@ -362,6 +362,17 @@ export const addFcmProcedure = (object) => {
   };
 };
 
+export const addFcmCertificateProcedure = (object) => {
+  return async (dispatch, getState) => {
+    let fcmPackage = getState().fcm.fcmPackage;
+    let { procedures = [] } = fcmPackage;
+    let newProcedures = [...procedures];
+
+    newProcedures.push(object);
+    dispatch(setFcmPackageProp("procedures", newProcedures));
+  };
+};
+
 export const removeFcmProcedure = (object) => {
   return async (dispatch, getState) => {
     console.log("***** estoy acá");
