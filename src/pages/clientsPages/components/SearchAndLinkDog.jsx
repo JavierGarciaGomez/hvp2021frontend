@@ -7,16 +7,17 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import dayjs from "dayjs";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  setFcmCurrentStepObject,
   setFcmPackageNeedsConfirmation,
   setFcmPackageProperty,
   startLoadingFcmDogs,
-  startLoadingFcmPartners,
+  updateStepReferences,
 } from "../../../actions/fcmActions";
-import { userAddFcmDog, userAddFcmPartner } from "../../../actions/userActions";
+import { userAddFcmDog } from "../../../actions/userActions";
 import { excludeFromCollection } from "../../../helpers/utilities";
 
 export const SearchAndLinkDog = () => {
@@ -55,8 +56,8 @@ export const SearchAndLinkDog = () => {
 
     if (fcmPackage) {
       // handleNext();
-      dispatch(setFcmPackageProperty(object._id));
-      dispatch(setFcmPackageNeedsConfirmation(true));
+
+      dispatch(updateStepReferences(object));
     }
   };
 

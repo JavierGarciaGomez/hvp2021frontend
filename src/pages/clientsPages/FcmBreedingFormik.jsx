@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
-  addFcmProcedure,
   addNewFcmStep,
   cleanFcmStep,
   handleFcmCompleteStep,
@@ -13,6 +12,7 @@ import {
   setFcmBreedingForm,
   setFcmCurrentStepConfig,
   setFcmCurrentStepEditable,
+  setFcmCurrentStepObject,
 } from "../../actions/fcmActions";
 import { fireSwalConfirmation, isObjectEmpty } from "../../helpers/utilities";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
@@ -114,13 +114,6 @@ export const FcmBreedingFormik = ({ label }) => {
       } else {
         puppiesTransfers.map((element, index) => {
           dispatch(
-            addFcmProcedure({
-              step: activeStep,
-              procedureType: "transfer",
-              puppyData: element,
-            })
-          );
-          dispatch(
             addNewFcmStep({
               label: getTransferStepLabel(activeStep, element.puppyName),
               componentName: "FcmTransferPuppy",
@@ -166,6 +159,7 @@ export const FcmBreedingFormik = ({ label }) => {
     // if there is an ID: update. If not: create
     Swal.close();
     dispatch(setFcmBreedingForm(newValues));
+    dispatch(setFcmCurrentStepObject(newValues));
     dispatch(
       setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
     );

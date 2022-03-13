@@ -2,20 +2,17 @@ import { Box, Typography } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setFcmCurrentStepConfig,
   setFcmCurrentStepEditable,
-  setFcmPackage,
   setFcmPackageCurrentProps,
 } from "../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";
-import { LostPartnerCard } from "./components/LostPartnerCard";
+
 import { SearchAndLinkDog } from "./components/SearchAndLinkDog";
-import { SearchAndLinkPartner } from "./components/SearchAndLinkPartner";
+
 import { SelectDogFromAccount } from "./components/SelectDogFromAccount";
-import { SelectFcmPartnerFromAccount } from "./components/SelectFcmPartnerFromAccount";
+
 import { FcmDogFormik } from "./FcmDogFormik";
-import { FcmPartnerFormik } from "./FcmPartnerFormik";
 
 export const FcmStepperDogSelector = ({ label }) => {
   /*************************************************************************************************** */
@@ -31,14 +28,6 @@ export const FcmStepperDogSelector = ({ label }) => {
       value: "previousLinked",
       component: <SelectDogFromAccount />,
       functions: () => {
-        // todo: delete
-        dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: false,
-            isEditable: false,
-          })
-        );
         dispatch(setFcmCurrentStepEditable(false));
       },
     },
@@ -48,14 +37,6 @@ export const FcmStepperDogSelector = ({ label }) => {
       value: "previousDataBase",
       component: <SearchAndLinkDog />,
       functions: () => {
-        // todo: delete
-        dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: false,
-            isEditable: false,
-          })
-        );
         dispatch(setFcmCurrentStepEditable(false));
       },
     },
@@ -64,13 +45,6 @@ export const FcmStepperDogSelector = ({ label }) => {
       value: "notRegistered",
       component: <FcmDogFormik />,
       functions: () => {
-        dispatch(
-          setFcmPackageCurrentProps({
-            ...fcmPackage.currentProps,
-            isFirstRegister: false,
-            isEditable: false,
-          })
-        );
         dispatch(setFcmCurrentStepEditable(true));
       },
     },
@@ -84,19 +58,6 @@ export const FcmStepperDogSelector = ({ label }) => {
   useEffect(() => {
     setselectedCase("");
   }, [fcmPackage.activeStep]);
-
-  useEffect(() => {
-    if (fcmPackage[fcmPackage.currentProps.packageProperty] !== "") {
-      dispatch(
-        setFcmPackageCurrentProps({
-          ...fcmPackage.currentProps,
-          isFirstRegister: false,
-          isEditable: false,
-        })
-      );
-    }
-    dispatch(setFcmCurrentStepEditable(false));
-  }, [fcmPackage.currentProps.packageProperty]);
 
   /*************************************************************************************************** */
   /**************************RENDER *********************************************************************/

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
-  addFcmProcedure,
   addNewFcmStep,
   cleanFcmStep,
   createFcmDog,
@@ -12,17 +11,13 @@ import {
   handleNextFcmPackageStep,
   removeFcmSteps,
   setFcmCurrentStepConfig,
-  setFcmCurrentStepDataId,
   setFcmCurrentStepEditable,
-  setFcmPackageEditable,
-  setFcmPackageNeedsConfirmation,
-  setFcmPackageProperty,
   updateFcmDog,
+  updateStepReferences,
 } from "../../actions/fcmActions";
 import {
   fireSwalConfirmation,
   fireSwalError,
-  isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
 import { Box, Button, Grid, Typography } from "@mui/material";
@@ -130,14 +125,6 @@ export const FcmDogFormik = () => {
         return false;
       }
       dispatch(
-        addFcmProcedure({
-          step: activeStep,
-          procedureType: "transfer",
-          dataId: values._id,
-        })
-      );
-
-      dispatch(
         addNewFcmStep({
           label: getTransferStepLabel(activeStep),
           componentName: "FcmTransferFormik",
@@ -197,26 +184,22 @@ export const FcmDogFormik = () => {
 
     // close sweet alert
     Swal.close();
-    let fcmDogId = null;
+    let fcmDog = null;
 
     // if there is an ID: update. If not: create
     if (newValues._id) {
-      fcmDogId = await dispatch(updateFcmDog(newValues));
+      fcmDog = await dispatch(updateFcmDog(newValues));
     } else {
-      fcmDogId = await dispatch(createFcmDog(newValues));
+      fcmDog = await dispatch(createFcmDog(newValues));
     }
     // if there is an error in the dispach return
-    if (!fcmDogId) {
+    if (!fcmDog) {
       return;
     }
-    // todo delete
-    dispatch(setFcmPackageProperty(fcmDogId));
-
+    dispatch(updateStepReferences(fcmDog));
     dispatch(
       setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
     );
-
-    dispatch(setFcmCurrentStepDataId(fcmDogId));
     dispatch(handleFcmCompleteStep());
   };
 

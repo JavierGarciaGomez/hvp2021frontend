@@ -1038,3 +1038,10 @@ export const includeInPackage = (collection = [], object, propertyName) => {
 export const isStepSkipped = (set = new Set(), step) => {
   return set.has(step);
 };
+
+export const objectContainsObjectProperties = (bigObject, smallObject) => {
+  console.log("utilities: bigobj and smallobj", bigObject, smallObject);
+  return Object.entries(smallObject).every(
+    (element) => bigObject[element[0]] == element[1]
+  );
+};

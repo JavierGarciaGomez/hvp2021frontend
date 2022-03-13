@@ -5,6 +5,7 @@ import {
   setFcmCurrentStepConfig,
   setFcmCurrentStepDataId,
   setFcmPackageProperty,
+  updateStepReferences,
 } from "../../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../../helpers/utilities";
@@ -18,11 +19,16 @@ export const SelectFcmPartnerFromAccount = () => {
   // if a parther is selected set the dataId to the step
   useEffect(() => {
     if (selectedFcmPartnerId !== "") {
-      dispatch(setFcmPackageProperty(selectedFcmPartnerId));
+      const found = findObjectByProperty(
+        client.linkedFcmPartners,
+        "_id",
+        selectedFcmPartnerId
+      );
+
+      dispatch(updateStepReferences(found));
       dispatch(
         setFcmCurrentStepConfig({ isEditable: false, needsConfirmation: true })
       );
-      dispatch(setFcmCurrentStepDataId(selectedFcmPartnerId));
     }
   }, [selectedFcmPartnerId]);
 

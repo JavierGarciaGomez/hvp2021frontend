@@ -9,12 +9,11 @@ import {
   createFcmPartner,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
+  removeFcmProcedure,
   setFcmCurrentStepConfig,
-  setFcmCurrentStepDataId,
   setFcmCurrentStepEditable,
-  setFcmPackageEditable,
-  setFcmPackageProperty,
   updateFcmPartner,
+  updateStepReferences,
 } from "../../actions/fcmActions";
 import {
   fireSwalConfirmation,
@@ -132,8 +131,9 @@ export const FcmPartnerFormik = () => {
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
 
+  console.log("Voy a imprimir procedures");
+  console.table(fcmPackage.procedures);
   const handleConfirmRenewal = async (values) => {
-    console.log("HANDLE CONFIRM RENEWAL");
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
         "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
@@ -144,9 +144,17 @@ export const FcmPartnerFormik = () => {
       }
       dispatch(
         addFcmProcedure({
-          step: activeStep,
-          procedureType: "renewal",
+          stepFromOrigin: activeStep,
+          type: "partnerRenewal",
           dataId: values._id,
+          data: values,
+        })
+      );
+    } else {
+      dispatch(
+        removeFcmProcedure({
+          stepFromOrigin: activeStep,
+          type: "partnerRenewal",
         })
       );
     }
@@ -229,25 +237,43 @@ export const FcmPartnerFormik = () => {
     };
 
     Swal.close();
-    let fcmPartnerId = null;
+    let fcmPartner = null;
     // if there is an ID: update. If not: create
     if (newValues._id) {
-      fcmPartnerId = await dispatch(updateFcmPartner(newValues));
+      fcmPartner = await dispatch(updateFcmPartner(newValues));
     } else {
-      fcmPartnerId = await dispatch(createFcmPartner(newValues));
+      fcmPartner = await dispatch(createFcmPartner(newValues));
     }
 
     // if there is an error in the dispach return
-    if (!fcmPartnerId) {
+    if (!fcmPartner) {
       return;
     }
-    // TODO DELETE
-    dispatch(setFcmPackageProperty(fcmPartnerId));
 
+    // add or remove a procedure
+    console.log("este es el fcm procedure", fcmPartner.isPending);
+    if (fcmPartner.isPending) {
+      dispatch(
+        addFcmProcedure({
+          stepFromOrigin: activeStep,
+          type: "partnerRegistration",
+          data: fcmPartner,
+          dataId: fcmPartner._id,
+        })
+      );
+    } else {
+      dispatch(
+        removeFcmProcedure({
+          stepFromOrigin: activeStep,
+          type: "partnerRegistration",
+        })
+      );
+    }
+
+    dispatch(updateStepReferences(fcmPartner));
     dispatch(
       setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
     );
-    dispatch(setFcmCurrentStepDataId(fcmPartnerId));
     dispatch(handleFcmCompleteStep());
   };
 

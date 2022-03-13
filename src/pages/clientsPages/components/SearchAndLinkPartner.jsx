@@ -12,10 +12,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFcmCurrentStepConfig,
-  setFcmCurrentStepDataId,
-  setFcmPackageNeedsConfirmation,
-  setFcmPackageProperty,
   startLoadingFcmPartners,
+  updateStepReferences,
 } from "../../../actions/fcmActions";
 import { userAddFcmPartner } from "../../../actions/userActions";
 import { excludeFromCollection } from "../../../helpers/utilities";
@@ -55,8 +53,7 @@ export const SearchAndLinkPartner = () => {
     // if is from a package
     if (fcmPackage) {
       // handleNext();
-      dispatch(setFcmPackageProperty(fcmPartner._id));
-      dispatch(setFcmCurrentStepDataId(fcmPartner._id));
+      dispatch(updateStepReferences(fcmPartner));
       dispatch(setFcmCurrentStepConfig({ needsConfirmation: true }));
     }
   };

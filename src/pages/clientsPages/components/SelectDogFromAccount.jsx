@@ -3,23 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFcmCurrentStepConfig,
-  setFcmCurrentStepDataId,
-  setFcmPackage,
-  setFcmPackageCurrentProps,
-  setFcmPackageProp,
-  setFcmPackageProperty,
+  updateStepReferences,
 } from "../../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../../helpers/utilities";
-import { FcmPartnerFormik } from "../FcmPartnerFormik";
-import { FcmPartnerCard } from "./FcmPartnerCard";
 
 export const SelectDogFromAccount = () => {
   const dispatch = useDispatch();
   const { client } = useSelector((state) => state.clients);
   const [selectedDogId, setselectedDogId] = useState("");
-  const [selectedDog, setselectedDog] = useState({});
-  const { fcmPackage } = useSelector((state) => state.fcm);
 
   useEffect(() => {
     if (selectedDogId !== "") {
@@ -28,33 +20,19 @@ export const SelectDogFromAccount = () => {
         "_id",
         selectedDogId
       );
-      setselectedDog(found);
 
-      dispatch(setFcmPackageProperty(selectedDogId));
+      dispatch(updateStepReferences(found));
 
       dispatch(
         setFcmCurrentStepConfig({ isEditable: false, needsConfirmation: true })
       );
-      dispatch(setFcmCurrentStepDataId(selectedDogId));
     }
   }, [selectedDogId]);
-
-  const handleSubmit = () => {
-    dispatch(setFcmPackageProperty(selectedDogId));
-    dispatch(setFcmCurrentStepDataId(selectedDogId));
-  };
 
   const options = client.linkedDogs.map((element) => {
     return {
       label: `${element.registerNum} - ${element.petName}`,
       value: element._id,
-      component: (
-        <FcmPartnerCard
-          fcmPartner={selectedDog}
-          usedInProcedure={true}
-          handleClickBtn={handleSubmit}
-        />
-      ),
     };
   });
 

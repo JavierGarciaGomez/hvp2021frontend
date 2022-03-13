@@ -10,9 +10,8 @@ import {
   handleNextFcmPackageStep,
   setFcmCurrentStepDataId,
   setFcmCurrentStepEditable,
-  setFcmPackageEditable,
-  setFcmPackageProperty,
   updateFcmtransfer,
+  updateStepReferences,
 } from "../../actions/fcmActions";
 import {
   fireSwalError,
@@ -199,14 +198,16 @@ export const FcmTransferFormik = () => {
     Swal.close();
     // set current step not editable
     // if there is an ID: update. If not: create
-    let fcmTransferId = null;
+    let fcmTransfer = null;
     if (!finalValues._id) {
-      fcmTransferId = await dispatch(createFcmtransfer(finalValues));
+      fcmTransfer = await dispatch(createFcmtransfer(finalValues));
     } else {
-      fcmTransferId = await dispatch(updateFcmtransfer(finalValues));
+      fcmTransfer = await dispatch(updateFcmtransfer(finalValues));
     }
+
+    dispatch(updateStepReferences(fcmTransfer));
     dispatch(setFcmCurrentStepEditable(false));
-    dispatch(setFcmCurrentStepDataId(fcmTransferId));
+
     dispatch(handleFcmCompleteStep());
     clearImgsData();
 

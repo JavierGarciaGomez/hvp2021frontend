@@ -15,9 +15,10 @@ export const LostPartnerCard = () => {
     fireSwalSuccess("Carta responsiva agregada al paquete");
     dispatch(
       addFcmProcedure({
-        step: activeStep,
-        procedureType: "responsiveLetter",
-        dataId: "responsiveLetter",
+        stepFromOrigin: activeStep,
+        type: "responsiveLetter",
+        dataId: null,
+        data: null,
       })
     );
     setshowForm(true);

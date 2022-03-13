@@ -5,6 +5,7 @@ import {
   fireSwalError,
   fireSwalSuccess,
   isStepSkipped,
+  objectContainsObjectProperties,
   replaceElementInCollection,
 } from "../helpers/utilities";
 import { types } from "../types/types";
@@ -25,7 +26,7 @@ export const createFcmPartner = (object) => {
         dispatch(updateClientReducer({ ...client }));
 
         fireSwalSuccess(body.msg);
-        return body.saved._id;
+        return body.saved;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -86,7 +87,7 @@ export const updateFcmPartner = (object) => {
         );
         dispatch(updateClientReducer({ ...client }));
         fireSwalSuccess(body.msg);
-        return body.updatedData._id;
+        return body.updatedData;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -114,7 +115,7 @@ export const createFcmDog = (object) => {
         dispatch(updateClientReducer({ ...client }));
 
         fireSwalSuccess(body.msg);
-        return body.saved._id;
+        return body.saved;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -168,7 +169,7 @@ export const updateFcmDog = (object) => {
         dispatch(updateClientReducer({ ...client }));
 
         fireSwalSuccess(body.msg);
-        return body.updatedData._id;
+        return body.updatedData;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -196,7 +197,7 @@ export const createFcmtransfer = (object) => {
         dispatch(updateClientReducer({ ...client }));
 
         fireSwalSuccess(body.msg);
-        return body.saved._id;
+        return body.saved;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -252,7 +253,7 @@ export const updateFcmtransfer = (object) => {
         dispatch(updateClientReducer({ ...client }));
 
         fireSwalSuccess(body.msg);
-        return body.updatedData._id;
+        return body.updatedData;
       } else {
         fireSwalError(body.msg);
         return false;
@@ -339,19 +340,45 @@ export const addFcmProcedure = (object) => {
   return async (dispatch, getState) => {
     let fcmPackage = getState().fcm.fcmPackage;
     let { procedures = [] } = fcmPackage;
-
-    // check if procedure exists
     let newProcedures = [...procedures];
-    let index = newProcedures.findIndex(
-      (element) => element.step === object.step
+
+    const objectToCheck = {
+      stepFromOrigin: object.stepFromOrigin,
+      type: object.type,
+    };
+
+    console.log("***Estoy en addfcmprocedure, objecttocheck", objectToCheck);
+
+    const elementIndex = newProcedures.findIndex((element) =>
+      objectContainsObjectProperties(element, objectToCheck)
     );
-    // if exists. Replace it.
-    if (index !== -1) {
-      newProcedures[index] = object;
-      // if not. Add it.
+    if (elementIndex >= 0) {
+      newProcedures[elementIndex] = object;
     } else {
       newProcedures.push(object);
     }
+
+    dispatch(setFcmPackageProp("procedures", newProcedures));
+  };
+};
+
+export const removeFcmProcedure = (object) => {
+  return async (dispatch, getState) => {
+    console.log("***** estoy acá");
+    let fcmPackage = getState().fcm.fcmPackage;
+    let { procedures = [] } = fcmPackage;
+    let newProcedures = [...procedures];
+
+    const objectToCheck = {
+      stepFromOrigin: object.stepFromOrigin,
+      type: object.type,
+    };
+
+    newProcedures = newProcedures.filter(
+      (element) => !objectContainsObjectProperties(element, objectToCheck)
+    );
+    console.log("newprocedurs after filtering", newProcedures);
+
     dispatch(setFcmPackageProp("procedures", newProcedures));
   };
 };
@@ -419,7 +446,7 @@ export const cleanFcmStep = () => {
 
     // search and remove procedures
     const newProcedures = procedures.filter(
-      (element) => element.step !== activeStep
+      (element) => element.stepFromOrigin !== activeStep
     );
 
     // search and remove steps
@@ -607,7 +634,6 @@ export const setFcmCurrentStepConfig = (data = {}) => {
     const newSteps = [...steps];
     const newConfig = { ...newSteps[activeStep].config, ...data };
     newSteps[activeStep].config = { ...newConfig };
-    console.log("new config", newConfig);
     fcmPackage.steps = newSteps;
     dispatch(setFcmPackage({ ...fcmPackage }));
   };
@@ -649,3 +675,41 @@ export const removeFcmPuppiesTransfersSteps = (puppiesTransfers = []) => {
     dispatch(setFcmPackageProp("steps", newSteps));
   };
 };
+
+export const updateStepReferences = (object) => {
+  return async (dispatch, getState) => {
+    dispatch(setFcmPackageProperty(object._id));
+    dispatch(setFcmCurrentStepDataId(object._id));
+    dispatch(setFcmCurrentStepObject(object));
+  };
+};
+
+export const setFcmCurrentStepObject = (object) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = [...steps];
+    newSteps[activeStep].stepObject = object;
+    fcmPackage.steps = newSteps;
+    dispatch(setFcmPackage({ ...fcmPackage }));
+  };
+};
+
+export const empty = () => {};
+
+const procedures = {
+  partnersRegistrations: [],
+  partnersRenewals: [],
+  transfers: [],
+  certificates: [],
+  responsiveLetter: [],
+};
+
+const procedure = {
+  stepFromOrigin: "",
+  type: "",
+  data: "",
+  dataId: "",
+};
+
+// si surge
