@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSummary";
+import { FcmPartnerStepLayout } from "../pages/clientsPages/components/FcmPartnerStepLayout";
 import { FcmSelectPartnerOptions } from "../pages/clientsPages/components/FcmSelectPartnerOptions";
 import { FcmTransferPuppy } from "../pages/clientsPages/components/FcmTransferPuppy";
 import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
@@ -88,6 +89,9 @@ export const generatePuppiesValidationParams = (
 
 export const getComponent = (componentName, props) => {
   switch (componentName) {
+    case "FcmPartnerStepLayout":
+      return <FcmPartnerStepLayout />;
+
     case "FcmStepperPartnerSelector":
       return <FcmSelectPartnerOptions {...props} />;
 

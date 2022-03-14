@@ -19,6 +19,7 @@ import {
   setFcmPackageCurrentProps,
   setFcmPackageSkipped,
   setFcmPackageStep,
+  startLoadingAllFcm,
   startLoadingFcmPackage,
   updateFcmPackage,
 } from "../../actions/fcmActions";
@@ -53,21 +54,6 @@ export const ProcedurePedigree = () => {
     return true;
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    dispatch(handleNextFcmPackageStep());
-
-    const newSkipped = new Set(skippedSteps.values());
-    newSkipped.add(activeStep);
-
-    dispatch(setFcmPackageSkipped(newSkipped));
-  };
-
   const handleReset = () => {
     dispatch(setFcmPackageStep(0));
     dispatch(setFcmCompletedSteps({}));
@@ -91,7 +77,8 @@ export const ProcedurePedigree = () => {
     if (id) {
       dispatch(startLoadingFcmPackage(id));
     }
-  }, [dispatch]);
+    dispatch(startLoadingAllFcm());
+  }, []);
 
   // props according to step
 
@@ -99,13 +86,6 @@ export const ProcedurePedigree = () => {
   useEffect(() => {
     if (activeStep === 0) {
       // todo delete
-      dispatch(
-        setFcmPackageCurrentProps({
-          ...fcmPackage.currentProps,
-          packageProperty: "fatherOwnerId",
-          formTitle: "Identificación de socio",
-        })
-      );
       // todo
       dispatch(
         setFcmPackageCurrentProps({
@@ -183,7 +163,7 @@ export const ProcedurePedigree = () => {
 
           return (
             <Step
-              key={`${index} ${step.label}.`}
+              key={`${index} ${step.stepLabel}.`}
               {...stepProps}
               completed={completedSteps[index]}
             >
@@ -193,7 +173,7 @@ export const ProcedurePedigree = () => {
                   dispatch(setFcmPackageStep(index));
                 }}
               >
-                {step.label}
+                {step.stepLabel}
               </StepButton>
               {/* <StepLabel {...labelProps}>{step.label}</StepLabel> */}
             </Step>

@@ -23,10 +23,12 @@ const initialState = {
   fcmPackage: {
     steps: [
       {
-        label: "Propietario del padre",
-        componentName: "FcmStepperPartnerSelector",
+        stepLabel: "Propietario del padre",
+        componentName: "FcmPartnerStepLayout",
         props: { label: "Propietario del padre" },
         dataId: null,
+        stepData: null,
+        isConfirmed: false,
         config: {
           ...defaultConfig,
           packageProperty: "fatherOwnerId",
@@ -34,10 +36,12 @@ const initialState = {
         },
       },
       {
-        label: "Propietario de la madre",
-        componentName: "FcmStepperPartnerSelector",
+        stepLabel: "Propietario de la madre",
+        componentName: "FcmPartnerStepLayout",
         props: { label: "Propietario de la madre" },
         dataId: null,
+        stepData: null,
+        isConfirmed: false,
         config: {
           ...defaultConfig,
           packageProperty: "motherOwnerId",
@@ -45,7 +49,7 @@ const initialState = {
         },
       },
       {
-        label: "Padre de la camada",
+        stepLabel: "Padre de la camada",
         componentName: "FcmStepperDogSelector",
         props: { label: "Padre de la camada" },
         dataId: null,
@@ -56,7 +60,7 @@ const initialState = {
         },
       },
       {
-        label: "Madre camada",
+        stepLabel: "Madre camada",
         componentName: "FcmStepperDogSelector",
         props: { label: "Madre de la camada" },
         dataId: null,
@@ -67,7 +71,7 @@ const initialState = {
         },
       },
       {
-        label: "Formato de cruza",
+        stepLabel: "Formato de cruza",
         componentName: "FcmBreedingFormik",
         props: { label: "Formato de cruza" },
         dataId: null,
@@ -77,7 +81,7 @@ const initialState = {
         },
       },
       {
-        label: "Resumen",
+        stepLabel: "Resumen",
         componentName: "FcmPackageSummary",
         props: { label: "Resumen" },
         dataId: null,
@@ -114,6 +118,7 @@ const initialState = {
     status: "",
     creator: "",
   },
+  allFcmLoaded: {},
 };
 
 export const fcmReducer = (state = initialState, action) => {
@@ -123,6 +128,9 @@ export const fcmReducer = (state = initialState, action) => {
 
     case types.fcmsFinishedLoading:
       return { ...state, fcmsIsLoading: false };
+
+    case types.fcmAllLoaded:
+      return { ...state, allFcmLoaded: action.payload };
 
     case types.fcmPartnersLoaded:
       return { ...state, fcmPartners: action.payload, fcmsIsLoading: false };
@@ -173,6 +181,13 @@ export const fcmReducer = (state = initialState, action) => {
         ...state,
         fcmPackage: action.payload,
         fcmsIsLoading: false,
+      };
+    }
+
+    case types.fcmPackageUpdateProcedures: {
+      return {
+        ...state,
+        fcmPackage: { ...state.fcmPackage, procedures: action.payload },
       };
     }
 

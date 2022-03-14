@@ -494,6 +494,12 @@ export const findObjectByProperty = (collection, property, matchValue) => {
   });
 };
 
+export const findObjectById = (collection, propertyValue) => {
+  return collection.find((obj) => {
+    return obj._id === propertyValue;
+  });
+};
+
 export const isObjectEmpty = (object) => {
   if (!object) {
     return true;

@@ -84,6 +84,7 @@ export const types = {
   updateClientReducer: "[clients] updateClientReducer",
 
   /************* FCM *********/
+  fcmAllLoaded: "[fcm] all loaded",
   fcmPartnersLoaded: "[fcm] partner loaded",
   fcmsIsLoading: "[fcms] is loading",
   fcmsFinishedLoading: "[fcm] finished loading",
@@ -95,6 +96,7 @@ export const types = {
 
   fcmDogsLoaded: "[fcm] dogs loaded",
   fcmPackageLoaded: "[fcm] package loaded",
+  fcmPackageUpdateProcedures: "[fcm] package handle procedures",
 };
 
 export const genderTypes = {

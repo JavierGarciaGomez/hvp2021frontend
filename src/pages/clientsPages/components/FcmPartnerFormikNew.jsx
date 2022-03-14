@@ -19,21 +19,20 @@ import { DatePickerFieldWrapper } from "../../../components/formsUI/DatePickerFi
 import { ButtonFormWrapper } from "../../../components/formsUI/ButtonFormWrapper";
 import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 
-export const FcmPartnerFormikNew = ({
-  handleSubmitForm,
-  handleCancel,
-  isEditable,
-  isFirstRegister,
-  isCardLost,
-  fcmPartnerData = null,
-}) => {
+export const FcmPartnerFormikNew = ({ ...props }) => {
+  const {
+    stepData: fcmPartnerData,
+    stepProps,
+    handleSubmitForm,
+    handleCancel,
+  } = props;
+  const { isFirstRegister, isCardLost, isEditable } = stepProps;
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
@@ -241,7 +240,7 @@ export const FcmPartnerFormikNew = ({
         fcmPartnerData.expirationDate
       ).format("YYYY-MM-DD");
 
-      setformValues({ fcmPartnerData });
+      setformValues({ ...fcmPartnerData });
     } else {
       setImgUrlPartnerCard(null);
       setImgUrlProofOfResidency(null);
