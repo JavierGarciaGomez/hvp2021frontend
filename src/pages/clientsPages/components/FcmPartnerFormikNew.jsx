@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -19,7 +19,6 @@ import { DatePickerFieldWrapper } from "../../../components/formsUI/DatePickerFi
 import { ButtonFormWrapper } from "../../../components/formsUI/ButtonFormWrapper";
 import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";

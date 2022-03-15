@@ -11,22 +11,27 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setFcmCurrentStepConfig,
+  setFcmActiveStepProperty,
   startLoadingFcmPartners,
   updateStepReferences,
 } from "../../../actions/fcmActions";
 import { userAddFcmPartner } from "../../../actions/userActions";
 import { excludeFromCollection } from "../../../helpers/utilities";
 
-export const SearchAndLinkPartner = () => {
+export const SearchAndLinkPartner = ({
+  handleCancelSelection,
+  handleStepProps,
+}) => {
   const dispatch = useDispatch();
-  const { fcmPartners } = useSelector((state) => state.fcm);
+  const { allFcm } = useSelector((state) => state.fcm);
+  const { allFcmPartners } = allFcm;
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
 
   const [fieldValue, setfieldValue] = useState("");
   const [filteredFcmPartners, setfilteredFcmPartners] = useState([]);
 
+  // todo: delete, because now the partners are in the store
   // loading fcm partners
   useEffect(() => {
     dispatch(startLoadingFcmPartners());
@@ -35,7 +40,7 @@ export const SearchAndLinkPartner = () => {
   const handleSearch = () => {
     //   exclude from fcmPartners the already linked
     const fcmPartnersExcludingLinked = excludeFromCollection(
-      fcmPartners,
+      allFcmPartners,
       client.linkedFcmPartners
     );
 
@@ -54,15 +59,32 @@ export const SearchAndLinkPartner = () => {
     if (fcmPackage) {
       // handleNext();
       dispatch(updateStepReferences(fcmPartner));
-      dispatch(setFcmCurrentStepConfig({ needsConfirmation: true }));
+      handleStepProps({
+        isEditable: false,
+        formWrapperTitle: "Confirma la información",
+      });
+      dispatch(setFcmActiveStepProperty("needsConfirmation", true));
     }
   };
 
   return (
     <Box>
+      <Typography mb="3rem">
+        Selecciona un socio de nuestra base de datos. Si no lo encuentras, será
+        necesario que lo registres, con lo que automáticamente estará vinculado
+        a tu cuenta.
+      </Typography>
       {/* Input and button */}
-      <Box sx={{ display: "flex", gap: "2rem", mb: "2rem" }}>
-        <FormControl>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-around",
+          gap: "2rem",
+          mb: "2rem",
+          alignItems: "center",
+        }}
+      >
+        <FormControl fullWidth={true} sx={{ flex: 1 }}>
           <TextField
             name="partnerNum"
             label="Número de socio"
@@ -72,7 +94,22 @@ export const SearchAndLinkPartner = () => {
             value={fieldValue}
           />
         </FormControl>
-        <Button onClick={handleSearch}>Buscar</Button>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            gap: "1rem",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <Button onClick={handleSearch} fullWidth={true}>
+            Buscar
+          </Button>
+          <Button color="error" fullWidth onClick={handleCancelSelection}>
+            Cancelar
+          </Button>
+        </Box>
       </Box>
       {/* SearchResults */}
       <Box

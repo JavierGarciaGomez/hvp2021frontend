@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import { updateArrayElementById } from "../helpers/arrayUtilities";
 import { areAllStepsCompleted, isLastStep } from "../helpers/fcmUtilities";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import {
   fireSwalError,
   fireSwalSuccess,
-  isStepSkipped,
   objectContainsObjectProperties,
   replaceElementInCollection,
 } from "../helpers/utilities";
@@ -13,8 +13,28 @@ import { types } from "../types/types";
 import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
 /***************************************************************/
-/**********************FCM PARTNER *****************************/
 /***************************************************************/
+/**********************USED ****** *****************************/
+/***************************************************************/
+/***************************************************************/
+
+/***************************************************************/
+/**********************COMMON *****************************/
+/***************************************************************/
+// USED
+export const fcmIsLoading = () => ({
+  type: types.fcmsIsLoading,
+});
+
+// USED
+export const fcmFinishedLoading = () => ({
+  type: types.fcmsFinishedLoading,
+});
+/***************************************************************/
+/**********************ALL FCM *****************************/
+/***************************************************************/
+
+// USED
 export const startLoadingAllFcm = () => {
   return async (dispatch, getState) => {
     try {
@@ -32,11 +52,20 @@ export const startLoadingAllFcm = () => {
   };
 };
 
+// USED
 export const allFcmLoaded = (data) => ({
   type: types.fcmAllLoaded,
   payload: data,
 });
 
+export const updateAllFcm = (data) => ({
+  type: types.fcmUpdateAll,
+  payload: data,
+});
+
+/***************************************************************/
+/**********************FCM PARTNER *****************************/
+/***************************************************************/
 export const createFcmPartner = (object) => {
   return async (dispatch, getState) => {
     try {
@@ -44,9 +73,15 @@ export const createFcmPartner = (object) => {
       const body = await resp.json();
 
       if (body.ok) {
+        // update the data in client
         const client = getState().clients.client;
         client.linkedFcmPartners.push(body.saved);
         dispatch(updateClientReducer({ ...client }));
+
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmPartners.push(body.saved);
+        dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
         return body.saved;
@@ -61,40 +96,11 @@ export const createFcmPartner = (object) => {
   };
 };
 
-export const startLoadingFcmPartners = () => {
-  return async (dispatch, getState) => {
-    try {
-      dispatch(fcmIsLoading());
-      let resp = await fetchConToken(`fcm/partners/`);
-      let body = await resp.json();
-
-      if (body.ok) {
-        dispatch(fcmPartnersLoaded(body.allFcmPartners));
-      }
-    } catch (error) {
-      console.log(error);
-      fireSwalError(error.message);
-    }
-    dispatch(fcmFinishedLoading());
-  };
-};
-
-export const fcmIsLoading = () => ({
-  type: types.fcmsIsLoading,
-});
-
-export const fcmFinishedLoading = () => ({
-  type: types.fcmsFinishedLoading,
-});
-
-export const fcmPartnersLoaded = (data) => ({
-  type: types.fcmPartnersLoaded,
-  payload: data,
-});
-
+// TODO: USED
 export const updateFcmPartner = (object) => {
   return async (dispatch, getState) => {
     try {
+      // fetch the update
       const resp = await fetchConToken(
         `fcm/partners/${object._id}`,
         object,
@@ -103,12 +109,21 @@ export const updateFcmPartner = (object) => {
       const body = await resp.json();
 
       if (body.ok) {
+        // update the data in client
         const client = getState().clients.client;
         client.linkedFcmPartners = replaceElementInCollection(
           object,
           client.linkedFcmPartners
         );
         dispatch(updateClientReducer({ ...client }));
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmPartners = updateArrayElementById(
+          newAllFcm.allFcmPartners,
+          object
+        );
+        dispatch(updateAllFcm(newAllFcm));
+
         fireSwalSuccess(body.msg);
         return body.updatedData;
       } else {
@@ -133,9 +148,15 @@ export const createFcmDog = (object) => {
       const body = await resp.json();
 
       if (body.ok) {
+        // update the data in client
         const client = getState().clients.client;
         client.linkedDogs.push(body.saved);
         dispatch(updateClientReducer({ ...client }));
+
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmDogs.push(body.saved);
+        dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
         return body.saved;
@@ -149,6 +170,364 @@ export const createFcmDog = (object) => {
     }
   };
 };
+
+export const updateFcmDog = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      // fetch the update
+      const resp = await fetchConToken(`fcm/dogs/${object._id}`, object, "PUT");
+      const body = await resp.json();
+
+      if (body.ok) {
+        // update the data in client
+        const client = getState().clients.client;
+
+        client.linkedDogs = replaceElementInCollection(
+          object,
+          client.linkedDogs
+        );
+
+        dispatch(updateClientReducer({ ...client }));
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmDogs = updateArrayElementById(
+          newAllFcm.allFcmDogs,
+          object
+        );
+        dispatch(updateAllFcm(newAllFcm));
+
+        fireSwalSuccess(body.msg);
+        return body.updatedData;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+/***************************************************************/
+/**********************FCM PACKAGE *****************************/
+/***************************************************************/
+
+/**************CRUD*********************/
+
+export const createFcmPackage = () => {
+  return async (dispatch, getState) => {
+    try {
+      const { fcmPackage } = getState().fcm;
+      const resp = await fetchConToken(`fcm/fcmPackages/`, fcmPackage, "POST");
+      const body = await resp.json();
+
+      if (body.ok) {
+        console.log("saved, LLegué acá, client", body.saved);
+        const client = getState().clients.client;
+        client.linkedFcmPackages.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
+
+        console.log(body.saved, body.saved._id);
+
+        fireSwalSuccess(body.msg);
+        return body.saved._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+// USED
+export const startLoadingFcmPackage = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(fcmIsLoading());
+      const resp = await fetchConToken(`fcm/fcmPackages/${id}`);
+      const body = await resp.json();
+
+      if (body.ok) {
+        return dispatch(fcmPackageLoaded(body.data));
+      } else {
+        return fireSwalError(body.msg);
+      }
+    } catch (error) {
+      return fireSwalError(error.message);
+    }
+  };
+};
+
+// USED
+export const fcmPackageLoaded = (data) => ({
+  type: types.fcmPackageLoaded,
+  payload: data,
+});
+
+export const updateFcmPackage = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      const { fcmPackage } = getState().fcm;
+      const resp = await fetchConToken(
+        `fcm/fcmPackages/${id}`,
+        fcmPackage,
+        "PUT"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        fireSwalSuccess(body.msg);
+        return body.updatedData._id;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+/**************HANDLING PACKAGES*********************/
+export const updateFcmPackageProperty = (propertyName, value) => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const newFcmPackage = { ...fcmPackage };
+    newFcmPackage[propertyName] = value;
+
+    dispatch({ type: types.fcmUpdatePackageProperty, payload: newFcmPackage });
+  };
+};
+
+export const updateStepReferences = (object) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const newFcmPackage = { ...fcmPackage };
+    const { activeStep } = newFcmPackage;
+    const { packageProperty } = newFcmPackage.currentProps;
+
+    // todo: delete first and maybe second
+    newFcmPackage[packageProperty] = object._id;
+    newFcmPackage.steps[activeStep].dataId = object._id;
+    newFcmPackage.steps[activeStep].stepData = object;
+
+    dispatch({
+      type: types.fcmPackageUpdateStepReferences,
+      payload: newFcmPackage,
+    });
+  };
+};
+
+export const addAndRemoveFcmPartnerProcedures = (stepData) => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const newFcmPackage = { ...fcmPackage };
+    const { procedures, activeStep } = newFcmPackage;
+
+    // remove previous procedures from the same step
+    const newProcedures = procedures.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
+
+    if (stepData.isPending) {
+      newProcedures.push({
+        stepFromOrigin: activeStep,
+        type: "partnerRegistration",
+        data: stepData,
+        dataId: stepData._id,
+      });
+    }
+
+    if (dayjs(stepData.expirationDate).isBefore(dayjs().add(14, "days"))) {
+      newProcedures.push({
+        stepFromOrigin: activeStep,
+        type: "partnerRenewal",
+        data: stepData,
+        dataId: stepData._id,
+      });
+    }
+    if (stepData.isCardLost) {
+      newProcedures.push({
+        stepFromOrigin: activeStep,
+        type: "responsiveLetter",
+        data: stepData,
+        dataId: stepData._id,
+      });
+    }
+
+    console.log("Voy a despachar");
+    dispatch(fcmPackageUpdateProcedures(newProcedures));
+  };
+};
+
+export const fcmPackageUpdateProcedures = (newProcedures) => {
+  console.log("acá voy", types.fcmPackageUpdateProcedures, newProcedures);
+  return { type: types.fcmPackageUpdateProcedures, payload: newProcedures };
+};
+
+/**************HANDLING STEPS*********************/
+export const setFcmPackageStep = (step) => ({
+  type: types.fcmPackageSetStep,
+  payload: step,
+});
+
+export const handleBackFcmPackageStep = () => {
+  return async (dispatch, getState) => {
+    let activeStep = getState().fcm.fcmPackage.activeStep;
+    dispatch(setFcmPackageStep(activeStep - 1));
+  };
+};
+
+export const handleNextFcmPackageStep = () => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const { activeStep, steps, completedSteps } = fcmPackage;
+
+    // It's the last step, but not all steps have been completed,
+    // find the first step that hasnt been completed
+    const newActiveStep =
+      isLastStep(activeStep, steps) &&
+      !areAllStepsCompleted(completedSteps, steps)
+        ? steps.findIndex((step, i) => !(i in completedSteps))
+        : activeStep + 1;
+
+    // set active step to 2
+    dispatch(setFcmPackageStep(newActiveStep));
+  };
+};
+
+export const handleFcmCompleteStep = () => {
+  return async (dispatch, getState) => {
+    const newFcmPackage = { ...getState().fcm.fcmPackage };
+    const { activeStep, completedSteps } = newFcmPackage;
+
+    // set that the step is confirmed
+    dispatch(setFcmActiveStepProperty("needsConfirmation", false));
+    // add step to completedSteps
+    const newCompletedSteps = { ...completedSteps };
+    newCompletedSteps[activeStep] = true;
+    console.log("estos son los newcompleted", newCompletedSteps);
+    dispatch(updateFcmPackageProperty("completedSteps", newCompletedSteps));
+
+    // handle next
+
+    dispatch(handleNextFcmPackageStep());
+  };
+};
+
+export const setFcmActiveStepProperty = (propertyName, value) => {
+  return async (dispatch, getState) => {
+    const newFcmPackage = { ...getState().fcm.fcmPackage };
+    const { activeStep } = newFcmPackage;
+
+    const activeStepProperties = { ...newFcmPackage.steps[activeStep] };
+    activeStepProperties[propertyName] = value;
+    console.log("activesteppro", activeStepProperties);
+
+    dispatch({
+      type: types.fcmSetActiveStepProperties,
+      payload: activeStepProperties,
+    });
+  };
+};
+
+export const cleanFcmStep = () => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const {
+      activeStep,
+      procedures,
+      completedSteps,
+      currentProps,
+      steps,
+      breedingForm,
+    } = fcmPackage;
+
+    // search and remove procedures
+    const newProcedures = procedures.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
+
+    // search and remove steps
+    const newSteps = steps.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
+    // search and remove completed steps
+    const newCompletedSteps = { ...completedSteps };
+    newCompletedSteps[activeStep] = false;
+    // search and remove packageproperty
+    const newFcmPackage = { ...fcmPackage };
+    newFcmPackage[currentProps.packageProperty] = "";
+    // new data set delete
+
+    console.log("newSteps", newSteps, "steps", steps);
+
+    newSteps[activeStep].dataId = null;
+    newSteps[activeStep].stepData = null;
+
+    // newSteps[activeStep].config.isEditable = true;
+
+    // if the step is 5 clean breeding
+    let newBreedingForm = { ...breedingForm };
+    if (activeStep === 4) {
+      newBreedingForm = null;
+    }
+
+    dispatch(
+      setFcmPackage({
+        ...newFcmPackage,
+        procedures: newProcedures,
+        completedSteps: newCompletedSteps,
+        steps: newSteps,
+        breedingForm: newBreedingForm,
+      })
+    );
+  };
+};
+/***************************************************************/
+/***************************************************************/
+/**********************NOT CHECKED *****************************/
+/***************************************************************/
+/***************************************************************/
+
+export const fcmPackageStepSetNeedsConfirmation = (boolea) => ({});
+
+export const startLoadingFcmPartners = () => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(fcmIsLoading());
+      let resp = await fetchConToken(`fcm/partners/`);
+      let body = await resp.json();
+
+      if (body.ok) {
+        dispatch(fcmPartnersLoaded(body.allFcmPartners));
+      }
+    } catch (error) {
+      console.log(error);
+      fireSwalError(error.message);
+    }
+    dispatch(fcmFinishedLoading());
+  };
+};
+
+export const fcmPartnersLoaded = (data) => ({
+  type: types.fcmPartnersLoaded,
+  payload: data,
+});
+
+/***************************************************************/
+/**********************FCM DOGS    *****************************/
+/***************************************************************/
+
+export const fcmDogsLoaded = (data) => ({
+  type: types.fcmDogsLoaded,
+  payload: data,
+});
 
 export const startLoadingFcmDogs = () => {
   return async (dispatch, getState) => {
@@ -165,42 +544,6 @@ export const startLoadingFcmDogs = () => {
       fireSwalError(error.message);
     }
     dispatch(fcmFinishedLoading());
-  };
-};
-
-export const fcmDogsLoaded = (data) => ({
-  type: types.fcmDogsLoaded,
-  payload: data,
-});
-
-export const updateFcmDog = (object) => {
-  return async (dispatch, getState) => {
-    try {
-      const resp = await fetchConToken(`fcm/dogs/${object._id}`, object, "PUT");
-      const body = await resp.json();
-
-      console.log("esta respuesta tengo", body);
-
-      if (body.ok) {
-        const client = getState().clients.client;
-
-        client.linkedDogs = replaceElementInCollection(
-          object,
-          client.linkedDogs
-        );
-
-        dispatch(updateClientReducer({ ...client }));
-
-        fireSwalSuccess(body.msg);
-        return body.updatedData;
-      } else {
-        fireSwalError(body.msg);
-        return false;
-      }
-    } catch (error) {
-      fireSwalError(error.message);
-      return false;
-    }
   };
 };
 
@@ -296,108 +639,10 @@ export const setFcmPackage = (object) => ({
   payload: object,
 });
 
-export const setFcmPackageStep = (step) => ({
-  type: types.fcmPackageSetStep,
-  payload: step,
-});
-
 export const setFcmPackageSkipped = (object) => ({
   type: types.fcmPackageSetSkipped,
   payload: object,
 });
-
-export const handleNextFcmPackageStep = () => {
-  return async (dispatch, getState) => {
-    const fcmPackage = getState().fcm.fcmPackage;
-    const { activeStep, steps, completedSteps } = fcmPackage;
-
-    // It's the last step, but not all steps have been completed,
-    // find the first step that hasnt been completed
-    const newActiveStep =
-      isLastStep(activeStep, steps) &&
-      !areAllStepsCompleted(completedSteps, steps)
-        ? steps.findIndex((step, i) => !(i in completedSteps))
-        : activeStep + 1;
-
-    // set active step to 2
-    dispatch(setFcmPackageStep(newActiveStep));
-  };
-};
-
-export const handleBackFcmPackageStep = () => {
-  return async (dispatch, getState) => {
-    console.log("***************solo quiero probar que esto acá", getState());
-    let activeStep = getState().fcm.fcmPackage.activeStep;
-    dispatch(setFcmPackageStep(activeStep - 1));
-  };
-};
-
-export const handleFcmCompleteStep = () => {
-  return async (dispatch, getState) => {
-    const newFcmPackage = { ...getState().fcm.fcmPackage };
-    const { activeStep } = newFcmPackage;
-
-    // set that the step is confirmed
-    newFcmPackage.steps[activeStep].isConfirmed = true;
-
-    // add step to completedSteps
-    newFcmPackage.completedSteps[activeStep] = true;
-    dispatch(handleNextFcmPackageStep());
-  };
-};
-
-export const setFcmCompletedSteps = (object) => {
-  return async (dispatch, getState) => {
-    dispatch(setFcmPackageProp("completedSteps", object));
-  };
-};
-
-export const addAndRemoveFcmPartnerProcedures = (stepData) => {
-  return async (dispatch, getState) => {
-    const fcmPackage = getState().fcm.fcmPackage;
-    const newFcmPackage = { ...fcmPackage };
-    const { procedures, activeStep } = newFcmPackage;
-
-    // remove previous procedures from the same step
-    const newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
-
-    if (stepData.isPending) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "partnerRegistration",
-        data: stepData,
-        dataId: stepData._id,
-      });
-    }
-
-    if (dayjs(stepData.expirationDate).isBefore(dayjs().add(14, "days"))) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "partnerRenewal",
-        data: stepData,
-        dataId: stepData._id,
-      });
-    }
-    if (stepData.isCardLost) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "responsiveLetter",
-        data: stepData,
-        dataId: stepData._id,
-      });
-    }
-
-    console.log("Voy a despachar");
-    dispatch(fcmPackageUpdateProcedures(newProcedures));
-  };
-};
-
-export const fcmPackageUpdateProcedures = (newProcedures) => {
-  console.log("acá voy", types.fcmPackageUpdateProcedures, newProcedures);
-  return { type: types.fcmPackageUpdateProcedures, payload: newProcedures };
-};
 
 export const addFcmProcedure = (object) => {
   return async (dispatch, getState) => {
@@ -506,60 +751,6 @@ export const setFcmPackageEditable = (boolean) => {
   };
 };
 
-export const cleanFcmStep = () => {
-  return async (dispatch, getState) => {
-    const { fcmPackage } = getState().fcm;
-    const {
-      activeStep,
-      procedures,
-      completedSteps,
-      currentProps,
-      steps,
-      breedingForm,
-    } = fcmPackage;
-
-    // search and remove procedures
-    const newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
-
-    // search and remove steps
-    const newSteps = steps.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
-    // search and remove completed steps
-    const newCompletedSteps = { ...completedSteps };
-    newCompletedSteps[activeStep] = false;
-    // search and remove packageproperty
-    const newFcmPackage = { ...fcmPackage };
-    newFcmPackage[currentProps.packageProperty] = "";
-    // new data set delete
-
-    console.log("newSteps", newSteps, "steps", steps);
-
-    newSteps[activeStep].dataId = null;
-    newSteps[activeStep].stepData = null;
-
-    // newSteps[activeStep].config.isEditable = true;
-
-    // if the step is 5 clean breeding
-    let newBreedingForm = { ...breedingForm };
-    if (activeStep === 4) {
-      newBreedingForm = null;
-    }
-
-    dispatch(
-      setFcmPackage({
-        ...newFcmPackage,
-        procedures: newProcedures,
-        completedSteps: newCompletedSteps,
-        steps: newSteps,
-        breedingForm: newBreedingForm,
-      })
-    );
-  };
-};
-
 export const addNewFcmStep = (object) => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
@@ -592,82 +783,6 @@ export const addNewFcmStep = (object) => {
 
     // newSteps.splice(newSteps.length - 1, 0, object);
     dispatch(setFcmPackageProp("steps", newSteps));
-  };
-};
-
-export const startLoadingFcmPackage = (id) => {
-  return async (dispatch, getState) => {
-    try {
-      dispatch(fcmIsLoading());
-      const resp = await fetchConToken(`fcm/fcmPackages/${id}`);
-      const body = await resp.json();
-
-      if (body.ok) {
-        return dispatch(fcmPackageLoaded(body.data));
-      } else {
-        return fireSwalError(body.msg);
-      }
-    } catch (error) {
-      return fireSwalError(error.message);
-    }
-  };
-};
-
-export const fcmPackageLoaded = (data) => ({
-  type: types.fcmPackageLoaded,
-  payload: data,
-});
-
-export const saveFcmPackage = () => {
-  return async (dispatch, getState) => {
-    try {
-      const { fcmPackage } = getState().fcm;
-      const resp = await fetchConToken(`fcm/fcmPackages/`, fcmPackage, "POST");
-      const body = await resp.json();
-
-      if (body.ok) {
-        console.log("saved, LLegué acá, client", body.saved);
-        const client = getState().clients.client;
-        client.linkedFcmPackages.push(body.saved);
-        dispatch(updateClientReducer({ ...client }));
-
-        console.log(body.saved, body.saved._id);
-
-        fireSwalSuccess(body.msg);
-        return body.saved._id;
-      } else {
-        fireSwalError(body.msg);
-        return false;
-      }
-    } catch (error) {
-      fireSwalError(error.message);
-      return false;
-    }
-  };
-};
-
-export const updateFcmPackage = (id) => {
-  return async (dispatch, getState) => {
-    try {
-      const { fcmPackage } = getState().fcm;
-      const resp = await fetchConToken(
-        `fcm/fcmPackages/${id}`,
-        fcmPackage,
-        "PUT"
-      );
-      const body = await resp.json();
-
-      if (body.ok) {
-        fireSwalSuccess(body.msg);
-        return body.updatedData._id;
-      } else {
-        fireSwalError(body.msg);
-        return false;
-      }
-    } catch (error) {
-      fireSwalError(error.message);
-      return false;
-    }
   };
 };
 
@@ -749,29 +864,6 @@ export const removeFcmPuppiesTransfersSteps = (puppiesTransfers = []) => {
     console.log("newsteps", newSteps);
 
     dispatch(setFcmPackageProp("steps", newSteps));
-  };
-};
-
-export const updateStepReferences = (object) => {
-  console.log("updateStepReferences. Esto recibí", object);
-  return async (dispatch, getState) => {
-    const { fcmPackage } = getState().fcm;
-    const newFcmPackage = { ...fcmPackage };
-    const { activeStep } = newFcmPackage;
-    const { packageProperty } = newFcmPackage.currentProps;
-
-    console.log("esto es el newfcmpackage", activeStep);
-
-    console.dir(newFcmPackage, activeStep);
-    console.log("a ver", newFcmPackage.steps[activeStep]);
-    newFcmPackage[packageProperty] = object._id;
-    newFcmPackage.steps[activeStep].dataId = object._id;
-    newFcmPackage.steps[activeStep].stepData = object;
-
-    console.log("updateStepReferences. Esto enviaré");
-    console.dir(newFcmPackage);
-
-    dispatch(setFcmPackage(newFcmPackage));
   };
 };
 

@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { FcmDogStepLayout } from "../pages/clientsPages/components/FcmDogStepLayout";
 import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSummary";
 import { FcmPartnerStepLayout } from "../pages/clientsPages/components/FcmPartnerStepLayout";
 import { FcmSelectPartnerOptions } from "../pages/clientsPages/components/FcmSelectPartnerOptions";
@@ -8,6 +9,7 @@ import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelect
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
+import { fcmComponentsTypes } from "../types/types";
 import { isObjectEmpty } from "./utilities";
 
 export const isLastStep = (activeStep, steps) => {
@@ -89,8 +91,11 @@ export const generatePuppiesValidationParams = (
 
 export const getComponent = (componentName, props) => {
   switch (componentName) {
-    case "FcmPartnerStepLayout":
+    case fcmComponentsTypes.fcmPartnerStepLayout:
       return <FcmPartnerStepLayout />;
+
+    case fcmComponentsTypes.fcmDogStepLayout:
+      return <FcmDogStepLayout />;
 
     case "FcmStepperPartnerSelector":
       return <FcmSelectPartnerOptions {...props} />;

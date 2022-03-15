@@ -1,22 +1,22 @@
-import { Box, Typography } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../../helpers/utilities";
-
 import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
-import { LostPartnerCard } from "./LostPartnerCard";
-import { SearchAndLinkPartner } from "./SearchAndLinkPartner";
-import { SelectFcmPartnerFromAccount } from "./SelectFcmPartnerFromAccount";
 
-export const FcmSelectPartnerOptions = ({ ...props }) => {
+import { SearchAndLinkPartner } from "./SearchAndLinkPartner";
+import { SelectFcmDogFromAccount } from "./SelectFcmDogFromAccount";
+
+export const FcmSelectDogOptions = ({ ...props }) => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-  const dispatch = useDispatch();
+
   const [selectedCase, setselectedCase] = useState("");
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { handleResetStepProps, handleStepProps } = props;
+  const { handleResetStepProps } = props;
 
   const handleCancelSelection = () => {
     setselectedCase("");
@@ -26,10 +26,10 @@ export const FcmSelectPartnerOptions = ({ ...props }) => {
 
   const options = [
     {
-      label: "Socio vinculado previamente a mi cuenta",
+      label: "Perro vinculado previamente a mi cuenta",
       value: "previousLinked",
       component: (
-        <SelectFcmPartnerFromAccount
+        <SelectFcmDogFromAccount
           handleCancelSelection={handleCancelSelection}
           {...props}
         />
@@ -38,7 +38,7 @@ export const FcmSelectPartnerOptions = ({ ...props }) => {
     },
     {
       label:
-        "Socio no vinculado a mi cuenta, pero registrado en esta plataforma",
+        "Perro no vinculado a mi cuenta, pero registrado en esta plataforma",
       value: "previousDataBase",
       component: (
         <SearchAndLinkPartner
@@ -49,7 +49,7 @@ export const FcmSelectPartnerOptions = ({ ...props }) => {
       functions: async () => {},
     },
     {
-      label: "Socio no registrado en esta plataforma",
+      label: "Perro no registrado en esta plataforma",
       value: "newPartner",
       component: (
         <FcmPartnerFormWrapper
@@ -58,54 +58,9 @@ export const FcmSelectPartnerOptions = ({ ...props }) => {
         />
       ),
       functions: async () => {},
-      // functions: () => {
-      //   setStepProps({
-      //     isFirstRegister: false,
-      //     isCardLost: false,
-      //     isEditable: true,
-      //     formWrapperTitle: "Llena el formulario",
-      //   });
-      // },
-    },
-    {
-      label: "Socio, con credencial extraviada",
-      value: "withoutCredential",
-      component: (
-        <LostPartnerCard handleCancel={handleCancelSelection} {...props} />
-      ),
-      functions: async () => {},
-      // functions: async () => {
-      //   setStepProps({
-      //     isFirstRegister: false,
-      //     isCardLost: true,
-      //     isEditable: true,
-      //     formTitle: "Llena el formulario",
-      //   });
-      // },
-    },
-    {
-      label: "Solicitar alta de un nuevo socio en la FCM",
-      value: "notRegisteredPartner",
-      component: (
-        <FcmPartnerFormWrapper
-          {...props}
-          handleCancel={handleCancelSelection}
-        />
-      ),
-      functions: () => {
-        console.log("me ejecuto");
-        handleStepProps({ isFirstRegister: true });
-      },
     },
   ];
 
-  // // when a case is selected. Execute functions to change props
-  // useEffect(() => {
-  //   selectedCase &&
-  //     findObjectByProperty(options, "value", selectedCase).functions();
-  // }, [selectedCase]);
-
-  // when the step changes. erase selection.
   useEffect(() => {
     setselectedCase("");
   }, [fcmPackage.activeStep]);

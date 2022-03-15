@@ -85,6 +85,7 @@ export const types = {
 
   /************* FCM *********/
   fcmAllLoaded: "[fcm] all loaded",
+  fcmUpdateAll: "[fcm] update all",
   fcmPartnersLoaded: "[fcm] partner loaded",
   fcmsIsLoading: "[fcms] is loading",
   fcmsFinishedLoading: "[fcm] finished loading",
@@ -93,10 +94,13 @@ export const types = {
   fcmPackageSetSkipped: "[fcm] package setSkipped",
   fcmPackageCurPropNeedsConfirmation:
     "[fcm] package current properties needs confirmation",
+  fcmUpdatePackageProperty: "[fcm] update package property",
 
   fcmDogsLoaded: "[fcm] dogs loaded",
   fcmPackageLoaded: "[fcm] package loaded",
   fcmPackageUpdateProcedures: "[fcm] package handle procedures",
+  fcmPackageUpdateStepReferences: "[fcm] package update step references",
+  fcmSetActiveStepProperties: "[fcm] package set active step properties",
 };
 
 export const genderTypes = {
@@ -367,3 +371,11 @@ export const documentationStatusTypes = [
   { value: "notValid", label: "No vigente" },
   { value: "notApplicable", label: "No aplica" },
 ];
+
+export const fcmComponentsTypes = {
+  fcmPartnerStepLayout: "FcmPartnerStepLayout",
+  fcmDogStepLayout: "FcmDogStepLayout",
+  fcmDogSelector: "FcmStepperDogSelector",
+  fcmBreedingForm: "FcmBreedingFormik",
+  fcmPackageSummary: "FcmPackageSummary",
+};

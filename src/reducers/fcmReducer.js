@@ -16,121 +16,65 @@ const defaultConfig = {
 };
 
 const initialState = {
-  // step: {label, componentName, props, stepFromOrigin, dataId, config {isFirstRegister, packageProperty, isEditable, formTitle, showCancel, needsConfirmation}},
+  allFcm: {
+    allFcmPartners: [],
+    allFcmDogs: [],
+    allFcmTransfers: [],
+    allFcmPackages: [],
+  },
   fcmsIsLoading: true,
   fcmPartners: [],
   fcmDogs: [],
-  fcmPackage: {
-    steps: [
-      {
-        stepLabel: "Propietario del padre",
-        componentName: "FcmPartnerStepLayout",
-        props: { label: "Propietario del padre" },
-        dataId: null,
-        stepData: null,
-        isConfirmed: false,
-        config: {
-          ...defaultConfig,
-          packageProperty: "fatherOwnerId",
-          formTitle: "Identificación de socio",
-        },
-      },
-      {
-        stepLabel: "Propietario de la madre",
-        componentName: "FcmPartnerStepLayout",
-        props: { label: "Propietario de la madre" },
-        dataId: null,
-        stepData: null,
-        isConfirmed: false,
-        config: {
-          ...defaultConfig,
-          packageProperty: "motherOwnerId",
-          formTitle: "Identificación de socio",
-        },
-      },
-      {
-        stepLabel: "Padre de la camada",
-        componentName: "FcmStepperDogSelector",
-        props: { label: "Padre de la camada" },
-        dataId: null,
-        config: {
-          ...defaultConfig,
-          packageProperty: "dogFatherId",
-          formTitle: "Identificación del perro",
-        },
-      },
-      {
-        stepLabel: "Madre camada",
-        componentName: "FcmStepperDogSelector",
-        props: { label: "Madre de la camada" },
-        dataId: null,
-        config: {
-          ...defaultConfig,
-          packageProperty: "dogMotherId",
-          formTitle: "Identificación del perro",
-        },
-      },
-      {
-        stepLabel: "Formato de cruza",
-        componentName: "FcmBreedingFormik",
-        props: { label: "Formato de cruza" },
-        dataId: null,
-        config: {
-          ...defaultConfig,
-          formTitle: "Formato de cruza",
-        },
-      },
-      {
-        stepLabel: "Resumen",
-        componentName: "FcmPackageSummary",
-        props: { label: "Resumen" },
-        dataId: null,
-        config: {
-          ...defaultConfig,
-          formTitle: "Identificación de socio",
-        },
-      },
-    ],
-    procedures: [],
-    activeStep: 0,
-    skippedSteps: new Set(),
-    completedSteps: { 0: false },
-    currentProps: {
-      isFirstRegister: false,
-      packageProperty: "",
-      isEditable: true,
-      formTitle: "Llena el formulario",
-      showCancel: false,
-      needsConfirmation: false,
-    },
 
-    fatherFcm: {},
-    motherFcm: {},
-    fatherDogFcm: {},
-    motherDogFcm: {},
-    fatherOwnerId: "",
-    motherOwnerId: "",
-    dogFatherId: "",
-    dogMotherId: "",
-    breedingForm: {},
-    extraSteps: [],
+  fcmPackage: {
+    steps: [],
+    activeStep: 0,
+    completedSteps: { 0: false },
+    procedures: [],
     documentation: [],
-    status: "",
+    status: null,
     creator: "",
   },
-  allFcmLoaded: {},
 };
 
 export const fcmReducer = (state = initialState, action) => {
   switch (action.type) {
+    // ALL
+    case types.fcmUpdateAll:
+      return { ...state, allFcm: action.payload };
+
+    case types.fcmAllLoaded:
+      return { ...state, allFcm: action.payload };
+
+    // packages
+
+    case types.fcmPackageUpdateStepReferences: {
+      console.log("*****esto recibí", action.payload);
+      return { ...state, fcmPackage: action.payload };
+    }
+
+    case types.fcmUpdatePackageProperty: {
+      return { ...state, fcmPackage: action.payload };
+    }
+
+    // packages. steps
+    case types.fcmSetActiveStepProperties: {
+      return {
+        ...state,
+        fcmPackage: {
+          ...state.fcmPackage,
+          steps: state.fcmPackage.steps.map((element, index) =>
+            index === state.fcmPackage.activeStep ? action.payload : element
+          ),
+        },
+      };
+    }
+
     case types.fcmsIsLoading:
       return { ...state, fcmsIsLoading: true };
 
     case types.fcmsFinishedLoading:
       return { ...state, fcmsIsLoading: false };
-
-    case types.fcmAllLoaded:
-      return { ...state, allFcmLoaded: action.payload };
 
     case types.fcmPartnersLoaded:
       return { ...state, fcmPartners: action.payload, fcmsIsLoading: false };

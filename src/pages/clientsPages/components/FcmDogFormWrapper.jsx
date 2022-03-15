@@ -3,16 +3,20 @@ import React, { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addAndRemoveFcmPartnerProcedures,
+  addNewFcmStep,
   cleanFcmStep,
   handleFcmCompleteStep,
+  removeFcmSteps,
+  setFcmCurrentStepConfig,
   updateStepReferences,
 } from "../../../actions/fcmActions";
 import { fireSwalConfirmation } from "../../../helpers/utilities";
 import { Box, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
-import { FcmPartnerFormikNew } from "./FcmPartnerFormikNew";
+import { getTransferStepLabel } from "../../../helpers/fcmUtilities";
+import { FcmDogFormikNew } from "./FcmDogFormikNew";
 
-export const FcmPartnerFormWrapper = (props) => {
+export const FcmDogFormWrapper = (props) => {
   /*************************************************************************************************** */
   /************************** hooks and props ******** ***************************************/
   /*************************************************************************************************** */
@@ -42,6 +46,41 @@ export const FcmPartnerFormWrapper = (props) => {
     }
   };
 
+  // todo: review
+  const handleConfirmTransfer = async (values) => {
+    // check if there is a pending transfer
+    if (values.isTransferPending) {
+      const confirmation = await fireSwalConfirmation(
+        "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
+      );
+      if (!confirmation) {
+        return false;
+      }
+      dispatch(
+        addNewFcmStep({
+          label: getTransferStepLabel(activeStep),
+          componentName: "FcmTransferFormik",
+          props: {
+            label: "Formato de transferencia",
+          },
+          stepFromOrigin: activeStep,
+          stepDataId: "",
+          config: {
+            isEditable: true,
+            formTitle: "Transferencia del ...",
+            showCancel: false,
+            needsConfirmation: false,
+          },
+        })
+      );
+      // if there are no pending transfers. Remove from step if they were previously included
+    } else {
+      dispatch(removeFcmSteps());
+    }
+    return true;
+  };
+
+  // todo: delete
   const handleConfirmRenewal = async (values) => {
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
@@ -60,7 +99,21 @@ export const FcmPartnerFormWrapper = (props) => {
     dispatch(handleFcmCompleteStep());
   };
 
+  // todo review
+  const handleSubmitPrev = async (fcmDog) => {
+    dispatch(updateStepReferences(fcmDog));
+    dispatch(
+      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
+    );
+    dispatch(handleFcmCompleteStep());
+  };
+
+  // todo review
   const handleConfirmation = async () => {
+    const values = { ...stepData };
+    if (!(await handleConfirmTransfer(values))) {
+      return;
+    }
     if (!(await handleConfirmRenewal({ ...stepData }))) {
       return;
     }
@@ -79,8 +132,8 @@ export const FcmPartnerFormWrapper = (props) => {
         <Box sx={{ mb: "3rem" }}>
           <Typography sx={{ mb: "2rem", lineHeight: "1.5" }}>
             {needsConfirmation
-              ? "Socio seleccionado. Confirma los datos, edítalos o remueve para seleccionar otro socio."
-              : "Los datos de socio del propietario del han sido llenados, puedes editar los datos o remover la selección."}
+              ? "Perro seleccionado. Confirma los datos, edítalos o remueve para seleccionar otro perro."
+              : "Los datos de la FCM del perro han sido llenados, puedes editar los datos o remover la selección."}
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
             {needsConfirmation && (
@@ -132,16 +185,11 @@ export const FcmPartnerFormWrapper = (props) => {
           Las imágenes deben tener un tamaño máximo de 1mb.
         </Typography>
         <Typography mb="1rem">
-          Si la tarjeta ya está vencida y cuentas con una nueva, es necesario
-          reemplazar la imagen.
-        </Typography>
-        <Typography mb="1rem">
-          Si se va a realizar la renovación de un nuevo socio, es importante que
-          el comprobante domiciliario no sea anterior a 3 meses. En su caso,
-          reemplazar la imagen
+          Si el pedigrí o CPR está endosado, es necesario marcar que se requiere
+          transferencia, para que se incluya el formato en el paquete.
         </Typography>
       </Box>
-      <FcmPartnerFormikNew
+      <FcmDogFormikNew
         handleSubmitForm={handleSubmit}
         handleCancel={handleCancelFormWrapper}
         {...props}

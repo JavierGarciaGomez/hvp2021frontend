@@ -4,11 +4,14 @@ import { useState } from "react";
 
 import { fireSwalSuccess } from "../../../helpers/utilities";
 import { FcmPartnerFormik } from "../FcmPartnerFormik";
+import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
 
-export const LostPartnerCard = () => {
+export const LostPartnerCard = ({ ...props }) => {
+  const { handleStepProps, handleCancel } = props;
   const [showForm, setshowForm] = useState(false);
   const handleSubmit = () => {
     fireSwalSuccess("Carta responsiva agregada al paquete");
+    handleStepProps({ isCardLost: true });
     setshowForm(true);
   };
   return (
@@ -43,18 +46,18 @@ export const LostPartnerCard = () => {
             es el caso de retrasos en el trámite o la necesidad de hacer
             trámites posteriores.
           </Box>
-          <Button
-            variant="contained"
-            fullWidth={true}
-            onClick={handleSubmit}
-            color="primary"
-          >
-            Acepto las condiciones
-          </Button>
+          <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
+            <Button fullWidth={true} onClick={handleSubmit} color="primary">
+              Acepto las condiciones
+            </Button>
+            <Button fullWidth={true} onClick={handleCancel} color="error">
+              Cancelar
+            </Button>
+          </Box>
         </Box>
       )}
 
-      {showForm && <FcmPartnerFormik />}
+      {showForm && <FcmPartnerFormWrapper {...props} />}
     </Fragment>
   );
 };

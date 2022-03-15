@@ -1,26 +1,23 @@
 import React, { Fragment, useEffect, useState } from "react";
 
 import { Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
-import { FcmSelectPartnerOptions } from "./FcmSelectPartnerOptions";
+import { useSelector } from "react-redux";
+import { FcmSelectDogOptions } from "./FcmSelectDogOptions";
+import { FcmDogFormWrapper } from "./FcmDogFormWrapper";
 
 const initialStepProps = {
-  isFirstRegister: false,
-  isCardLost: false,
   isEditable: true,
   formTitle: "Llena el formulario",
   formWrapperTitle: "Llena el formulario",
 };
 // show the selector or the data if already selected
-export const FcmPartnerStepLayout = () => {
+export const FcmDogStepLayout = () => {
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { steps, activeStep } = fcmPackage;
   const { stepData, stepLabel, needsConfirmation } = steps[activeStep];
   const [stepProps, setstepProps] = useState(initialStepProps);
 
   const handleStepProps = (newProps) => {
-    console.log("a ver", newProps);
     setstepProps((prevProps) => ({ ...prevProps, ...newProps }));
   };
   const handleResetStepProps = () => {
@@ -43,15 +40,11 @@ export const FcmPartnerStepLayout = () => {
   useEffect(() => {
     if (stepData) {
       handleStepProps({
-        formWrapperTitle: "Socio seleccionado",
+        formWrapperTitle: "Perro seleccionado",
         isEditable: false,
       });
     }
   }, [stepData]);
-
-  console.log("esta es la stepdat", stepData);
-
-  console.log("***estos son los props", initialStepProps);
 
   return (
     <Fragment>
@@ -59,14 +52,14 @@ export const FcmPartnerStepLayout = () => {
         {stepLabel}
       </Typography>
       {!stepData ? (
-        <FcmSelectPartnerOptions
+        <FcmSelectDogOptions
           stepData={stepData}
           handleStepProps={handleStepProps}
           stepProps={stepProps}
           handleResetStepProps={handleResetStepProps}
         />
       ) : (
-        <FcmPartnerFormWrapper
+        <FcmDogFormWrapper
           stepData={stepData}
           stepProps={stepProps}
           handleStepProps={handleStepProps}
