@@ -46,7 +46,7 @@ export const SelectFcmDogFromAccount = ({
       </Typography>
       <SimpleSelectWrapper
         options={options}
-        label="Selecciona un socio"
+        label="Selecciona un perro"
         value={selectedFcmDogId}
         setValue={setselectedFcmDogId}
       ></SimpleSelectWrapper>

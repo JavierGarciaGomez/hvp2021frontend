@@ -411,7 +411,7 @@ export const handleFcmCompleteStep = () => {
     // add step to completedSteps
     const newCompletedSteps = { ...completedSteps };
     newCompletedSteps[activeStep] = true;
-    console.log("estos son los newcompleted", newCompletedSteps);
+
     dispatch(updateFcmPackageProperty("completedSteps", newCompletedSteps));
 
     // handle next
@@ -489,6 +489,82 @@ export const cleanFcmStep = () => {
     );
   };
 };
+
+export const addOrRemoveFcmTransferSteps = (fcmDog) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+
+    if (fcmDog.isTransferPending) {
+      dispatch(
+        addNewFcmStep({
+          stepLabel: `Transferencia de ${fcmDog.petName}`,
+          componentName: "FcmTransferFormik",
+          dataId: null,
+          stepData: { previousOwner: null, dog: fcmDog._id, newOner: null },
+          needsConfirmation: false,
+          stepFromOrigign: activeStep,
+        })
+      );
+    } else {
+      dispatch(removeFcmSteps());
+    }
+  };
+};
+
+// todo: review
+export const addNewFcmStep = (object) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = [...steps];
+
+    // todo: review
+    // check if the steps are renewed
+    // filters the steps that came from this step
+
+    // in case of parents transfers dont add step if existed previously
+    if (activeStep === 2 || activeStep === 3) {
+      const existentStep = newSteps.find(
+        (step) => step.stepFromOrigin === activeStep
+      );
+      if (!existentStep) {
+        newSteps.splice(newSteps.length - 1, 0, object);
+      }
+    }
+
+    if (activeStep === 4) {
+      const existentStep = newSteps.find(
+        (step) =>
+          step.stepFromOrigin === activeStep &&
+          step.stepObject.puppyName === object.stepObject.puppyName
+      );
+      if (!existentStep) {
+        newSteps.splice(newSteps.length - 1, 0, object);
+      }
+    }
+
+    // newSteps.splice(newSteps.length - 1, 0, object);
+
+    dispatch(updateFcmPackageProperty("steps", newSteps));
+  };
+};
+
+// todo: review
+export const removeFcmSteps = () => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const { steps, activeStep } = fcmPackage;
+    const newSteps = steps.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
+    // newSteps.splice(newSteps.length - 1, 0, object);
+    dispatch(updateFcmPackageProperty("steps", newSteps));
+  };
+};
+
+/**************HANDLING PROCEDURES*********************/
+
 /***************************************************************/
 /***************************************************************/
 /**********************NOT CHECKED *****************************/
@@ -751,41 +827,6 @@ export const setFcmPackageEditable = (boolean) => {
   };
 };
 
-export const addNewFcmStep = (object) => {
-  return async (dispatch, getState) => {
-    const { fcmPackage } = getState().fcm;
-    const { steps, activeStep } = fcmPackage;
-    const newSteps = [...steps];
-
-    // check if the steps are renewed
-    // filters the steps that came from this step
-
-    // in case of parents transfers dont add step if existed previously
-    if (activeStep === 2 || activeStep === 3) {
-      const existentStep = newSteps.find(
-        (step) => step.stepFromOrigin === activeStep
-      );
-      if (!existentStep) {
-        newSteps.splice(newSteps.length - 1, 0, object);
-      }
-    }
-
-    if (activeStep === 4) {
-      const existentStep = newSteps.find(
-        (step) =>
-          step.stepFromOrigin === activeStep &&
-          step.stepObject.puppyName === object.stepObject.puppyName
-      );
-      if (!existentStep) {
-        newSteps.splice(newSteps.length - 1, 0, object);
-      }
-    }
-
-    // newSteps.splice(newSteps.length - 1, 0, object);
-    dispatch(setFcmPackageProp("steps", newSteps));
-  };
-};
-
 export const setFcmBreedingForm = (values) => {
   return async (dispatch, getState) => {
     // const client = getState().clients.client;
@@ -827,18 +868,6 @@ export const setFcmCurrentStepConfig = (data = {}) => {
     newSteps[activeStep].config = { ...newConfig };
     fcmPackage.steps = newSteps;
     dispatch(setFcmPackage({ ...fcmPackage }));
-  };
-};
-
-export const removeFcmSteps = () => {
-  return async (dispatch, getState) => {
-    const { fcmPackage } = getState().fcm;
-    const { steps, activeStep } = fcmPackage;
-    const newSteps = steps.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
-    // newSteps.splice(newSteps.length - 1, 0, object);
-    dispatch(setFcmPackageProp("steps", newSteps));
   };
 };
 

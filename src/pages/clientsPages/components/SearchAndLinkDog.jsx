@@ -11,18 +11,21 @@ import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setFcmCurrentStepObject,
-  setFcmPackageNeedsConfirmation,
-  setFcmPackageProperty,
+  setFcmActiveStepProperty,
   startLoadingFcmDogs,
   updateStepReferences,
 } from "../../../actions/fcmActions";
 import { userAddFcmDog } from "../../../actions/userActions";
 import { excludeFromCollection } from "../../../helpers/utilities";
 
-export const SearchAndLinkDog = () => {
+export const SearchAndLinkDog = ({
+  handleCancelSelection,
+  handleStepProps,
+}) => {
   const dispatch = useDispatch();
-  const { fcmDogs } = useSelector((state) => state.fcm);
+  const { allFcm } = useSelector((state) => state.fcm);
+  const { allFcmDogs } = allFcm;
+
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
 
@@ -37,9 +40,8 @@ export const SearchAndLinkDog = () => {
 
   const handleSearch = () => {
     //   exclude from fcmPartners the already linked
-    console.log("****SEARCH", fcmDogs, client.linkedDogs);
     const fcmDogsExcludingLinked = excludeFromCollection(
-      fcmDogs,
+      allFcmDogs,
       client.linkedDogs
     );
 
@@ -58,14 +60,32 @@ export const SearchAndLinkDog = () => {
       // handleNext();
 
       dispatch(updateStepReferences(object));
+      handleStepProps({
+        isEditable: false,
+        formWrapperTitle: "Confirma la información",
+      });
+      dispatch(setFcmActiveStepProperty("needsConfirmation", true));
     }
   };
 
   return (
     <Box>
+      <Typography mb="3rem">
+        Selecciona un perro de nuestra base de datos. Si no lo encuentras, será
+        necesario que lo registres, con lo que automáticamente estará vinculado
+        a tu cuenta.
+      </Typography>
       {/* Input and button */}
-      <Box sx={{ display: "flex", gap: "2rem", mb: "2rem" }}>
-        <FormControl>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-around",
+          gap: "2rem",
+          mb: "2rem",
+          alignItems: "center",
+        }}
+      >
+        <FormControl fullWidth={true} sx={{ flex: 1 }}>
           <TextField
             name="registerNum"
             label="Número de registro"
@@ -75,7 +95,22 @@ export const SearchAndLinkDog = () => {
             value={fieldValue}
           />
         </FormControl>
-        <Button onClick={handleSearch}>Buscar</Button>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            gap: "1rem",
+            alignItems: "center",
+            flex: 1,
+          }}
+        >
+          <Button onClick={handleSearch} fullWidth={true}>
+            Buscar
+          </Button>
+          <Button color="error" fullWidth onClick={handleCancelSelection}>
+            Cancelar
+          </Button>
+        </Box>
       </Box>
       {/* SearchResults */}
       <Box

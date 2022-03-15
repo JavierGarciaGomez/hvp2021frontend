@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addAndRemoveFcmPartnerProcedures,
   addNewFcmStep,
+  addOrRemoveFcmTransferSteps,
   cleanFcmStep,
   handleFcmCompleteStep,
   removeFcmSteps,
@@ -46,46 +47,12 @@ export const FcmDogFormWrapper = (props) => {
     }
   };
 
-  // todo: review
   const handleConfirmTransfer = async (values) => {
-    // check if there is a pending transfer
-    if (values.isTransferPending) {
+    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
         "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
       );
-      if (!confirmation) {
-        return false;
-      }
-      dispatch(
-        addNewFcmStep({
-          label: getTransferStepLabel(activeStep),
-          componentName: "FcmTransferFormik",
-          props: {
-            label: "Formato de transferencia",
-          },
-          stepFromOrigin: activeStep,
-          stepDataId: "",
-          config: {
-            isEditable: true,
-            formTitle: "Transferencia del ...",
-            showCancel: false,
-            needsConfirmation: false,
-          },
-        })
-      );
-      // if there are no pending transfers. Remove from step if they were previously included
-    } else {
-      dispatch(removeFcmSteps());
-    }
-    return true;
-  };
 
-  // todo: delete
-  const handleConfirmRenewal = async (values) => {
-    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
-      const confirmation = await fireSwalConfirmation(
-        "La tarjeta ha expirado o expirará pronto. Se agregará al paquete una renovación de socio. Antes de confirmar, verificar que el comprobante domiciliario no sea anterior a 3 meses"
-      );
       if (!confirmation) {
         return false;
       }
@@ -93,31 +60,18 @@ export const FcmDogFormWrapper = (props) => {
     return true;
   };
 
-  const handleSubmit = async (fcmPartner) => {
-    dispatch(updateStepReferences(fcmPartner));
-    dispatch(addAndRemoveFcmPartnerProcedures(fcmPartner));
-    dispatch(handleFcmCompleteStep());
-  };
-
-  // todo review
-  const handleSubmitPrev = async (fcmDog) => {
+  const handleSubmit = async (fcmDog) => {
     dispatch(updateStepReferences(fcmDog));
-    dispatch(
-      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
-    );
+    dispatch(addOrRemoveFcmTransferSteps(fcmDog));
     dispatch(handleFcmCompleteStep());
   };
 
   // todo review
   const handleConfirmation = async () => {
-    const values = { ...stepData };
-    if (!(await handleConfirmTransfer(values))) {
+    if (!(await handleConfirmTransfer(stepData))) {
       return;
     }
-    if (!(await handleConfirmRenewal({ ...stepData }))) {
-      return;
-    }
-    dispatch(addAndRemoveFcmPartnerProcedures(stepData));
+    dispatch(addOrRemoveFcmTransferSteps(stepData));
     dispatch(handleFcmCompleteStep());
   };
 

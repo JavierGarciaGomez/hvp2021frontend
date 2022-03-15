@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../../helpers/utilities";
+import { FcmDogFormWrapper } from "./FcmDogFormWrapper";
 import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
+import { SearchAndLinkDog } from "./SearchAndLinkDog";
 
 import { SearchAndLinkPartner } from "./SearchAndLinkPartner";
 import { SelectFcmDogFromAccount } from "./SelectFcmDogFromAccount";
@@ -41,7 +43,7 @@ export const FcmSelectDogOptions = ({ ...props }) => {
         "Perro no vinculado a mi cuenta, pero registrado en esta plataforma",
       value: "previousDataBase",
       component: (
-        <SearchAndLinkPartner
+        <SearchAndLinkDog
           handleCancelSelection={handleCancelSelection}
           {...props}
         />
@@ -52,10 +54,7 @@ export const FcmSelectDogOptions = ({ ...props }) => {
       label: "Perro no registrado en esta plataforma",
       value: "newPartner",
       component: (
-        <FcmPartnerFormWrapper
-          handleCancel={handleCancelSelection}
-          {...props}
-        />
+        <FcmDogFormWrapper handleCancel={handleCancelSelection} {...props} />
       ),
       functions: async () => {},
     },

@@ -74,6 +74,7 @@ export const ProcedurePedigree = () => {
     dataId: null,
     stepData: null,
     needsConfirmation: false,
+    stepFromOrigin: null,
     // todo: delete
     config: {
       isFirstRegister: false,
