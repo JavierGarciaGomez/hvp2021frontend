@@ -33,7 +33,7 @@ export const SelectFcmDogFromAccount = ({
 
   const options = client.linkedDogs.map((fcmDog) => {
     return {
-      label: `${fcmDog.petName}`,
+      label: `${fcmDog.registerNum} - ${fcmDog.petName}`,
       value: fcmDog._id,
     };
   });

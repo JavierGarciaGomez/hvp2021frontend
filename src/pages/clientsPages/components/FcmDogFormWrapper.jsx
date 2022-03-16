@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addAndRemoveFcmPartnerProcedures,
+  addAndRemoveFcmProcedures,
   addNewFcmStep,
   addOrRemoveFcmTransferSteps,
   cleanFcmStep,

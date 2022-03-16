@@ -5,20 +5,24 @@ import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
   addFcmCertificateProcedure,
-  addFcmProcedure,
   addNewFcmStep,
   cleanFcmStep,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
   removeFcmProcedure,
-  removeFcmPuppiesTransfersSteps,
   setFcmBreedingForm,
   setFcmCurrentStepConfig,
   setFcmCurrentStepEditable,
   setFcmCurrentStepObject,
+  createFcmDog,
+  updateFcmDog,
+  updateStepReferences,
+  addOrRemoveFcmTransferSteps,
+  removeFcmSteps,
+  addAndRemoveFcmProcedures,
 } from "../../actions/fcmActions";
 import { fireSwalConfirmation, isObjectEmpty } from "../../helpers/utilities";
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
 import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
@@ -28,8 +32,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
-import { getTransferStepLabel } from "../../helpers/fcmUtilities";
+import {
+  checkIfStepsAreCompleted,
+  getTransferStepLabel,
+} from "../../helpers/fcmUtilities";
 import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
+import dayjs from "dayjs";
 
 export const FcmBreedingFormik = ({ label }) => {
   const dispatch = useDispatch();
@@ -39,22 +47,36 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
 
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, steps, breedingForm } = fcmPackage;
+  const { activeStep, steps, breedingForm, completedSteps } = fcmPackage;
+
   const { config } = steps[activeStep];
   const { isEditable, formTitle, showCancel } = config;
 
   const [registersAmount, setregistersAmount] = useState("");
   const [puppiesRegisters, setpuppiesRegisters] = useState([]);
+  const [puppyTransfers, setPuppyTransfers] = useState([]);
+  const [arePrevStepsCompleted, setAreprevStepsCompleted] = useState(false);
+  const [haveParentsSameBreed, sethaveParentsSameBreed] = useState(false);
 
+  // TODO: When to delete puppies: a) when reset. All clear. b) Cuando se da click a eliminar cachorro.
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
 
+  console.log(haveParentsSameBreed);
   let emptyPuppy = {
-    puppyName: "",
-    puppySex: "",
-    puppyNeedsTransfer: false,
-    puppyColor: "",
+    petName: "",
+    breed: steps[2].stepData?.breed || "",
+    color: "",
+    sex: "",
+    birthDate: "",
+    registerNum: "",
+    registerType: "pedigree",
+    urlFront: null,
+    urlBack: null,
+    isRegisterPending: true,
+    isTransferPending: false,
+    _id: null,
   };
   let initialValues = {
     breedingDate: "",
@@ -75,10 +97,10 @@ export const FcmBreedingFormik = ({ label }) => {
     death: Yup.number().required("Es obligatorio"),
     puppies: Yup.array(
       Yup.object({
-        puppyName: Yup.string().required("Es obligatorio"),
-        puppySex: Yup.string().required("Es obligatorio"),
-        puppyNeedsTransfer: Yup.boolean(),
-        puppyColor: Yup.string().required("Es obligatorio"),
+        petName: Yup.string().required("Es obligatorio"),
+        sex: Yup.string().required("Es obligatorio"),
+        isTransferPending: Yup.boolean(),
+        color: Yup.string().required("Es obligatorio"),
       })
     )
       .min(1, "Al menos debe haber un cachorro")
@@ -92,6 +114,26 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
 
   useEffect(() => {
+    setAreprevStepsCompleted(
+      checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 3])
+    );
+  }, []);
+
+  // check if the parents are from the same breed
+  useEffect(() => {
+    if (arePrevStepsCompleted) {
+      console.log(steps[2].stepData.breed.toLowerCase());
+      console.log(steps[3].stepData.breed.toLowerCase());
+      if (
+        steps[2].stepData.breed.toLowerCase() ===
+        steps[3].stepData.breed.toLowerCase()
+      ) {
+        sethaveParentsSameBreed(true);
+      }
+    }
+  }, [arePrevStepsCompleted]);
+
+  useEffect(() => {
     if (!isObjectEmpty(breedingForm)) {
       setformValues({ ...breedingForm });
     } else {
@@ -102,91 +144,88 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
-  const handleConfirmPuppiesTransfer = async (values) => {
-    // get the puppies with transfers
-    let puppiesTransfers = values.puppies.filter(
-      (element) => element.puppyNeedsTransfer
-    );
-
-    if (puppiesTransfers.length > 0) {
-      const confirmation = await fireSwalConfirmation(
-        `Se está solicitando la transferencia de ${puppiesTransfers.length} cachorros. Por lo que se agregarán los trámites correspondientes`
-      );
-      if (!confirmation) {
-        return false;
-      } else {
-        puppiesTransfers.map((element, index) => {
-          dispatch(
-            addNewFcmStep({
-              label: getTransferStepLabel(activeStep, element.puppyName),
-              componentName: "FcmTransferPuppy",
-              props: {
-                label: getTransferStepLabel(activeStep, element.puppyName),
-              },
-              stepFromOrigin: activeStep,
-              stepDataId: "",
-              config: {
-                isFirstRegister: false,
-                isEditable: true,
-                formTitle: "Llena el formulario",
-                showCancel: false,
-                needsConfirmation: false,
-              },
-              stepObject: element,
-            })
-          );
-        });
-      }
-    }
-    // remove puppies without transfers
-    dispatch(removeFcmPuppiesTransfersSteps(puppiesTransfers));
-
-    return true;
-  };
 
   const handleSubmit = async (values) => {
     if (!(await handleConfirmPuppiesTransfer(values))) {
       return;
     }
     fireSwalWait();
+
     // check transfer puppies
+
     for (let i = 0; i < registersAmount; i++) {
-      if (values[`puppyNeedsTransfer${i + 1}`]) {
+      if (values[`isTransferPending${i + 1}`]) {
       }
     }
 
-    Swal.close();
+    // adding registers amount
     let newValues = { ...values };
     newValues.registersAmount = registersAmount;
 
-    // if there is an ID: update. If not: create
     Swal.close();
 
-    dispatch(
-      removeFcmProcedure({ stepFromOrigin: activeStep, type: "certificate" })
-    );
-    newValues.puppies.map((element) => {
-      dispatch(
-        addFcmCertificateProcedure({
-          stepFromOrigin: activeStep,
-          type: "certificate",
-          data: element.puppyName,
-          dataId: newValues._id,
-        })
-      );
-    });
+    dispatch(removeFcmSteps());
+    // create dogs as fcm
+    let newPuppies = [];
+    for (let puppy of values.puppies) {
+      let fcmPuppy = null;
+      puppy.birthDate = values.birthDate;
+      puppy.registerNum = `En trámite - ${puppy.petName} - ${dayjs().format(
+        "DD-MM-YY HH:mm"
+      )}`;
 
-    dispatch(setFcmBreedingForm(newValues));
-    dispatch(setFcmCurrentStepObject(newValues));
-    dispatch(
-      setFcmCurrentStepConfig({ needsConfirmation: false, isEditable: false })
-    );
+      console.log("puppy", puppy);
+
+      if (puppy._id) {
+        fcmPuppy = await dispatch(updateFcmDog(puppy));
+      } else {
+        fcmPuppy = await dispatch(createFcmDog(puppy));
+      }
+      // replace pupy values with new puppy
+
+      dispatch(addOrRemoveFcmTransferSteps(fcmPuppy));
+      newPuppies.push(fcmPuppy);
+    }
+
+    newValues.puppies = newPuppies;
+    dispatch(addAndRemoveFcmProcedures(newValues));
+
+    dispatch(updateStepReferences(newValues));
+
     dispatch(handleFcmCompleteStep());
+  };
+
+  const handleConfirmPuppiesTransfer = async (values) => {
+    // get the puppies with transfers
+    setPuppyTransfers(
+      values.puppies.filter((element) => element.isTransferPending)
+    );
+
+    if (puppyTransfers.length > 0) {
+      const confirmation = await fireSwalConfirmation(
+        `Se está solicitando la transferencia de ${puppyTransfers.length} cachorros. Por lo que se agregarán los trámites correspondientes`
+      );
+      if (!confirmation) {
+        return false;
+      }
+    }
+    return true;
   };
 
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
   /*************************************************************************************************** */
+
+  if (!arePrevStepsCompleted || !haveParentsSameBreed) {
+    return (
+      <Card sx={{ padding: "2rem" }}>
+        <Typography>
+          Para poder realizar este paso antes es necesario completar los 4 pasos
+          anteriores y verificar que ambos padres sean de la misma raza.
+        </Typography>
+      </Card>
+    );
+  }
 
   return (
     <Fragment>
@@ -349,14 +388,14 @@ export const FcmBreedingFormik = ({ label }) => {
                         </Grid>
                         <Grid item xs={4} md={3}>
                           <TextFieldWrapper
-                            name={`puppies.${index}.puppyName`}
+                            name={`puppies.${index}.petName`}
                             label="Nombre"
                             disabled={!isEditable}
                           />
                         </Grid>
                         <Grid item xs={4} md={2}>
                           <SelectWrapper
-                            name={`puppies.${index}.puppySex`}
+                            name={`puppies.${index}.sex`}
                             label="Sexo"
                             disabled={!isEditable}
                             options={{
@@ -367,14 +406,14 @@ export const FcmBreedingFormik = ({ label }) => {
                         </Grid>
                         <Grid item xs={4} md={2}>
                           <TextFieldWrapper
-                            name={`puppies.${index}.puppyColor`}
+                            name={`puppies.${index}.color`}
                             label="Color"
                             disabled={!isEditable}
                           />
                         </Grid>
                         <Grid item xs={6} md={3}>
                           <CheckboxInputWrapper
-                            name={`puppies.${index}.puppyNeedsTransfer`}
+                            name={`puppies.${index}.isTransferPending`}
                             label="Se realizará cambio de propietario"
                             disabled={!isEditable}
                           />

@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addAndRemoveFcmPartnerProcedures,
+  addAndRemoveFcmProcedures,
   cleanFcmStep,
   handleFcmCompleteStep,
   updateStepReferences,
@@ -56,7 +56,7 @@ export const FcmPartnerFormWrapper = (props) => {
 
   const handleSubmit = async (fcmPartner) => {
     dispatch(updateStepReferences(fcmPartner));
-    dispatch(addAndRemoveFcmPartnerProcedures(fcmPartner));
+    dispatch(addAndRemoveFcmProcedures(fcmPartner));
     dispatch(handleFcmCompleteStep());
   };
 
@@ -64,7 +64,7 @@ export const FcmPartnerFormWrapper = (props) => {
     if (!(await handleConfirmRenewal({ ...stepData }))) {
       return;
     }
-    dispatch(addAndRemoveFcmPartnerProcedures(stepData));
+    dispatch(addAndRemoveFcmProcedures(stepData));
     dispatch(handleFcmCompleteStep());
   };
 

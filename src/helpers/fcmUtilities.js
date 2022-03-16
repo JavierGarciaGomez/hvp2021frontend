@@ -24,6 +24,19 @@ export const totalCompletedSteps = (completedSteps) => {
   return Object.keys(completedSteps).length;
 };
 
+export const checkIfStepsAreCompleted = (
+  completedSteps = {},
+  stepsToCheck = []
+) => {
+  let areCompleted = true;
+  stepsToCheck.map((element) => {
+    if (!completedSteps[element]) {
+      areCompleted = false;
+    }
+  });
+  return areCompleted;
+};
+
 export const generatePuppiesValues = (values = {}, registersAmount = 0) => {
   console.log("******registers amount", registersAmount);
   const newValues = { ...values };
@@ -97,14 +110,14 @@ export const getComponent = (componentName, props) => {
     case fcmComponentsTypes.fcmDogStepLayout:
       return <FcmDogStepLayout />;
 
+    case fcmComponentsTypes.fcmBreedingForm:
+      return <FcmBreedingFormik {...props} />;
+
     case "FcmStepperPartnerSelector":
       return <FcmSelectPartnerOptions {...props} />;
 
     case "FcmStepperDogSelector":
       return <FcmStepperDogSelector {...props} />;
-
-    case "FcmBreedingFormik":
-      return <FcmBreedingFormik {...props} />;
 
     case "FcmBreedingFormik":
       return <FcmBreedingFormik {...props} />;

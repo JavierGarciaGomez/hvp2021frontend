@@ -54,10 +54,11 @@ export const FcmTransferFormikNew = () => {
   const [isPreviousDataLoaded, setisPreviousDataLoaded] = useState(false);
   const { label, componentName, props, stepFromOrigin, dataId, config } =
     steps[activeStep];
-  const { isEditable } = config;
+
   const [componentData, setcomponentData] = useState({});
   const [prevOwner, setprevOwner] = useState(null);
   const [newOwner, setnewOwner] = useState(null);
+  const [isEditable, setisEditable] = useState(true);
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/

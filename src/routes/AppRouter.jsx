@@ -13,8 +13,7 @@ import { roleTypes } from "../types/types";
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { checkAuthorization } from "../helpers/utilities";
 import { ClientLayout } from "../pages/clientsPages/ClientLayout";
-import { TestDynamicFormik } from "../pages/test/TestDynamicFormik";
-import { FcmBreedingFormik2 } from "../pages/clientsPages/FcmBreedingFormik2";
+
 import { TestFormikUpload } from "../pages/test/TestFormikUpload";
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
 

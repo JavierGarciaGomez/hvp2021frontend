@@ -323,7 +323,8 @@ export const updateStepReferences = (object) => {
   };
 };
 
-export const addAndRemoveFcmPartnerProcedures = (stepData) => {
+// todo change name
+export const addAndRemoveFcmProcedures = (stepData) => {
   return async (dispatch, getState) => {
     const fcmPackage = getState().fcm.fcmPackage;
     const newFcmPackage = { ...fcmPackage };
@@ -334,33 +335,55 @@ export const addAndRemoveFcmPartnerProcedures = (stepData) => {
       (element) => element.stepFromOrigin !== activeStep
     );
 
-    if (stepData.isPending) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "partnerRegistration",
-        data: stepData,
-        dataId: stepData._id,
+    if (activeStep === 0 || activeStep === 1) {
+      if (stepData.isPending) {
+        newProcedures.push({
+          stepFromOrigin: activeStep,
+          type: "partnerRegistration",
+          data: stepData,
+          dataId: stepData._id,
+        });
+      }
+
+      if (dayjs(stepData.expirationDate).isBefore(dayjs().add(14, "days"))) {
+        newProcedures.push({
+          stepFromOrigin: activeStep,
+          type: "partnerRenewal",
+          data: stepData,
+          dataId: stepData._id,
+        });
+      }
+      if (stepData.isCardLost) {
+        newProcedures.push({
+          stepFromOrigin: activeStep,
+          type: "responsiveLetter",
+          data: stepData,
+          dataId: stepData._id,
+        });
+      }
+    }
+    if (activeStep === 4) {
+      stepData.puppies.map((element) => {
+        newProcedures.push({
+          stepFromOrigin: activeStep,
+          type: "certificate",
+          data: element,
+          dataId: element._id,
+        });
       });
     }
 
-    if (dayjs(stepData.expirationDate).isBefore(dayjs().add(14, "days"))) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "partnerRenewal",
-        data: stepData,
-        dataId: stepData._id,
-      });
-    }
-    if (stepData.isCardLost) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "responsiveLetter",
-        data: stepData,
-        dataId: stepData._id,
+    if (activeStep > 4) {
+      stepData.puppies.map((element) => {
+        newProcedures.push({
+          stepFromOrigin: activeStep,
+          type: "transfer",
+          data: stepData,
+          dataId: stepData._id,
+        });
       });
     }
 
-    console.log("Voy a despachar");
     dispatch(fcmPackageUpdateProcedures(newProcedures));
   };
 };
@@ -501,9 +524,9 @@ export const addOrRemoveFcmTransferSteps = (fcmDog) => {
           stepLabel: `Transferencia de ${fcmDog.petName}`,
           componentName: "FcmTransferFormik",
           dataId: null,
-          stepData: { previousOwner: null, dog: fcmDog._id, newOner: null },
+          stepData: { previousOwner: null, dog: fcmDog._id, newOwner: null },
           needsConfirmation: false,
-          stepFromOrigign: activeStep,
+          stepFromOrigin: activeStep,
         })
       );
     } else {
@@ -558,6 +581,7 @@ export const removeFcmSteps = () => {
     const newSteps = steps.filter(
       (element) => element.stepFromOrigin !== activeStep
     );
+    console.log("estos son los new steps desp de remover", newSteps);
     // newSteps.splice(newSteps.length - 1, 0, object);
     dispatch(updateFcmPackageProperty("steps", newSteps));
   };
