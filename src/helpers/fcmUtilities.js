@@ -113,23 +113,14 @@ export const getComponent = (componentName, props) => {
     case fcmComponentsTypes.fcmBreedingForm:
       return <FcmBreedingFormik {...props} />;
 
-    case "FcmStepperPartnerSelector":
-      return <FcmSelectPartnerOptions {...props} />;
-
-    case "FcmStepperDogSelector":
-      return <FcmStepperDogSelector {...props} />;
-
-    case "FcmBreedingFormik":
+    case fcmComponentsTypes.fcmBreedingForm:
       return <FcmBreedingFormik {...props} />;
 
-    case "FcmTransferFormik":
+    case fcmComponentsTypes.FcmTransferFormikNew:
       return <FcmTransferFormikNew {...props} />;
 
-    case "FcmTransferPuppy":
-      return <FcmTransferPuppy {...props} />;
-
-    case "FcmPackageSummary":
-      return <FcmPackageSummary {...props} />;
+    case fcmComponentsTypes.fcmPackageSummary:
+      return <FcmPackageSummary />;
 
     default:
       return null;

@@ -9,7 +9,7 @@ import {
   objectContainsObjectProperties,
   replaceElementInCollection,
 } from "../helpers/utilities";
-import { types } from "../types/types";
+import { fcmComponentsTypes, types } from "../types/types";
 import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
 /***************************************************************/
@@ -323,7 +323,6 @@ export const updateStepReferences = (object) => {
   };
 };
 
-// todo change name
 export const addAndRemoveFcmProcedures = (stepData) => {
   return async (dispatch, getState) => {
     const fcmPackage = getState().fcm.fcmPackage;
@@ -522,7 +521,7 @@ export const addOrRemoveFcmTransferSteps = (fcmDog) => {
       dispatch(
         addNewFcmStep({
           stepLabel: `Transferencia de ${fcmDog.petName}`,
-          componentName: "FcmTransferFormik",
+          componentName: fcmComponentsTypes.fcmTransferForm,
           dataId: null,
           stepData: { previousOwner: null, dog: fcmDog._id, newOwner: null },
           needsConfirmation: false,

@@ -375,7 +375,7 @@ export const documentationStatusTypes = [
 export const fcmComponentsTypes = {
   fcmPartnerStepLayout: "FcmPartnerStepLayout",
   fcmDogStepLayout: "FcmDogStepLayout",
-  fcmDogSelector: "FcmStepperDogSelector",
-  fcmBreedingForm: "FcmBreedingFormik",
+  fcmBreedingForm: "FcmBreedingForm",
+  fcmTransferForm: "FcmTransferForm",
   fcmPackageSummary: "FcmPackageSummary",
 };
