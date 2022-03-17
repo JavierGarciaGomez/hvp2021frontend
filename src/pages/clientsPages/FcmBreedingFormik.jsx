@@ -61,7 +61,6 @@ export const FcmBreedingFormik = ({ label }) => {
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
 
-  console.log(haveParentsSameBreed);
   // todo: put this data again
   // let emptyPuppy = {
   //   petName: "",
@@ -144,8 +143,6 @@ export const FcmBreedingFormik = ({ label }) => {
   // check if the parents are from the same breed
   useEffect(() => {
     if (arePrevStepsCompleted) {
-      console.log(steps[2].stepData.breed.toLowerCase());
-      console.log(steps[3].stepData.breed.toLowerCase());
       if (
         steps[2].stepData.breed.toLowerCase() ===
         steps[3].stepData.breed.toLowerCase()
@@ -206,7 +203,7 @@ export const FcmBreedingFormik = ({ label }) => {
       // replace pupy values with new puppy
 
       dispatch(checkAndAddFcmPartnerStep(fcmPuppy));
-      dispatch(checkAndAddFcmTransferStep(fcmPuppy));
+      dispatch(checkAndAddFcmTransferStep(fcmPuppy, true));
       dispatch(addAndRemoveFcmCertificatesProcedures(puppy));
 
       newPuppies.push(fcmPuppy);

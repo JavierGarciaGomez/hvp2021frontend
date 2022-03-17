@@ -20,7 +20,6 @@ export const FcmPartnerStepLayout = () => {
   const [stepProps, setstepProps] = useState(initialStepProps);
 
   const handleStepProps = (newProps) => {
-    console.log("a ver", newProps);
     setstepProps((prevProps) => ({ ...prevProps, ...newProps }));
   };
   const handleResetStepProps = () => {
@@ -48,10 +47,6 @@ export const FcmPartnerStepLayout = () => {
       });
     }
   }, [stepData]);
-
-  console.log("esta es la stepdat", stepData);
-
-  console.log("***estos son los props", initialStepProps);
 
   return (
     <Fragment>

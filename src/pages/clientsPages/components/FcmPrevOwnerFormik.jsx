@@ -15,6 +15,14 @@ import {
 } from "../../../helpers/utilities";
 import Swal from "sweetalert2";
 
+let initialValues = {
+  firstName: "",
+  paternalSurname: "",
+  maternalSurname: "",
+  urlFrontIne: "",
+  urlBackIne: "",
+};
+
 export const FcmPrevOwnerFormik = ({
   handleSubmitForm,
   prevOwner,
@@ -23,15 +31,7 @@ export const FcmPrevOwnerFormik = ({
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
 
-  const [formValues, setformValues] = useState({});
-
-  let initialValues = {
-    firstName: "",
-    paternalSurname: "",
-    maternalSurname: "",
-    urlFrontIne: "",
-    urlBackIne: "",
-  };
+  const [formValues, setformValues] = useState(initialValues);
 
   let validationParams = {
     firstName: Yup.string().trim().required("Es obligatorio"),
@@ -76,7 +76,7 @@ export const FcmPrevOwnerFormik = ({
     Swal.close();
   };
 
-  console.log("");
+  console.log("formValues", formValues);
 
   return (
     <Fragment>

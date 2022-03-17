@@ -13,8 +13,6 @@ import {
   updateStepReferences,
 } from "../../../actions/fcmActions";
 import { findElementBYId } from "../../../helpers/arrayUtilities";
-import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
-import { FcmPartnerStepLayout } from "./FcmPartnerStepLayout";
 
 const initialStepProps = {
   isEditable: true,
@@ -27,7 +25,7 @@ export const FcmTransferStepLayout = () => {
   const dispatch = useDispatch();
   const { fcmPackage, allFcm } = useSelector((state) => state.fcm);
   const { steps, activeStep, completedSteps } = fcmPackage;
-  const { stepData, stepLabel, needsConfirmation } = steps[activeStep];
+
   const [stepProps, setstepProps] = useState(initialStepProps);
   const [prevOwner, setprevOwner] = useState(null);
   const [newOwner, setnewOwner] = useState(null);
@@ -36,44 +34,62 @@ export const FcmTransferStepLayout = () => {
   const [arePrevStepsCompleted, setAreprevStepsCompleted] = useState(false);
   const [isDataFull, setisDataFull] = useState(false);
   const currentStep = steps[activeStep];
+  const { isPuppy, stepFromOrigin, stepData, stepLabel, needsConfirmation } =
+    currentStep;
   const [modality, setModality] = useState("missingPrevOwner");
+  const [isStepCompleted, setisStepCompleted] = useState(false);
 
   /************************** Initial values and validation *******************************************************/
 
   /**************************use effects  **************************************************************/
 
-  // setthe modality
+  // check if this step is completed
   useEffect(() => {
-    if (currentStep.stepFromOrigin === 4) {
-      setModality("missingNewOwner");
-    }
-  }, []);
+    setisStepCompleted(checkIfStepsAreCompleted(completedSteps, [activeStep]));
+  }, [activeStep]);
 
   // check if the previous steps are completed
   useEffect(() => {
-    setAreprevStepsCompleted(
-      checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4])
-    );
-  }, []);
+    if (isPuppy) {
+      setAreprevStepsCompleted(
+        checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4, activeStep - 1])
+      );
+    } else {
+      setAreprevStepsCompleted(
+        checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4])
+      );
+    }
+  }, [isPuppy]);
 
   // if the step change, reset data
   useEffect(() => {
     setisEditable(false);
-    dispatch(setFcmActiveStepProperty("needsConfirmation", false));
+    if (isPuppy) {
+      if (isStepCompleted) {
+        dispatch(setFcmActiveStepProperty("needsConfirmation", false));
+      } else {
+        dispatch(setFcmActiveStepProperty("needsConfirmation", true));
+      }
+    } else {
+      dispatch(setFcmActiveStepProperty("needsConfirmation", false));
+    }
+  }, [isPuppy, isStepCompleted]);
+
+  useEffect(() => {
+    setisEditable(false);
   }, [activeStep]);
 
   // if there is stepdata set it
   useEffect(() => {
-    if (currentStep.stepData) {
+    if (stepData) {
       setdog(findElementBYId(allFcm.allFcmDogs, stepData.dog) || null);
-      setprevOwner(
-        findElementBYId(allFcm.allFcmPartners, stepData.prevOwner) || null
-      );
+
+      setprevOwner(stepData.prevOwner || null);
       setnewOwner(
         findElementBYId(allFcm.allFcmPartners, stepData.newOwner) || null
       );
     }
-  }, [currentStep.stepData]);
+  }, [stepData]);
 
   // if all the data is filled, set datafull
   useEffect(() => {
@@ -88,22 +104,23 @@ export const FcmTransferStepLayout = () => {
   useEffect(() => {
     if (arePrevStepsCompleted) {
       if (!isDataFull) {
-        if (currentStep.stepFromOrigin === 2) {
+        if (stepFromOrigin === 2) {
           setnewOwner(steps[0].stepData);
           return setdog(steps[2].stepData);
         }
-        if (currentStep.stepFromOrigin === 3) {
+        if (stepFromOrigin === 3) {
           setnewOwner(steps[1].stepData);
           return setdog(steps[3].stepData);
         }
-        if (currentStep.stepFromOrigin === 4) {
+        if (stepFromOrigin === 4) {
           setprevOwner(steps[1].stepData);
+          setnewOwner(steps[activeStep - 1].stepData);
         }
       } else {
         setisEditable(false);
       }
     }
-  }, [arePrevStepsCompleted, isDataFull, currentStep.stepData]);
+  }, [arePrevStepsCompleted, isDataFull, stepData]);
 
   useEffect(() => {
     handleResetStepProps();
@@ -146,7 +163,6 @@ export const FcmTransferStepLayout = () => {
   };
 
   const handleConfirmation = () => {
-    console.log(dog, prevOwner, newOwner);
     dispatch(setFcmActiveStepProperty("needsConfirmation", false));
     dispatch(
       updateStepReferences({
@@ -164,8 +180,9 @@ export const FcmTransferStepLayout = () => {
   };
 
   console.log({ prevOwner, newOwner, dog });
-  console.log(arePrevStepsCompleted);
+  console.log("arePrevStepsCompleted", arePrevStepsCompleted);
   console.log("isdatafull", isDataFull);
+  console.log("isstepcompleted", isStepCompleted);
 
   /************************** RENDER *******************************************************/
   return (
@@ -177,16 +194,18 @@ export const FcmTransferStepLayout = () => {
       {!arePrevStepsCompleted && (
         <Card sx={{ padding: "2rem", mt: "3rem" }}>
           <Typography>
-            {isDataFull
-              ? "Paso completado exitosamente. Puedes editar o remover la información"
-              : "Para poder realizar este paso antes es necesario completar los 5 pasos anteriores, las ediciones a pasos anteriores podrán afectar e incluso borrar los datos de este paso."}
+            {isPuppy
+              ? "Para poder realizar este paso antes es necesario completar los 4 primeros pasos así como el referente al nuevo propietario del cachorro, las ediciones a pasos anteriores podrán afectar e incluso borrar los datos de este paso."
+              : "Para poder realizar este paso antes es necesario completar los 4 primeros pasos, las ediciones a pasos anteriores podrán afectar e incluso borrar los datos de este paso."}
           </Typography>
         </Card>
       )}
       {arePrevStepsCompleted && (
         <Fragment>
           <Typography mb="3rem">
-            {needsConfirmation
+            {isStepCompleted
+              ? "Paso completado exitosamente. Puedes editar o remover la información"
+              : needsConfirmation
               ? "Confirma los datos"
               : "Para poder realizar este paso se deben completar los datos del perro, del dueño anterior y del nuevo dueño. Llena los datos faltantes."}
           </Typography>
@@ -224,20 +243,11 @@ export const FcmTransferStepLayout = () => {
             </Fragment>
           )}
 
-          {isEditable &&
-            (currentStep.stepFromOrigin === 2 ||
-              currentStep.stepFromOrigin === 3) && (
-              <FcmPrevOwnerFormik
-                handleSubmitForm={handleSubmitForm}
-                prevOwner={prevOwner}
-                handleCancel={handleShowEdit}
-              />
-            )}
-          {isEditable && currentStep.stepFromOrigin === 4 && (
-            <FcmPartnerStepLayout
+          {isEditable && (stepFromOrigin === 2 || stepFromOrigin === 3) && (
+            <FcmPrevOwnerFormik
               handleSubmitForm={handleSubmitForm}
+              prevOwner={prevOwner}
               handleCancel={handleShowEdit}
-              stepProps={{ isEditable: isEditable }}
             />
           )}
         </Fragment>

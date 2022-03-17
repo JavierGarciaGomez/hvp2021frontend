@@ -341,9 +341,6 @@ export const addAndRemoveFcmCertificatesProcedures = (puppy) => {
       data: puppy,
       dataId: puppy._id,
     });
-
-    console.log("estos son los newprocedures", newProcedures);
-
     dispatch(fcmPackageUpdateProcedures(newProcedures));
   };
 };
@@ -353,9 +350,6 @@ export const addAndRemoveFcmPartnerProcedures = (stepData) => {
     const fcmPackage = getState().fcm.fcmPackage;
     const newFcmPackage = { ...fcmPackage };
     const { procedures, activeStep, steps } = newFcmPackage;
-    const currentStep = { ...steps[activeStep] };
-
-    console.log("ACTIONS      *****************    stepdata", stepData);
 
     // remove previous procedures from the same step
     const newProcedures = procedures.filter(
@@ -386,9 +380,6 @@ export const addAndRemoveFcmPartnerProcedures = (stepData) => {
         dataId: stepData._id,
       });
     }
-
-    console.log("estos son los newprocedures", newProcedures);
-
     dispatch(fcmPackageUpdateProcedures(newProcedures));
   };
 };
@@ -458,7 +449,6 @@ export const addAndRemoveFcmProcedures = (stepData) => {
 };
 
 export const fcmPackageUpdateProcedures = (newProcedures) => {
-  console.log("acá voy", types.fcmPackageUpdateProcedures, newProcedures);
   return { type: types.fcmPackageUpdateProcedures, payload: newProcedures };
 };
 
@@ -519,7 +509,6 @@ export const setFcmActiveStepProperty = (propertyName, value) => {
 
     const activeStepProperties = { ...newFcmPackage.steps[activeStep] };
     activeStepProperties[propertyName] = value;
-    console.log("activesteppro", activeStepProperties);
 
     dispatch({
       type: types.fcmSetActiveStepProperties,
@@ -582,12 +571,10 @@ export const cleanFcmStep = () => {
   };
 };
 
-export const addOrRemoveFcmTransferSteps = (fcmDog) => {
+export const addOrRemoveFcmTransferSteps = (fcmDog, isPuppy = false) => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
     const { steps, activeStep } = fcmPackage;
-
-    console.log("ESTE ES EL PERRO", fcmDog);
 
     if (fcmDog.isTransferPending) {
       dispatch(
@@ -598,6 +585,7 @@ export const addOrRemoveFcmTransferSteps = (fcmDog) => {
           stepData: { previousOwner: null, dog: fcmDog._id, newOwner: null },
           needsConfirmation: false,
           stepFromOrigin: activeStep,
+          isPuppy: isPuppy,
         })
       );
     }
@@ -665,13 +653,11 @@ export const addFcmPartnerStep = (object) => {
 
 // todo: review
 export const checkAndAddFcmPartnerStep = (puppy) => {
-  console.log("LLEGUÉ");
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
     const { activeStep } = fcmPackage;
 
     if (puppy.isTransferPending) {
-      console.log("LLEGUÉ 2");
       dispatch(
         addNewFcmStep({
           stepLabel: `Nuevo propietario de ${puppy.petName}`,
@@ -685,7 +671,7 @@ export const checkAndAddFcmPartnerStep = (puppy) => {
     }
   };
 };
-export const checkAndAddFcmTransferStep = (fcmDog) => {
+export const checkAndAddFcmTransferStep = (fcmDog, isPuppy = false) => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
     const { activeStep } = fcmPackage;
@@ -696,9 +682,10 @@ export const checkAndAddFcmTransferStep = (fcmDog) => {
           stepLabel: `Transferencia de ${fcmDog.petName}`,
           stepType: fcmStepTypes.fcmTransferStep,
           dataId: null,
-          stepData: null,
+          stepData: { previousOwner: null, dog: fcmDog._id, newOwner: null },
           needsConfirmation: false,
           stepFromOrigin: activeStep,
+          isPuppy,
         })
       );
     }
@@ -765,7 +752,6 @@ export const removeFcmSteps = () => {
     const newSteps = steps.filter(
       (element) => element.stepFromOrigin !== activeStep
     );
-    console.log("estos son los new steps desp de remover", newSteps);
     // newSteps.splice(newSteps.length - 1, 0, object);
     dispatch(updateFcmPackageProperty("steps", newSteps));
   };
