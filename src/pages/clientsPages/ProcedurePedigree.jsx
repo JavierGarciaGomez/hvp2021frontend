@@ -26,7 +26,7 @@ import {
 } from "../../actions/fcmActions";
 import { areAllStepsCompleted, getComponent } from "../../helpers/fcmUtilities";
 import { isStepSkipped } from "../../helpers/utilities";
-import { fcmComponentsTypes } from "../../types/types";
+import { fcmStepTypes } from "../../types/types";
 
 export const ProcedurePedigree = () => {
   const navigate = useNavigate();
@@ -70,11 +70,12 @@ export const ProcedurePedigree = () => {
   // todo check and simplify
   const defaultStep = {
     stepLabel: "Propietario del padre",
-    componentName: fcmComponentsTypes.fcmPartnerStepLayout,
+    stepType: fcmStepTypes.fcmPartnerStep,
     dataId: null,
     stepData: null,
     needsConfirmation: false,
     stepFromOrigin: null,
+
     // todo: delete
     config: {
       isFirstRegister: false,
@@ -94,33 +95,33 @@ export const ProcedurePedigree = () => {
       {
         ...defaultStep,
         stepLabel: "Propietario del padre",
-        componentName: fcmComponentsTypes.fcmPartnerStepLayout,
+        stepType: fcmStepTypes.fcmPartnerStep,
       },
       {
         ...defaultStep,
         stepLabel: "Propietario de la madre",
-        componentName: fcmComponentsTypes.fcmPartnerStepLayout,
+        stepType: fcmStepTypes.fcmPartnerStep,
       },
       {
         ...defaultStep,
         stepLabel: "Padre de la camada",
-        componentName: fcmComponentsTypes.fcmDogStepLayout,
+        stepType: fcmStepTypes.fcmDogStep,
         props: { label: "Padre de la camada" },
       },
       {
         ...defaultStep,
         stepLabel: "Madre camada",
-        componentName: fcmComponentsTypes.fcmDogStepLayout,
+        stepType: fcmStepTypes.fcmDogStep,
       },
       {
         ...defaultStep,
         stepLabel: "Formato de cruza",
-        componentName: fcmComponentsTypes.fcmBreedingForm,
+        stepType: fcmStepTypes.fcmBreedingStep,
       },
       {
         ...defaultStep,
         stepLabel: "Resumen",
-        componentName: fcmComponentsTypes.fcmPackageSummary,
+        stepType: fcmStepTypes.fcmSummaryStep,
       },
     ],
     activeStep: 0,
@@ -348,10 +349,7 @@ export const ProcedurePedigree = () => {
               ))}
           </Box>
           {/* esto es */}
-          {getComponent(
-            steps[activeStep].componentName,
-            steps[activeStep].props
-          )}
+          {getComponent(steps[activeStep].stepType, steps[activeStep].props)}
         </React.Fragment>
       )}
     </Box>

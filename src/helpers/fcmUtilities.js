@@ -4,12 +4,14 @@ import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSu
 import { FcmPartnerStepLayout } from "../pages/clientsPages/components/FcmPartnerStepLayout";
 import { FcmSelectPartnerOptions } from "../pages/clientsPages/components/FcmSelectPartnerOptions";
 import { FcmTransferPuppy } from "../pages/clientsPages/components/FcmTransferPuppy";
+import { FcmTransferStepLayout } from "../pages/clientsPages/components/FcmTransferStepLayout";
 import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
 import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
-import { fcmComponentsTypes } from "../types/types";
+import { FcmTransferFormWrapper } from "../pages/clientsPages/FcmTransferFormWrapper";
+import { fcmStepTypes } from "../types/types";
 import { isObjectEmpty } from "./utilities";
 
 export const isLastStep = (activeStep, steps) => {
@@ -102,24 +104,24 @@ export const generatePuppiesValidationParams = (
   return newValidationParams;
 };
 
-export const getComponent = (componentName, props) => {
-  switch (componentName) {
-    case fcmComponentsTypes.fcmPartnerStepLayout:
+export const getComponent = (stepType, props) => {
+  switch (stepType) {
+    case fcmStepTypes.fcmPartnerStep:
       return <FcmPartnerStepLayout />;
 
-    case fcmComponentsTypes.fcmDogStepLayout:
+    case fcmStepTypes.fcmDogStep:
       return <FcmDogStepLayout />;
 
-    case fcmComponentsTypes.fcmBreedingForm:
+    case fcmStepTypes.fcmBreedingStep:
       return <FcmBreedingFormik {...props} />;
 
-    case fcmComponentsTypes.fcmBreedingForm:
+    case fcmStepTypes.fcmBreedingStep:
       return <FcmBreedingFormik {...props} />;
 
-    case fcmComponentsTypes.FcmTransferFormikNew:
-      return <FcmTransferFormikNew {...props} />;
+    case fcmStepTypes.fcmTransferStep:
+      return <FcmTransferStepLayout {...props} />;
 
-    case fcmComponentsTypes.fcmPackageSummary:
+    case fcmStepTypes.fcmSummaryStep:
       return <FcmPackageSummary />;
 
     default:

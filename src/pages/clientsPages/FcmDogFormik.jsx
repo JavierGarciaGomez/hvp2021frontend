@@ -50,7 +50,7 @@ export const FcmDogFormik = () => {
   const [imgUrlPedigreeFront, setImgUrlPedigreeFront] = useState(null);
   const [imgUrlPedigreeBack, setImgUrlPedigreeBack] = useState(null);
 
-  const { label, componentName, props, stepFromOrigin, dataId, config } =
+  const { label, stepType, props, stepFromOrigin, dataId, config } =
     steps[activeStep];
   const { isEditable, needsConfirmation, formTitle, showCancel } = config;
   const [componentData, setcomponentData] = useState({});

@@ -1,8 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { Box, Button, Card, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 
 import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
@@ -15,9 +15,15 @@ import {
 } from "../../../helpers/utilities";
 import Swal from "sweetalert2";
 
-export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
+export const FcmPrevOwnerFormik = ({
+  handleSubmitForm,
+  prevOwner,
+  handleCancel,
+}) => {
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
+
+  const [formValues, setformValues] = useState({});
 
   let initialValues = {
     firstName: "",
@@ -35,13 +41,20 @@ export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
 
   let formValidation = Yup.object().shape(validationParams);
 
+  useEffect(() => {
+    if (prevOwner) {
+      return setformValues({ ...prevOwner });
+    }
+    setformValues(initialValues);
+  }, []);
+
   const handleSubmit = async (values) => {
     fireSwalWait("Cargando información", "Por favor, espere");
 
-    if (filesFrontINE.length === 0) {
+    if (filesFrontINE.length === 0 && !values.urlFrontIne) {
       return fireSwalError("Se debe cargar la imagen frontal del INE");
     }
-    if (filesBackINE.length === 0) {
+    if (filesBackINE.length === 0 && !values.urlBackIne) {
       return fireSwalError("Se debe cargar la imagen trasera del INE");
     }
 
@@ -62,6 +75,8 @@ export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
     handleSubmitForm(newValues);
     Swal.close();
   };
+
+  console.log("");
 
   return (
     <Fragment>
@@ -87,7 +102,7 @@ export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
         {/* Formik */}
 
         <Formik
-          initialValues={{ ...initialValues }}
+          initialValues={{ ...formValues }}
           validationSchema={formValidation}
           onSubmit={(values) => {
             handleSubmit(values);
@@ -125,6 +140,7 @@ export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
                   <Typography mb="2rem">INE frente</Typography>
                   <DragImageUpload
                     files={filesFrontINE}
+                    imgUrl={values.urlFrontIne}
                     setFiles={setfilesFrontINE}
                   ></DragImageUpload>
                 </Grid>
@@ -133,6 +149,7 @@ export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
                   <DragImageUpload
                     files={filesBackINE}
                     setFiles={setfilesBackINE}
+                    imgUrl={values.urlBackIne}
                   ></DragImageUpload>
                 </Grid>
                 <Grid item xs={12} mb={2}>
@@ -142,14 +159,13 @@ export const FcmPrevOwnerFormik = ({ handleSubmitForm }) => {
                     <Button
                       variant="contained"
                       fullWidth={true}
-                      // onClick={handleSubmit}
+                      onClick={handleCancel}
                       color="error"
                     >
                       Cancelar
                     </Button>
                   </Box>
                 </Grid>
-                {/* DATOS DE IDENTIFICACIÓN */}
               </Grid>
 
               <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>

@@ -6,3 +6,7 @@ export const updateArrayElementById = (array = [], element) => {
     return el;
   });
 };
+
+export const findElementBYId = (array = [], id) => {
+  return array.find((el) => el._id === id);
+};

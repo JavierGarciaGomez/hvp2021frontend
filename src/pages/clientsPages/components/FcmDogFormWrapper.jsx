@@ -5,6 +5,7 @@ import {
   addAndRemoveFcmProcedures,
   addNewFcmStep,
   addOrRemoveFcmTransferSteps,
+  checkAndAddFcmTransferStep,
   cleanFcmStep,
   handleFcmCompleteStep,
   removeFcmSteps,
@@ -62,7 +63,9 @@ export const FcmDogFormWrapper = (props) => {
 
   const handleSubmit = async (fcmDog) => {
     dispatch(updateStepReferences(fcmDog));
-    dispatch(addOrRemoveFcmTransferSteps(fcmDog));
+    dispatch(removeFcmSteps());
+    dispatch(checkAndAddFcmTransferStep(fcmDog));
+
     dispatch(handleFcmCompleteStep());
   };
 

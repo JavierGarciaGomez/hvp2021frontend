@@ -372,10 +372,10 @@ export const documentationStatusTypes = [
   { value: "notApplicable", label: "No aplica" },
 ];
 
-export const fcmComponentsTypes = {
-  fcmPartnerStepLayout: "FcmPartnerStepLayout",
-  fcmDogStepLayout: "FcmDogStepLayout",
-  fcmBreedingForm: "FcmBreedingForm",
-  fcmTransferForm: "FcmTransferForm",
-  fcmPackageSummary: "FcmPackageSummary",
+export const fcmStepTypes = {
+  fcmPartnerStep: "FcmPartnerStep",
+  fcmDogStep: "FcmDogStep",
+  fcmBreedingStep: "FcmBreedingStep",
+  fcmTransferStep: "FcmTransferStep",
+  fcmSummaryStep: "FcmSummaryStep",
 };

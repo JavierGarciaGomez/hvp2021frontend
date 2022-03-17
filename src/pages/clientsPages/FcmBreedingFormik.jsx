@@ -4,22 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
-  addFcmCertificateProcedure,
-  addNewFcmStep,
   cleanFcmStep,
   handleFcmCompleteStep,
   handleNextFcmPackageStep,
-  removeFcmProcedure,
-  setFcmBreedingForm,
-  setFcmCurrentStepConfig,
   setFcmCurrentStepEditable,
-  setFcmCurrentStepObject,
   createFcmDog,
   updateFcmDog,
   updateStepReferences,
   addOrRemoveFcmTransferSteps,
   removeFcmSteps,
   addAndRemoveFcmProcedures,
+  addOrRemoveFcmPartnerSteps,
+  checkAndAddFcmPartnerStep,
+  checkAndAddFcmTransferStep,
+  addAndRemoveFcmCertificatesProcedures,
 } from "../../actions/fcmActions";
 import { fireSwalConfirmation, isObjectEmpty } from "../../helpers/utilities";
 import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
@@ -64,27 +62,51 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
 
   console.log(haveParentsSameBreed);
+  // todo: put this data again
+  // let emptyPuppy = {
+  //   petName: "",
+  //   breed: steps[2].stepData?.breed || "",
+  //   color: "",
+  //   sex: "",
+  //   birthDate: "",
+  //   registerNum: "",
+  //   registerType: "pedigree",
+  //   urlFront: null,
+  //   urlBack: null,
+  //   isRegisterPending: true,
+  //   isTransferPending: false,
+  // };
   let emptyPuppy = {
-    petName: "",
+    petName: "Perrito",
     breed: steps[2].stepData?.breed || "",
-    color: "",
-    sex: "",
+    color: "Azul",
+    sex: "male",
     birthDate: "",
     registerNum: "",
     registerType: "pedigree",
     urlFront: null,
     urlBack: null,
     isRegisterPending: true,
-    isTransferPending: false,
-    _id: null,
+    isTransferPending: true,
   };
+  // todo: put this data again
+  // let initialValues = {
+  //   breedingDate: "",
+  //   birthDate: "",
+  //   birthPlace: "",
+  //   malesAlive: "",
+  //   femalesAlive: "",
+  //   death: "",
+  //   puppies: [emptyPuppy],
+  // };
+
   let initialValues = {
-    breedingDate: "",
-    birthDate: "",
-    birthPlace: "",
-    malesAlive: "",
-    femalesAlive: "",
-    death: "",
+    breedingDate: "2022-03-17",
+    birthDate: "2022-03-17",
+    birthPlace: "Merida",
+    malesAlive: "1",
+    femalesAlive: "1",
+    death: "1",
     puppies: [emptyPuppy],
   };
 
@@ -183,12 +205,14 @@ export const FcmBreedingFormik = ({ label }) => {
       }
       // replace pupy values with new puppy
 
-      dispatch(addOrRemoveFcmTransferSteps(fcmPuppy));
+      dispatch(checkAndAddFcmPartnerStep(fcmPuppy));
+      dispatch(checkAndAddFcmTransferStep(fcmPuppy));
+      dispatch(addAndRemoveFcmCertificatesProcedures(puppy));
+
       newPuppies.push(fcmPuppy);
     }
 
     newValues.puppies = newPuppies;
-    dispatch(addAndRemoveFcmProcedures(newValues));
 
     dispatch(updateStepReferences(newValues));
 

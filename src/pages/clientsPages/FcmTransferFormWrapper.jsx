@@ -18,7 +18,7 @@ import {
   isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../helpers/utilities";
-import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -26,6 +26,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   checkIfPreviousStepsAreFilled,
+  checkIfStepsAreCompleted,
   getFcmDogIdByOriginStep,
   getFcmParterIdByOriginStep,
 } from "../../helpers/fcmUtilities";
@@ -33,16 +34,18 @@ import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 import { FcmPrevOwnerFormik } from "./components/FcmPrevOwnerFormik";
 import { FcmStepperPartnerSelector } from "./FcmStepperPartnerSelector";
 
-export const FcmTransferFormikNew = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+export const FcmTransferFormWrapper = () => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, currentProps, steps } = fcmPackage;
+
+  const { activeStep, currentProps, steps, completedSteps } = fcmPackage;
+
   const { formTitle, showCancel } = currentProps;
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
@@ -52,23 +55,19 @@ export const FcmTransferFormikNew = () => {
   const [isPending, setisPending] = useState(false);
   const [fcmDog, setfcmDog] = useState({});
   const [isPreviousDataLoaded, setisPreviousDataLoaded] = useState(false);
-  const { label, stepType, props, stepFromOrigin, dataId, config } =
-    steps[activeStep];
+  const currentStep = steps[activeStep];
+  const { dataId, stepFromOrigin } = currentStep;
 
   const [componentData, setcomponentData] = useState({});
   const [prevOwner, setprevOwner] = useState(null);
   const [newOwner, setnewOwner] = useState(null);
   const [isEditable, setisEditable] = useState(true);
+  const [arePrevStepsCompleted, setAreprevStepsCompleted] = useState(false);
 
   /*************************************************************************************************** */
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
-
-  const dog = {
-    petName: "Nombre Perro",
-    registerNum: "12345",
-  };
-
+  //#region
   useEffect(() => {
     setprevOwner({
       firstName: "Javier",
@@ -107,10 +106,29 @@ export const FcmTransferFormikNew = () => {
   let formValidation = Yup.object().shape(validationParams);
 
   const [formValues, setformValues] = useState(initialValues);
-
+  //#endregion
   /*************************************************************************************************** */
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
+  //#region
+  useEffect(() => {
+    setAreprevStepsCompleted(
+      checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4])
+    );
+  }, []);
+
+  useEffect(() => {
+    if (arePrevStepsCompleted) {
+      console.log("esta es la stepdata", currentStep);
+      if (currentStep.stepFromOrigin == 2) {
+        setnewOwner(steps[0].stepData);
+        setfcmDog(steps[2].stepData);
+      }
+    }
+  });
+
+  console.log("estos son los datos hasta ahora");
+  console.log({ newOwner, fcmDog });
 
   // check if there is already a saved transfer
   useEffect(() => {
@@ -162,10 +180,11 @@ export const FcmTransferFormikNew = () => {
     }
   }, [fcmDog, fcmPartner]);
 
+  //#endregion
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
-
+  //#region
   const clearImgsData = () => {
     setImgUrlBackIne(null);
     setImgUrlFrontIne(null);
@@ -241,36 +260,20 @@ export const FcmTransferFormikNew = () => {
 
     // navigate(`/dashboard/documentation`);
   };
-
+  //#endregion
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
   /*************************************************************************************************** */
 
-  if (!dog) {
+  if (!arePrevStepsCompleted) {
     return (
-      <div>
-        No se puede llenar este formulario, sin antes haber registrado la
-        información del perro
-      </div>
-    );
-  }
-
-  if (!prevOwner) {
-    return (
-      <Fragment>
-        <div>FALTA EL PREVOWNER</div>
-        <FcmPrevOwnerFormik handleSubmitForm={setprevOwner} />
-      </Fragment>
-    );
-    // prevOwner Component
-  }
-
-  if (!newOwner) {
-    return (
-      <Fragment>
-        <div>Hola</div>
-        <FcmStepperPartnerSelector></FcmStepperPartnerSelector>
-      </Fragment>
+      <Card sx={{ padding: "2rem", mt: "3rem" }}>
+        <Typography>
+          Para poder realizar este paso antes es necesario completar los 5 pasos
+          anteriores, las ediciones a pasos anteriores podrán afectar e incluso
+          borrar los datos de este paso.
+        </Typography>
+      </Card>
     );
   }
 
@@ -335,27 +338,32 @@ export const FcmTransferFormikNew = () => {
             </Box>
           )}
 
-          <Box mb="3rem">
-            <Typography component="h4" variant="h5" mb="2rem">
-              Datos del perro a transferir
-            </Typography>
+          <Box>
+            <Box mb="3rem">
+              <Typography component="h4" variant="h5" mb="2rem">
+                Datos del perro a transferir
+              </Typography>
 
-            <Typography>Nombre: {dog.petName}</Typography>
-            <Typography>Número de registro: {dog.registerNum}</Typography>
-          </Box>
+              <Typography>Nombre: {fcmDog.petName}</Typography>
+              <Typography>Número de registro: {fcmDog.registerNum}</Typography>
+            </Box>
 
-          <Box mb="3rem">
-            <Typography component="h4" variant="h5" mb="2rem">
-              Datos del nuevo propietario
-            </Typography>
-            <Typography>Nombre: {newOwner.fullName}</Typography>
-            <Typography>Número de registro: {newOwner.partnerNum}</Typography>
-          </Box>
-          <Box mb="3rem">
-            <Typography component="h4" variant="h5" mb="2rem">
-              Datos del propietario anterior
-            </Typography>
-            <Typography>{`Nombre: ${prevOwner.firstName} ${prevOwner.paternalSurname} ${prevOwner.maternalSurname}`}</Typography>
+            <Box mb="3rem">
+              <Typography component="h4" variant="h5" mb="2rem">
+                Datos del nuevo propietario
+              </Typography>
+              <Typography>
+                Nombre:{" "}
+                {`${newOwner.firstName} ${newOwner.paternalSurname} ${newOwner.maternalSurname}`}
+              </Typography>
+              <Typography>Número de registro: {newOwner.partnerNum}</Typography>
+            </Box>
+            <Box mb="3rem">
+              <Typography component="h4" variant="h5" mb="2rem">
+                Datos del propietario anterior
+              </Typography>
+              <Typography>{`Nombre: ${prevOwner.firstName} ${prevOwner.paternalSurname} ${prevOwner.maternalSurname}`}</Typography>
+            </Box>
           </Box>
         </Fragment>
       )}

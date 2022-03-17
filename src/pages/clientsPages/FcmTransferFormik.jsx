@@ -85,6 +85,7 @@ export const FcmTransferFormik = () => {
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
 
+  console.log("im rendered");
   // check if there is already a saved transfer
   useEffect(() => {
     if (dataId) {
