@@ -1,7 +1,14 @@
+import { ClassNames } from "@emotion/react";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import { array } from "yup";
 import { updateArrayElementById } from "../helpers/arrayUtilities";
-import { areAllStepsCompleted, isLastStep } from "../helpers/fcmUtilities";
+import {
+  areAllStepsCompleted,
+  insertOrUpdateProcedureById,
+  isLastStep,
+  removeProcedureByIdAndType,
+} from "../helpers/fcmUtilities";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
 import {
   fireSwalError,
@@ -10,7 +17,12 @@ import {
   replaceElementInCollection,
 } from "../helpers/utilities";
 import { fcmStepTypes, types } from "../types/types";
-import { clientStartLoading, updateClientReducer } from "./clientsActions";
+import {
+  clientStartLoading,
+  unlinkFcmDogFromClient,
+  updateClientReducer,
+} from "./clientsActions";
+import { userRemoveFcmDog } from "./userActions";
 
 /***************************************************************/
 /***************************************************************/
@@ -141,7 +153,7 @@ export const updateFcmPartner = (object) => {
 /**********************FCM DOGS    *****************************/
 /***************************************************************/
 
-export const createFcmDog = (object) => {
+export const createFcmDog = (object, fireSwal = true) => {
   return async (dispatch, getState) => {
     try {
       const resp = await fetchConToken(`fcm/dogs/`, object, "POST");
@@ -158,14 +170,14 @@ export const createFcmDog = (object) => {
         newAllFcm.allFcmDogs.push(body.saved);
         dispatch(updateAllFcm(newAllFcm));
 
-        fireSwalSuccess(body.msg);
+        fireSwal && fireSwalSuccess(body.msg);
         return body.saved;
       } else {
-        fireSwalError(body.msg);
+        fireSwal && fireSwalError(body.msg);
         return false;
       }
     } catch (error) {
-      fireSwalError(error.message);
+      fireSwal && fireSwalError(error.message);
       return false;
     }
   };
@@ -195,6 +207,98 @@ export const updateFcmDog = (object) => {
           object
         );
         dispatch(updateAllFcm(newAllFcm));
+
+        fireSwalSuccess(body.msg);
+        return body.updatedData;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+export const deleteFcmDog = (object, fireSwal = false) => {
+  return async (dispatch, getState) => {
+    try {
+      // fetch
+      const resp = await fetchConToken(
+        `fcm/dogs/${object._id}`,
+        object,
+        "DELETE"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        if (fireSwal) {
+          fireSwalSuccess(body.msg);
+        }
+        return body.updatedData;
+      } else {
+        if (fireSwal) {
+          fireSwalError(body.msg);
+        }
+        return false;
+      }
+    } catch (error) {
+      if (fireSwal) {
+        fireSwalError(error.message);
+      }
+      return false;
+    }
+  };
+};
+
+/***************************************************************/
+/**********************FcmTransfers    *****************************/
+/***************************************************************/
+
+export const createFcmtransfer = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(`fcm/fcmTransfers/`, object, "POST");
+      const body = await resp.json();
+
+      if (body.ok) {
+        const client = getState().clients.client;
+        client.linkedFcmTransfers.push(body.saved);
+        dispatch(updateClientReducer({ ...client }));
+
+        fireSwalSuccess(body.msg);
+        return body.saved;
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+export const updateFcmtransfer = (object) => {
+  return async (dispatch, getState) => {
+    try {
+      const resp = await fetchConToken(
+        `fcm/fcmTransfers/${object._id}`,
+        object,
+        "PUT"
+      );
+      const body = await resp.json();
+
+      if (body.ok) {
+        const client = getState().clients.client;
+
+        client.linkedFcmTransfers = replaceElementInCollection(
+          object,
+          client.linkedFcmTransfers
+        );
+
+        dispatch(updateClientReducer({ ...client }));
 
         fireSwalSuccess(body.msg);
         return body.updatedData;
@@ -345,6 +449,28 @@ export const addAndRemoveFcmCertificatesProcedures = (puppy) => {
   };
 };
 
+export const addAndRemoveFcmTransfersProcedures = (fcmTransfer) => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const newFcmPackage = { ...fcmPackage };
+    const { procedures, activeStep, steps } = newFcmPackage;
+    const currentStep = { ...steps[activeStep] };
+
+    // remove previous procedures from the same step
+    const newProcedures = procedures.filter(
+      (element) => element.stepFromOrigin !== activeStep
+    );
+
+    newProcedures.push({
+      stepFromOrigin: activeStep,
+      type: "transfer",
+      data: fcmTransfer,
+      dataId: fcmTransfer._id,
+    });
+    dispatch(fcmPackageUpdateProcedures(newProcedures));
+  };
+};
+
 export const addAndRemoveFcmPartnerProcedures = (stepData) => {
   return async (dispatch, getState) => {
     const fcmPackage = getState().fcm.fcmPackage;
@@ -352,34 +478,65 @@ export const addAndRemoveFcmPartnerProcedures = (stepData) => {
     const { procedures, activeStep, steps } = newFcmPackage;
 
     // remove previous procedures from the same step
-    const newProcedures = procedures.filter(
+    let newProcedures = procedures.filter(
       (element) => element.stepFromOrigin !== activeStep
     );
-    if (stepData.isPending) {
-      newProcedures.push({
+
+    // remove procedures with the same dataid
+    // newProcedures = newProcedures.filter(
+    //   (element) => element.dataId !== stepData._id
+    // );
+
+    stepData.isPending &&
+      insertOrUpdateProcedureById(newProcedures, stepData._id, {
         stepFromOrigin: activeStep,
         type: "partnerRegistration",
         data: stepData,
         dataId: stepData._id,
       });
-    }
 
-    if (dayjs(stepData.expirationDate).isBefore(dayjs().add(14, "days"))) {
-      newProcedures.push({
-        stepFromOrigin: activeStep,
-        type: "partnerRenewal",
-        data: stepData,
-        dataId: stepData._id,
-      });
-    }
-    if (stepData.isCardLost) {
-      newProcedures.push({
+    // newProcedures.push({
+    //   stepFromOrigin: activeStep,
+    //   type: "partnerRegistration",
+    //   data: stepData,
+    //   dataId: stepData._id,
+    // });
+
+    dayjs(stepData.expirationDate).isBefore(dayjs().add(14, "days"))
+      ? insertOrUpdateProcedureById(newProcedures, stepData._id, {
+          stepFromOrigin: activeStep,
+          type: "partnerRenewal",
+          data: stepData,
+          dataId: stepData._id,
+        })
+      : removeProcedureByIdAndType(newProcedures, {
+          dataId: stepData._id,
+          type: "partnerRenewal",
+        });
+
+    // newProcedures.push({
+    //   stepFromOrigin: activeStep,
+    //   type: "partnerRenewal",
+    //   data: stepData,
+    //   dataId: stepData._id,
+    // });
+
+    stepData.isPending &&
+      insertOrUpdateProcedureById(newProcedures, stepData._id, {
         stepFromOrigin: activeStep,
         type: "responsiveLetter",
         data: stepData,
         dataId: stepData._id,
       });
-    }
+
+    // stepData.isCardLost) {
+    //   newProcedures.push({
+    //     stepFromOrigin: activeStep,
+    //     type: "responsiveLetter",
+    //     data: stepData,
+    //     dataId: stepData._id,
+    //   });
+    // }
     dispatch(fcmPackageUpdateProcedures(newProcedures));
   };
 };
@@ -445,6 +602,30 @@ export const addAndRemoveFcmProcedures = (stepData) => {
     }
 
     dispatch(fcmPackageUpdateProcedures(newProcedures));
+  };
+};
+
+export const removePreviousPuppies = (puppies) => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const client = getState().clients.client;
+    const { activeStep, steps, completedSteps } = fcmPackage;
+
+    console.table(puppies);
+    // array of puppies to remove (puppies with id)
+    const newPuppies = puppies.filter((puppy) => puppy._id);
+    console.table(newPuppies);
+    if (newPuppies.length > 0) {
+      for (const puppy of newPuppies) {
+        // remove from database
+        dispatch(deleteFcmDog(puppy, false));
+        // unlink client database
+        dispatch(userRemoveFcmDog(client._id, puppy._id, false));
+        // remove client reducer
+        dispatch(unlinkFcmDogFromClient(puppy._id, false));
+        // remove allfcm reducer
+      }
+    }
   };
 };
 
@@ -529,35 +710,40 @@ export const cleanFcmStep = () => {
       breedingForm,
     } = fcmPackage;
 
+    const relatedSteps = steps.reduce(
+      (arr, step, index) => (
+        step.stepFromOrigin === activeStep && arr.push(index), arr
+      ),
+      []
+    );
+    relatedSteps.push(activeStep);
+
     // search and remove procedures
     const newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
+      (element) => !relatedSteps.includes(element.stepFromOrigin)
     );
 
-    // search and remove steps
-    const newSteps = steps.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
+    let newSteps = [...fcmPackage.steps];
     // search and remove completed steps
     const newCompletedSteps = { ...completedSteps };
-    newCompletedSteps[activeStep] = false;
+    relatedSteps.forEach((element) => {
+      console.log(element, newSteps[element]);
+      newCompletedSteps[element] = false;
+      newSteps[element].dataId = null;
+      newSteps[element].stepData = null;
+    });
+
+    // search and remove steps
+    newSteps = newSteps.filter(
+      (element) => !relatedSteps.includes(element.stepFromOrigin)
+    );
+
     // search and remove packageproperty
     const newFcmPackage = { ...fcmPackage };
-    newFcmPackage[currentProps.packageProperty] = "";
+
     // new data set delete
 
     console.log("newSteps", newSteps, "steps", steps);
-
-    newSteps[activeStep].dataId = null;
-    newSteps[activeStep].stepData = null;
-
-    // newSteps[activeStep].config.isEditable = true;
-
-    // if the step is 5 clean breeding
-    let newBreedingForm = { ...breedingForm };
-    if (activeStep === 4) {
-      newBreedingForm = null;
-    }
 
     dispatch(
       setFcmPackage({
@@ -565,7 +751,6 @@ export const cleanFcmStep = () => {
         procedures: newProcedures,
         completedSteps: newCompletedSteps,
         steps: newSteps,
-        breedingForm: newBreedingForm,
       })
     );
   };
@@ -821,30 +1006,6 @@ export const startLoadingFcmDogs = () => {
 /**********************FcmTransfers    *****************************/
 /***************************************************************/
 
-export const createFcmtransfer = (object) => {
-  return async (dispatch, getState) => {
-    try {
-      const resp = await fetchConToken(`fcm/fcmTransfers/`, object, "POST");
-      const body = await resp.json();
-
-      if (body.ok) {
-        const client = getState().clients.client;
-        client.linkedFcmTransfers.push(body.saved);
-        dispatch(updateClientReducer({ ...client }));
-
-        fireSwalSuccess(body.msg);
-        return body.saved;
-      } else {
-        fireSwalError(body.msg);
-        return false;
-      }
-    } catch (error) {
-      fireSwalError(error.message);
-      return false;
-    }
-  };
-};
-
 // export const startLoadingFcmtransfers = () => {
 //   return async (dispatch, getState) => {
 //     try {
@@ -867,39 +1028,6 @@ export const createFcmtransfer = (object) => {
 //   type: types.fcmtransfersLoaded,
 //   payload: data,
 // });
-
-export const updateFcmtransfer = (object) => {
-  return async (dispatch, getState) => {
-    try {
-      const resp = await fetchConToken(
-        `fcm/fcmTransfers/${object._id}`,
-        object,
-        "PUT"
-      );
-      const body = await resp.json();
-
-      if (body.ok) {
-        const client = getState().clients.client;
-
-        client.linkedFcmTransfers = replaceElementInCollection(
-          object,
-          client.linkedFcmTransfers
-        );
-
-        dispatch(updateClientReducer({ ...client }));
-
-        fireSwalSuccess(body.msg);
-        return body.updatedData;
-      } else {
-        fireSwalError(body.msg);
-        return false;
-      }
-    } catch (error) {
-      fireSwalError(error.message);
-      return false;
-    }
-  };
-};
 
 /***************************************************************/
 /**********************FCM PACKAGES*****************************/

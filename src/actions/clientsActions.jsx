@@ -116,6 +116,22 @@ export const createclients = (object) => {
   };
 };
 
+export const unlinkFcmDogFromClient = (fcmDogId, fireSwal = true) => {
+  return async (dispatch, getState) => {
+    try {
+      const client = getState().clients.client;
+      const newLinkedDogs = client.linkedDogs.filter(
+        (element) => element._id !== fcmDogId
+      );
+      client.linkedDogs = newLinkedDogs;
+
+      dispatch(updateClientReducer({ ...client }));
+    } catch (error) {
+      Swal.fire("error", "error", "error");
+    }
+  };
+};
+
 export const updateClientReducer = (data) => ({
   type: types.updateClientReducer,
   payload: data,

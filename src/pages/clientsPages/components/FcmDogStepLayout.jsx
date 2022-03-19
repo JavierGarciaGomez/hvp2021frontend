@@ -16,6 +16,7 @@ export const FcmDogStepLayout = () => {
   const { steps, activeStep } = fcmPackage;
   const { stepData, stepLabel, needsConfirmation } = steps[activeStep];
   const [stepProps, setstepProps] = useState(initialStepProps);
+  const [requiredSex, setRequiredSex] = useState(null);
 
   const handleStepProps = (newProps) => {
     setstepProps((prevProps) => ({ ...prevProps, ...newProps }));
@@ -44,7 +45,16 @@ export const FcmDogStepLayout = () => {
         isEditable: false,
       });
     }
-  }, [stepData]);
+  }, [activeStep, stepData]);
+
+  useEffect(() => {
+    if (activeStep === 2) {
+      setRequiredSex("male");
+    }
+    if (activeStep === 3) {
+      setRequiredSex("female");
+    }
+  }, [activeStep]);
 
   return (
     <Fragment>
@@ -57,6 +67,7 @@ export const FcmDogStepLayout = () => {
           handleStepProps={handleStepProps}
           stepProps={stepProps}
           handleResetStepProps={handleResetStepProps}
+          requiredSex={requiredSex}
         />
       ) : (
         <FcmDogFormWrapper
@@ -64,6 +75,7 @@ export const FcmDogStepLayout = () => {
           stepProps={stepProps}
           handleStepProps={handleStepProps}
           handleResetStepProps={handleResetStepProps}
+          requiredSex={requiredSex}
         />
       )}
     </Fragment>

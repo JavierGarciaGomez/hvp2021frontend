@@ -26,6 +26,8 @@ export const FcmPartnerStepLayout = () => {
     setstepProps(initialStepProps);
   };
 
+  console.log("esto son los props", stepProps);
+
   useEffect(() => {
     handleResetStepProps();
   }, [activeStep]);
@@ -46,7 +48,7 @@ export const FcmPartnerStepLayout = () => {
         isEditable: false,
       });
     }
-  }, [stepData]);
+  }, [stepData, activeStep]);
 
   return (
     <Fragment>

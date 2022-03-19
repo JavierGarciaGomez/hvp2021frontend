@@ -11,13 +11,11 @@ import {
   createFcmDog,
   updateFcmDog,
   updateStepReferences,
-  addOrRemoveFcmTransferSteps,
   removeFcmSteps,
-  addAndRemoveFcmProcedures,
-  addOrRemoveFcmPartnerSteps,
   checkAndAddFcmPartnerStep,
   checkAndAddFcmTransferStep,
   addAndRemoveFcmCertificatesProcedures,
+  removePreviousPuppies,
 } from "../../actions/fcmActions";
 import { fireSwalConfirmation, isObjectEmpty } from "../../helpers/utilities";
 import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
@@ -30,10 +28,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
-import {
-  checkIfStepsAreCompleted,
-  getTransferStepLabel,
-} from "../../helpers/fcmUtilities";
+import { checkIfStepsAreCompleted } from "../../helpers/fcmUtilities";
 import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
 
@@ -46,15 +41,16 @@ export const FcmBreedingFormik = ({ label }) => {
 
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { activeStep, steps, breedingForm, completedSteps } = fcmPackage;
-
-  const { config } = steps[activeStep];
-  const { isEditable, formTitle, showCancel } = config;
+  const currentStep = steps[activeStep];
+  const { isPuppy, stepFromOrigin, stepData, stepLabel, needsConfirmation } =
+    currentStep;
 
   const [registersAmount, setregistersAmount] = useState("");
   const [puppiesRegisters, setpuppiesRegisters] = useState([]);
   const [puppyTransfers, setPuppyTransfers] = useState([]);
   const [arePrevStepsCompleted, setAreprevStepsCompleted] = useState(false);
   const [haveParentsSameBreed, sethaveParentsSameBreed] = useState(false);
+  const [isEditable, setisEditable] = useState(true);
 
   // TODO: When to delete puppies: a) when reset. All clear. b) Cuando se da click a eliminar cachorro.
   /*************************************************************************************************** */
@@ -134,6 +130,7 @@ export const FcmBreedingFormik = ({ label }) => {
   /**************************use effects  **************************************************************/
   /*************************************************************************************************** */
 
+  // check if the previous steps are completed
   useEffect(() => {
     setAreprevStepsCompleted(
       checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 3])
@@ -153,18 +150,22 @@ export const FcmBreedingFormik = ({ label }) => {
   }, [arePrevStepsCompleted]);
 
   useEffect(() => {
-    if (!isObjectEmpty(breedingForm)) {
-      setformValues({ ...breedingForm });
+    if (!isObjectEmpty(stepData)) {
+      setformValues({ ...stepData });
+      setisEditable(false);
     } else {
       setformValues(initialValues);
     }
-  }, [breedingForm]);
+  }, [stepData]);
 
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
 
   const handleSubmit = async (values) => {
+    console.log("*** REMOVE PREV PUPP***");
+    // remove previously created puppies. form values is used because is the data before the form is edited
+
     if (!(await handleConfirmPuppiesTransfer(values))) {
       return;
     }
@@ -181,9 +182,9 @@ export const FcmBreedingFormik = ({ label }) => {
     let newValues = { ...values };
     newValues.registersAmount = registersAmount;
 
-    Swal.close();
-
+    dispatch(removePreviousPuppies(formValues.puppies));
     dispatch(removeFcmSteps());
+    Swal.close();
     // create dogs as fcm
     let newPuppies = [];
     for (let puppy of values.puppies) {
@@ -193,13 +194,8 @@ export const FcmBreedingFormik = ({ label }) => {
         "DD-MM-YY HH:mm"
       )}`;
 
-      console.log("puppy", puppy);
+      fcmPuppy = await dispatch(createFcmDog(puppy, false));
 
-      if (puppy._id) {
-        fcmPuppy = await dispatch(updateFcmDog(puppy));
-      } else {
-        fcmPuppy = await dispatch(createFcmDog(puppy));
-      }
       // replace pupy values with new puppy
 
       dispatch(checkAndAddFcmPartnerStep(fcmPuppy));
@@ -233,28 +229,38 @@ export const FcmBreedingFormik = ({ label }) => {
     return true;
   };
 
+  const handleCancel = () => {
+    setisEditable(false);
+  };
+
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
   /*************************************************************************************************** */
 
   if (!arePrevStepsCompleted || !haveParentsSameBreed) {
     return (
-      <Card sx={{ padding: "2rem" }}>
-        <Typography>
-          Para poder realizar este paso antes es necesario completar los 4 pasos
-          anteriores y verificar que ambos padres sean de la misma raza.
+      <Fragment>
+        <Typography variant="h4" component="h2" mb="3rem">
+          {stepLabel}
         </Typography>
-      </Card>
+        <Card sx={{ padding: "2rem" }}>
+          <Typography>
+            Para poder realizar este paso antes es necesario completar los 4
+            pasos anteriores y verificar que ambos padres sean de la misma raza.
+          </Typography>
+        </Card>
+      </Fragment>
     );
   }
 
   return (
     <Fragment>
       <Typography variant="h4" component="h2" mb="3rem">
-        {label}
+        {stepLabel}
       </Typography>
+
       <Typography component="h2" variant="h5" mb="2rem">
-        {formTitle}
+        Llena el formulario
       </Typography>
 
       {!isEditable && (
@@ -265,33 +271,21 @@ export const FcmBreedingFormik = ({ label }) => {
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
             <Button
-              variant="contained"
               fullWidth={true}
               onClick={() => {
-                dispatch(handleNextFcmPackageStep());
-              }}
-              color="primary"
-            >
-              Siguiente paso
-            </Button>
-
-            <Button
-              variant="contained"
-              fullWidth={true}
-              onClick={() => {
-                dispatch(setFcmCurrentStepEditable(true));
+                setisEditable(true);
               }}
               color="primary"
             >
               Editar información
             </Button>
             <Button
-              variant="contained"
               fullWidth={true}
               onClick={() => {
                 dispatch(cleanFcmStep());
                 setformValues(initialValues);
                 setregistersAmount(0);
+                setisEditable(true);
               }}
               color="error"
             >
@@ -334,7 +328,7 @@ export const FcmBreedingFormik = ({ label }) => {
         }}
         enableReinitialize
       >
-        {({ values, errors, isSubmitting, isValid }) => (
+        {({ values, errors, isSubmitting, isValid, resetForm }) => (
           <Form>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -490,6 +484,19 @@ export const FcmBreedingFormik = ({ label }) => {
                 <Grid item xs={12} mb={2}>
                   <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
                     <ButtonFormWrapper> Guardar</ButtonFormWrapper>
+                    {stepData && (
+                      <Button
+                        variant="contained"
+                        fullWidth={true}
+                        onClick={() => {
+                          resetForm();
+                          handleCancel();
+                        }}
+                        color="error"
+                      >
+                        Cancelar
+                      </Button>
+                    )}
                   </Box>
                 </Grid>
               )}

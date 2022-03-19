@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
+import { fireSwalSuccess } from "../helpers/utilities";
 import { types } from "../types/types";
 import { clientStartLoading, updateClientReducer } from "./clientsActions";
 
@@ -121,8 +122,8 @@ export const userAddFcmPartner = (userId, fcmPartner) => {
   };
 };
 
-export const userRemoveFcmDog = (userId, fcmDogId) => {
-  return async (dispatch) => {
+export const userRemoveFcmDog = (userId, fcmDogId, fireSwal = true) => {
+  return async (dispatch, getState) => {
     try {
       const resp = await fetchConToken(
         `users/${userId}/dogs/unlink/${fcmDogId}`,
@@ -132,13 +133,7 @@ export const userRemoveFcmDog = (userId, fcmDogId) => {
       const body = await resp.json();
 
       if (body.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Registro desvinculado correctamente",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        dispatch(clientStartLoading(userId));
+        fireSwal && fireSwalSuccess(body.msg);
       } else {
         Swal.fire("error", body.msg, "error");
       }

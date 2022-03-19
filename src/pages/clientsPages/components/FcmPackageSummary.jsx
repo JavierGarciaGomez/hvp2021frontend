@@ -1,19 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import { getGeneralData } from "../../../helpers/fcmUtilities";
+import {
+  generateProcedureData,
+  getGeneralData,
+} from "../../../helpers/fcmUtilities";
+import { getFullNameOfObject } from "../../../helpers/utilities";
 
 export const FcmPackageSummary = () => {
-  const { fcmPackage } = useSelector((state) => state.fcm);
+  const { fcmPackage, allFcm } = useSelector((state) => state.fcm);
   const { client } = useSelector((state) => state.clients);
+
   const [generalData, setgeneralData] = useState({ puppies: [] });
   const [procedureData, setProcedureData] = useState({});
+  const {
+    partnerRegistrationsProcedures,
+    partnerRenewalsProcedures,
+    partnerResponsiveLetterProcedures,
+    transfersProcedures,
+    certificateProcedures,
+  } = procedureData;
 
   useEffect(() => {
     setgeneralData(getGeneralData(fcmPackage, client));
+    setProcedureData(generateProcedureData(fcmPackage));
   }, []);
 
-  console.log(generalData);
+  console.log("que tenemos por acá");
+  console.dir(procedureData);
 
   return (
     <Box mt="4rem">
@@ -83,9 +97,9 @@ export const FcmPackageSummary = () => {
             Registros de la cruza
           </Typography>
           {generalData.puppies.map((element) => (
-            <Box key={element.name} sx={{ display: "flex" }}>
+            <Box key={element.petName} sx={{ display: "flex" }}>
               <Typography>Nombre: </Typography>
-              <Typography>{element.puppyName} </Typography>
+              <Typography>{element.petName} </Typography>
             </Box>
           ))}
         </Box>
@@ -96,6 +110,71 @@ export const FcmPackageSummary = () => {
           Trámites incluidos en el paquete
         </Typography>
       </Box>
+      {partnerRegistrationsProcedures &&
+        partnerRegistrationsProcedures.length > 0 && (
+          <Box mb="2rem">
+            <Typography component="h3" variant="h5">
+              Registros de nuevos socios
+            </Typography>
+            {partnerRegistrationsProcedures.map((element) => (
+              <Box key={element._id} sx={{ display: "flex" }}>
+                <Typography>Nombre: </Typography>
+                <Typography>{getFullNameOfObject(element)} </Typography>
+              </Box>
+            ))}
+          </Box>
+        )}
+      {partnerRenewalsProcedures && partnerRenewalsProcedures.length > 0 && (
+        <Box mb="2rem">
+          <Typography component="h3" variant="h5">
+            Renovaciones de socios
+          </Typography>
+          {partnerRenewalsProcedures.map((element) => (
+            <Box key={element._id} sx={{ display: "flex" }}>
+              <Typography>Nombre: </Typography>
+              <Typography>{getFullNameOfObject(element)} </Typography>
+            </Box>
+          ))}
+        </Box>
+      )}
+      {partnerResponsiveLetterProcedures &&
+        partnerResponsiveLetterProcedures.length > 0 && (
+          <Box mb="2rem">
+            <Typography component="h3" variant="h5">
+              Cartas responsivas de socios
+            </Typography>
+            {partnerResponsiveLetterProcedures.map((element) => (
+              <Box key={element._id} sx={{ display: "flex" }}>
+                <Typography>Nombre: </Typography>
+                <Typography>{getFullNameOfObject(element)} </Typography>
+              </Box>
+            ))}
+          </Box>
+        )}
+      {transfersProcedures && transfersProcedures.length > 0 && (
+        <Box mb="2rem">
+          <Typography component="h3" variant="h5">
+            Transferencias
+          </Typography>
+          {transfersProcedures.map((element) => (
+            <Box key={element._id} sx={{ display: "flex" }}>
+              <Typography>{element.stepLabel} </Typography>
+            </Box>
+          ))}
+        </Box>
+      )}
+      {certificateProcedures && certificateProcedures.length > 0 && (
+        <Box mb="2rem">
+          <Typography component="h3" variant="h5">
+            Certificados FCM
+          </Typography>
+          {certificateProcedures.map((element) => (
+            <Box key={element._id} sx={{ display: "flex" }}>
+              <Typography>{element.petName} </Typography>
+            </Box>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

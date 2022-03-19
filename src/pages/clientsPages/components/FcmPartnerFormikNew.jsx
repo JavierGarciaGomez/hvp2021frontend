@@ -123,6 +123,9 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
   /*************************************************************************************************** */
   //#region
 
+  console.log("estos son los form values", formValues);
+  console.log("estos son los props", stepProps);
+
   const handleConfirmRenewal = async (values) => {
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
@@ -255,7 +258,7 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
     } else {
       setisIncomplete(isFirstRegister || isCardLost);
     }
-  }, []);
+  }, [isFirstRegister, isCardLost]);
 
   //#endregion
   /*************************************************************************************************** */
@@ -271,7 +274,7 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       }}
       enableReinitialize
     >
-      {({ values, errors, isSubmitting, isValid }) => (
+      {({ values, errors, isSubmitting, isValid, resetForm }) => (
         <Form>
           <Grid container spacing={2}>
             {/* SECTION IMAGES */}
@@ -480,7 +483,10 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                   <Button
                     variant="contained"
                     fullWidth={true}
-                    onClick={handleCancel}
+                    onClick={() => {
+                      resetForm();
+                      handleCancel();
+                    }}
                     color="error"
                   >
                     Cancelar

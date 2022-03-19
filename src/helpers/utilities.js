@@ -1051,3 +1051,7 @@ export const objectContainsObjectProperties = (bigObject, smallObject) => {
     (element) => bigObject[element[0]] == element[1]
   );
 };
+
+export const getFullNameOfObject = (object) => {
+  return `${object.firstName} ${object.paternalSurname} ${object.maternalSurname}`;
+};

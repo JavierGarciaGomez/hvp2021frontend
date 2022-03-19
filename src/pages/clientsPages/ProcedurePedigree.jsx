@@ -1,11 +1,18 @@
 import {
+  Check,
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+} from "@mui/icons-material";
+import {
   Box,
   Button,
   CircularProgress,
+  MobileStepper,
   Step,
   StepButton,
   Stepper,
   Typography,
+  useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -29,6 +36,7 @@ import { isStepSkipped } from "../../helpers/utilities";
 import { fcmStepTypes } from "../../types/types";
 
 export const ProcedurePedigree = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -47,6 +55,12 @@ export const ProcedurePedigree = () => {
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { steps, activeStep, skippedSteps, completedSteps } = fcmPackage;
   const [isLoading, setisLoading] = useState(true);
+  const [displayStepper, setdisplayStepper] = useState({
+    display: { xs: "none", md: "flex" },
+  });
+  const [displayBoxStepper, setdisplayBoxStepper] = useState({
+    display: { xs: "flex", md: "none" },
+  });
 
   // TODO: PENDING
 
@@ -110,7 +124,7 @@ export const ProcedurePedigree = () => {
       },
       {
         ...defaultStep,
-        stepLabel: "Madre camada",
+        stepLabel: "Madre de la camada",
         stepType: fcmStepTypes.fcmDogStep,
       },
       {
@@ -178,6 +192,16 @@ export const ProcedurePedigree = () => {
     };
     executeAsync();
   }, []);
+
+  useEffect(() => {
+    if (steps.length > 9) {
+      setdisplayStepper({ display: "none" });
+      setdisplayBoxStepper({ display: "flex" });
+    } else {
+      setdisplayStepper({ display: { xs: "none", md: "flex" } });
+      setdisplayBoxStepper({ display: { xs: "flex", md: "none" } });
+    }
+  }, [steps.length]);
 
   // TODO: DELETE
   // useEffect(() => {
@@ -251,7 +275,11 @@ export const ProcedurePedigree = () => {
   return (
     <Box sx={{ width: "100%" }}>
       {/* stepper (numbers and labels) */}
-      <Stepper nonLinear activeStep={activeStep} sx={{ mb: "3rem" }}>
+      <Stepper
+        nonLinear
+        activeStep={activeStep}
+        sx={{ mb: "3rem", ...displayStepper }}
+      >
         {steps.map((step, index) => {
           const stepProps = {};
           const labelProps = {};
@@ -285,6 +313,15 @@ export const ProcedurePedigree = () => {
           );
         })}
       </Stepper>
+
+      <Box sx={{ justifyContent: "center", ...displayBoxStepper }}>
+        <Typography component="h3" variant="h3">
+          {activeStep + 1}/{steps.length}
+        </Typography>
+        {completedSteps[activeStep] && (
+          <Check sx={{ fontSize: "4.8rem" }} color="primary" />
+        )}
+      </Box>
 
       {/* Main content */}
       {areAllStepsCompleted(completedSteps, steps) ? (

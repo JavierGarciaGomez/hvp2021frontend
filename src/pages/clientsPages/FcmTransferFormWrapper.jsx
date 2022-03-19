@@ -68,22 +68,6 @@ export const FcmTransferFormWrapper = () => {
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
   //#region
-  useEffect(() => {
-    setprevOwner({
-      firstName: "Javier",
-      paternalSurname: "García",
-      maternalSurname: "Gómez",
-    });
-  }, []);
-
-  // const dog = null;
-
-  // const newOwner = {
-  //   fullName: "Nombre Paterno Materno",
-  //   partnerNum: "XYZ",
-  // };
-
-  const [fullDataHaveBeenFilled, setfullDataHaveBeenFilled] = useState(false);
 
   let initialValues = {
     previousOwner: {

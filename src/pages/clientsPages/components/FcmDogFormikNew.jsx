@@ -27,6 +27,7 @@ export const FcmDogFormikNew = ({ ...props }) => {
     stepProps,
     handleSubmitForm,
     handleCancel,
+    requiredSex,
   } = props;
   const { isEditable } = stepProps;
   const dispatch = useDispatch();
@@ -80,7 +81,7 @@ export const FcmDogFormikNew = ({ ...props }) => {
   //#region
 
   const handleConfirmTransfer = async (values) => {
-    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
+    if (values.isTransferPending) {
       const confirmation = await fireSwalConfirmation(
         "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
       );
@@ -93,6 +94,13 @@ export const FcmDogFormikNew = ({ ...props }) => {
   };
 
   const handleSubmit = async (values) => {
+    if (requiredSex) {
+      if (values.sex !== requiredSex) {
+        return fireSwalError(
+          "El sexo del perro no concide. Edita la información o selecciona otro."
+        );
+      }
+    }
     // if the date is going to expire in the next 2 weeks ask confirmatio
     if (!(await handleConfirmTransfer(values))) {
       return;
@@ -177,7 +185,7 @@ export const FcmDogFormikNew = ({ ...props }) => {
       }}
       enableReinitialize
     >
-      {({ values, errors, isSubmitting, isValid }) => (
+      {({ values, errors, isSubmitting, resetForm, isValid }) => (
         <Form>
           <Grid container spacing={2}>
             {/* SECTION IMAGES */}
@@ -293,7 +301,10 @@ export const FcmDogFormikNew = ({ ...props }) => {
                   <Button
                     variant="contained"
                     fullWidth={true}
-                    onClick={handleCancel}
+                    onClick={() => {
+                      resetForm();
+                      handleCancel();
+                    }}
                     color="error"
                   >
                     Cancelar

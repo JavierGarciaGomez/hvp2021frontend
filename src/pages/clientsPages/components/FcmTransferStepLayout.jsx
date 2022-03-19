@@ -7,10 +7,14 @@ import { FcmSelectDogOptions } from "./FcmSelectDogOptions";
 import { checkIfStepsAreCompleted } from "../../../helpers/fcmUtilities";
 import { FcmTransferTable } from "./FcmTransferTable";
 import { FcmPrevOwnerFormik } from "./FcmPrevOwnerFormik";
+import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import {
   handleFcmCompleteStep,
   setFcmActiveStepProperty,
   updateStepReferences,
+  createFcmtransfer,
+  updateFcmtransfer,
+  addAndRemoveFcmTransfersProcedures,
 } from "../../../actions/fcmActions";
 import { findElementBYId } from "../../../helpers/arrayUtilities";
 
@@ -162,16 +166,24 @@ export const FcmTransferStepLayout = () => {
     setisEditable((prev) => !prev);
   };
 
-  const handleConfirmation = () => {
-    dispatch(setFcmActiveStepProperty("needsConfirmation", false));
-    dispatch(
-      updateStepReferences({
-        dog: dog._id,
-        prevOwner: prevOwner,
-        newOwner: newOwner._id,
-      })
-    );
-    // dispatch(addAndRemoveFcmProcedures(fcmPartner));
+  const handleConfirmation = async () => {
+    fireSwalWait();
+    let fcmTransfer = null;
+    if (stepData._id) {
+      fcmTransfer = await dispatch(
+        updateFcmtransfer({ dog, prevOwner, newOwner, _id: stepData._id })
+      );
+    } else {
+      fcmTransfer = await dispatch(
+        createFcmtransfer({ dog, prevOwner, newOwner })
+      );
+    }
+    if (!fcmTransfer) {
+      return;
+    }
+
+    dispatch(addAndRemoveFcmTransfersProcedures(fcmTransfer));
+    dispatch(updateStepReferences(fcmTransfer));
     dispatch(handleFcmCompleteStep());
   };
 
@@ -204,7 +216,7 @@ export const FcmTransferStepLayout = () => {
         <Fragment>
           <Typography mb="3rem">
             {isStepCompleted
-              ? "Paso completado exitosamente. Puedes editar o remover la información"
+              ? "Paso completado exitosamente."
               : needsConfirmation
               ? "Confirma los datos"
               : "Para poder realizar este paso se deben completar los datos del perro, del dueño anterior y del nuevo dueño. Llena los datos faltantes."}
@@ -230,11 +242,13 @@ export const FcmTransferStepLayout = () => {
                   </Button>
                 )}
 
-                <Button fullWidth onClick={handleShowEdit}>
-                  {!prevOwner ? "Llenar los datos faltantes" : "Editar"}
-                </Button>
+                {!isPuppy && (
+                  <Button fullWidth onClick={handleShowEdit}>
+                    {!prevOwner ? "Llenar los datos faltantes" : "Editar"}
+                  </Button>
+                )}
 
-                {prevOwner && (
+                {!isPuppy && prevOwner && (
                   <Button fullWidth onClick={handleRemove} color="error">
                     Remover
                   </Button>

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,7 +12,10 @@ import {
   setFcmCurrentStepConfig,
   updateStepReferences,
 } from "../../../actions/fcmActions";
-import { fireSwalConfirmation } from "../../../helpers/utilities";
+import {
+  fireSwalConfirmation,
+  fireSwalError,
+} from "../../../helpers/utilities";
 import { Box, Button, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { getTransferStepLabel } from "../../../helpers/fcmUtilities";
@@ -28,6 +31,7 @@ export const FcmDogFormWrapper = (props) => {
     stepData,
     handleResetStepProps,
     handleStepProps,
+    requiredSex,
   } = props;
   const dispatch = useDispatch();
   const { isEditable, formWrapperTitle } = stepProps;
@@ -35,6 +39,11 @@ export const FcmDogFormWrapper = (props) => {
   const fcmPackage = useSelector((state) => state.fcm.fcmPackage);
   const { steps, activeStep } = fcmPackage;
   const { needsConfirmation } = steps[activeStep];
+
+  /*************************************************************************************************** */
+  /************************** use effects *******************************************************/
+  /*************************************************************************************************** */
+
   /*************************************************************************************************** */
   /************************** Handlers *******************************************************/
   /*************************************************************************************************** */
@@ -49,7 +58,7 @@ export const FcmDogFormWrapper = (props) => {
   };
 
   const handleConfirmTransfer = async (values) => {
-    if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
+    if (values.isTransferPending) {
       const confirmation = await fireSwalConfirmation(
         "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
       );
@@ -71,6 +80,17 @@ export const FcmDogFormWrapper = (props) => {
 
   // todo review
   const handleConfirmation = async () => {
+    console.log("required sex", requiredSex, stepData.sex);
+    if (requiredSex) {
+      console.log("required sex", requiredSex, stepData.sex);
+      if (stepData.sex !== requiredSex) {
+        console.log("required sex", requiredSex, stepData.sex);
+        return fireSwalError(
+          "El sexo del perro no concide. Edita la información o selecciona otro."
+        );
+      }
+    }
+
     if (!(await handleConfirmTransfer(stepData))) {
       return;
     }

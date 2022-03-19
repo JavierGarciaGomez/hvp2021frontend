@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import * as Yup from "yup";
 import { FcmDogStepLayout } from "../pages/clientsPages/components/FcmDogStepLayout";
 import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSummary";
@@ -12,14 +13,21 @@ import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
 import { FcmTransferFormWrapper } from "../pages/clientsPages/FcmTransferFormWrapper";
 import { fcmStepTypes } from "../types/types";
-import { isObjectEmpty } from "./utilities";
+
+import { isObjectEmpty, objectContainsObjectProperties } from "./utilities";
 
 export const isLastStep = (activeStep, steps) => {
   return activeStep === steps.length - 1;
 };
 
 export const areAllStepsCompleted = (completedSteps, steps) => {
-  return totalCompletedSteps(completedSteps) === steps.length;
+  console.log("areAllStepsCompleted", completedSteps, steps);
+  const completedStepsValues = Object.values(completedSteps);
+  const amountCompletedSteps = completedStepsValues.reduce(
+    (prevValue, curValue) => curValue && prevValue++
+  );
+
+  return steps.length === amountCompletedSteps;
 };
 
 export const totalCompletedSteps = (completedSteps) => {
@@ -200,13 +208,14 @@ export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
   }
 };
 
-export const getGeneralData = (fcmPackage, client) => {
+export const getGeneralData = (fcmPackage, client, allFcm) => {
   const {
     fatherOwnerId,
     motherOwnerId,
     dogFatherId,
     dogMotherId,
     breedingForm,
+    steps,
   } = fcmPackage;
 
   const generalData = {
@@ -220,18 +229,10 @@ export const getGeneralData = (fcmPackage, client) => {
     motherFcmDogRegisterNum: "",
     puppies: [],
   };
-  const fatherOwnerFcm = client.linkedFcmPartners.find(
-    (element) => element._id === fatherOwnerId
-  );
-  const motherOwnerFcm = client.linkedFcmPartners.find(
-    (element) => element._id === motherOwnerId
-  );
-  const dogFatherFcm = client.linkedDogs.find(
-    (element) => element._id === dogFatherId
-  );
-  const dogMotherFcm = client.linkedDogs.find(
-    (element) => element._id === dogMotherId
-  );
+  const fatherOwnerFcm = steps[0].stepData;
+  const motherOwnerFcm = steps[1].stepData;
+  const dogFatherFcm = steps[2].stepData;
+  const dogMotherFcm = steps[3].stepData;
 
   if (fatherOwnerFcm) {
     generalData.fatherOwnerFullName = `${fatherOwnerFcm.firstName} ${fatherOwnerFcm.paternalSurname} ${fatherOwnerFcm.maternalSurname} `;
@@ -249,8 +250,8 @@ export const getGeneralData = (fcmPackage, client) => {
     generalData.motherFcmDogName = dogMotherFcm.petName;
     generalData.motherFcmDogRegisterNum = dogMotherFcm.registerNum;
   }
-  if (!isObjectEmpty(breedingForm)) {
-    generalData.puppies = [...breedingForm.puppies];
+  if (!isObjectEmpty(steps[4].stepData)) {
+    generalData.puppies = [...steps[4].stepData.puppies];
   }
 
   return generalData;
@@ -265,4 +266,112 @@ export const getProcedures = (fcmPackage, client) => {
   };
 
   return procedures;
+};
+
+export const insertOrUpdateProcedureById = (array = [], id, object) => {
+  const index = array.findIndex((element) => element.dataId === id);
+  console.log(array[index]?.stepFromOrigin || null);
+  index >= 0
+    ? (array[index] = {
+        ...object,
+        stepFromOrigin: array[index].stepFromOrigin,
+      })
+    : array.push(object);
+  return array;
+};
+
+export const removeProcedureByIdAndType = (array, data) => {
+  return array.filter(
+    (element) => !objectContainsObjectProperties(element, data)
+  );
+};
+
+export const generateProcedureData = (fcmPackage) => {
+  const { steps } = fcmPackage;
+  console.log("que carajo", steps);
+
+  let fcmPartnerSteps = steps.filter(
+    (step) => step.stepType === fcmStepTypes.fcmPartnerStep
+  );
+
+  let partnerRenewalsProcedures = [];
+  fcmPartnerSteps.forEach((step) => {
+    if (
+      step.stepData?.expirationDate &&
+      dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days")) &&
+      !partnerRenewalsProcedures.find((element) => element._id === step.dataId)
+    ) {
+      partnerRenewalsProcedures.push({ ...step.stepData });
+    }
+  });
+
+  let partnerRegistrationsProcedures = [];
+  fcmPartnerSteps.forEach((step) => {
+    if (
+      step.stepData?.isPending &&
+      !partnerRegistrationsProcedures.find(
+        (element) => element._id === step.dataId
+      )
+    ) {
+      partnerRegistrationsProcedures.push({ ...step.stepData });
+    }
+  });
+
+  let partnerResponsiveLetterProcedures = [];
+  fcmPartnerSteps.forEach((step) => {
+    if (
+      step.stepData?.isCardLost &&
+      !partnerResponsiveLetterProcedures.find(
+        (element) => element._id === step.dataId
+      )
+    ) {
+      partnerResponsiveLetterProcedures.push({ ...step.stepData });
+    }
+  });
+
+  console.log(partnerResponsiveLetterProcedures);
+
+  // let partnerRenewalsProcedures = fcmPartnerSteps.filter(
+  //   (step) =>
+  //     step.stepData?.expirationDate &&
+  //     dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days"))
+  // );
+
+  let transfersProcedures = steps.filter(
+    (step) => step.stepType === fcmStepTypes.fcmTransferStep
+  );
+
+  console.dir(steps[4]);
+
+  let certificateProcedures = steps[4].stepData?.puppies
+    ? [...steps[4].stepData.puppies]
+    : [];
+
+  return {
+    partnerRegistrationsProcedures,
+    partnerRenewalsProcedures,
+    partnerResponsiveLetterProcedures,
+    transfersProcedures,
+    certificateProcedures,
+  };
+};
+
+export const removeDuplicates = (array) =>
+  array.filter(
+    (element, index) => array.indexOf(element.stepData._id) === index
+  );
+
+export const removeDuplicatesByProperty = (array = [], propertyName) => {
+  let countList = array.reduce((p, c) => {
+    console.log("esto es p", p);
+    console.log("esto es c", c);
+    p[c[propertyName]] = (p[c[propertyName]] || 0) + 1;
+    return p;
+  });
+
+  console.log("este es el count", countList);
+  let result = array.filter((element) => countList[element[propertyName]] > 1);
+
+  console.log("este es el result", result);
+  return result;
 };
