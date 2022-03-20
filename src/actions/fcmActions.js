@@ -204,12 +204,16 @@ export const createFcmDog = (object, fireSwal = true) => {
       if (body.ok) {
         // update the data in client
         const client = getState().clients.client;
-        client.linkedDogs.push(body.saved);
-        dispatch(updateClientReducer({ ...client }));
+        if (client) {
+          client.linkedDogs.push(body.saved);
+          dispatch(updateClientReducer({ ...client }));
+        }
 
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmDogs.push(body.saved);
+        const newAllFcmDogs = [...newAllFcm.allFcmDogs];
+        newAllFcmDogs.push(body.saved);
+        newAllFcm.allFcmDogs = newAllFcmDogs;
         dispatch(updateAllFcm(newAllFcm));
 
         fireSwal && fireSwalSuccess(body.msg);
@@ -219,7 +223,7 @@ export const createFcmDog = (object, fireSwal = true) => {
         return false;
       }
     } catch (error) {
-      fireSwal && fireSwalError(error.message);
+      printAndFireError(error);
       return false;
     }
   };
@@ -265,18 +269,19 @@ export const updateFcmDog = (object) => {
   };
 };
 
-export const deleteFcmDog = (object, fireSwal = false) => {
+export const deleteFcmDog = (id, fireSwal = false) => {
   return async (dispatch, getState) => {
     try {
       // fetch
-      const resp = await fetchConToken(
-        `fcm/dogs/${object._id}`,
-        object,
-        "DELETE"
-      );
+      const resp = await fetchConToken(`fcm/dogs/${id}`, {}, "DELETE");
       const body = await resp.json();
 
       if (body.ok) {
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmDogs = removeArrayElementById(newAllFcm.allFcmDogs, id);
+
+        dispatch(updateAllFcm(newAllFcm));
+
         if (fireSwal) {
           fireSwalSuccess(body.msg);
         }
@@ -672,7 +677,7 @@ export const removePreviousPuppies = (puppies) => {
     if (newPuppies.length > 0) {
       for (const puppy of newPuppies) {
         // remove from database
-        dispatch(deleteFcmDog(puppy, false));
+        dispatch(deleteFcmDog(puppy._id, false));
         // unlink client database
         dispatch(userRemoveFcmDog(client._id, puppy._id, false));
         // remove client reducer

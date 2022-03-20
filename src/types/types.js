@@ -389,3 +389,16 @@ export const fcmPackageStatusTypes = {
   FcmReceived: "Recibido de la FCM",
   concluded: "Concluido",
 };
+
+export const fcmCertificatesTypes = {
+  pedigree: "Pedigrí",
+  racePurity: "Certificado de pureza racial",
+  initialRacePurity: "Certificado de pureza racial inicial",
+  initialRegister: "Registro inicial",
+  contestCertificate: "Certificado para concurso",
+};
+
+export const dogSexTypes = {
+  male: "Macho",
+  female: "Hembra",
+};

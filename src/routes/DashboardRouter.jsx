@@ -22,8 +22,10 @@ import { DocumentationForm } from "../pages/dashboard/documentation/components/D
 import { TestPage } from "../pages/test/TestPage";
 import { FcmIndex } from "../pages/dashboard/fcm/FcmIndex";
 import { FcmPartnersIndex } from "../pages/dashboard/fcm/FcmPartnersIndex";
-import { FcmPartnerCreateNew } from "../pages/dashboard/fcm/FcmPartnerCreateNew";
+
 import { FcmPartner } from "../pages/dashboard/fcm/FcmPartner";
+import { FcmDogsIndex } from "../pages/dashboard/fcm/FcmDogsIndex";
+import { FcmDog } from "../pages/dashboard/fcm/FcmDog";
 
 export const DashboardRouter = () => {
   return (
@@ -76,6 +78,9 @@ export const DashboardRouter = () => {
       <Route path="fcm/fcmPartners" element={<FcmPartnersIndex />} />
       <Route path="fcm/fcmPartners/createNew" element={<FcmPartner />} />
       <Route path="fcm/fcmPartners/:id" element={<FcmPartner />} />
+      <Route path="fcm/fcmDogs" element={<FcmDogsIndex />} />
+      <Route path="fcm/fcmDogs/createNew" element={<FcmDog />} />
+      <Route path="fcm/fcmDogs/:id" element={<FcmDog />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />
