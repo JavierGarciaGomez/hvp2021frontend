@@ -20,6 +20,10 @@ import { Misc } from "../pages/dashboard/misc/Misc";
 import { Documentation } from "../pages/dashboard/documentation/Documentation";
 import { DocumentationForm } from "../pages/dashboard/documentation/components/DocumentationForm";
 import { TestPage } from "../pages/test/TestPage";
+import { FcmIndex } from "../pages/dashboard/fcm/FcmIndex";
+import { FcmPartnersIndex } from "../pages/dashboard/fcm/FcmPartnersIndex";
+import { FcmPartnerCreateNew } from "../pages/dashboard/fcm/FcmPartnerCreateNew";
+import { FcmPartner } from "../pages/dashboard/fcm/FcmPartner";
 
 export const DashboardRouter = () => {
   return (
@@ -66,6 +70,12 @@ export const DashboardRouter = () => {
       {/* Documentation */}
       <Route path="documentation" element={<Documentation />} />
       <Route path="documentation/:docId" element={<DocumentationForm />} />
+
+      {/* FCM */}
+      <Route path="fcm" element={<FcmIndex />} />
+      <Route path="fcm/fcmPartners" element={<FcmPartnersIndex />} />
+      <Route path="fcm/fcmPartners/createNew" element={<FcmPartner />} />
+      <Route path="fcm/fcmPartners/:id" element={<FcmPartner />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />

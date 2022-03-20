@@ -21,7 +21,6 @@ export const isLastStep = (activeStep, steps) => {
 };
 
 export const areAllStepsCompleted = (completedSteps, steps) => {
-  console.log("areAllStepsCompleted", completedSteps, steps);
   const completedStepsValues = Object.values(completedSteps);
   const amountCompletedSteps = completedStepsValues.reduce(
     (prevValue, curValue) => curValue && prevValue++
@@ -48,7 +47,6 @@ export const checkIfStepsAreCompleted = (
 };
 
 export const generatePuppiesValues = (values = {}, registersAmount = 0) => {
-  console.log("******registers amount", registersAmount);
   const newValues = { ...values };
   for (let i = registersAmount + 1; i <= 14; i++) {
     delete newValues[`puppyName${i}`];
@@ -183,16 +181,6 @@ export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
     fcmPackage;
   const { stepFromOrigin } = steps[activeStep];
 
-  console.log(
-    "a ver",
-    "padre ",
-    fatherOwnerId,
-    dogFatherId,
-    "madre",
-    motherOwnerId,
-    dogMotherId
-  );
-
   switch (stepFromOrigin) {
     case 2:
       if (!fatherOwnerId || !dogFatherId) {
@@ -270,7 +258,7 @@ export const getProcedures = (fcmPackage, client) => {
 
 export const insertOrUpdateProcedureById = (array = [], id, object) => {
   const index = array.findIndex((element) => element.dataId === id);
-  console.log(array[index]?.stepFromOrigin || null);
+
   index >= 0
     ? (array[index] = {
         ...object,
@@ -288,7 +276,6 @@ export const removeProcedureByIdAndType = (array, data) => {
 
 export const generateProcedureData = (fcmPackage) => {
   const { steps } = fcmPackage;
-  console.log("que carajo", steps);
 
   let fcmPartnerSteps = steps.filter(
     (step) => step.stepType === fcmStepTypes.fcmPartnerStep
@@ -329,8 +316,6 @@ export const generateProcedureData = (fcmPackage) => {
     }
   });
 
-  console.log(partnerResponsiveLetterProcedures);
-
   // let partnerRenewalsProcedures = fcmPartnerSteps.filter(
   //   (step) =>
   //     step.stepData?.expirationDate &&
@@ -340,8 +325,6 @@ export const generateProcedureData = (fcmPackage) => {
   let transfersProcedures = steps.filter(
     (step) => step.stepType === fcmStepTypes.fcmTransferStep
   );
-
-  console.dir(steps[4]);
 
   let certificateProcedures = steps[4].stepData?.puppies
     ? [...steps[4].stepData.puppies]
@@ -363,15 +346,11 @@ export const removeDuplicates = (array) =>
 
 export const removeDuplicatesByProperty = (array = [], propertyName) => {
   let countList = array.reduce((p, c) => {
-    console.log("esto es p", p);
-    console.log("esto es c", c);
     p[c[propertyName]] = (p[c[propertyName]] || 0) + 1;
     return p;
   });
 
-  console.log("este es el count", countList);
   let result = array.filter((element) => countList[element[propertyName]] > 1);
 
-  console.log("este es el result", result);
   return result;
 };

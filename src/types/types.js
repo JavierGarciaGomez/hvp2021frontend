@@ -379,3 +379,13 @@ export const fcmStepTypes = {
   fcmTransferStep: "FcmTransferStep",
   fcmSummaryStep: "FcmSummaryStep",
 };
+
+export const fcmPackageStatusTypes = {
+  filling: "Llenándose",
+  sentByClient: "Enviado por usuario",
+  preliminarilyReviewed: "Revisado preliminarmente",
+  inspectionDone: "Inspección realizada",
+  fcmSent: "Enviado a la FCM",
+  FcmReceived: "Recibido de la FCM",
+  concluded: "Concluido",
+};

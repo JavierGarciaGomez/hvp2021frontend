@@ -6,10 +6,7 @@ import * as Yup from "yup";
 import {
   cleanFcmStep,
   handleFcmCompleteStep,
-  handleNextFcmPackageStep,
-  setFcmCurrentStepEditable,
   createFcmDog,
-  updateFcmDog,
   updateStepReferences,
   removeFcmSteps,
   checkAndAddFcmPartnerStep,
@@ -57,51 +54,27 @@ export const FcmBreedingFormik = ({ label }) => {
   /************************** Initial values and validation *******************************************************/
   /*************************************************************************************************** */
 
-  // todo: put this data again
-  // let emptyPuppy = {
-  //   petName: "",
-  //   breed: steps[2].stepData?.breed || "",
-  //   color: "",
-  //   sex: "",
-  //   birthDate: "",
-  //   registerNum: "",
-  //   registerType: "pedigree",
-  //   urlFront: null,
-  //   urlBack: null,
-  //   isRegisterPending: true,
-  //   isTransferPending: false,
-  // };
   let emptyPuppy = {
-    petName: "Perrito",
+    petName: "",
     breed: steps[2].stepData?.breed || "",
-    color: "Azul",
-    sex: "male",
+    color: "",
+    sex: "",
     birthDate: "",
     registerNum: "",
     registerType: "pedigree",
     urlFront: null,
     urlBack: null,
     isRegisterPending: true,
-    isTransferPending: true,
+    isTransferPending: false,
   };
-  // todo: put this data again
-  // let initialValues = {
-  //   breedingDate: "",
-  //   birthDate: "",
-  //   birthPlace: "",
-  //   malesAlive: "",
-  //   femalesAlive: "",
-  //   death: "",
-  //   puppies: [emptyPuppy],
-  // };
 
   let initialValues = {
-    breedingDate: "2022-03-17",
-    birthDate: "2022-03-17",
-    birthPlace: "Merida",
-    malesAlive: "1",
-    femalesAlive: "1",
-    death: "1",
+    breedingDate: "",
+    birthDate: "",
+    birthPlace: "",
+    malesAlive: "",
+    femalesAlive: "",
+    death: "",
     puppies: [emptyPuppy],
   };
 

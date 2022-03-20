@@ -3,7 +3,6 @@ import React, { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addAndRemoveFcmPartnerProcedures,
-  addAndRemoveFcmProcedures,
   cleanFcmStep,
   handleFcmCompleteStep,
   updateStepReferences,
@@ -71,7 +70,6 @@ export const FcmPartnerFormWrapper = (props) => {
 
   return (
     <Fragment>
-      <div>FcmPartnerFormWrapper</div>
       <Typography component="h2" variant="h5" mb="2rem">
         {formWrapperTitle}
       </Typography>

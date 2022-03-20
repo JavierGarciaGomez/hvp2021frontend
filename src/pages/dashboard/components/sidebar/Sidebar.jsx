@@ -14,6 +14,7 @@ import {
   WorkOutline,
   MiscellaneousServicesOutlined,
   Article,
+  WorkspacePremium,
 } from "@mui/icons-material";
 import { setMenuState } from "../../../../actions/dbUiActions";
 import { SidebarLink } from "../SidebarLink";
@@ -105,6 +106,12 @@ export const Sidebar = () => {
             handleNavLinkClick={handleNavLinkClick}
             muiIcon={<Article className="db-c-sidebar__icon" />}
             label="Documentación"
+          />
+          <SidebarLink
+            link="/dashboard/fcm"
+            handleNavLinkClick={handleNavLinkClick}
+            muiIcon={<WorkspacePremium className="db-c-sidebar__icon" />}
+            label="FCM"
           />
         </ul>
       </div>

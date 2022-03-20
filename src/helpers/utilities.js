@@ -1046,12 +1046,27 @@ export const isStepSkipped = (set = new Set(), step) => {
 };
 
 export const objectContainsObjectProperties = (bigObject, smallObject) => {
-  console.log("utilities: bigobj and smallobj", bigObject, smallObject);
   return Object.entries(smallObject).every(
     (element) => bigObject[element[0]] == element[1]
   );
 };
 
 export const getFullNameOfObject = (object) => {
-  return `${object.firstName} ${object.paternalSurname} ${object.maternalSurname}`;
+  return `${object?.firstName} ${object?.paternalSurname} ${object?.maternalSurname}`;
+};
+
+export const checkIfUrlOrFileExist = (files, url) => {
+  if (files.length === 0 && !url) {
+    return false;
+  }
+  return true;
+};
+
+export const getImgUrlByFileOrUrl = async (files, url) => {
+  return files.length > 0 ? await uploadImg(files[0], false) : url;
+};
+
+export const printAndFireError = (error) => {
+  console.log(error);
+  fireSwalError(error.message);
 };

@@ -3,7 +3,7 @@
 import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
 import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
-import { types } from "../types/types";
+import { fcmPackageStatus, fcmPackageStatusTypes, types } from "../types/types";
 
 const defaultConfig = {
   isFirstRegister: false,
@@ -32,7 +32,7 @@ const initialState = {
     completedSteps: { 0: false },
     procedures: [],
     documentation: [],
-    status: null,
+    status: fcmPackageStatusTypes.filling,
     creator: "",
   },
 };
@@ -49,7 +49,6 @@ export const fcmReducer = (state = initialState, action) => {
     // packages
 
     case types.fcmPackageUpdateStepReferences: {
-      console.log("*****esto recibí", action.payload);
       return { ...state, fcmPackage: action.payload };
     }
 
@@ -83,7 +82,6 @@ export const fcmReducer = (state = initialState, action) => {
       return { ...state, fcmDogs: action.payload, fcmsIsLoading: false };
 
     case types.fcmSetPackage: {
-      console.log("***************esto he recibido", action);
       return { ...state, fcmPackage: action.payload };
     }
 

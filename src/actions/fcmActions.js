@@ -2,7 +2,10 @@ import { ClassNames } from "@emotion/react";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { array } from "yup";
-import { updateArrayElementById } from "../helpers/arrayUtilities";
+import {
+  removeArrayElementById,
+  updateArrayElementById,
+} from "../helpers/arrayUtilities";
 import {
   areAllStepsCompleted,
   insertOrUpdateProcedureById,
@@ -14,6 +17,7 @@ import {
   fireSwalError,
   fireSwalSuccess,
   objectContainsObjectProperties,
+  printAndFireError,
   replaceElementInCollection,
 } from "../helpers/utilities";
 import { fcmStepTypes, types } from "../types/types";
@@ -87,12 +91,18 @@ export const createFcmPartner = (object) => {
       if (body.ok) {
         // update the data in client
         const client = getState().clients.client;
-        client.linkedFcmPartners.push(body.saved);
-        dispatch(updateClientReducer({ ...client }));
+        if (client) {
+          client.linkedFcmPartners.push(body.saved);
+          dispatch(updateClientReducer({ ...client }));
+        }
 
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmPartners.push(body.saved);
+        const newAllFcmPartners = [...newAllFcm.allFcmPartners];
+
+        newAllFcmPartners.push(body.saved);
+
+        newAllFcm.allFcmPartners = newAllFcmPartners;
         dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
@@ -102,7 +112,7 @@ export const createFcmPartner = (object) => {
         return false;
       }
     } catch (error) {
-      fireSwalError(error.message);
+      printAndFireError(error);
       return false;
     }
   };
@@ -123,11 +133,13 @@ export const updateFcmPartner = (object) => {
       if (body.ok) {
         // update the data in client
         const client = getState().clients.client;
-        client.linkedFcmPartners = replaceElementInCollection(
-          object,
-          client.linkedFcmPartners
-        );
-        dispatch(updateClientReducer({ ...client }));
+        if (client) {
+          client.linkedFcmPartners = replaceElementInCollection(
+            object,
+            client.linkedFcmPartners
+          );
+          dispatch(updateClientReducer({ ...client }));
+        }
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
         newAllFcm.allFcmPartners = updateArrayElementById(
@@ -143,7 +155,37 @@ export const updateFcmPartner = (object) => {
         return false;
       }
     } catch (error) {
-      fireSwalError(error.message);
+      printAndFireError(error);
+
+      return false;
+    }
+  };
+};
+
+export const deleteFcmPartner = (id) => {
+  return async (dispatch, getState) => {
+    try {
+      // fetch the update
+      const resp = await fetchConToken(`fcm/partners/${id}`, {}, "DELETE");
+      const body = await resp.json();
+
+      if (body.ok) {
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmPartners = removeArrayElementById(
+          newAllFcm.allFcmPartners,
+          id
+        );
+
+        dispatch(updateAllFcm(newAllFcm));
+
+        return fireSwalSuccess(body.msg);
+      } else {
+        fireSwalError(body.msg);
+        return false;
+      }
+    } catch (error) {
+      printAndFireError(error);
       return false;
     }
   };
@@ -192,14 +234,16 @@ export const updateFcmDog = (object) => {
 
       if (body.ok) {
         // update the data in client
+
         const client = getState().clients.client;
+        if (client) {
+          client.linkedDogs = replaceElementInCollection(
+            object,
+            client.linkedDogs
+          );
+          dispatch(updateClientReducer({ ...client }));
+        }
 
-        client.linkedDogs = replaceElementInCollection(
-          object,
-          client.linkedDogs
-        );
-
-        dispatch(updateClientReducer({ ...client }));
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
         newAllFcm.allFcmDogs = updateArrayElementById(
@@ -403,6 +447,16 @@ export const updateFcmPackageProperty = (propertyName, value) => {
     const fcmPackage = getState().fcm.fcmPackage;
     const newFcmPackage = { ...fcmPackage };
     newFcmPackage[propertyName] = value;
+
+    dispatch({ type: types.fcmUpdatePackageProperty, payload: newFcmPackage });
+  };
+};
+
+export const setFcmPackageStatus = (status) => {
+  return async (dispatch, getState) => {
+    const fcmPackage = getState().fcm.fcmPackage;
+    const newFcmPackage = { ...fcmPackage };
+    newFcmPackage.status = status;
 
     dispatch({ type: types.fcmUpdatePackageProperty, payload: newFcmPackage });
   };

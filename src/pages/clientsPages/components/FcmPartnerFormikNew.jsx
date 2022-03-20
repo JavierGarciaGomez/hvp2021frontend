@@ -123,9 +123,6 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
   /*************************************************************************************************** */
   //#region
 
-  console.log("estos son los form values", formValues);
-  console.log("estos son los props", stepProps);
-
   const handleConfirmRenewal = async (values) => {
     if (dayjs(values.expirationDate).isBefore(dayjs().add(14, "days"))) {
       const confirmation = await fireSwalConfirmation(
@@ -427,14 +424,14 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                 <Grid item xs={12} md={4}>
                   <TextFieldWrapper
                     name="address.state"
-                    label="State"
+                    label="Estado"
                     disabled={!isEditable}
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <TextFieldWrapper
                     name="address.country"
-                    label="Country"
+                    label="País"
                     disabled={!isEditable}
                   />
                 </Grid>

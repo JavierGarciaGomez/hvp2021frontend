@@ -10,3 +10,7 @@ export const updateArrayElementById = (array = [], element) => {
 export const findElementBYId = (array = [], id) => {
   return array.find((el) => el._id === id);
 };
+
+export const removeArrayElementById = (array = [], id) => {
+  return array.filter((element) => element._id !== id);
+};

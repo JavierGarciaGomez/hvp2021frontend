@@ -191,11 +191,6 @@ export const FcmTransferStepLayout = () => {
     setprevOwner(null);
   };
 
-  console.log({ prevOwner, newOwner, dog });
-  console.log("arePrevStepsCompleted", arePrevStepsCompleted);
-  console.log("isdatafull", isDataFull);
-  console.log("isstepcompleted", isStepCompleted);
-
   /************************** RENDER *******************************************************/
   return (
     <Fragment>

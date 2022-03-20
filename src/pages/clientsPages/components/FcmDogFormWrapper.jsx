@@ -80,11 +80,8 @@ export const FcmDogFormWrapper = (props) => {
 
   // todo review
   const handleConfirmation = async () => {
-    console.log("required sex", requiredSex, stepData.sex);
     if (requiredSex) {
-      console.log("required sex", requiredSex, stepData.sex);
       if (stepData.sex !== requiredSex) {
-        console.log("required sex", requiredSex, stepData.sex);
         return fireSwalError(
           "El sexo del perro no concide. Edita la información o selecciona otro."
         );
@@ -100,7 +97,6 @@ export const FcmDogFormWrapper = (props) => {
 
   return (
     <Fragment>
-      <div>FcmPartnerFormWrapper</div>
       <Typography component="h2" variant="h5" mb="2rem">
         {formWrapperTitle}
       </Typography>

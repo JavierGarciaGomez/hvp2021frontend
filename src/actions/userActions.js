@@ -73,8 +73,6 @@ export const userRemoveFcmPartner = (userId, fcmPartnerId) => {
       );
       const body = await resp.json();
 
-      console.log("userRemove este es el body", body);
-
       if (body.ok) {
         Swal.fire({
           icon: "success",

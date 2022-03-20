@@ -93,7 +93,6 @@ export const FcmSelectPartnerOptions = ({ ...props }) => {
         />
       ),
       functions: () => {
-        console.log("me ejecuto");
         handleStepProps({ isFirstRegister: true });
       },
     },

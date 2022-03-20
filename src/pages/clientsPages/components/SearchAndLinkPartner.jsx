@@ -16,7 +16,10 @@ import {
   updateStepReferences,
 } from "../../../actions/fcmActions";
 import { userAddFcmPartner } from "../../../actions/userActions";
-import { excludeFromCollection } from "../../../helpers/utilities";
+import {
+  excludeFromCollection,
+  fireSwalError,
+} from "../../../helpers/utilities";
 
 export const SearchAndLinkPartner = ({
   handleCancelSelection,
@@ -38,6 +41,12 @@ export const SearchAndLinkPartner = ({
   }, [dispatch]);
 
   const handleSearch = () => {
+    // if the search has less than 3 values. return
+    if (fieldValue.length < 3) {
+      return fireSwalError(
+        "La búsqueda debe contar al menos con tres carácteres"
+      );
+    }
     //   exclude from fcmPartners the already linked
     const fcmPartnersExcludingLinked = excludeFromCollection(
       allFcmPartners,
@@ -124,7 +133,9 @@ export const SearchAndLinkPartner = ({
           mb: "5rem",
         }}
       >
-        {filteredFcmPartners.length > 0 &&
+        {!filteredFcmPartners.length > 0 ? (
+          <Typography>No se encontró ningún socio con ese número</Typography>
+        ) : (
           filteredFcmPartners.map((fcmPartner) => {
             return (
               <Card
@@ -171,7 +182,8 @@ export const SearchAndLinkPartner = ({
                 </CardContent>
               </Card>
             );
-          })}
+          })
+        )}
       </Box>
     </Box>
   );

@@ -14,6 +14,7 @@ export const ButtonFormWrapper = ({ children, ...otherProps }) => {
     color: "primary",
     fullWidth: true,
     onClick: handleSubmit,
+    ...otherProps,
   };
 
   return <Button {...configButton}>{children}</Button>;

@@ -26,8 +26,6 @@ export const FcmPartnerStepLayout = () => {
     setstepProps(initialStepProps);
   };
 
-  console.log("esto son los props", stepProps);
-
   useEffect(() => {
     handleResetStepProps();
   }, [activeStep]);
