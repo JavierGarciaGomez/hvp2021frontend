@@ -1052,7 +1052,9 @@ export const objectContainsObjectProperties = (bigObject, smallObject) => {
 };
 
 export const getFullNameOfObject = (object) => {
-  return `${object?.firstName} ${object?.paternalSurname} ${object?.maternalSurname}`;
+  return `${object?.firstName || ""} ${object?.paternalSurname || ""} ${
+    object?.maternalSurname || ""
+  }`;
 };
 
 export const checkIfUrlOrFileExist = (files, url) => {
@@ -1069,4 +1071,8 @@ export const getImgUrlByFileOrUrl = async (files, url) => {
 export const printAndFireError = (error) => {
   console.log(error);
   fireSwalError(error.message);
+};
+
+export const transformBooleanToString = (boolean) => {
+  return boolean ? "Sí" : "No";
 };

@@ -11,6 +11,7 @@ import { ButtonFormWrapper } from "../../../components/formsUI/ButtonFormWrapper
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import {
   fireSwalError,
+  isObjectEmpty,
   setUrlValueOrRefreshImage,
 } from "../../../helpers/utilities";
 import Swal from "sweetalert2";
@@ -42,7 +43,7 @@ export const FcmPrevOwnerFormik = ({
   let formValidation = Yup.object().shape(validationParams);
 
   useEffect(() => {
-    if (prevOwner) {
+    if (!isObjectEmpty(prevOwner)) {
       return setformValues({ ...prevOwner });
     }
     setformValues(initialValues);
@@ -75,8 +76,6 @@ export const FcmPrevOwnerFormik = ({
     handleSubmitForm(newValues);
     Swal.close();
   };
-
-  console.log("formValues", formValues);
 
   return (
     <Fragment>
@@ -168,7 +167,7 @@ export const FcmPrevOwnerFormik = ({
                 </Grid>
               </Grid>
 
-              <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
+              {/* <pre>{JSON.stringify({ values, errors }, null, 4)}</pre> */}
             </Form>
           )}
         </Formik>

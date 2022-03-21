@@ -11,10 +11,8 @@ import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 import {
   createFcmDog,
-  createFcmPartner,
   startLoadingAllFcm,
   updateFcmDog,
-  updateFcmPartner,
 } from "../../../actions/fcmActions";
 import { transformDatePropertyToInput } from "../../../helpers/dateUtilities";
 import {
@@ -27,49 +25,48 @@ import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
 import { SelectWrapper } from "../../../components/formsUI/SelectWrapper";
 import { fcmCertificatesTypes } from "../../../types/types";
+import { FcmTransferShow } from "./FcmTransferShow";
+import { FcmTransferEdit } from "./FcmTransferEdit";
 
-let emptyFormValues = {
-  petName: "",
-  breed: "",
-  color: "",
-  sex: "",
-  birthDate: "",
-  registerNum: "",
-  registerType: "",
-  urlFront: "",
-  urlBack: "",
-  isRegisterPending: false,
-  isTransferPending: false,
-};
+// todo
+// let emptyFormValues = {
+//   dog: {},
+//   prevOwner: {},
+// };
 
-let validationParams = {
-  petName: Yup.string().trim().required("Es obligatorio"),
-  breed: Yup.string().trim().required("Es obligatorio"),
-  color: Yup.string().trim().required("Es obligatorio"),
-  sex: Yup.string().trim().required("Es obligatorio"),
-  birthDate: Yup.date().required("Es obligatorio"),
-  registerType: Yup.string().trim().required("Es obligatorio"),
-  isRegisterPending: Yup.boolean(),
-  isTransferPending: Yup.boolean(),
-  registerNum: Yup.string().when("isRegisterPending", {
-    is: false,
-    then: Yup.string().required("Es obligatorio"),
-  }),
-};
+// todo
+// let validationParams = {
+//   petName: Yup.string().trim().required("Es obligatorio"),
+//   breed: Yup.string().trim().required("Es obligatorio"),
+//   color: Yup.string().trim().required("Es obligatorio"),
+//   sex: Yup.string().trim().required("Es obligatorio"),
+//   birthDate: Yup.date().required("Es obligatorio"),
+//   registerType: Yup.string().trim().required("Es obligatorio"),
+//   isRegisterPending: Yup.boolean(),
+//   isTransferPending: Yup.boolean(),
+//   registerNum: Yup.string().when("isRegisterPending", {
+//     is: false,
+//     then: Yup.string().required("Es obligatorio"),
+//   }),
+// };
 
-export const FcmDog = () => {
+export const FcmTransfer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let formValidation = Yup.object().shape(validationParams);
+  // let formValidation = Yup.object().shape(validationParams);
   const { allFcm } = useSelector((state) => state.fcm);
-  const { allFcmDogs = [] } = allFcm;
-  const [initialFormValues, setInitialFormValues] = useState(emptyFormValues);
+  const { allFcmTransfers = [] } = allFcm;
+  // const [initialFormValues, setInitialFormValues] = useState(emptyFormValues);
+
   const [filesFront, setFilesFront] = useState([]);
   const [filesBack, setFilesBack] = useState([]);
-  const [isEditable, setisEditable] = useState(true);
+  const [isEditable, setisEditable] = useState(false);
   const { id } = useParams();
 
-  const [heading, setHeading] = useState("Registrar perro nuevo");
+  const [heading, setHeading] = useState(
+    "Transferencia o cambio de propietario"
+  );
+  const [fcmTransfer, setfcmTransfer] = useState({});
 
   /*************************************************************************************************** */
   /************************** useeffects *******************************************************/
@@ -78,28 +75,24 @@ export const FcmDog = () => {
   //   load the fcmParther if there is an id
 
   useEffect(() => {
-    if (allFcmDogs.length === 0) {
+    if (allFcmTransfers.length === 0) {
       dispatch(startLoadingAllFcm());
     }
   }, []);
 
   useEffect(() => {
-    if (id && allFcmDogs.length > 0) {
-      const fcmDog = allFcmDogs.find((element) => element._id === id);
+    if (id && allFcmTransfers.length > 0) {
+      const fcmTransfer = allFcmTransfers.find((element) => element._id === id);
       const fcmDogFormattedDate = transformDatePropertyToInput(
-        fcmDog,
+        fcmTransfer,
         "birthDate"
       );
 
-      setInitialFormValues({ ...fcmDogFormattedDate });
+      // setInitialFormValues({ ...fcmDogFormattedDate });
       setisEditable(false);
-      setHeading(
-        `Perro ${getFullNameOfObject(fcmDog) || ""} - ${
-          fcmDog?.registerNum || ""
-        }`
-      );
+      setfcmTransfer(fcmTransfer);
     }
-  }, [allFcmDogs]);
+  }, [allFcmTransfers]);
 
   //#endregion
   /*************************************************************************************************** */
@@ -164,6 +157,16 @@ export const FcmDog = () => {
 
   //#endregion
 
+  if (!isEditable)
+    return (
+      <FcmTransferShow
+        fcmTransfer={fcmTransfer}
+        setisEditable={setisEditable}
+      />
+    );
+
+  if (isEditable) return <FcmTransferEdit fcmTransfer={fcmTransfer} />;
+
   return (
     <Box>
       <Typography component="h2" variant="h5" mb="2rem">
@@ -187,7 +190,7 @@ export const FcmDog = () => {
         </Typography>
       </Box>
       {/* Formulario */}
-      <Formik
+      {/* <Formik
         initialValues={{ ...initialFormValues }}
         validationSchema={formValidation}
         onSubmit={(values) => {
@@ -197,9 +200,9 @@ export const FcmDog = () => {
       >
         {({ values, errors, isSubmitting, isValid, resetForm }) => (
           <Form>
-            <Grid container spacing={2}>
-              {/* CONDICIONES INICIALES */}
-              <Grid item xs={12}>
+            <Grid container spacing={2}> */}
+      {/* CONDICIONES INICIALES */}
+      {/* <Grid item xs={12}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography component="h4" variant="h5">
@@ -227,9 +230,9 @@ export const FcmDog = () => {
                     </Grid>
                   )}
                 </Grid>
-              </Grid>
-              {/* DATOS DE IDENTIFICACIÓN */}
-              <Grid item xs={12}>
+              </Grid> */}
+      {/* DATOS DE IDENTIFICACIÓN */}
+      {/* <Grid item xs={12}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography component="h4" variant="h5">
@@ -294,20 +297,20 @@ export const FcmDog = () => {
                     />
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
 
-              {/* SECTION IMAGES */}
-              {!values.isRegisterPending && (
+      {/* SECTION IMAGES */}
+      {/* {!values.isRegisterPending && (
                 <Grid item xs={12} mb="2rem">
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <Typography component="h4" variant="h5" mb="2rem">
                         Imágenes
                       </Typography>
-                    </Grid>
-                    {/* tarjeta de socio */}
+                    </Grid> */}
+      {/* tarjeta de socio */}
 
-                    <Grid item xs={12} md={6}>
+      {/* <Grid item xs={12} md={6}>
                       <Typography mb="2rem">
                         Pedigrí o certificado frontal
                       </Typography>
@@ -361,11 +364,11 @@ export const FcmDog = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-              )}
+              )} */}
 
-              {/* BUTTONS */}
+      {/* BUTTONS */}
 
-              <Grid item xs={12} mb={2}>
+      {/* <Grid item xs={12} mb={2}>
                 <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
                   {isEditable ? (
                     <ButtonFormWrapper variant="text">
@@ -400,7 +403,7 @@ export const FcmDog = () => {
             </Box>
           </Form>
         )}
-      </Formik>
+      </Formik> */}
     </Box>
   );
 };

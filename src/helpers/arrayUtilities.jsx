@@ -1,3 +1,5 @@
+import { isObjectEmpty } from "./utilities";
+
 export const updateArrayElementById = (array = [], element) => {
   return array.map((el) => {
     if (el._id === element._id) {
@@ -13,4 +15,20 @@ export const findElementBYId = (array = [], id) => {
 
 export const removeArrayElementById = (array = [], id) => {
   return array.filter((element) => element._id !== id);
+};
+
+export const mergeArraysWithoutDuplicates = (arr1, arr2) => {
+  const ids = new Set(arr1.map((element) => element._id));
+  const merged = [...arr1, ...arr2.filter((element) => !ids.has(element._id))];
+  return merged;
+};
+
+export const checkIfObjectsAreEmpty = (objects = []) => {
+  for (let object of objects) {
+    if (isObjectEmpty(object)) {
+      return true;
+    }
+  }
+
+  return false;
 };

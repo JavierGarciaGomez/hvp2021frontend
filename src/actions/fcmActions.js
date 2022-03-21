@@ -313,8 +313,17 @@ export const createFcmtransfer = (object) => {
 
       if (body.ok) {
         const client = getState().clients.client;
-        client.linkedFcmTransfers.push(body.saved);
-        dispatch(updateClientReducer({ ...client }));
+        if (client) {
+          client.linkedFcmTransfers.push(body.saved);
+          dispatch(updateClientReducer({ ...client }));
+        }
+
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        const newAllFcmTransfers = [...newAllFcm.allFcmTransfers];
+        newAllFcmTransfers.push(body.saved);
+        newAllFcm.allFcmTransfers = newAllFcmTransfers;
+        dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
         return body.saved;
@@ -341,13 +350,22 @@ export const updateFcmtransfer = (object) => {
 
       if (body.ok) {
         const client = getState().clients.client;
+        if (client) {
+          client.linkedFcmTransfers = replaceElementInCollection(
+            object,
+            client.linkedFcmTransfers
+          );
 
-        client.linkedFcmTransfers = replaceElementInCollection(
-          object,
-          client.linkedFcmTransfers
+          dispatch(updateClientReducer({ ...client }));
+        }
+
+        // update the data in allFCM
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmTransfers = updateArrayElementById(
+          newAllFcm.allFcmTransfers,
+          object
         );
-
-        dispatch(updateClientReducer({ ...client }));
+        dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
         return body.updatedData;
@@ -357,6 +375,41 @@ export const updateFcmtransfer = (object) => {
       }
     } catch (error) {
       fireSwalError(error.message);
+      return false;
+    }
+  };
+};
+
+export const deleteFcmTransfer = (id, fireSwal = false) => {
+  return async (dispatch, getState) => {
+    try {
+      // fetch
+      const resp = await fetchConToken(`fcm/fcmTransfers/${id}`, {}, "DELETE");
+      const body = await resp.json();
+
+      if (body.ok) {
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmTransfers = removeArrayElementById(
+          newAllFcm.allFcmTransfers,
+          id
+        );
+
+        dispatch(updateAllFcm(newAllFcm));
+
+        if (fireSwal) {
+          fireSwalSuccess(body.msg);
+        }
+        return body.updatedData;
+      } else {
+        if (fireSwal) {
+          fireSwalError(body.msg);
+        }
+        return false;
+      }
+    } catch (error) {
+      if (fireSwal) {
+        fireSwalError(error.message);
+      }
       return false;
     }
   };

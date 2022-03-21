@@ -10,7 +10,7 @@ import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
 import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
 import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
 import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
-import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
+
 import { FcmTransferFormWrapper } from "../pages/clientsPages/FcmTransferFormWrapper";
 import { fcmStepTypes } from "../types/types";
 
