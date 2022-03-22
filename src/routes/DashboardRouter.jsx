@@ -28,6 +28,8 @@ import { FcmDogsIndex } from "../pages/dashboard/fcm/FcmDogsIndex";
 import { FcmDog } from "../pages/dashboard/fcm/FcmDog";
 import { FcmTransfersIndex } from "../pages/dashboard/fcm/FcmTransfersIndex.jsx";
 import { FcmTransfer } from "../pages/dashboard/fcm/FcmTransfer";
+import { FcmPackagesIndex } from "../pages/dashboard/fcm/FcmPackagesIndex";
+import { FcmPackage } from "../pages/dashboard/fcm/FcmPackage";
 
 export const DashboardRouter = () => {
   return (
@@ -86,6 +88,9 @@ export const DashboardRouter = () => {
       <Route path="fcm/fcmTransfers" element={<FcmTransfersIndex />} />
       <Route path="fcm/fcmTransfers/createNew" element={<FcmTransfer />} />
       <Route path="fcm/fcmTransfers/:id" element={<FcmTransfer />} />
+      <Route path="fcm/fcmPackages" element={<FcmPackagesIndex />} />
+      <Route path="fcm/fcmPackages/createNew" element={<FcmPackage />} />
+      <Route path="fcm/fcmPackages/:fcmPackageId" element={<FcmPackage />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />

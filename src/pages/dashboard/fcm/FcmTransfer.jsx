@@ -91,6 +91,8 @@ export const FcmTransfer = () => {
       // setInitialFormValues({ ...fcmDogFormattedDate });
       setisEditable(false);
       setfcmTransfer(fcmTransfer);
+    } else {
+      setisEditable(true);
     }
   }, [allFcmTransfers]);
 

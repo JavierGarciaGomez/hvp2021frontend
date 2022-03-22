@@ -449,6 +449,41 @@ export const createFcmPackage = () => {
   };
 };
 
+export const deleteFcmPackage = (id, fireSwal = false) => {
+  return async (dispatch, getState) => {
+    try {
+      // fetch
+      const resp = await fetchConToken(`fcm/fcmTransfers/${id}`, {}, "DELETE");
+      const body = await resp.json();
+
+      if (body.ok) {
+        const newAllFcm = { ...getState().fcm.allFcm };
+        newAllFcm.allFcmPackages = removeArrayElementById(
+          newAllFcm.allFcmPackages,
+          id
+        );
+
+        dispatch(updateAllFcm(newAllFcm));
+
+        if (fireSwal) {
+          fireSwalSuccess(body.msg);
+        }
+        return body.updatedData;
+      } else {
+        if (fireSwal) {
+          fireSwalError(body.msg);
+        }
+        return false;
+      }
+    } catch (error) {
+      if (fireSwal) {
+        fireSwalError(error.message);
+      }
+      return false;
+    }
+  };
+};
+
 // USED
 export const startLoadingFcmPackage = (id) => {
   return async (dispatch, getState) => {
@@ -804,8 +839,25 @@ export const setFcmActiveStepProperty = (propertyName, value) => {
     activeStepProperties[propertyName] = value;
 
     dispatch({
-      type: types.fcmSetActiveStepProperties,
+      type: types.fcmSetStepProperties,
       payload: activeStepProperties,
+    });
+  };
+};
+
+export const setFcmStepProperty = (stepIndex, propertyName, value) => {
+  console.log(stepIndex, propertyName, value);
+  return async (dispatch, getState) => {
+    const newFcmPackage = { ...getState().fcm.fcmPackage };
+    const newSteps = [...newFcmPackage.steps];
+    const stepProperties = { ...newSteps[stepIndex] };
+    stepProperties[propertyName] = value;
+
+    newSteps[stepIndex] = stepProperties;
+
+    return dispatch({
+      type: types.fcmSetStepProperties,
+      payload: newSteps,
     });
   };
 };

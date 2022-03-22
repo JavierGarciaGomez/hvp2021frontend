@@ -101,6 +101,7 @@ export const types = {
   fcmPackageUpdateProcedures: "[fcm] package handle procedures",
   fcmPackageUpdateStepReferences: "[fcm] package update step references",
   fcmSetActiveStepProperties: "[fcm] package set active step properties",
+  fcmSetStepProperties: "[fcm] package set step properties",
 };
 
 export const genderTypes = {

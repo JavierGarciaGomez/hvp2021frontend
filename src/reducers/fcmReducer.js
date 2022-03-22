@@ -69,6 +69,13 @@ export const fcmReducer = (state = initialState, action) => {
       };
     }
 
+    case types.fcmSetStepProperties: {
+      return {
+        ...state,
+        fcmPackage: { ...state.fcmPackage, steps: action.payload },
+      };
+    }
+
     case types.fcmsIsLoading:
       return { ...state, fcmsIsLoading: true };
 

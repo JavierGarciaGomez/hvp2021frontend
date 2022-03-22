@@ -88,7 +88,7 @@ let validationParams = {
     .required("Es obligatorio"),
 };
 
-export const FcmPartner = () => {
+export const FcmPartner = ({ fcmPartnerid }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let formValidation = Yup.object().shape(validationParams);
@@ -105,6 +105,8 @@ export const FcmPartner = () => {
   const [fcmPartner, setfcmPartner] = useState(null);
   const [heading, setHeading] = useState("Crear socio nuevo");
 
+  console.log(fcmPartnerid);
+
   /*************************************************************************************************** */
   /************************** useeffects *******************************************************/
   /*************************************************************************************************** */
@@ -118,8 +120,21 @@ export const FcmPartner = () => {
   }, []);
 
   useEffect(() => {
-    if (id && allFcmPartners.length > 0) {
-      const fcmPartner = allFcmPartners.find((element) => element._id === id);
+    if (allFcmPartners.length > 0) {
+      console.log(fcmPartnerid);
+      let idToSearch = null;
+      if (id) idToSearch = id;
+      if (fcmPartnerid) idToSearch = fcmPartnerid;
+
+      console.log(idToSearch);
+      console.log(allFcmPartners);
+      if (!idToSearch) return;
+
+      const fcmPartner = allFcmPartners.find(
+        (element) => element._id === idToSearch
+      );
+
+      console.log(fcmPartner);
       const fcmPartnerFormattedDate = transformDatePropertyToInput(
         fcmPartner,
         "expirationDate"
