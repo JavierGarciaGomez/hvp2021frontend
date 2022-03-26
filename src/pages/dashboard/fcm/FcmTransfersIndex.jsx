@@ -37,7 +37,7 @@ export const FcmTransfersIndex = () => {
       headerName: "Nombre",
       flex: 1,
       editable: false,
-      valueGetter: (params) => params.row.dog.petName || "",
+      valueGetter: (params) => params.row.dog?.petName || "",
     },
     {
       field: "Antiguo propietario",

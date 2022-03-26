@@ -19,11 +19,11 @@ import { FcmPrevOwnerFormik } from "../../clientsPages/components/FcmPrevOwnerFo
 import { FcmSelectDog } from "./components/FcmSelectDog";
 
 export const FcmTransferEdit = (props) => {
+  const { fcmTransfer, onCancel, onSave } = props;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { allFcm } = useSelector((state) => state.fcm);
   const { allFcmDogs, allFcmPartners } = allFcm;
-  const { fcmTransfer } = props;
   const { dog, newOwner, prevOwner } = fcmTransfer;
 
   const [selectedDog, setselectedDog] = useState(dog || {});
@@ -71,10 +71,12 @@ export const FcmTransferEdit = (props) => {
       savedFcmTransfer = await dispatch(createFcmtransfer(newFcmTransfer));
     }
 
+    if (onSave) return onSave();
     savedFcmTransfer && navigate(-1);
   };
 
   const handleCancel = () => {
+    if (onCancel) return onCancel();
     navigate(-1);
   };
 

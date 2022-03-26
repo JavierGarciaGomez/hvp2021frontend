@@ -169,7 +169,7 @@ export const FcmDogFormikNew = ({ ...props }) => {
       setImgUrlPedigreeFront(null);
       setImgUrlPedigreeBack(null);
     }
-  }, []);
+  }, [fcmDogData]);
 
   //#endregion
   /*************************************************************************************************** */

@@ -12,7 +12,7 @@ import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartn
 import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
 
 import { FcmTransferFormWrapper } from "../pages/clientsPages/FcmTransferFormWrapper";
-import { fcmStepTypes } from "../types/types";
+import { fcmPackageStatusTypes, fcmStepTypes } from "../types/types";
 
 import { isObjectEmpty, objectContainsObjectProperties } from "./utilities";
 
@@ -353,4 +353,60 @@ export const removeDuplicatesByProperty = (array = [], propertyName) => {
   let result = array.filter((element) => countList[element[propertyName]] > 1);
 
   return result;
+};
+
+export const checkProcedureStatus = (requiredStatus, status) => {
+  let authorizedStatus = [fcmPackageStatusTypes.concluded];
+
+  if (requiredStatus === fcmPackageStatusTypes.concluded) {
+    if (authorizedStatus.includes(status)) {
+      return true;
+    }
+    return false;
+  }
+
+  authorizedStatus.push(fcmPackageStatusTypes.FcmReceived);
+  if (requiredStatus === fcmPackageStatusTypes.FcmReceived) {
+    if (authorizedStatus.includes(status)) {
+      return true;
+    }
+    return false;
+  }
+
+  authorizedStatus.push(fcmPackageStatusTypes.fcmSent);
+  if (requiredStatus === fcmPackageStatusTypes.fcmSent) {
+    if (authorizedStatus.includes(status)) {
+      return true;
+    }
+    return false;
+  }
+
+  authorizedStatus.push(fcmPackageStatusTypes.inspectionDone);
+  if (requiredStatus === fcmPackageStatusTypes.inspectionDone) {
+    if (authorizedStatus.includes(status)) {
+      return true;
+    }
+    return false;
+  }
+
+  authorizedStatus.push(fcmPackageStatusTypes.preliminarilyReviewed);
+  if (requiredStatus === fcmPackageStatusTypes.preliminarilyReviewed) {
+    if (authorizedStatus.includes(status)) {
+      return true;
+    }
+    return false;
+  }
+
+  authorizedStatus.push(fcmPackageStatusTypes.sentByClient);
+  if (requiredStatus === fcmPackageStatusTypes.sentByClient) {
+    if (authorizedStatus.includes(status)) {
+      return true;
+    }
+    return false;
+  }
+
+  authorizedStatus.push(fcmPackageStatusTypes.filling);
+  if (requiredStatus === fcmPackageStatusTypes.filling) {
+    return true;
+  }
 };

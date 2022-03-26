@@ -5,13 +5,10 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  deleteFcmDog,
   deleteFcmPackage,
-  deleteFcmTransfer,
   startLoadingAllFcm,
 } from "../../../actions/fcmActions";
 import { fireSwalConfirmation } from "../../../helpers/utilities";
-import { dogSexTypes, fcmCertificatesTypes } from "../../../types/types";
 
 // todo try to convert it to a layout component for fcm
 export const FcmPackagesIndex = () => {
@@ -53,6 +50,14 @@ export const FcmPackagesIndex = () => {
       headerName: "Estado",
       flex: 1,
       editable: false,
+      // todo review
+    },
+    {
+      field: "createdBy",
+      headerName: "Creado por",
+      flex: 1,
+      editable: false,
+      valueGetter: (params) => params.row.creator.email,
       // todo review
     },
     {

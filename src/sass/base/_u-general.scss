@@ -75,3 +75,10 @@
 .u-textTransformNone {
   text-transform: none !important;
 }
+
+@media print {
+  .u-pagebreak {
+    clear: both;
+    page-break-after: always;
+  }
+}

@@ -61,6 +61,7 @@ export const ProcedurePedigree = () => {
   const [displayBoxStepper, setdisplayBoxStepper] = useState({
     display: { xs: "flex", md: "none" },
   });
+  console.log(steps);
 
   // TODO: PENDING
 

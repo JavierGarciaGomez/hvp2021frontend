@@ -22,6 +22,7 @@ import {
   fireSwalError,
   getFullNameOfObject,
   getImgUrlByFileOrUrl,
+  isObjectEmpty,
 } from "../../../helpers/utilities";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
@@ -57,7 +58,7 @@ let validationParams = {
   }),
 };
 
-export const FcmDog = () => {
+export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let formValidation = Yup.object().shape(validationParams);
@@ -68,6 +69,7 @@ export const FcmDog = () => {
   const [filesBack, setFilesBack] = useState([]);
   const [isEditable, setisEditable] = useState(true);
   const { id } = useParams();
+  const [showButtons, setShowButtons] = useState(true);
 
   const [heading, setHeading] = useState("Registrar perro nuevo");
 
@@ -84,14 +86,28 @@ export const FcmDog = () => {
   }, []);
 
   useEffect(() => {
-    if (id && allFcmDogs.length > 0) {
-      const fcmDog = allFcmDogs.find((element) => element._id === id);
-      const fcmDogFormattedDate = transformDatePropertyToInput(
+    if (!isObjectEmpty(extraProps)) {
+      setisEditable(extraProps.isEditable);
+      setShowButtons(extraProps.showButtons);
+    }
+  }, [extraProps]);
+
+  useEffect(() => {
+    if (allFcmDogs.length > 0) {
+      let idToSearch = null;
+      if (id) idToSearch = id;
+      if (fcmDogId) idToSearch = fcmDogId;
+
+      if (!idToSearch) return;
+
+      const fcmDog = allFcmDogs.find((element) => element._id === idToSearch);
+
+      const fcmDogsFormattedDate = transformDatePropertyToInput(
         fcmDog,
         "birthDate"
       );
 
-      setInitialFormValues({ ...fcmDogFormattedDate });
+      setInitialFormValues({ ...fcmDogsFormattedDate });
       setisEditable(false);
       setHeading(
         `Perro ${getFullNameOfObject(fcmDog) || ""} - ${
@@ -99,7 +115,7 @@ export const FcmDog = () => {
         }`
       );
     }
-  }, [allFcmDogs]);
+  }, [allFcmDogs, fcmDogId, id]);
 
   //#endregion
   /*************************************************************************************************** */
@@ -141,10 +157,15 @@ export const FcmDog = () => {
     } else {
       return await dispatch(createFcmDog(newValues));
     }
+    if (onSave) onSave();
+    if (!extraProps.navigateBack) {
+      return;
+    }
     navigate(-1);
   };
 
   const handleCancel = () => {
+    if (onCancel) return onCancel();
     if (isEditable) {
       return setisEditable(false);
     }
@@ -365,35 +386,37 @@ export const FcmDog = () => {
 
               {/* BUTTONS */}
 
-              <Grid item xs={12} mb={2}>
-                <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
-                  {isEditable ? (
-                    <ButtonFormWrapper variant="text">
-                      Guardar
-                    </ButtonFormWrapper>
-                  ) : (
+              {showButtons && (
+                <Grid item xs={12} mb={2}>
+                  <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
+                    {isEditable ? (
+                      <ButtonFormWrapper variant="text">
+                        Guardar
+                      </ButtonFormWrapper>
+                    ) : (
+                      <Button
+                        fullWidth={true}
+                        onClick={() => {
+                          setisEditable(true);
+                        }}
+                      >
+                        Editar
+                      </Button>
+                    )}
+
                     <Button
                       fullWidth={true}
                       onClick={() => {
-                        setisEditable(true);
+                        resetForm();
+                        handleCancel();
                       }}
+                      color="error"
                     >
-                      Editar
+                      Cancelar
                     </Button>
-                  )}
-
-                  <Button
-                    fullWidth={true}
-                    onClick={() => {
-                      resetForm();
-                      handleCancel();
-                    }}
-                    color="error"
-                  >
-                    Cancelar
-                  </Button>
-                </Box>
-              </Grid>
+                  </Box>
+                </Grid>
+              )}
             </Grid>
             <Box>
               <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>

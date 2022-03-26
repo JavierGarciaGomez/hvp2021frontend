@@ -229,7 +229,7 @@ export const createFcmDog = (object, fireSwal = true) => {
   };
 };
 
-export const updateFcmDog = (object) => {
+export const updateFcmDog = (object, fireSwal = true) => {
   return async (dispatch, getState) => {
     try {
       // fetch the update
@@ -256,7 +256,7 @@ export const updateFcmDog = (object) => {
         );
         dispatch(updateAllFcm(newAllFcm));
 
-        fireSwalSuccess(body.msg);
+        fireSwal && fireSwalSuccess(body.msg);
         return body.updatedData;
       } else {
         fireSwalError(body.msg);
@@ -453,11 +453,29 @@ export const deleteFcmPackage = (id, fireSwal = false) => {
   return async (dispatch, getState) => {
     try {
       // fetch
-      const resp = await fetchConToken(`fcm/fcmTransfers/${id}`, {}, "DELETE");
+      const resp = await fetchConToken(`fcm/fcmPackages/${id}`, {}, "DELETE");
       const body = await resp.json();
 
       if (body.ok) {
         const newAllFcm = { ...getState().fcm.allFcm };
+
+        // delete puppies and transfers
+        const fcmPackage = newAllFcm.allFcmPackages.find(
+          (element) => element._id === id
+        );
+
+        for (let puppy of fcmPackage.steps[4].stepData.puppies) {
+          console.log(puppy);
+          if (puppy.isRegisterPending) {
+            await dispatch(deleteFcmDog(puppy._id));
+          }
+
+          const fcmTransfer = newAllFcm.allFcmTransfers.find(
+            (element) => element.dog._id === puppy._id
+          );
+          if (fcmTransfer) await dispatch(deleteFcmTransfer(fcmTransfer._id));
+        }
+
         newAllFcm.allFcmPackages = removeArrayElementById(
           newAllFcm.allFcmPackages,
           id
@@ -566,6 +584,20 @@ export const updateStepReferences = (object) => {
     newFcmPackage[packageProperty] = object._id;
     newFcmPackage.steps[activeStep].dataId = object._id;
     newFcmPackage.steps[activeStep].stepData = object;
+
+    dispatch({
+      type: types.fcmPackageUpdateStepReferences,
+      payload: newFcmPackage,
+    });
+  };
+};
+
+export const updateStepReferencesByStep = (stepIndex, object) => {
+  return async (dispatch, getState) => {
+    const { fcmPackage } = getState().fcm;
+    const newFcmPackage = { ...fcmPackage };
+
+    newFcmPackage.steps[stepIndex].stepData = object;
 
     dispatch({
       type: types.fcmPackageUpdateStepReferences,
@@ -776,6 +808,14 @@ export const removePreviousPuppies = (puppies) => {
   };
 };
 
+export const removeFcmPuppy = (puppy, user) => {
+  return async (dispatch, getState) => {
+    dispatch(deleteFcmDog(puppy._id, false));
+    dispatch(userRemoveFcmDog(user._id, puppy._id, false));
+    dispatch(unlinkFcmDogFromClient(puppy._id, false));
+  };
+};
+
 export const fcmPackageUpdateProcedures = (newProcedures) => {
   return { type: types.fcmPackageUpdateProcedures, payload: newProcedures };
 };
@@ -839,7 +879,7 @@ export const setFcmActiveStepProperty = (propertyName, value) => {
     activeStepProperties[propertyName] = value;
 
     dispatch({
-      type: types.fcmSetStepProperties,
+      type: types.fcmSetActiveStepProperties,
       payload: activeStepProperties,
     });
   };

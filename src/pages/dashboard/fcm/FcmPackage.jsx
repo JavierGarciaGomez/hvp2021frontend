@@ -2,12 +2,20 @@ import { Box, Button, Typography } from "@mui/material";
 
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import {
+  createFcmPackage,
   fcmPackageLoaded,
+  setFcmPackageStatus,
   startLoadingAllFcm,
+  updateFcmPackage,
+  updateFcmPackageProperty,
 } from "../../../actions/fcmActions";
+import { checkProcedureStatus } from "../../../helpers/fcmUtilities";
+import { fireSwalError } from "../../../helpers/utilities";
+import { fcmPackageStatusTypes } from "../../../types/types";
+import { FcmMedicalInspectionForm } from "./components/FcmMedicalInspectionForm";
 import { FcmRevisionPanel } from "./components/FcmRevisionPanel";
 import { FormatItem } from "./components/FormatItem";
 
@@ -18,15 +26,15 @@ export const FcmPackage = () => {
   const { allFcm } = useSelector((state) => state.fcm);
   const { allFcmPackages = [] } = allFcm;
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { steps } = fcmPackage;
+  const { steps, status, medicalInspection } = fcmPackage;
 
   // const [initialFormValues, setInitialFormValues] = useState(emptyFormValues);
   // todo. change it to false
 
   const [showRevisionPanel, setShowRevisionPanel] = useState(false);
-  const [selectStepFormat, setSelectStepFormat] = useState(null);
   const [selectedStepIndexToReview, setSelectedStepIndexToReview] =
     useState("");
+  const [stepsToValidate, setStepsToValidate] = useState([]);
 
   const { fcmPackageId } = useParams();
 
@@ -48,13 +56,16 @@ export const FcmPackage = () => {
         (element) => element._id === fcmPackageId
       );
 
-      console.log(fcmPackage);
       dispatch(fcmPackageLoaded(fcmPackage));
 
       // setInitialFormValues({ ...fcmDogFormattedDate });
     } else {
     }
   }, [allFcmPackages]);
+
+  useEffect(() => {
+    setStepsToValidate(steps.slice(0, steps.length - 1));
+  }, [steps]);
 
   //#endregion
   /*************************************************************************************************** */
@@ -63,13 +74,39 @@ export const FcmPackage = () => {
   //#region
 
   const handleSelect = (stepIndex) => {
-    setShowRevisionPanel(true);
     setSelectedStepIndexToReview(stepIndex);
-
-    console.log(steps[stepIndex]);
+    setShowRevisionPanel(true);
   };
 
-  const handleReviewFormat = (step) => {};
+  const handleSave = async () => {
+    if (fcmPackageId) {
+      await dispatch(updateFcmPackage(fcmPackageId));
+    } else {
+      await dispatch(createFcmPackage());
+    }
+  };
+
+  const handleValidatePackage = async () => {
+    const validatedSteps = steps.reduce((acc, obj) => {
+      if (obj.isValidated) {
+        return (acc = acc + 1);
+      } else {
+        return acc;
+      }
+    }, 0);
+
+    if (validatedSteps < steps.length - 1) {
+      return fireSwalError("Necesitar validar todos los pasos para continuar");
+    }
+    dispatch(setFcmPackageStatus(fcmPackageStatusTypes.preliminarilyReviewed));
+    handleSave();
+  };
+
+  const handleSaveInspection = (values) => {
+    dispatch(updateFcmPackageProperty("medicalInspection", values));
+    dispatch(setFcmPackageStatus(fcmPackageStatusTypes.inspectionDone));
+    handleSave();
+  };
 
   //#endregion
 
@@ -77,6 +114,9 @@ export const FcmPackage = () => {
     <Box>
       <Typography component="h2" variant="h4" mb="2rem">
         Paquete FCM. Pedigrí.
+      </Typography>
+      <Typography component="h2" variant="h5" mb="2rem">
+        Estado del paquete: {status}
       </Typography>
       {/* Notas */}
       <Box
@@ -97,6 +137,10 @@ export const FcmPackage = () => {
           cliente, para que este haga las correcciones; sin embargo, de ser
           posible, es mejor hacer las correcciones en esta etapa.
         </Typography>
+        <Typography mb="1rem">
+          Para que el estado de avance de la revisión y los ajustes realizados
+          se conserven, es necesario guardar los avances.
+        </Typography>
       </Box>
       <Box mb="4rem">
         <Box mb="2rem">
@@ -105,7 +149,7 @@ export const FcmPackage = () => {
           </Typography>
         </Box>
 
-        {steps.map((step, index) => (
+        {stepsToValidate.map((step, index) => (
           <FormatItem
             key={step.stepLabel}
             step={step || {}}
@@ -114,8 +158,58 @@ export const FcmPackage = () => {
           ></FormatItem>
         ))}
       </Box>
+
       {showRevisionPanel && (
-        <FcmRevisionPanel stepIndex={selectedStepIndexToReview} />
+        <FcmRevisionPanel
+          stepIndex={selectedStepIndexToReview}
+          setShowRevisionPanel={setShowRevisionPanel}
+          onCancel={() => setShowRevisionPanel(false)}
+        />
+      )}
+
+      <Box sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}>
+        <Button onClick={handleSave} size="large">
+          Guardar
+        </Button>
+
+        <Button onClick={handleValidatePackage} size="large">
+          Marcar paquete como validado
+        </Button>
+      </Box>
+
+      {checkProcedureStatus(
+        fcmPackageStatusTypes.preliminarilyReviewed,
+        status
+      ) && (
+        <Box>
+          <Typography component="h2" variant="h4" mb="2rem">
+            Revisión médica
+          </Typography>
+          <FcmMedicalInspectionForm
+            onSave={handleSaveInspection}
+            medicalInspectionData={medicalInspection}
+          />
+        </Box>
+      )}
+
+      {checkProcedureStatus(fcmPackageStatusTypes.inspectionDone, status) && (
+        <Box>
+          <Typography component="h2" variant="h4" mb="2rem">
+            Imprimir paquete
+          </Typography>
+          <Box
+            sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}
+          >
+            <Link
+              to={`/other/print/fcmPackage/${fcmPackageId}`}
+              target="_blank"
+            >
+              <Button onClick={() => {}} size="large">
+                Imprimir paquete
+              </Button>
+            </Link>
+          </Box>
+        </Box>
       )}
     </Box>
   );

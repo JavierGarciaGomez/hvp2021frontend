@@ -2,7 +2,8 @@ import { Box, Button, Typography } from "@mui/material";
 import React, { Fragment } from "react";
 
 export const FcmTransferShow = (props) => {
-  const { fcmTransfer, setisEditable } = props;
+  const { fcmTransfer, setisEditable, extraProps } = props;
+  const { showButtons = true } = extraProps;
   const { newOwner, prevOwner, dog } = fcmTransfer;
 
   const handleEdit = () => {
@@ -57,9 +58,7 @@ export const FcmTransferShow = (props) => {
           <Typography color="error">Falta información</Typography>
         )}
       </Box>
-      <Box>
-        <Button onClick={handleEdit}>Editar</Button>
-      </Box>
+      <Box>{showButtons && <Button onClick={handleEdit}>Editar</Button>}</Box>
     </Box>
   );
 };

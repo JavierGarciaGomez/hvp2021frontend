@@ -20,6 +20,7 @@ import {
   fireSwalError,
   getFullNameOfObject,
   getImgUrlByFileOrUrl,
+  isObjectEmpty,
 } from "../../../helpers/utilities";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
@@ -50,7 +51,8 @@ import { FcmTransferEdit } from "./FcmTransferEdit";
 //   }),
 // };
 
-export const FcmTransfer = () => {
+export const FcmTransfer = (props) => {
+  const { fcmTransferId, extraProps, onSave } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // let formValidation = Yup.object().shape(validationParams);
@@ -67,6 +69,7 @@ export const FcmTransfer = () => {
     "Transferencia o cambio de propietario"
   );
   const [fcmTransfer, setfcmTransfer] = useState({});
+  const [showButtons, setShowButtons] = useState(true);
 
   /*************************************************************************************************** */
   /************************** useeffects *******************************************************/
@@ -81,13 +84,24 @@ export const FcmTransfer = () => {
   }, []);
 
   useEffect(() => {
-    if (id && allFcmTransfers.length > 0) {
-      const fcmTransfer = allFcmTransfers.find((element) => element._id === id);
-      const fcmDogFormattedDate = transformDatePropertyToInput(
-        fcmTransfer,
-        "birthDate"
-      );
+    if (!isObjectEmpty(extraProps)) {
+      setisEditable(extraProps.isEditable);
+      setShowButtons(extraProps.showButtons);
+    }
+  }, [extraProps]);
 
+  useEffect(() => {
+    console.log(fcmTransferId);
+    if (allFcmTransfers.length > 0) {
+      let idToSearch = null;
+      if (id) idToSearch = id;
+      if (fcmTransferId) idToSearch = fcmTransferId;
+      if (!idToSearch) return;
+
+      const fcmTransfer = allFcmTransfers.find(
+        (element) => element._id === idToSearch
+      );
+      console.log(fcmTransfer);
       // setInitialFormValues({ ...fcmDogFormattedDate });
       setisEditable(false);
       setfcmTransfer(fcmTransfer);
@@ -164,248 +178,10 @@ export const FcmTransfer = () => {
       <FcmTransferShow
         fcmTransfer={fcmTransfer}
         setisEditable={setisEditable}
+        {...props}
       />
     );
 
-  if (isEditable) return <FcmTransferEdit fcmTransfer={fcmTransfer} />;
-
-  return (
-    <Box>
-      <Typography component="h2" variant="h5" mb="2rem">
-        {heading}
-      </Typography>
-      {/* Notas */}
-      <Box
-        sx={{
-          bgcolor: "grey.300",
-          p: "2rem",
-          borderRadius: 2,
-          boxShadow: 5,
-          mb: "5rem",
-        }}
-      >
-        <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
-          Notas:
-        </Typography>
-        <Typography mb="1rem">
-          Las imágenes deben tener un tamaño máximo de 1mb.
-        </Typography>
-      </Box>
-      {/* Formulario */}
-      {/* <Formik
-        initialValues={{ ...initialFormValues }}
-        validationSchema={formValidation}
-        onSubmit={(values) => {
-          handleSubmit(values);
-        }}
-        enableReinitialize
-      >
-        {({ values, errors, isSubmitting, isValid, resetForm }) => (
-          <Form>
-            <Grid container spacing={2}> */}
-      {/* CONDICIONES INICIALES */}
-      {/* <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography component="h4" variant="h5">
-                      Condiciones iniciales
-                    </Typography>
-                  </Grid>
-
-                  {!values.isTransferPending && (
-                    <Grid item xs={6}>
-                      <CheckboxInputWrapper
-                        name="isRegisterPending"
-                        label="Registro pendiente en FCM"
-                        disabled={!isEditable}
-                      />
-                    </Grid>
-                  )}
-
-                  {!values.isRegisterPending && (
-                    <Grid item xs={6}>
-                      <CheckboxInputWrapper
-                        name="isTransferPending"
-                        label="Transferencia pendiente"
-                        disabled={!isEditable}
-                      />
-                    </Grid>
-                  )}
-                </Grid>
-              </Grid> */}
-      {/* DATOS DE IDENTIFICACIÓN */}
-      {/* <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography component="h4" variant="h5">
-                      Datos del perro
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextFieldWrapper
-                      name="petName"
-                      label="Nombre"
-                      disabled={!isEditable}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextFieldWrapper
-                      name="breed"
-                      label="Raza"
-                      disabled={!isEditable}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={4}>
-                    <TextFieldWrapper
-                      name="color"
-                      label="Color"
-                      disabled={!isEditable}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <SelectWrapper
-                      name="sex"
-                      label="Sexo"
-                      disabled={!isEditable}
-                      options={{
-                        male: "Macho",
-                        female: "Hembra",
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <DatePickerFieldWrapper
-                      name="birthDate"
-                      label="Fecha de nacimiento"
-                      disabled={!isEditable}
-                    />
-                  </Grid>
-                  {!values.isRegisterPending && (
-                    <Grid item xs={12} md={6}>
-                      <TextFieldWrapper
-                        name="registerNum"
-                        label="Número de registro"
-                        disabled={!isEditable}
-                      />
-                    </Grid>
-                  )}
-
-                  <Grid item xs={12} md={6}>
-                    <SelectWrapper
-                      name="registerType"
-                      label="Tipo de registro"
-                      disabled={!isEditable}
-                      options={fcmCertificatesTypes}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid> */}
-
-      {/* SECTION IMAGES */}
-      {/* {!values.isRegisterPending && (
-                <Grid item xs={12} mb="2rem">
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography component="h4" variant="h5" mb="2rem">
-                        Imágenes
-                      </Typography>
-                    </Grid> */}
-      {/* tarjeta de socio */}
-
-      {/* <Grid item xs={12} md={6}>
-                      <Typography mb="2rem">
-                        Pedigrí o certificado frontal
-                      </Typography>
-                      <DragImageUpload
-                        files={filesFront}
-                        setFiles={setFilesFront}
-                        imgUrl={values.urlFront}
-                        editable={isEditable}
-                      ></DragImageUpload>
-                      <Box
-                        sx={{
-                          mt: "1rem",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Button
-                          size="small"
-                          onClick={() => {
-                            window.open(values.urlFront);
-                          }}
-                        >
-                          Ver imagen
-                        </Button>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Typography mb="2rem">INE reverso</Typography>
-                      <DragImageUpload
-                        files={filesBack}
-                        setFiles={setFilesBack}
-                        imgUrl={values.urlBack}
-                        editable={isEditable}
-                      ></DragImageUpload>
-                      <Box
-                        sx={{
-                          mt: "1rem",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Button
-                          size="small"
-                          onClick={() => {
-                            window.open(values.urlBack);
-                          }}
-                        >
-                          Ver imagen
-                        </Button>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              )} */}
-
-      {/* BUTTONS */}
-
-      {/* <Grid item xs={12} mb={2}>
-                <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
-                  {isEditable ? (
-                    <ButtonFormWrapper variant="text">
-                      Guardar
-                    </ButtonFormWrapper>
-                  ) : (
-                    <Button
-                      fullWidth={true}
-                      onClick={() => {
-                        setisEditable(true);
-                      }}
-                    >
-                      Editar
-                    </Button>
-                  )}
-
-                  <Button
-                    fullWidth={true}
-                    onClick={() => {
-                      resetForm();
-                      handleCancel();
-                    }}
-                    color="error"
-                  >
-                    Cancelar
-                  </Button>
-                </Box>
-              </Grid>
-            </Grid>
-            <Box>
-              <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
-            </Box>
-          </Form>
-        )}
-      </Formik> */}
-    </Box>
-  );
+  if (isEditable)
+    return <FcmTransferEdit fcmTransfer={fcmTransfer} {...props} />;
 };

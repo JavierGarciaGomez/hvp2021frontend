@@ -246,7 +246,7 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       setImgUrlFrontIne(null);
       setImgUrlBackIne(null);
     }
-  }, []);
+  }, [fcmPartnerData]);
 
   // todo review
   useEffect(() => {

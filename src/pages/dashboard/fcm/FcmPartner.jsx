@@ -20,6 +20,7 @@ import {
   fireSwalError,
   getFullNameOfObject,
   getImgUrlByFileOrUrl,
+  isObjectEmpty,
 } from "../../../helpers/utilities";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
@@ -88,7 +89,7 @@ let validationParams = {
     .required("Es obligatorio"),
 };
 
-export const FcmPartner = ({ fcmPartnerid }) => {
+export const FcmPartner = ({ fcmPartnerid, extraProps, onSave, onCancel }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let formValidation = Yup.object().shape(validationParams);
@@ -102,10 +103,9 @@ export const FcmPartner = ({ fcmPartnerid }) => {
   const [filesBackINE, setfilesBackINE] = useState([]);
   const [isEditable, setisEditable] = useState(true);
   const { id } = useParams();
-  const [fcmPartner, setfcmPartner] = useState(null);
-  const [heading, setHeading] = useState("Crear socio nuevo");
 
-  console.log(fcmPartnerid);
+  const [heading, setHeading] = useState("Crear socio nuevo");
+  const [showButtons, setShowButtons] = useState(true);
 
   /*************************************************************************************************** */
   /************************** useeffects *******************************************************/
@@ -120,26 +120,30 @@ export const FcmPartner = ({ fcmPartnerid }) => {
   }, []);
 
   useEffect(() => {
+    console.log(extraProps);
+    if (!isObjectEmpty(extraProps)) {
+      setisEditable(extraProps.isEditable);
+      setShowButtons(extraProps.showButtons);
+    }
+  }, [extraProps]);
+
+  useEffect(() => {
     if (allFcmPartners.length > 0) {
-      console.log(fcmPartnerid);
       let idToSearch = null;
       if (id) idToSearch = id;
       if (fcmPartnerid) idToSearch = fcmPartnerid;
 
-      console.log(idToSearch);
-      console.log(allFcmPartners);
       if (!idToSearch) return;
 
       const fcmPartner = allFcmPartners.find(
         (element) => element._id === idToSearch
       );
 
-      console.log(fcmPartner);
       const fcmPartnerFormattedDate = transformDatePropertyToInput(
         fcmPartner,
         "expirationDate"
       );
-      setfcmPartner(fcmPartnerFormattedDate);
+
       setInitialFormValues({ ...fcmPartnerFormattedDate });
       setisEditable(false);
       setHeading(
@@ -148,7 +152,7 @@ export const FcmPartner = ({ fcmPartnerid }) => {
         }`
       );
     }
-  }, [allFcmPartners]);
+  }, [allFcmPartners, fcmPartnerid, id]);
 
   //#endregion
   /*************************************************************************************************** */
@@ -211,20 +215,24 @@ export const FcmPartner = ({ fcmPartnerid }) => {
     let newValues =
       isPending || isCardLost ? emptyUnusedValues(values) : { ...values };
 
-    console.log("estos son new values", newValues);
-
     if (newValues._id) {
       await dispatch(updateFcmPartner(newValues));
     } else {
       return await dispatch(createFcmPartner(newValues));
     }
+    if (onSave) onSave();
+    if (!extraProps.navigateBack) {
+      return;
+    }
     navigate(-1);
   };
 
   const handleCancel = () => {
+    if (onCancel) return onCancel();
     if (isEditable) {
       return setisEditable(false);
     }
+
     return navigate(-1);
   };
 
@@ -579,35 +587,37 @@ export const FcmPartner = ({ fcmPartnerid }) => {
 
               {/* BUTTONS */}
 
-              <Grid item xs={12} mb={2}>
-                <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
-                  {isEditable ? (
-                    <ButtonFormWrapper variant="text">
-                      Guardar
-                    </ButtonFormWrapper>
-                  ) : (
+              {showButtons && (
+                <Grid item xs={12} mb={2}>
+                  <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
+                    {isEditable ? (
+                      <ButtonFormWrapper variant="text">
+                        Guardar
+                      </ButtonFormWrapper>
+                    ) : (
+                      <Button
+                        fullWidth={true}
+                        onClick={() => {
+                          setisEditable(true);
+                        }}
+                      >
+                        Editar
+                      </Button>
+                    )}
+
                     <Button
                       fullWidth={true}
                       onClick={() => {
-                        setisEditable(true);
+                        resetForm();
+                        handleCancel();
                       }}
+                      color="error"
                     >
-                      Editar
+                      Cancelar
                     </Button>
-                  )}
-
-                  <Button
-                    fullWidth={true}
-                    onClick={() => {
-                      resetForm();
-                      handleCancel();
-                    }}
-                    color="error"
-                  >
-                    Cancelar
-                  </Button>
-                </Box>
-              </Grid>
+                  </Box>
+                </Grid>
+              )}
             </Grid>
             <Box>
               <pre>{JSON.stringify({ values, errors }, null, 4)}</pre>
