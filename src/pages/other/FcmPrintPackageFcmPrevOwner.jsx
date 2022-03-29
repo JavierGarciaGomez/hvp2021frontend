@@ -16,7 +16,7 @@ export const FcmPrintPackageFcmPrevOwner = ({ prevOwner }) => {
     <Box mb="10rem">
       <Box>
         <Typography component="h3" variant="h5">
-          Antiguo propietario de XXX
+          Antiguo propietario
         </Typography>
       </Box>
       <Box>

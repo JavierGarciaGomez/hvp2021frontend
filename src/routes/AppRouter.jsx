@@ -5,16 +5,16 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { startChecking } from "../actions/authActions";
 import { AuthPage } from "../pages/authPages/loginPage/AuthPage";
 import { MainPageLayout } from "../pages/mainPages/MainPageLayout";
-import { TestPage } from "../pages/test/TestPage";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
+
 import { roleTypes } from "../types/types";
 
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { checkAuthorization } from "../helpers/utilities";
 import { ClientLayout } from "../pages/clientsPages/ClientLayout";
 
-import { TestFormikUpload } from "../pages/test/TestFormikUpload";
+
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
 import { PackagePdf } from "../pages/other/PackagePdf";
 

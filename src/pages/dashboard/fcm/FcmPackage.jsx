@@ -65,6 +65,23 @@ export const FcmPackage = () => {
 
   useEffect(() => {
     setStepsToValidate(steps.slice(0, steps.length - 1));
+
+    // check if are not all validated. set to send by user
+    if (
+      status === fcmPackageStatusTypes.preliminarilyReviewed ||
+      status === fcmPackageStatusTypes.inspectionDone
+    ) {
+      const validatedSteps = steps.reduce((acc, obj) => {
+        if (obj.isValidated) {
+          return (acc = acc + 1);
+        } else {
+          return acc;
+        }
+      }, 0);
+      if (validatedSteps < steps.length - 1) {
+        dispatch(setFcmPackageStatus(fcmPackageStatusTypes.sentByClient));
+      }
+    }
   }, [steps]);
 
   //#endregion
@@ -142,6 +159,11 @@ export const FcmPackage = () => {
           se conserven, es necesario guardar los avances.
         </Typography>
       </Box>
+      <Box sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}>
+        <Button onClick={handleSave} size="large">
+          Guardar avances
+        </Button>
+      </Box>
       <Box mb="4rem">
         <Box mb="2rem">
           <Typography component="h3" variant="h5">
@@ -168,10 +190,6 @@ export const FcmPackage = () => {
       )}
 
       <Box sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}>
-        <Button onClick={handleSave} size="large">
-          Guardar
-        </Button>
-
         <Button onClick={handleValidatePackage} size="large">
           Marcar paquete como validado
         </Button>

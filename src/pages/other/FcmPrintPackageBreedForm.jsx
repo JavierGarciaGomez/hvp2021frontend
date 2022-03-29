@@ -18,7 +18,12 @@ export const FcmPrintPackageBreedForm = ({ breedingData }) => {
     fcmDogMale,
     fcmPartnerFemaleOwner,
     fcmPartnerMaleOwner,
+    inspectionDate,
+    observations,
+    fcmCode,
   } = breedingData;
+
+  console.log(breedingData);
 
   console.log(breedingData);
   let puppiesSpaces = [
@@ -41,8 +46,21 @@ export const FcmPrintPackageBreedForm = ({ breedingData }) => {
   return (
     <Box mb="10rem">
       {/* header */}
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box>Imagen</Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          maxHeight: "50px",
+        }}
+      >
+        <Box sx={{ height: "50px" }}>
+          <Box
+            component="img"
+            src="https://res.cloudinary.com/dwalcv9li/image/upload/v1648300900/samples/images_zsilt8.png"
+            sx={{ height: "100%", display: "block", width: "auto" }}
+          ></Box>
+        </Box>
         <Box>
           <Typography component="h2" variant="h5">
             CERTIFICADO DE CRUZA
@@ -50,7 +68,7 @@ export const FcmPrintPackageBreedForm = ({ breedingData }) => {
         </Box>
         <Box>
           <Typography>
-            Registro número: <Typography variant="span">FCME123456</Typography>
+            Registro número: <Typography variant="span">{fcmCode}</Typography>
           </Typography>
         </Box>
       </Box>
@@ -438,11 +456,14 @@ export const FcmPrintPackageBreedForm = ({ breedingData }) => {
             <Typography sx={{ textAlign: "center" }}>
               Fecha de la inspección:
             </Typography>
-            <Typography sx={{ textAlign: "center" }}> 22/nov/2022</Typography>
+            <Typography sx={{ textAlign: "center" }}>
+              {" "}
+              {dayjs(inspectionDate).format("DD-MMM-YYYY")}
+            </Typography>
           </Box>
           <Box sx={{ flex: 2 }}>
             <Typography sx={{ textAlign: "center" }}>Observaciones:</Typography>
-            <Typography variant="span"> Me parece estupendo</Typography>
+            <Typography variant="span"> {observations}</Typography>
           </Box>
           <Box sx={{ flex: 2 }}>
             <Typography sx={{ textAlign: "center" }}>

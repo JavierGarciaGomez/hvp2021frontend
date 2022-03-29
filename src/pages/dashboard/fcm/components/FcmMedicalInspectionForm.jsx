@@ -17,10 +17,12 @@ import { TextAreaWrapper } from "../../../../components/formsUI/TextAreaWrapper"
 let initialValues = {
   inspectionDate: "",
   observations: "",
+  fcmCode: "",
 };
 let initialValidationParams = {
   inspectionDate: Yup.date().required("Es obligatorio"),
   observations: Yup.string(),
+  fcmCode: Yup.string().required("Es obligatorio"),
 };
 
 export const FcmMedicalInspectionForm = (props) => {
@@ -69,14 +71,21 @@ export const FcmMedicalInspectionForm = (props) => {
       {({ values, errors, isSubmitting, isValid, resetForm }) => (
         <Form>
           <Grid container spacing={2}>
-            <Grid item xs={6} md={12}>
+            <Grid item xs={6} md={6}>
               <DatePickerFieldWrapper
                 name="inspectionDate"
                 label="Fecha de inspección"
                 disabled={!isEditable}
               />
             </Grid>
-            <Grid item xs={6} md={12}>
+            <Grid item xs={6} md={6}>
+              <TextFieldWrapper
+                name="fcmCode"
+                label="Código FCM"
+                disabled={!isEditable}
+              />
+            </Grid>
+            <Grid item xs={12}>
               <InputLabel>Observaciones</InputLabel>
               <TextAreaWrapper
                 name="observations"

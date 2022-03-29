@@ -160,6 +160,7 @@ export const PackagePdf = () => {
         fcmPartnerFemaleOwner,
         fcmDogMale,
         fcmDogFemale,
+        ...fcmPackage.medicalInspection,
       });
       setSummaryData({
         user: fcmPackage.creator.email,
