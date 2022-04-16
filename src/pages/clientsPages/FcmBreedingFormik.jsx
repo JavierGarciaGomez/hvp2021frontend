@@ -14,7 +14,7 @@ import {
   addAndRemoveFcmCertificatesProcedures,
   removePreviousPuppies,
 } from "../../actions/fcmActions";
-import { fireSwalConfirmation, isObjectEmpty } from "../../helpers/utilities";
+import { fireSwalConfirmation, fireSwalError, isObjectEmpty } from "../../helpers/utilities";
 import { Box, Button, Card, Grid, TextField, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerFieldWrapper";
@@ -25,9 +25,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
-import { checkIfStepsAreCompleted } from "../../helpers/fcmUtilities";
+import { checkIfStepsAreCompleted, checkValidParentsAge } from "../../helpers/fcmUtilities";
 import { fireSwalWait } from "../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
+import { propertiesToUpperCase } from "../../helpers/objectUtilities";
 
 export const FcmBreedingFormik = ({ label }) => {
   const dispatch = useDispatch();
@@ -39,11 +40,9 @@ export const FcmBreedingFormik = ({ label }) => {
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { activeStep, steps, breedingForm, completedSteps } = fcmPackage;
   const currentStep = steps[activeStep];
-  const { isPuppy, stepFromOrigin, stepData, stepLabel, needsConfirmation } =
-    currentStep;
+  const { stepData, stepLabel } = currentStep;
 
   const [registersAmount, setregistersAmount] = useState("");
-  const [puppiesRegisters, setpuppiesRegisters] = useState([]);
   const [puppyTransfers, setPuppyTransfers] = useState([]);
   const [arePrevStepsCompleted, setAreprevStepsCompleted] = useState(false);
   const [haveParentsSameBreed, sethaveParentsSameBreed] = useState(false);
@@ -87,7 +86,9 @@ export const FcmBreedingFormik = ({ label }) => {
     death: Yup.number().required("Es obligatorio"),
     puppies: Yup.array(
       Yup.object({
-        petName: Yup.string().required("Es obligatorio"),
+        petName: Yup.string()
+          .required("Es obligatorio")
+          .matches(/^[A-Za-z]+$/, "Solo un nombre, solo letras, sin espacios"),
         sex: Yup.string().required("Es obligatorio"),
         isTransferPending: Yup.boolean(),
         color: Yup.string().required("Es obligatorio"),
@@ -105,18 +106,13 @@ export const FcmBreedingFormik = ({ label }) => {
 
   // check if the previous steps are completed
   useEffect(() => {
-    setAreprevStepsCompleted(
-      checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 3])
-    );
+    setAreprevStepsCompleted(checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 3]));
   }, []);
 
   // check if the parents are from the same breed
   useEffect(() => {
     if (arePrevStepsCompleted) {
-      if (
-        steps[2].stepData.breed.toLowerCase() ===
-        steps[3].stepData.breed.toLowerCase()
-      ) {
+      if (steps[2].stepData.breed.toLowerCase() === steps[3].stepData.breed.toLowerCase()) {
         sethaveParentsSameBreed(true);
       }
     }
@@ -136,10 +132,15 @@ export const FcmBreedingFormik = ({ label }) => {
   /*************************************************************************************************** */
 
   const handleSubmit = async (values) => {
-    console.log("*** REMOVE PREV PUPP***");
+    if (!checkValidParentsAge(values.breedingDate, steps)) {
+      return fireSwalError("Los padres de la camada no pueden ser diez años mayores a la fecha de cruza, si existe un error corrige los datos del padre que corresponda");
+    }
+
+    const upperCaseValues = propertiesToUpperCase(values);
     // remove previously created puppies. form values is used because is the data before the form is edited
 
-    if (!(await handleConfirmPuppiesTransfer(values))) {
+    console.log(upperCaseValues);
+    if (!(await handleConfirmPuppiesTransfer(upperCaseValues))) {
       return;
     }
     fireSwalWait();
@@ -147,12 +148,12 @@ export const FcmBreedingFormik = ({ label }) => {
     // check transfer puppies
 
     for (let i = 0; i < registersAmount; i++) {
-      if (values[`isTransferPending${i + 1}`]) {
+      if (upperCaseValues[`isTransferPending${i + 1}`]) {
       }
     }
 
     // adding registers amount
-    let newValues = { ...values };
+    let newValues = { ...upperCaseValues };
     newValues.registersAmount = registersAmount;
 
     dispatch(removePreviousPuppies(formValues.puppies));
@@ -160,12 +161,10 @@ export const FcmBreedingFormik = ({ label }) => {
     Swal.close();
     // create dogs as fcm
     let newPuppies = [];
-    for (let puppy of values.puppies) {
+    for (let puppy of upperCaseValues.puppies) {
       let fcmPuppy = null;
       puppy.birthDate = values.birthDate;
-      puppy.registerNum = `En trámite - ${puppy.petName} - ${dayjs().format(
-        "DD-MM-YY HH:mm"
-      )}`;
+      puppy.registerNum = `En trámite - ${puppy.petName} - ${dayjs().format("DD-MM-YY HH:mm")}`;
 
       fcmPuppy = await dispatch(createFcmDog(puppy, false));
 
@@ -187,14 +186,10 @@ export const FcmBreedingFormik = ({ label }) => {
 
   const handleConfirmPuppiesTransfer = async (values) => {
     // get the puppies with transfers
-    setPuppyTransfers(
-      values.puppies.filter((element) => element.isTransferPending)
-    );
+    setPuppyTransfers(values.puppies.filter((element) => element.isTransferPending));
 
     if (puppyTransfers.length > 0) {
-      const confirmation = await fireSwalConfirmation(
-        `Se está solicitando la transferencia de ${puppyTransfers.length} cachorros. Por lo que se agregarán los trámites correspondientes`
-      );
+      const confirmation = await fireSwalConfirmation(`Se está solicitando la transferencia de ${puppyTransfers.length} cachorros. Por lo que se agregarán los trámites correspondientes`);
       if (!confirmation) {
         return false;
       }
@@ -217,10 +212,7 @@ export const FcmBreedingFormik = ({ label }) => {
           {stepLabel}
         </Typography>
         <Card sx={{ padding: "2rem" }}>
-          <Typography>
-            Para poder realizar este paso antes es necesario completar los 4
-            pasos anteriores y verificar que ambos padres sean de la misma raza.
-          </Typography>
+          <Typography>Para poder realizar este paso antes es necesario completar los 4 pasos anteriores y verificar que ambos padres sean de la misma raza.</Typography>
         </Card>
       </Fragment>
     );
@@ -238,10 +230,7 @@ export const FcmBreedingFormik = ({ label }) => {
 
       {!isEditable && (
         <Box sx={{ mb: "3rem" }}>
-          <Typography sx={{ mb: "2rem", lineHeight: "1.5" }}>
-            Los datos han sido llenados, puedes continuar con el paso siguiente,
-            editar los datos o remover la selección.
-          </Typography>
+          <Typography sx={{ mb: "2rem", lineHeight: "1.5" }}>Los datos han sido llenados, puedes continuar con el paso siguiente, editar los datos o remover la selección.</Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
             <Button
               fullWidth={true}
@@ -281,14 +270,8 @@ export const FcmBreedingFormik = ({ label }) => {
         <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
           Notas:
         </Typography>
-        <Typography mb="1rem">
-          Solo llenar los datos de los cachorros de los cuales se pretenda
-          obtener el registro.
-        </Typography>
-        <Typography mb="1rem">
-          En el llenado de los cachorros, primero poner los machos y después las
-          hembras.
-        </Typography>
+        <Typography mb="1rem">Solo llenar los datos de los cachorros de los cuales se pretenda obtener el registro.</Typography>
+        <Typography mb="1rem">En el llenado de los cachorros, primero poner los machos y después las hembras.</Typography>
       </Box>
 
       {/* Formik */}
@@ -310,49 +293,22 @@ export const FcmBreedingFormik = ({ label }) => {
                 </Typography>
               </Grid>
               <Grid item xs={6} md={4}>
-                <DatePickerFieldWrapper
-                  name="breedingDate"
-                  label="Fecha de cruza"
-                  disabled={!isEditable}
-                />
+                <DatePickerFieldWrapper name="breedingDate" label="Fecha de cruza" disabled={!isEditable} />
               </Grid>
               <Grid item xs={6} md={4}>
-                <DatePickerFieldWrapper
-                  name="birthDate"
-                  label="Fecha de nacimiento"
-                  disabled={!isEditable}
-                />
+                <DatePickerFieldWrapper name="birthDate" label="Fecha de nacimiento" disabled={!isEditable} />
               </Grid>
               <Grid item xs={6} md={4}>
-                <TextFieldWrapper
-                  name="birthPlace"
-                  label="Lugar de nacimiento"
-                  disabled={!isEditable}
-                />
+                <TextFieldWrapper name="birthPlace" label="Lugar de nacimiento" disabled={!isEditable} />
               </Grid>
               <Grid item xs={6} md={4}>
-                <TextFieldWrapper
-                  name="malesAlive"
-                  label="Machos vivos"
-                  disabled={!isEditable}
-                  type="number"
-                />
+                <TextFieldWrapper name="malesAlive" label="Machos vivos" disabled={!isEditable} type="number" />
               </Grid>
               <Grid item xs={6} md={4}>
-                <TextFieldWrapper
-                  name="femalesAlive"
-                  label="Hembras vivas"
-                  disabled={!isEditable}
-                  type="number"
-                />
+                <TextFieldWrapper name="femalesAlive" label="Hembras vivas" disabled={!isEditable} type="number" />
               </Grid>
               <Grid item xs={6} md={4}>
-                <TextFieldWrapper
-                  name="death"
-                  label="Muertos"
-                  disabled={!isEditable}
-                  type="number"
-                />
+                <TextFieldWrapper name="death" label="Muertos" disabled={!isEditable} type="number" />
               </Grid>
               <Grid item xs={12} mt="4rem">
                 <Typography component="h4" variant="h5">
@@ -366,20 +322,12 @@ export const FcmBreedingFormik = ({ label }) => {
                     {values.puppies.map((_, index) => (
                       <Fragment key={index}>
                         <Grid item xs={12}>
-                          <Typography
-                            component="h5"
-                            variant="h6"
-                            textAlign={"center"}
-                          >
+                          <Typography component="h5" variant="h6" textAlign={"center"}>
                             {`Cachorro ${index + 1}`}
                           </Typography>
                         </Grid>
                         <Grid item xs={4} md={3}>
-                          <TextFieldWrapper
-                            name={`puppies.${index}.petName`}
-                            label="Nombre"
-                            disabled={!isEditable}
-                          />
+                          <TextFieldWrapper name={`puppies.${index}.petName`} label="Nombre" disabled={!isEditable} />
                         </Grid>
                         <Grid item xs={4} md={2}>
                           <SelectWrapper
@@ -387,31 +335,18 @@ export const FcmBreedingFormik = ({ label }) => {
                             label="Sexo"
                             disabled={!isEditable}
                             options={{
-                              male: "Macho",
-                              female: "Hembra",
+                              MALE: "MACHO",
+                              FEMALE: "HEMBRA",
                             }}
                           />
                         </Grid>
                         <Grid item xs={4} md={2}>
-                          <TextFieldWrapper
-                            name={`puppies.${index}.color`}
-                            label="Color"
-                            disabled={!isEditable}
-                          />
+                          <TextFieldWrapper name={`puppies.${index}.color`} label="Color" disabled={!isEditable} />
                         </Grid>
                         <Grid item xs={6} md={3}>
-                          <CheckboxInputWrapper
-                            name={`puppies.${index}.isTransferPending`}
-                            label="Se realizará cambio de propietario"
-                            disabled={!isEditable}
-                          />
+                          <CheckboxInputWrapper name={`puppies.${index}.isTransferPending`} label="Se realizará cambio de propietario" disabled={!isEditable} />
                         </Grid>
-                        <Grid
-                          item
-                          xs={6}
-                          md={2}
-                          sx={{ display: "flex", justifyContent: "center" }}
-                        >
+                        <Grid item xs={6} md={2} sx={{ display: "flex", justifyContent: "center" }}>
                           {isEditable && (
                             <Button
                               disabled={isSubmitting}
@@ -439,12 +374,7 @@ export const FcmBreedingFormik = ({ label }) => {
                           mb: "4rem",
                         }}
                       >
-                        <Button
-                          disabled={isSubmitting}
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => push(emptyPuppy)}
-                        >
+                        <Button disabled={isSubmitting} variant="contained" color="secondary" onClick={() => push(emptyPuppy)}>
                           Agrega cachorro
                         </Button>
                       </Grid>

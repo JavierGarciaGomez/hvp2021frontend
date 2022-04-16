@@ -17,6 +17,7 @@ import { Info } from "@mui/icons-material";
 export const initialState = {
   puppiesNum: 0,
   partnerNum: 0,
+  tattosNum: 0,
   olderThan3Months: false,
   transfersNum: 0,
   sedationIsNeeded: false,
@@ -51,7 +52,7 @@ export const FcmCalculator = ({ recProcedure = {} }) => {
         <p>
           <span className="fw-bold">Nota:</span> Los costos de esta calculadora
           son con respecto a los trámites de la FCM, pero pueden haber costos
-          adicionales.
+          adicionales, especialmente lo relativo a la sedación en caso de perros intranquilos. De igual forma los precios dependen de la FCM, por lo que están sujetos a cambios sin previo aviso.
         </p>
       </div>
       {/* Select procedure */}

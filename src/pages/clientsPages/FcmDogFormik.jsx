@@ -43,7 +43,7 @@ export const FcmDogFormik = () => {
   const { id } = useParams();
   const { client } = useSelector((state) => state.clients);
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, steps, currentProps } = fcmPackage;
+  const { activeStep, steps,  } = fcmPackage;
 
   const [filesPedigreeFront, setfilesPedigreeFront] = useState([]);
   const [filesPedigreeBack, setfilesPedigreeBack] = useState([]);

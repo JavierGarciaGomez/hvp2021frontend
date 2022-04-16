@@ -5,16 +5,11 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { startChecking } from "../actions/authActions";
 import { AuthPage } from "../pages/authPages/loginPage/AuthPage";
 import { MainPageLayout } from "../pages/mainPages/MainPageLayout";
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import { roleTypes } from "../types/types";
-
 import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { checkAuthorization } from "../helpers/utilities";
 import { ClientLayout } from "../pages/clientsPages/ClientLayout";
-
-
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
 import { PackagePdf } from "../pages/other/PackagePdf";
 
@@ -27,17 +22,10 @@ export const AppRouter = () => {
   });
   const dispatch = useDispatch();
   const { checking, role } = useSelector((state) => state.auth);
-  // const [isCollaborator, setisCollaborator] = useState(false);
-
-  // todo: doing google login
-
+  
   useEffect(() => {
     dispatch(startChecking());
   }, [dispatch]);
-
-  // useEffect(() => {
-  //   setisCollaborator(checkAuthorization(role, roleTypes.collaborator));
-  // }, [role]);
 
   if (checking) {
     return <CircularProgress />;
@@ -62,9 +50,7 @@ export const AppRouter = () => {
             path="/other/print/fcmPackage/:fcmPackageId"
             element={<PackagePdf />}
           ></Route>
-
           {/* <Route path="*" element={<LoginPage />} /> */}
-
           {/* <Route path="/auth/register" element={<LoginPage />} /> */}
         </Routes>
       </HashRouter>

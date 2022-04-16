@@ -30,31 +30,32 @@ export const FcmDogStepLayout = () => {
   }, [activeStep]);
 
   useEffect(() => {
-    if (needsConfirmation) {
-      handleStepProps({
-        isEditable: false,
-        formWrapperTitle: "Confirma el formulario",
-      });
-    }
-  }, [needsConfirmation]);
-
-  useEffect(() => {
     if (stepData) {
-      handleStepProps({
-        formWrapperTitle: "Perro seleccionado",
-        isEditable: false,
-      });
+      if (needsConfirmation) {
+        handleStepProps({
+          isEditable: false,
+          formWrapperTitle: "Confirma el formulario",
+        });
+      } else {
+        handleStepProps({
+          isEditable: false,
+          formWrapperTitle: "Perro seleccionado",
+        });
+      }
     }
-  }, [activeStep, stepData]);
+  }, [stepData, needsConfirmation]);
 
   useEffect(() => {
     if (activeStep === 2) {
-      setRequiredSex("male");
+      setRequiredSex("MALE");
     }
     if (activeStep === 3) {
-      setRequiredSex("female");
+      setRequiredSex("FEMALE");
     }
   }, [activeStep]);
+
+  console.log({ ...steps[activeStep] });
+  console.log({ ...stepProps });
 
   return (
     <Fragment>
@@ -62,21 +63,9 @@ export const FcmDogStepLayout = () => {
         {stepLabel}
       </Typography>
       {!stepData ? (
-        <FcmSelectDogOptions
-          stepData={stepData}
-          handleStepProps={handleStepProps}
-          stepProps={stepProps}
-          handleResetStepProps={handleResetStepProps}
-          requiredSex={requiredSex}
-        />
+        <FcmSelectDogOptions stepData={stepData} handleStepProps={handleStepProps} stepProps={stepProps} handleResetStepProps={handleResetStepProps} requiredSex={requiredSex} />
       ) : (
-        <FcmDogFormWrapper
-          stepData={stepData}
-          stepProps={stepProps}
-          handleStepProps={handleStepProps}
-          handleResetStepProps={handleResetStepProps}
-          requiredSex={requiredSex}
-        />
+        <FcmDogFormWrapper stepData={stepData} stepProps={stepProps} handleStepProps={handleStepProps} handleResetStepProps={handleResetStepProps} requiredSex={requiredSex} />
       )}
     </Fragment>
   );

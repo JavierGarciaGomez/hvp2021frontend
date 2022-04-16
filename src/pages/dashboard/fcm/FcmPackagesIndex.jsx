@@ -1,13 +1,11 @@
 import { DeleteOutline } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import dayjs from "dayjs";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  deleteFcmPackage,
-  startLoadingAllFcm,
-} from "../../../actions/fcmActions";
+import { deleteFcmPackage, startLoadingAllFcm } from "../../../actions/fcmActions";
 import { fireSwalConfirmation } from "../../../helpers/utilities";
 
 // todo try to convert it to a layout component for fcm
@@ -17,12 +15,7 @@ export const FcmPackagesIndex = () => {
   const { allFcmPackages } = allFcm;
 
   const handleDelete = async (id) => {
-    if (
-      !(await fireSwalConfirmation(
-        "¿Estás seguro de borrar este objeto de la base de datos? Esta acción es irreversible y podría afectar trámites comenzados"
-      ))
-    )
-      return;
+    if (!(await fireSwalConfirmation("¿Estás seguro de borrar este objeto de la base de datos? Esta acción es irreversible y podría afectar trámites comenzados"))) return;
 
     // todo
     dispatch(deleteFcmPackage(id, true));
@@ -36,7 +29,7 @@ export const FcmPackagesIndex = () => {
       flex: 1,
       editable: false,
       // todo review
-      valueGetter: (params) => `Pedigrí` || "",
+      valueGetter: (params) => params.row.packageType,
     },
     {
       field: "status",
@@ -65,7 +58,7 @@ export const FcmPackagesIndex = () => {
       headerName: "Fecha de inicio",
       flex: 1,
       editable: false,
-      // todo review
+      valueGetter: (params) => dayjs(params.row.creationDate),
     },
 
     {
@@ -86,10 +79,7 @@ export const FcmPackagesIndex = () => {
               <Button>Ver</Button>
             </Link>
 
-            <DeleteOutline
-              sx={{ color: "error.main", cursor: "pointer" }}
-              onClick={() => handleDelete(params.id)}
-            />
+            <DeleteOutline sx={{ color: "error.main", cursor: "pointer" }} onClick={() => handleDelete(params.id)} />
           </Box>
         );
       },

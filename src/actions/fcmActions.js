@@ -2,30 +2,12 @@ import { ClassNames } from "@emotion/react";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { array } from "yup";
-import {
-  removeArrayElementById,
-  updateArrayElementById,
-} from "../helpers/arrayUtilities";
-import {
-  areAllStepsCompleted,
-  insertOrUpdateProcedureById,
-  isLastStep,
-  removeProcedureByIdAndType,
-} from "../helpers/fcmUtilities";
+import { removeArrayElementById, updateArrayElementById } from "../helpers/arrayUtilities";
+import { areAllStepsCompleted, insertOrUpdateProcedureById, isLastStep, removeProcedureByIdAndType } from "../helpers/fcmUtilities";
 import { fetchConToken, fetchSinToken } from "../helpers/fetch";
-import {
-  fireSwalError,
-  fireSwalSuccess,
-  objectContainsObjectProperties,
-  printAndFireError,
-  replaceElementInCollection,
-} from "../helpers/utilities";
+import { fireSwalError, fireSwalSuccess, objectContainsObjectProperties, printAndFireError, replaceElementInCollection } from "../helpers/utilities";
 import { fcmStepTypes, types } from "../types/types";
-import {
-  clientStartLoading,
-  unlinkFcmDogFromClient,
-  updateClientReducer,
-} from "./clientsActions";
+import { clientStartLoading, unlinkFcmDogFromClient, updateClientReducer } from "./clientsActions";
 import { userRemoveFcmDog } from "./userActions";
 
 /***************************************************************/
@@ -123,29 +105,19 @@ export const updateFcmPartner = (object) => {
   return async (dispatch, getState) => {
     try {
       // fetch the update
-      const resp = await fetchConToken(
-        `fcm/partners/${object._id}`,
-        object,
-        "PUT"
-      );
+      const resp = await fetchConToken(`fcm/partners/${object._id}`, object, "PUT");
       const body = await resp.json();
 
       if (body.ok) {
         // update the data in client
         const client = getState().clients.client;
         if (client) {
-          client.linkedFcmPartners = replaceElementInCollection(
-            object,
-            client.linkedFcmPartners
-          );
+          client.linkedFcmPartners = replaceElementInCollection(object, client.linkedFcmPartners);
           dispatch(updateClientReducer({ ...client }));
         }
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmPartners = updateArrayElementById(
-          newAllFcm.allFcmPartners,
-          object
-        );
+        newAllFcm.allFcmPartners = updateArrayElementById(newAllFcm.allFcmPartners, object);
         dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
@@ -172,10 +144,7 @@ export const deleteFcmPartner = (id) => {
       if (body.ok) {
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmPartners = removeArrayElementById(
-          newAllFcm.allFcmPartners,
-          id
-        );
+        newAllFcm.allFcmPartners = removeArrayElementById(newAllFcm.allFcmPartners, id);
 
         dispatch(updateAllFcm(newAllFcm));
 
@@ -241,19 +210,13 @@ export const updateFcmDog = (object, fireSwal = true) => {
 
         const client = getState().clients.client;
         if (client) {
-          client.linkedDogs = replaceElementInCollection(
-            object,
-            client.linkedDogs
-          );
+          client.linkedDogs = replaceElementInCollection(object, client.linkedDogs);
           dispatch(updateClientReducer({ ...client }));
         }
 
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmDogs = updateArrayElementById(
-          newAllFcm.allFcmDogs,
-          object
-        );
+        newAllFcm.allFcmDogs = updateArrayElementById(newAllFcm.allFcmDogs, object);
         dispatch(updateAllFcm(newAllFcm));
 
         fireSwal && fireSwalSuccess(body.msg);
@@ -341,30 +304,20 @@ export const createFcmtransfer = (object) => {
 export const updateFcmtransfer = (object) => {
   return async (dispatch, getState) => {
     try {
-      const resp = await fetchConToken(
-        `fcm/fcmTransfers/${object._id}`,
-        object,
-        "PUT"
-      );
+      const resp = await fetchConToken(`fcm/fcmTransfers/${object._id}`, object, "PUT");
       const body = await resp.json();
 
       if (body.ok) {
         const client = getState().clients.client;
         if (client) {
-          client.linkedFcmTransfers = replaceElementInCollection(
-            object,
-            client.linkedFcmTransfers
-          );
+          client.linkedFcmTransfers = replaceElementInCollection(object, client.linkedFcmTransfers);
 
           dispatch(updateClientReducer({ ...client }));
         }
 
         // update the data in allFCM
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmTransfers = updateArrayElementById(
-          newAllFcm.allFcmTransfers,
-          object
-        );
+        newAllFcm.allFcmTransfers = updateArrayElementById(newAllFcm.allFcmTransfers, object);
         dispatch(updateAllFcm(newAllFcm));
 
         fireSwalSuccess(body.msg);
@@ -389,10 +342,7 @@ export const deleteFcmTransfer = (id, fireSwal = false) => {
 
       if (body.ok) {
         const newAllFcm = { ...getState().fcm.allFcm };
-        newAllFcm.allFcmTransfers = removeArrayElementById(
-          newAllFcm.allFcmTransfers,
-          id
-        );
+        newAllFcm.allFcmTransfers = removeArrayElementById(newAllFcm.allFcmTransfers, id);
 
         dispatch(updateAllFcm(newAllFcm));
 
@@ -460,9 +410,7 @@ export const deleteFcmPackage = (id, fireSwal = false) => {
         const newAllFcm = { ...getState().fcm.allFcm };
 
         // delete puppies and transfers
-        const fcmPackage = newAllFcm.allFcmPackages.find(
-          (element) => element._id === id
-        );
+        const fcmPackage = newAllFcm.allFcmPackages.find((element) => element._id === id);
 
         for (let puppy of fcmPackage.steps[4].stepData.puppies) {
           console.log(puppy);
@@ -470,16 +418,11 @@ export const deleteFcmPackage = (id, fireSwal = false) => {
             await dispatch(deleteFcmDog(puppy._id));
           }
 
-          const fcmTransfer = newAllFcm.allFcmTransfers.find(
-            (element) => element.dog._id === puppy._id
-          );
+          const fcmTransfer = newAllFcm.allFcmTransfers.find((element) => element.dog._id === puppy._id);
           if (fcmTransfer) await dispatch(deleteFcmTransfer(fcmTransfer._id));
         }
 
-        newAllFcm.allFcmPackages = removeArrayElementById(
-          newAllFcm.allFcmPackages,
-          id
-        );
+        newAllFcm.allFcmPackages = removeArrayElementById(newAllFcm.allFcmPackages, id);
 
         dispatch(updateAllFcm(newAllFcm));
 
@@ -531,11 +474,7 @@ export const updateFcmPackage = (id) => {
   return async (dispatch, getState) => {
     try {
       const { fcmPackage } = getState().fcm;
-      const resp = await fetchConToken(
-        `fcm/fcmPackages/${id}`,
-        fcmPackage,
-        "PUT"
-      );
+      const resp = await fetchConToken(`fcm/fcmPackages/${id}`, fcmPackage, "PUT");
       const body = await resp.json();
 
       if (body.ok) {
@@ -552,6 +491,12 @@ export const updateFcmPackage = (id) => {
   };
 };
 
+/**************HANDLING PACKAGES*********************/
+
+export const setFcmPackageType = (fcmPackageType = "") => ({
+  type: types.fcmPackageSetType,
+  payload: fcmPackageType,
+});
 /**************HANDLING PACKAGES*********************/
 export const updateFcmPackageProperty = (propertyName, value) => {
   return async (dispatch, getState) => {
@@ -578,10 +523,10 @@ export const updateStepReferences = (object) => {
     const { fcmPackage } = getState().fcm;
     const newFcmPackage = { ...fcmPackage };
     const { activeStep } = newFcmPackage;
-    const { packageProperty } = newFcmPackage.currentProps;
+    // const { packageProperty } = newFcmPackage.currentProps;
 
     // todo: delete first and maybe second
-    newFcmPackage[packageProperty] = object._id;
+    // newFcmPackage[packageProperty] = object._id;
     newFcmPackage.steps[activeStep].dataId = object._id;
     newFcmPackage.steps[activeStep].stepData = object;
 
@@ -614,9 +559,7 @@ export const addAndRemoveFcmCertificatesProcedures = (puppy) => {
     const currentStep = { ...steps[activeStep] };
 
     // remove previous procedures from the same step
-    const newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
+    const newProcedures = procedures.filter((element) => element.stepFromOrigin !== activeStep);
 
     newProcedures.push({
       stepFromOrigin: activeStep,
@@ -636,9 +579,7 @@ export const addAndRemoveFcmTransfersProcedures = (fcmTransfer) => {
     const currentStep = { ...steps[activeStep] };
 
     // remove previous procedures from the same step
-    const newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
+    const newProcedures = procedures.filter((element) => element.stepFromOrigin !== activeStep);
 
     newProcedures.push({
       stepFromOrigin: activeStep,
@@ -657,9 +598,7 @@ export const addAndRemoveFcmPartnerProcedures = (stepData) => {
     const { procedures, activeStep, steps } = newFcmPackage;
 
     // remove previous procedures from the same step
-    let newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
+    let newProcedures = procedures.filter((element) => element.stepFromOrigin !== activeStep);
 
     // remove procedures with the same dataid
     // newProcedures = newProcedures.filter(
@@ -727,9 +666,7 @@ export const addAndRemoveFcmProcedures = (stepData) => {
     const { procedures, activeStep } = newFcmPackage;
 
     // remove previous procedures from the same step
-    const newProcedures = procedures.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
+    const newProcedures = procedures.filter((element) => element.stepFromOrigin !== activeStep);
 
     if (activeStep === 0 || activeStep === 1) {
       if (stepData.isPending) {
@@ -840,11 +777,7 @@ export const handleNextFcmPackageStep = () => {
 
     // It's the last step, but not all steps have been completed,
     // find the first step that hasnt been completed
-    const newActiveStep =
-      isLastStep(activeStep, steps) &&
-      !areAllStepsCompleted(completedSteps, steps)
-        ? steps.findIndex((step, i) => !(i in completedSteps))
-        : activeStep + 1;
+    const newActiveStep = isLastStep(activeStep, steps) && !areAllStepsCompleted(completedSteps, steps) ? steps.findIndex((step, i) => !(i in completedSteps)) : activeStep + 1;
 
     // set active step to 2
     dispatch(setFcmPackageStep(newActiveStep));
@@ -905,27 +838,13 @@ export const setFcmStepProperty = (stepIndex, propertyName, value) => {
 export const cleanFcmStep = () => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
-    const {
-      activeStep,
-      procedures,
-      completedSteps,
-      currentProps,
-      steps,
-      breedingForm,
-    } = fcmPackage;
+    const { activeStep, procedures, completedSteps, steps } = fcmPackage;
 
-    const relatedSteps = steps.reduce(
-      (arr, step, index) => (
-        step.stepFromOrigin === activeStep && arr.push(index), arr
-      ),
-      []
-    );
+    const relatedSteps = steps.reduce((arr, step, index) => (step.stepFromOrigin === activeStep && arr.push(index), arr), []);
     relatedSteps.push(activeStep);
 
     // search and remove procedures
-    const newProcedures = procedures.filter(
-      (element) => !relatedSteps.includes(element.stepFromOrigin)
-    );
+    const newProcedures = procedures.filter((element) => !relatedSteps.includes(element.stepFromOrigin));
 
     let newSteps = [...fcmPackage.steps];
     // search and remove completed steps
@@ -938,9 +857,7 @@ export const cleanFcmStep = () => {
     });
 
     // search and remove steps
-    newSteps = newSteps.filter(
-      (element) => !relatedSteps.includes(element.stepFromOrigin)
-    );
+    newSteps = newSteps.filter((element) => !relatedSteps.includes(element.stepFromOrigin));
 
     // search and remove packageproperty
     const newFcmPackage = { ...fcmPackage };
@@ -1015,20 +932,14 @@ export const addFcmPartnerStep = (object) => {
 
     // in case of parents transfers dont add step if existed previously
     if (currentStep.stepType === fcmStepTypes.fcmPartnerStep) {
-      const existentStep = newSteps.find(
-        (step) => step.stepFromOrigin === activeStep
-      );
+      const existentStep = newSteps.find((step) => step.stepFromOrigin === activeStep);
       if (!existentStep) {
         newSteps.splice(newSteps.length - 1, 0, object);
       }
     }
 
     if (activeStep === 4) {
-      const existentStep = newSteps.find(
-        (step) =>
-          step.stepFromOrigin === activeStep &&
-          step.stepObject.puppyName === object.stepObject.puppyName
-      );
+      const existentStep = newSteps.find((step) => step.stepFromOrigin === activeStep && step.stepObject.puppyName === object.stepObject.puppyName);
       if (!existentStep) {
         newSteps.splice(newSteps.length - 1, 0, object);
       }
@@ -1108,20 +1019,14 @@ export const oldAddNewFcmStep = (object) => {
 
     // in case of parents transfers dont add step if existed previously
     if (currentStep.stepType === fcmStepTypes.fcmPartnerStep) {
-      const existentStep = newSteps.find(
-        (step) => step.stepFromOrigin === activeStep
-      );
+      const existentStep = newSteps.find((step) => step.stepFromOrigin === activeStep);
       if (!existentStep) {
         newSteps.splice(newSteps.length - 1, 0, object);
       }
     }
 
     if (activeStep === 4) {
-      const existentStep = newSteps.find(
-        (step) =>
-          step.stepFromOrigin === activeStep &&
-          step.stepObject.puppyName === object.stepObject.puppyName
-      );
+      const existentStep = newSteps.find((step) => step.stepFromOrigin === activeStep && step.stepObject.puppyName === object.stepObject.puppyName);
       if (!existentStep) {
         newSteps.splice(newSteps.length - 1, 0, object);
       }
@@ -1138,9 +1043,7 @@ export const removeFcmSteps = () => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
     const { steps, activeStep } = fcmPackage;
-    const newSteps = steps.filter(
-      (element) => element.stepFromOrigin !== activeStep
-    );
+    const newSteps = steps.filter((element) => element.stepFromOrigin !== activeStep);
     // newSteps.splice(newSteps.length - 1, 0, object);
     dispatch(updateFcmPackageProperty("steps", newSteps));
   };
@@ -1259,9 +1162,7 @@ export const addFcmProcedure = (object) => {
 
     console.log("***Estoy en addfcmprocedure, objecttocheck", objectToCheck);
 
-    const elementIndex = newProcedures.findIndex((element) =>
-      objectContainsObjectProperties(element, objectToCheck)
-    );
+    const elementIndex = newProcedures.findIndex((element) => objectContainsObjectProperties(element, objectToCheck));
     if (elementIndex >= 0) {
       newProcedures[elementIndex] = object;
     } else {
@@ -1284,9 +1185,7 @@ export const removeFcmProcedure = (object) => {
       type: object.type,
     };
 
-    newProcedures = newProcedures.filter(
-      (element) => !objectContainsObjectProperties(element, objectToCheck)
-    );
+    newProcedures = newProcedures.filter((element) => !objectContainsObjectProperties(element, objectToCheck));
     console.log("newprocedurs after filtering", newProcedures);
 
     dispatch(setFcmPackageProp("procedures", newProcedures));
@@ -1401,9 +1300,7 @@ export const removeFcmPuppiesTransfersSteps = (puppiesTransfers = []) => {
   return async (dispatch, getState) => {
     const { fcmPackage } = getState().fcm;
     const { steps, activeStep } = fcmPackage;
-    const puppiesTransfersNames = puppiesTransfers.map(
-      (element) => element.puppyName
-    );
+    const puppiesTransfersNames = puppiesTransfers.map((element) => element.puppyName);
 
     console.log("puppiesTransferNames", puppiesTransfersNames);
     const newSteps = steps.filter((element) => {

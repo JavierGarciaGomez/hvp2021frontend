@@ -1,5 +1,9 @@
+import { Card } from "@mui/material";
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setFcmPackageType } from "../../actions/fcmActions";
+import { fcmPackagesTypes } from "../../types/types";
 
 const linksData = [
   {
@@ -7,6 +11,13 @@ const linksData = [
     desc: "Trámite Pedigree.",
     link: "/clients/procedure/pedigree",
   },
+  {
+    label: "Tramitar pureza racial ??????",
+    desc: "Trámite Pedigree.",
+    link: "/clients/procedure/",
+    packageType: fcmPackagesTypes.RACEPURITY,
+  },
+
   {
     label: "Dar de alta a socio ya registrado",
     desc: "Trámite para dar de alta los datos de un socio con credencial vigente. Para socios Ya registrados. Un socio con registro vigente es necesario para todos los trámites de la Federación Canófila Mexicana.",
@@ -26,18 +37,25 @@ const linksData = [
 ];
 
 export const ClientSelectProcedure = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleClickLink = (linkData) => {
+    dispatch(setFcmPackageType(linkData.packageType));
+    navigate(linkData.link);
+  };
+
   return (
     <Fragment>
       <h2 className="heading--secondary"> Inicia un nuevo trámite </h2>{" "}
       <div className="proceduresWrapper">
         {linksData.map((element) => {
           return (
-            <Link key={element.label} to={element.link}>
+            <Card key={element.label} onClick={() => handleClickLink(element)}>
               <div className="procedure">
-                <div className="procedure_name">{element.label}</div>{" "}
-                <div className="procedure_desc">{element.desc}</div>
+                <div className="procedure_name">{element.label}</div> <div className="procedure_desc">{element.desc}</div>
               </div>
-            </Link>
+            </Card>
           );
         })}
       </div>

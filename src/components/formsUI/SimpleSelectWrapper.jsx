@@ -9,13 +9,7 @@ export const SimpleSelectWrapper = ({ options, label, value, setValue }) => {
   return (
     <FormControl fullWidth sx={{ mb: "3rem" }}>
       <InputLabel id="demo-simple-select-label">{label}</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={value}
-        label={label}
-        onChange={handleChange}
-      >
+      <Select labelId="demo-simple-select-label" id="demo-simple-select" value={value} label={label} onChange={handleChange}>
         {options.map((option) => {
           return (
             <MenuItem key={option.value} value={option.value}>

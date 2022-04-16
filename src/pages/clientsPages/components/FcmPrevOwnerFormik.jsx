@@ -9,12 +9,9 @@ import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
 import { useState } from "react";
 import { ButtonFormWrapper } from "../../../components/formsUI/ButtonFormWrapper";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
-import {
-  fireSwalError,
-  isObjectEmpty,
-  setUrlValueOrRefreshImage,
-} from "../../../helpers/utilities";
+import { fireSwalError, isObjectEmpty, setUrlValueOrRefreshImage } from "../../../helpers/utilities";
 import Swal from "sweetalert2";
+import { propertiesToUpperCase } from "../../../helpers/objectUtilities";
 
 let initialValues = {
   firstName: "",
@@ -24,11 +21,7 @@ let initialValues = {
   urlBackIne: "",
 };
 
-export const FcmPrevOwnerFormik = ({
-  handleSubmitForm,
-  prevOwner,
-  handleCancel,
-}) => {
+export const FcmPrevOwnerFormik = ({ handleSubmitForm, prevOwner, handleCancel }) => {
   const [filesFrontINE, setfilesFrontINE] = useState([]);
   const [filesBackINE, setfilesBackINE] = useState([]);
 
@@ -50,6 +43,8 @@ export const FcmPrevOwnerFormik = ({
   }, []);
 
   const handleSubmit = async (values) => {
+    const upperCaseValues = propertiesToUpperCase(values);
+
     fireSwalWait("Cargando información", "Por favor, espere");
 
     if (filesFrontINE.length === 0 && !values.urlFrontIne) {
@@ -59,19 +54,11 @@ export const FcmPrevOwnerFormik = ({
       return fireSwalError("Se debe cargar la imagen trasera del INE");
     }
 
-    let newValues = { ...values };
+    let newValues = { ...upperCaseValues };
 
     // if there is a new file refresh the image
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesFrontINE,
-      "urlFrontIne"
-    );
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesBackINE,
-      "urlBackIne"
-    );
+    newValues = await setUrlValueOrRefreshImage(newValues, filesFrontINE, "urlFrontIne");
+    newValues = await setUrlValueOrRefreshImage(newValues, filesBackINE, "urlBackIne");
 
     handleSubmitForm(newValues);
     Swal.close();
@@ -93,9 +80,7 @@ export const FcmPrevOwnerFormik = ({
           <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
             Notas:
           </Typography>
-          <Typography mb="1rem">
-            Las imágenes deben tener un tamaño máximo de 1mb.
-          </Typography>
+          <Typography mb="1rem">Las imágenes deben tener un tamaño máximo de 1mb.</Typography>
         </Box>
 
         {/* Formik */}
@@ -124,43 +109,24 @@ export const FcmPrevOwnerFormik = ({
                   <TextFieldWrapper name="firstName" label="Nombre (s)" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="paternalSurname"
-                    label="Apellido paterno"
-                  />
+                  <TextFieldWrapper name="paternalSurname" label="Apellido paterno" />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="maternalSurname"
-                    label="Apellido materno"
-                  />
+                  <TextFieldWrapper name="maternalSurname" label="Apellido materno" />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography mb="2rem">INE frente</Typography>
-                  <DragImageUpload
-                    files={filesFrontINE}
-                    imgUrl={values.urlFrontIne}
-                    setFiles={setfilesFrontINE}
-                  ></DragImageUpload>
+                  <DragImageUpload files={filesFrontINE} imgUrl={values.urlFrontIne} setFiles={setfilesFrontINE}></DragImageUpload>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography mb="2rem">INE reverso</Typography>
-                  <DragImageUpload
-                    files={filesBackINE}
-                    setFiles={setfilesBackINE}
-                    imgUrl={values.urlBackIne}
-                  ></DragImageUpload>
+                  <DragImageUpload files={filesBackINE} setFiles={setfilesBackINE} imgUrl={values.urlBackIne}></DragImageUpload>
                 </Grid>
                 <Grid item xs={12} mb={2}>
                   <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
                     <ButtonFormWrapper> Guardar</ButtonFormWrapper>
 
-                    <Button
-                      variant="contained"
-                      fullWidth={true}
-                      onClick={handleCancel}
-                      color="error"
-                    >
+                    <Button variant="contained" fullWidth={true} onClick={handleCancel} color="error">
                       Cancelar
                     </Button>
                   </Box>

@@ -89,43 +89,56 @@ export const MainPagesServices = () => {
               bg="u-bgPrimaryDarker"
               imgName="consulta.jpg"
               title="Consultas"
-              text="Nuestra especialidad es la medicina canina y la felina, pero también
-          podemos atender a las mascotas exóticas. Nuestro propósito es
-          esforzarnos para que tanto las mascotas se encuentren saludables y los
-          propietarios tránquilos."
-              linkTo="consultation"
+              text="#HVP te ofrece consultas generales, de primera vez, cardiológicas, endocrinológicas, geriátricas, oncológicas, así como consultas especialistas de oftalmología veterinaria, intentando brindar los servicios con la mayor seguridad para todos mediante protocolos y puedas estar confiado que siempre velaremos por la vida y salud de tu mascota."
+              
             />
-            <ServiceCard
-              bg="u-bgPrimaryDarkest"
-              imgName="vaccine.jpg"
-              title="Vacunas"
-              text="El plan de vacunación de las mascotas es de vital importancia
-              pues con este se genera la inmunidad frente a enfermedades
-              recurrentes que pueden causar estragos en su salud."
-              linkTo={null}
-            />
+
 
             <ServiceCard
               bg="u-bgPrimaryDarkest"
               imgName="desp.jpg"
               title="Desparasitaciones"
-              text="Las desparasitaciones pueden ser internas o externas, y en
-              ambos casos es importante aplicarlas cotidianamente, para
-              prevenir que los parásitos causen daños mayores al organismo
-              de nuestras mascotas."
+              text="Tener a tu mascota saludable requiere de visitas periódicas con su médico para desparasitaciones internas y externas y así evitar riesgos de salud mediante esquemas convenientes para tu querida mascota según su edad y hábitos, puedes acudir a cualquiera de nuestras sucursales para este servicio #HVPURBAN #HVPHARBOR #HVPMONTEJO"
+              linkTo={null}
+            />
+
+            <ServiceCard
+              bg="u-bgPrimaryDarkest"
+              imgName="vaccine.jpg"
+              title="Vacunas"
+              text="Todas las mascotas tienen un ejército que los defiende de enfermedades contagiosas, pero debe ser enterando para poder combatirlas, estamos hablando de su sistema inmune y su entrenamiento son las vacunas, en #HVP te ofrecemos este servicio dando un esquema de vacunación personalizado para que tu mascota libre más batallas. Te esperamos en las sucursales #HVPURBAN #HVP HARBOR Y #HVPMONTEJO para brindarte nuestros servicios, ¡agenda ya!"
               linkTo={null}
             />
 
             <ServiceCard
               bg="u-bgPrimaryDarker"
+              imgName="profilax.jpg"
+              title=" Profilaxis dental"
+              text="La limpieza de la cavidad oral de tu mascotita es importante para la salud integral de ella, procura la limpieza cotidiana pero también evita afecciones que pueden afectar más allá de su boquita, agenda la valoración para el procedimiento y resuelve toda duda."
+              linkTo={null}
+            />
+            <ServiceCard
+              bg="u-bgPrimaryDarker"
               imgName="lab.jpg"
-              title="Laboratorio"
-              text="Para servicios de diagnóstico clínico contamos con pruebas de
-              laboratorio, biometrías hemáticas, químicas sanguíneas,
-              coprológicos, histopatologías y pruebas de gabinete como rayos
-              X, ultrasonido, ecocardiogramas, electrocardiogramas, etc.,
-              para un diagnóstico y pronostico certero."
-              linkTo="laboratory"
+              title="Estudios de laboratorio"
+              text="Somos un hospital comprometido con el diagnóstico certero por lo cual buscamos todas las posibilidades para llegar a este, realizando estudios de laboratorio como hemogramas, químicas sanguíneas, uroanálisis, coprológicos entre otras pruebas que nos permiten ofrecer el servicio de calidad que deseas en tu sucursal favorita #HVPURBAN #HVPHARBOR."
+
+            />
+                        <ServiceCard
+              bg="u-bgPrimaryDarkest"
+              imgName="gabinete.jpg"
+              title="Pruebas de gabinete"
+              text="Dentro de las herramientas de diagnóstico encontramos las de gabinete como los rayos x, electrocardiogramas, ecocardiogramas, ecografías y más por lo que nos hemos esforzado para brindar este servicio de forma confiable en nuestras instalaciones por parte de especialistas y técnicos externos que llegan hasta nuestras sucursales de #HVPURBAN y #HVPHARBOR para poder ofrecer un servicio confiable e integral con lo cual tu mascota estará en buenas manos."
+
+            />
+
+
+                        <ServiceCard
+              bg="u-bgPrimaryDarkest"
+              imgName="tonom.jpg"
+              title="Tonometría"
+              text="La tonometría es la medición de la presión intraocular que nos permite diagnosticar enfermedades que suelen afectar la visión de tu mascota, este servicio se les ofrece en consulta oftalmológica y a los colegas veterinarios que requieran el servicio para sus pacientes, realiza tu cita en la sucursal #HVPURBAN."
+
             />
 
             <ServiceCard
@@ -136,11 +149,11 @@ export const MainPagesServices = () => {
               mayores y menores, contamos con un quirófano plenamente
               equipado y las anestesias son mediante oxígeno, con lo que se
               obtienen mejores resultados."
-              linkTo="surgery"
+              
             />
 
             <ServiceCard
-              bg="u-bgPrimaryDarkest"
+              bg="u-bgPrimaryDarker"
               imgName="pedig.jpg"
               title="Trámites FCM"
               text="Somos inspectores oficiales de la Federación Canófila Mexicana
@@ -163,14 +176,14 @@ export const MainPagesServices = () => {
             />
 
             <ServiceCard
-              bg="u-bgPrimaryDarker"
+              bg="u-bgPrimaryDarkest"
               imgName="insemin.jpg"
               title="Inseminación artificial"
               text="Este servicio, ha cobrado mucha popularidad en nuestros días,
               pues la causa más común de infertilidad se debe a problemas
               conductuales (la hembra no se deja montar) y la Inseminación
               es la mejor opción para corregir el problema."
-              linkTo="insemination"
+              
             />
 
             <ServiceCard
@@ -185,17 +198,16 @@ export const MainPagesServices = () => {
               linkTo={null}
             />
 
-            <ServiceCard
-              bg="u-bgPrimaryDarkest"
-              imgName="profilax.jpg"
-              title=" Profilaxis dental"
-              text="La profilaxis es una intervención para la limpieza dental de
-              las mascotas que ayuda a desprender el sarro y la placa
-              bacteriana, con lo que se previenen diversas enfermedades,
-              incluso aquellas relacionadas con el corazón."
-              linkTo={null}
-            />
 
+
+            <ServiceCard
+              bg="u-bgPrimaryDarker"
+              imgName="catarata.jpg"
+              title="Cirugía de cataratas"
+              text="Contamos con equipamiento de vanguardia y personal altamente capacitado para realizar la resolución de cataratas por mínima innovación siendo reconocidos en el sureste mexicano por la especialidad de oftalmología veterinaria, agenda tu consulta donde te informaremos completamente y te daremos el protocolo para regresarle a tu mascotita la calidad de vida que merece."
+              
+            />
+            
             <ServiceCard
               bg="u-bgPrimaryDarkest"
               imgName="microchip.jpg"
@@ -208,14 +220,12 @@ export const MainPagesServices = () => {
               linkTo={null}
             />
 
-            <ServiceCard
+<ServiceCard
               bg="u-bgPrimaryDarker"
-              imgName="catarata.jpg"
-              title="Cirugía de cataratas"
-              text="Somos un referente en el sureste mexicano en oftalmología y en
-              cirugía de cataras, debido a que contamos con equipamiento de
-              vanguardia y profesionales en esta área médica."
-              linkTo="cataractSurgery"
+              imgName="vetPlans.jpg"
+              title="Planes de medicina preventiva"
+              text="La salud de tu mascota proviene de los cuidados diarios en tiempo y espacio, pero también en la prevención de enfermedades, en #HVP te ofrecemos planes de medicina preventiva adaptado a la edad de tu mascota, que incluyen consultas generales, vacunas, desparasitaciones, análisis de laboratorio, pruebas de gabinete y más. ¡Pregunta por ellos!"
+              
             />
           </div>
         </div>

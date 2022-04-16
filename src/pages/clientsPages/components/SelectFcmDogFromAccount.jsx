@@ -1,17 +1,11 @@
 import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setFcmActiveStepProperty,
-  updateStepReferences,
-} from "../../../actions/fcmActions";
+import { setFcmActiveStepProperty, updateStepReferences } from "../../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectById } from "../../../helpers/utilities";
 
-export const SelectFcmDogFromAccount = ({
-  handleCancelSelection,
-  handleStepProps,
-}) => {
+export const SelectFcmDogFromAccount = ({ handleCancelSelection, handleStepProps }) => {
   const { client } = useSelector((state) => state.clients);
   const [selectedFcmDogId, setselectedFcmDogId] = useState("");
 
@@ -32,24 +26,19 @@ export const SelectFcmDogFromAccount = ({
   }, [selectedFcmDogId]);
 
   const options = client.linkedDogs.map((fcmDog) => {
+    console.log("fcmDog", fcmDog);
     return {
       label: `${fcmDog.registerNum} - ${fcmDog.petName}`,
       value: fcmDog._id,
     };
   });
 
+  console.log("opciones", options);
+
   return (
     <Box>
-      <Typography mb="3rem">
-        Selecciona un perro vinculado a tu cuenta o cancela para regresar a las
-        opciones iniciales
-      </Typography>
-      <SimpleSelectWrapper
-        options={options}
-        label="Selecciona un perro"
-        value={selectedFcmDogId}
-        setValue={setselectedFcmDogId}
-      ></SimpleSelectWrapper>
+      <Typography mb="3rem">Selecciona un perro vinculado a tu cuenta o cancela para regresar a las opciones iniciales</Typography>
+      <SimpleSelectWrapper options={options} label="Selecciona un perro" value={selectedFcmDogId} setValue={setselectedFcmDogId}></SimpleSelectWrapper>
       <Button color="error" fullWidth onClick={handleCancelSelection}>
         Cancelar
       </Button>

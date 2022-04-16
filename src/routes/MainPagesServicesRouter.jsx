@@ -148,7 +148,7 @@ export const MainPageServicesRouter = () => {
                   Reproductiva o ginecológica (Cesáreas, partos), Traumatología
                   y Ortopedia, Urológica, Oncológica y Oftalmológica, con alta
                   experiencia en cataratas con mínima invasión. Ejemplos de
-                  cirugías: General: Cirugía Estética (Orejas y cola), Tumores
+                  cirugías: General: Tumores
                   cutáneos, heridas en general, Prolapsos, Hernias, etc.
                   Reproductiva: Ovario histerectomía (Castración en hembras),
                   Orquiectomía (Castración en machos), Vasectomía, Cesáreas,

@@ -8,15 +8,9 @@ import { checkIfStepsAreCompleted } from "../../../helpers/fcmUtilities";
 import { FcmTransferTable } from "./FcmTransferTable";
 import { FcmPrevOwnerFormik } from "./FcmPrevOwnerFormik";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
-import {
-  handleFcmCompleteStep,
-  setFcmActiveStepProperty,
-  updateStepReferences,
-  createFcmtransfer,
-  updateFcmtransfer,
-  addAndRemoveFcmTransfersProcedures,
-} from "../../../actions/fcmActions";
+import { handleFcmCompleteStep, setFcmActiveStepProperty, updateStepReferences, createFcmtransfer, updateFcmtransfer, addAndRemoveFcmTransfersProcedures } from "../../../actions/fcmActions";
 import { findElementBYId } from "../../../helpers/arrayUtilities";
+import { propertiesToUpperCase } from "../../../helpers/objectUtilities";
 
 const initialStepProps = {
   isEditable: true,
@@ -38,8 +32,7 @@ export const FcmTransferStepLayout = () => {
   const [arePrevStepsCompleted, setAreprevStepsCompleted] = useState(false);
   const [isDataFull, setisDataFull] = useState(false);
   const currentStep = steps[activeStep];
-  const { isPuppy, stepFromOrigin, stepData, stepLabel, needsConfirmation } =
-    currentStep;
+  const { isPuppy, stepFromOrigin, stepData, stepLabel, needsConfirmation } = currentStep;
   const [modality, setModality] = useState("missingPrevOwner");
   const [isStepCompleted, setisStepCompleted] = useState(false);
 
@@ -55,13 +48,9 @@ export const FcmTransferStepLayout = () => {
   // check if the previous steps are completed
   useEffect(() => {
     if (isPuppy) {
-      setAreprevStepsCompleted(
-        checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4, activeStep - 1])
-      );
+      setAreprevStepsCompleted(checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4, activeStep - 1]));
     } else {
-      setAreprevStepsCompleted(
-        checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4])
-      );
+      setAreprevStepsCompleted(checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4]));
     }
   }, [isPuppy]);
 
@@ -89,9 +78,7 @@ export const FcmTransferStepLayout = () => {
       setdog(findElementBYId(allFcm.allFcmDogs, stepData.dog) || null);
 
       setprevOwner(stepData.prevOwner || null);
-      setnewOwner(
-        findElementBYId(allFcm.allFcmPartners, stepData.newOwner) || null
-      );
+      setnewOwner(findElementBYId(allFcm.allFcmPartners, stepData.newOwner) || null);
     }
   }, [stepData]);
 
@@ -157,7 +144,9 @@ export const FcmTransferStepLayout = () => {
   };
 
   const handleSubmitForm = (values) => {
-    setprevOwner(values);
+    const upperCaseValues = propertiesToUpperCase(values);
+
+    setprevOwner(upperCaseValues);
     setisEditable(false);
     dispatch(setFcmActiveStepProperty("needsConfirmation", true));
   };
@@ -170,13 +159,9 @@ export const FcmTransferStepLayout = () => {
     fireSwalWait();
     let fcmTransfer = null;
     if (stepData._id) {
-      fcmTransfer = await dispatch(
-        updateFcmtransfer({ dog, prevOwner, newOwner, _id: stepData._id })
-      );
+      fcmTransfer = await dispatch(updateFcmtransfer({ dog, prevOwner, newOwner, _id: stepData._id }));
     } else {
-      fcmTransfer = await dispatch(
-        createFcmtransfer({ dog, prevOwner, newOwner })
-      );
+      fcmTransfer = await dispatch(createFcmtransfer({ dog, prevOwner, newOwner }));
     }
     if (!fcmTransfer) {
       return;
@@ -219,11 +204,7 @@ export const FcmTransferStepLayout = () => {
 
           {!isEditable && (
             <Fragment>
-              <FcmTransferTable
-                newOwner={newOwner}
-                prevOwner={prevOwner}
-                dog={dog}
-              />
+              <FcmTransferTable newOwner={newOwner} prevOwner={prevOwner} dog={dog} />
               <Box
                 sx={{
                   display: "flex",
@@ -252,13 +233,7 @@ export const FcmTransferStepLayout = () => {
             </Fragment>
           )}
 
-          {isEditable && (stepFromOrigin === 2 || stepFromOrigin === 3) && (
-            <FcmPrevOwnerFormik
-              handleSubmitForm={handleSubmitForm}
-              prevOwner={prevOwner}
-              handleCancel={handleShowEdit}
-            />
-          )}
+          {isEditable && (stepFromOrigin === 2 || stepFromOrigin === 3) && <FcmPrevOwnerFormik handleSubmitForm={handleSubmitForm} prevOwner={prevOwner} handleCancel={handleShowEdit} />}
         </Fragment>
       )}
 

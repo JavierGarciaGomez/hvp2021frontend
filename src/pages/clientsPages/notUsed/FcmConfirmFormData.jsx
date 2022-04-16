@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import React, { Fragment } from "react";
-import { FcmPartnerFormikNew } from "./FcmPartnerFormikNew";
+import { FcmPartnerFormikNew } from "../components/FcmPartnerFormikNew";
 
 export const FcmConfirmFormData = ({ stepProps, stepData }) => {
   const { needsConfirmation, isEditable } = stepProps;

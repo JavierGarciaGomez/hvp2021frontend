@@ -1,14 +1,23 @@
 import { Box, Button, Typography } from "@mui/material";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 export const FcmTransferShow = (props) => {
   const { fcmTransfer, setisEditable, extraProps } = props;
-  const { showButtons = true } = extraProps;
+
   const { newOwner, prevOwner, dog } = fcmTransfer;
 
   const handleEdit = () => {
     setisEditable(true);
   };
+
+  const [showButtons, setShowButtons] = useState(true);
+
+  useEffect(() => {
+    if (extraProps) {
+      setShowButtons(extraProps.showButtons);
+    }
+  }, [extraProps]);
+
   return (
     <Box>
       <Box mb="3rem">
@@ -36,10 +45,7 @@ export const FcmTransferShow = (props) => {
         </Typography>
         {newOwner ? (
           <Fragment>
-            <Typography>
-              Nombre:{" "}
-              {`${newOwner.firstName} ${newOwner.paternalSurname} ${newOwner.maternalSurname}`}
-            </Typography>
+            <Typography>Nombre: {`${newOwner.firstName} ${newOwner.paternalSurname} ${newOwner.maternalSurname}`}</Typography>
             <Typography>Número de registro: {newOwner.partnerNum}</Typography>
           </Fragment>
         ) : (

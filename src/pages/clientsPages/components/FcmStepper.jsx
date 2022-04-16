@@ -1,95 +1,27 @@
 import { Check } from "@mui/icons-material";
-import { Box, Button, CircularProgress, Step, StepButton, Stepper, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useEffect } from "react";
-
+import { Box, Button, Step, StepButton, Stepper, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  createFcmPackage,
   handleBackFcmPackageStep,
   handleNextFcmPackageStep,
-  createFcmPackage,
   setFcmPackage,
   setFcmPackageStep,
   startLoadingAllFcm,
   startLoadingFcmPackage,
   updateFcmPackage,
   updateFcmPackageProperty,
-} from "../../actions/fcmActions";
-import { areAllStepsCompleted, getComponent } from "../../helpers/fcmUtilities";
+} from "../../../actions/fcmActions";
+import { areAllStepsCompleted, getComponent } from "../../../helpers/fcmUtilities";
 
-import { fcmStepTypes } from "../../types/types";
-
-/*************************************************************************************************** */
-/**************************Initial FcmPackage Data  ***************************************************/
-/*************************************************************************************************** */
-//#region
-// todo check and simplify
-const defaultStep = {
-  stepLabel: "Propietario del padre",
-  stepType: fcmStepTypes.fcmPartnerStep,
-  dataId: null,
-  stepData: null,
-  needsConfirmation: false,
-  stepFromOrigin: null,
-};
-
-const initialFcmPackage = {
-  steps: [
-    {
-      ...defaultStep,
-      stepLabel: "Propietario del padre",
-      stepType: fcmStepTypes.fcmPartnerStep,
-    },
-    {
-      ...defaultStep,
-      stepLabel: "Propietario de la madre",
-      stepType: fcmStepTypes.fcmPartnerStep,
-    },
-    {
-      ...defaultStep,
-      stepLabel: "Padre de la camada",
-      stepType: fcmStepTypes.fcmDogStep,
-      props: { label: "Padre de la camada" },
-    },
-    {
-      ...defaultStep,
-      stepLabel: "Madre de la camada",
-      stepType: fcmStepTypes.fcmDogStep,
-    },
-    {
-      ...defaultStep,
-      stepLabel: "Formato de cruza",
-      stepType: fcmStepTypes.fcmBreedingStep,
-    },
-    {
-      ...defaultStep,
-      stepLabel: "Resumen",
-      stepType: fcmStepTypes.fcmSummaryStep,
-    },
-  ],
-  activeStep: 0,
-  completedSteps: { 0: false },
-  procedures: [],
-  documentation: [],
-  status: null,
-  creator: "",
-  // todo: delete
-};
-
-//#endregion
-export const ProcedurePedigree = () => {
+export const FcmStepper = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const dispatch = useDispatch();
-
-  /*************************************************************************************************** */
-  /**************************usestates and useselectors ******** ***************************************/
-  /*************************************************************************************************** */
-  // fcmPackage is the main object created through the stepper
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { steps, activeStep, completedSteps } = fcmPackage;
-  const [isLoading, setisLoading] = useState(true);
   const [displayStepper, setdisplayStepper] = useState({
     display: { xs: "none", md: "flex" },
   });
@@ -108,20 +40,6 @@ export const ProcedurePedigree = () => {
   /*************************************************************************************************** */
   /**************************Use effects  *****************************************************/
   /*************************************************************************************************** */
-
-  useEffect(() => {
-    const executeAsync = async () => {
-      await dispatch(startLoadingAllFcm());
-      if (id) {
-        // todo: change. check the package in
-        await dispatch(startLoadingFcmPackage(id));
-      } else {
-        await dispatch(setFcmPackage(initialFcmPackage));
-      }
-      setisLoading(false);
-    };
-    executeAsync();
-  }, []);
 
   useEffect(() => {
     if (steps.length > 9) {
@@ -145,18 +63,8 @@ export const ProcedurePedigree = () => {
       navigate(`${savedId}`);
     }
   };
-
-  /*************************************************************************************************** */
-  /**************************RENDER *********************************************************************/
-  /*************************************************************************************************** */
-
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
   return (
     <Box sx={{ width: "100%" }}>
-      {/* stepper (numbers and labels) */}
       <Stepper nonLinear activeStep={activeStep} sx={{ mb: "3rem", ...displayStepper }}>
         {steps.map((step, index) => {
           return (
@@ -173,15 +81,12 @@ export const ProcedurePedigree = () => {
           );
         })}
       </Stepper>
-
       <Box sx={{ justifyContent: "center", ...displayBoxStepper }}>
         <Typography component="h3" variant="h3">
           {activeStep + 1}/{steps.length}
         </Typography>
         {completedSteps[activeStep] && <Check sx={{ fontSize: "4.8rem" }} color="primary" />}
       </Box>
-
-      {/* Main content */}
       {areAllStepsCompleted(completedSteps, steps) ? (
         //When all steps are completed
         <React.Fragment>

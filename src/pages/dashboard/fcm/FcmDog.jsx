@@ -9,25 +9,14 @@ import { CheckboxInputWrapper } from "../../../components/formsUI/CheckboxInputW
 import { DatePickerFieldWrapper } from "../../../components/formsUI/DatePickerFieldWrapper";
 import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
-import {
-  createFcmDog,
-  createFcmPartner,
-  startLoadingAllFcm,
-  updateFcmDog,
-  updateFcmPartner,
-} from "../../../actions/fcmActions";
+import { createFcmDog, createFcmPartner, startLoadingAllFcm, updateFcmDog, updateFcmPartner } from "../../../actions/fcmActions";
 import { transformDatePropertyToInput } from "../../../helpers/dateUtilities";
-import {
-  checkIfUrlOrFileExist,
-  fireSwalError,
-  getFullNameOfObject,
-  getImgUrlByFileOrUrl,
-  isObjectEmpty,
-} from "../../../helpers/utilities";
+import { checkIfUrlOrFileExist, fireSwalError, getFullNameOfObject, getImgUrlByFileOrUrl, isObjectEmpty } from "../../../helpers/utilities";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
 import { SelectWrapper } from "../../../components/formsUI/SelectWrapper";
 import { fcmCertificatesTypes } from "../../../types/types";
+import { propertiesToUpperCase } from "../../../helpers/objectUtilities";
 
 let emptyFormValues = {
   petName: "",
@@ -102,18 +91,11 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
 
       const fcmDog = allFcmDogs.find((element) => element._id === idToSearch);
 
-      const fcmDogsFormattedDate = transformDatePropertyToInput(
-        fcmDog,
-        "birthDate"
-      );
+      const fcmDogsFormattedDate = transformDatePropertyToInput(fcmDog, "birthDate");
 
       setInitialFormValues({ ...fcmDogsFormattedDate });
       setisEditable(false);
-      setHeading(
-        `Perro ${getFullNameOfObject(fcmDog) || ""} - ${
-          fcmDog?.registerNum || ""
-        }`
-      );
+      setHeading(`Perro ${getFullNameOfObject(fcmDog) || ""} - ${fcmDog?.registerNum || ""}`);
     }
   }, [allFcmDogs, fcmDogId, id]);
 
@@ -138,19 +120,19 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
   };
 
   const handleSubmit = async (values) => {
-    fireSwalWait();
-    if (!checkImages(values)) return;
+    const upperCaseValues = propertiesToUpperCase(values);
 
-    const { urlFront, urlBack, isRegisterPending } = values;
+    fireSwalWait();
+    if (!checkImages(upperCaseValues)) return;
+
+    const { urlFront, urlBack, isRegisterPending } = upperCaseValues;
 
     if (!isRegisterPending) {
-      values.urlFront = await getImgUrlByFileOrUrl(filesFront, urlFront);
-      values.urlBack = await getImgUrlByFileOrUrl(filesBack, urlBack);
+      upperCaseValues.urlFront = await getImgUrlByFileOrUrl(filesFront, urlFront);
+      upperCaseValues.urlBack = await getImgUrlByFileOrUrl(filesBack, urlBack);
     }
 
-    let newValues = isRegisterPending
-      ? emptyUnusedValues(values)
-      : { ...values };
+    let newValues = isRegisterPending ? emptyUnusedValues(upperCaseValues) : { ...upperCaseValues };
 
     if (newValues._id) {
       await dispatch(updateFcmDog(newValues));
@@ -176,9 +158,7 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
     const newValues = { ...values };
     newValues.urlFront = "";
     newValues.urlBack = "";
-    newValues.registerNum = `En trámite - ${values.petName} - ${dayjs().format(
-      "DD-MM-YY HH:mm"
-    )}`;
+    newValues.registerNum = `En trámite - ${values.petName} - ${dayjs().format("DD-MM-YY HH:mm")}`;
 
     return newValues;
   };
@@ -203,9 +183,7 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
         <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
           Notas:
         </Typography>
-        <Typography mb="1rem">
-          Las imágenes deben tener un tamaño máximo de 1mb.
-        </Typography>
+        <Typography mb="1rem">Las imágenes deben tener un tamaño máximo de 1mb.</Typography>
       </Box>
       {/* Formulario */}
       <Formik
@@ -230,21 +208,13 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
 
                   {!values.isTransferPending && (
                     <Grid item xs={6}>
-                      <CheckboxInputWrapper
-                        name="isRegisterPending"
-                        label="Registro pendiente en FCM"
-                        disabled={!isEditable}
-                      />
+                      <CheckboxInputWrapper name="isRegisterPending" label="Registro pendiente en FCM" disabled={!isEditable} />
                     </Grid>
                   )}
 
                   {!values.isRegisterPending && (
                     <Grid item xs={6}>
-                      <CheckboxInputWrapper
-                        name="isTransferPending"
-                        label="Transferencia pendiente"
-                        disabled={!isEditable}
-                      />
+                      <CheckboxInputWrapper name="isTransferPending" label="Transferencia pendiente" disabled={!isEditable} />
                     </Grid>
                   )}
                 </Grid>
@@ -258,25 +228,13 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <TextFieldWrapper
-                      name="petName"
-                      label="Nombre"
-                      disabled={!isEditable}
-                    />
+                    <TextFieldWrapper name="petName" label="Nombre" disabled={!isEditable} />
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <TextFieldWrapper
-                      name="breed"
-                      label="Raza"
-                      disabled={!isEditable}
-                    />
+                    <TextFieldWrapper name="breed" label="Raza" disabled={!isEditable} />
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <TextFieldWrapper
-                      name="color"
-                      label="Color"
-                      disabled={!isEditable}
-                    />
+                    <TextFieldWrapper name="color" label="Color" disabled={!isEditable} />
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <SelectWrapper
@@ -284,35 +242,22 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
                       label="Sexo"
                       disabled={!isEditable}
                       options={{
-                        male: "Macho",
-                        female: "Hembra",
+                        MALE: "MACHO",
+                        FEMALE: "HEMBRA",
                       }}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <DatePickerFieldWrapper
-                      name="birthDate"
-                      label="Fecha de nacimiento"
-                      disabled={!isEditable}
-                    />
+                    <DatePickerFieldWrapper name="birthDate" label="Fecha de nacimiento" disabled={!isEditable} />
                   </Grid>
                   {!values.isRegisterPending && (
                     <Grid item xs={12} md={6}>
-                      <TextFieldWrapper
-                        name="registerNum"
-                        label="Número de registro"
-                        disabled={!isEditable}
-                      />
+                      <TextFieldWrapper name="registerNum" label="Número de registro" disabled={!isEditable} />
                     </Grid>
                   )}
 
                   <Grid item xs={12} md={6}>
-                    <SelectWrapper
-                      name="registerType"
-                      label="Tipo de registro"
-                      disabled={!isEditable}
-                      options={fcmCertificatesTypes}
-                    />
+                    <SelectWrapper name="registerType" label="Tipo de registro" disabled={!isEditable} options={fcmCertificatesTypes} />
                   </Grid>
                 </Grid>
               </Grid>
@@ -329,15 +274,8 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
                     {/* tarjeta de socio */}
 
                     <Grid item xs={12} md={6}>
-                      <Typography mb="2rem">
-                        Pedigrí o certificado frontal
-                      </Typography>
-                      <DragImageUpload
-                        files={filesFront}
-                        setFiles={setFilesFront}
-                        imgUrl={values.urlFront}
-                        editable={isEditable}
-                      ></DragImageUpload>
+                      <Typography mb="2rem">Pedigrí o certificado frontal</Typography>
+                      <DragImageUpload files={filesFront} setFiles={setFilesFront} imgUrl={values.urlFront} editable={isEditable}></DragImageUpload>
                       <Box
                         sx={{
                           mt: "1rem",
@@ -357,12 +295,7 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       <Typography mb="2rem">INE reverso</Typography>
-                      <DragImageUpload
-                        files={filesBack}
-                        setFiles={setFilesBack}
-                        imgUrl={values.urlBack}
-                        editable={isEditable}
-                      ></DragImageUpload>
+                      <DragImageUpload files={filesBack} setFiles={setFilesBack} imgUrl={values.urlBack} editable={isEditable}></DragImageUpload>
                       <Box
                         sx={{
                           mt: "1rem",
@@ -390,9 +323,7 @@ export const FcmDog = ({ fcmDogId, extraProps, onSave, onCancel }) => {
                 <Grid item xs={12} mb={2}>
                   <Box sx={{ display: "flex", width: "100%", gap: "3rem" }}>
                     {isEditable ? (
-                      <ButtonFormWrapper variant="text">
-                        Guardar
-                      </ButtonFormWrapper>
+                      <ButtonFormWrapper variant="text">Guardar</ButtonFormWrapper>
                     ) : (
                       <Button
                         fullWidth={true}

@@ -22,9 +22,7 @@ export const isLastStep = (activeStep, steps) => {
 
 export const areAllStepsCompleted = (completedSteps, steps) => {
   const completedStepsValues = Object.values(completedSteps);
-  const amountCompletedSteps = completedStepsValues.reduce(
-    (prevValue, curValue) => curValue && prevValue++
-  );
+  const amountCompletedSteps = completedStepsValues.reduce((prevValue, curValue) => curValue && prevValue++);
 
   return steps.length === amountCompletedSteps;
 };
@@ -33,10 +31,7 @@ export const totalCompletedSteps = (completedSteps) => {
   return Object.keys(completedSteps).length;
 };
 
-export const checkIfStepsAreCompleted = (
-  completedSteps = {},
-  stepsToCheck = []
-) => {
+export const checkIfStepsAreCompleted = (completedSteps = {}, stepsToCheck = []) => {
   let areCompleted = true;
   stepsToCheck.map((element) => {
     if (!completedSteps[element]) {
@@ -73,10 +68,7 @@ export const generatePuppiesValues = (values = {}, registersAmount = 0) => {
   return newValues;
 };
 
-export const generatePuppiesValidationParams = (
-  validationParams = {},
-  registersAmount = 0
-) => {
+export const generatePuppiesValidationParams = (validationParams = {}, registersAmount = 0) => {
   const newValidationParams = { ...validationParams };
   for (let i = registersAmount + 1; i <= 14; i++) {
     delete newValidationParams[`puppyName${i}`];
@@ -87,23 +79,16 @@ export const generatePuppiesValidationParams = (
 
   for (let i = 1; i <= registersAmount; i++) {
     if (!newValidationParams[`puppyName${i}`]) {
-      newValidationParams[`puppyName${i}`] = Yup.string()
-        .trim()
-        .required("Es obligatorio");
+      newValidationParams[`puppyName${i}`] = Yup.string().trim().required("Es obligatorio");
     }
     if (!newValidationParams[`puppySex${i}`]) {
-      newValidationParams[`puppySex${i}`] = Yup.string()
-        .trim()
-        .required("Es obligatorio");
+      newValidationParams[`puppySex${i}`] = Yup.string().trim().required("Es obligatorio");
     }
     if (!newValidationParams[`puppyColor${i}`]) {
-      newValidationParams[`puppyColor${i}`] = Yup.string()
-        .trim()
-        .required("Es obligatorio");
+      newValidationParams[`puppyColor${i}`] = Yup.string().trim().required("Es obligatorio");
     }
     if (!newValidationParams[`puppyNeedsTransfer${i}`]) {
-      newValidationParams[`puppyNeedsTransfer${i}`] =
-        Yup.boolean().required("Es obligatorio");
+      newValidationParams[`puppyNeedsTransfer${i}`] = Yup.boolean().required("Es obligatorio");
     }
   }
 
@@ -177,8 +162,7 @@ export const getTransferStepLabel = (activeStep, puppyName) => {
 };
 
 export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
-  const { steps, fatherOwnerId, motherOwnerId, dogFatherId, dogMotherId } =
-    fcmPackage;
+  const { steps, fatherOwnerId, motherOwnerId, dogFatherId, dogMotherId } = fcmPackage;
   const { stepFromOrigin } = steps[activeStep];
 
   switch (stepFromOrigin) {
@@ -197,14 +181,7 @@ export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
 };
 
 export const getGeneralData = (fcmPackage, client, allFcm) => {
-  const {
-    fatherOwnerId,
-    motherOwnerId,
-    dogFatherId,
-    dogMotherId,
-    breedingForm,
-    steps,
-  } = fcmPackage;
+  const { fatherOwnerId, motherOwnerId, dogFatherId, dogMotherId, breedingForm, steps } = fcmPackage;
 
   const generalData = {
     fatherOwnerFullName: "",
@@ -269,49 +246,31 @@ export const insertOrUpdateProcedureById = (array = [], id, object) => {
 };
 
 export const removeProcedureByIdAndType = (array, data) => {
-  return array.filter(
-    (element) => !objectContainsObjectProperties(element, data)
-  );
+  return array.filter((element) => !objectContainsObjectProperties(element, data));
 };
 
 export const generateProcedureData = (fcmPackage) => {
   const { steps } = fcmPackage;
 
-  let fcmPartnerSteps = steps.filter(
-    (step) => step.stepType === fcmStepTypes.fcmPartnerStep
-  );
+  let fcmPartnerSteps = steps.filter((step) => step.stepType === fcmStepTypes.fcmPartnerStep);
 
   let partnerRenewalsProcedures = [];
   fcmPartnerSteps.forEach((step) => {
-    if (
-      step.stepData?.expirationDate &&
-      dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days")) &&
-      !partnerRenewalsProcedures.find((element) => element._id === step.dataId)
-    ) {
+    if (step.stepData?.expirationDate && dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days")) && !partnerRenewalsProcedures.find((element) => element._id === step.dataId)) {
       partnerRenewalsProcedures.push({ ...step.stepData });
     }
   });
 
   let partnerRegistrationsProcedures = [];
   fcmPartnerSteps.forEach((step) => {
-    if (
-      step.stepData?.isPending &&
-      !partnerRegistrationsProcedures.find(
-        (element) => element._id === step.dataId
-      )
-    ) {
+    if (step.stepData?.isPending && !partnerRegistrationsProcedures.find((element) => element._id === step.dataId)) {
       partnerRegistrationsProcedures.push({ ...step.stepData });
     }
   });
 
   let partnerResponsiveLetterProcedures = [];
   fcmPartnerSteps.forEach((step) => {
-    if (
-      step.stepData?.isCardLost &&
-      !partnerResponsiveLetterProcedures.find(
-        (element) => element._id === step.dataId
-      )
-    ) {
+    if (step.stepData?.isCardLost && !partnerResponsiveLetterProcedures.find((element) => element._id === step.dataId)) {
       partnerResponsiveLetterProcedures.push({ ...step.stepData });
     }
   });
@@ -322,13 +281,9 @@ export const generateProcedureData = (fcmPackage) => {
   //     dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days"))
   // );
 
-  let transfersProcedures = steps.filter(
-    (step) => step.stepType === fcmStepTypes.fcmTransferStep
-  );
+  let transfersProcedures = steps.filter((step) => step.stepType === fcmStepTypes.fcmTransferStep);
 
-  let certificateProcedures = steps[4].stepData?.puppies
-    ? [...steps[4].stepData.puppies]
-    : [];
+  let certificateProcedures = steps[4].stepData?.puppies ? [...steps[4].stepData.puppies] : [];
 
   return {
     partnerRegistrationsProcedures,
@@ -339,10 +294,7 @@ export const generateProcedureData = (fcmPackage) => {
   };
 };
 
-export const removeDuplicates = (array) =>
-  array.filter(
-    (element, index) => array.indexOf(element.stepData._id) === index
-  );
+export const removeDuplicates = (array) => array.filter((element, index) => array.indexOf(element.stepData._id) === index);
 
 export const removeDuplicatesByProperty = (array = [], propertyName) => {
   let countList = array.reduce((p, c) => {
@@ -409,4 +361,34 @@ export const checkProcedureStatus = (requiredStatus, status) => {
   if (requiredStatus === fcmPackageStatusTypes.filling) {
     return true;
   }
+};
+
+export const checkValidParentsAge = (breedingDate, steps = []) => {
+  console.log(steps);
+  const fatherBirthDate = steps[2].stepData.birthDate;
+  const motherBirthDate = steps[3].stepData.birthDate;
+  console.log(breedingDate, fatherBirthDate, motherBirthDate);
+
+  const checkIfParentIsLessThanYearsOld = (parentBirthDate) => {
+    return dayjs(breedingDate).isBefore(dayjs(parentBirthDate).add(10, "years"));
+  };
+
+  const checkIfParentIsMoreThanOneYearOld = (parentBirthDate) => {
+    return dayjs(parentBirthDate).isBefore(dayjs(breedingDate).subtract(1, "years"));
+  };
+
+  if (!checkIfParentIsLessThanYearsOld(fatherBirthDate)) {
+    return false;
+  }
+  if (!checkIfParentIsLessThanYearsOld(motherBirthDate)) {
+    return false;
+  }
+  if (!checkIfParentIsMoreThanOneYearOld(fatherBirthDate)) {
+    return false;
+  }
+  if (!checkIfParentIsMoreThanOneYearOld(motherBirthDate)) {
+    return false;
+  }
+
+  return true;
 };

@@ -4,11 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { createFcmDog, updateFcmDog } from "../../../actions/fcmActions";
-import {
-  fireSwalConfirmation,
-  fireSwalError,
-  setUrlValueOrRefreshImage,
-} from "../../../helpers/utilities";
+import { fireSwalConfirmation, fireSwalError, setUrlValueOrRefreshImage } from "../../../helpers/utilities";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../../components/formsUI/DatePickerFieldWrapper";
@@ -20,15 +16,10 @@ import Swal from "sweetalert2";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import { SelectWrapper } from "../../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../../components/formsUI/CheckboxInputWrapper";
+import { propertiesToUpperCase } from "../../../helpers/objectUtilities";
 
 export const FcmDogFormikNew = ({ ...props }) => {
-  const {
-    stepData: fcmDogData,
-    stepProps,
-    handleSubmitForm,
-    handleCancel,
-    requiredSex,
-  } = props;
+  const { stepData: fcmDogData, stepProps, handleSubmitForm, handleCancel, requiredSex } = props;
   const { isEditable } = stepProps;
   const dispatch = useDispatch();
 
@@ -82,9 +73,7 @@ export const FcmDogFormikNew = ({ ...props }) => {
 
   const handleConfirmTransfer = async (values) => {
     if (values.isTransferPending) {
-      const confirmation = await fireSwalConfirmation(
-        "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
-      );
+      const confirmation = await fireSwalConfirmation("Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario.");
 
       if (!confirmation) {
         return false;
@@ -94,47 +83,33 @@ export const FcmDogFormikNew = ({ ...props }) => {
   };
 
   const handleSubmit = async (values) => {
+    const upperCaseValues = propertiesToUpperCase(values);
+    console.log(upperCaseValues);
     if (requiredSex) {
-      if (values.sex !== requiredSex) {
-        return fireSwalError(
-          "El sexo del perro no concide. Edita la información o selecciona otro."
-        );
+      if (upperCaseValues.sex !== requiredSex) {
+        return fireSwalError("El sexo del perro no concide. Edita la información o selecciona otro.");
       }
     }
     // if the date is going to expire in the next 2 weeks ask confirmatio
-    if (!(await handleConfirmTransfer(values))) {
+    if (!(await handleConfirmTransfer(upperCaseValues))) {
       return;
     }
     fireSwalWait();
 
     // images validation
     if (filesPedigreeFront.length === 0 && !imgUrlPedigreeFront) {
-      return fireSwalError(
-        "Se debe cargar la imagen frontal del certificado del perro"
-      );
+      return fireSwalError("Se debe cargar la imagen frontal del certificado del perro");
     }
 
     if (filesPedigreeBack.length === 0 && !imgUrlPedigreeBack) {
-      return fireSwalError(
-        "Se debe cargar la imagen trasera del certificado del perro"
-      );
+      return fireSwalError("Se debe cargar la imagen trasera del certificado del perro");
     }
 
-    let newValues = { ...values };
+    let newValues = { ...upperCaseValues };
     // if there is a new file refresh the image
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesPedigreeFront,
-      "urlFront",
-      imgUrlPedigreeFront
-    );
+    newValues = await setUrlValueOrRefreshImage(newValues, filesPedigreeFront, "urlFront", imgUrlPedigreeFront);
 
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesPedigreeBack,
-      "urlBack",
-      imgUrlPedigreeBack
-    );
+    newValues = await setUrlValueOrRefreshImage(newValues, filesPedigreeBack, "urlBack", imgUrlPedigreeBack);
 
     Swal.close();
     let fcmDog = null;
@@ -171,6 +146,9 @@ export const FcmDogFormikNew = ({ ...props }) => {
     }
   }, [fcmDogData]);
 
+  console.log({ ...props });
+  console.log({ ...stepProps });
+
   //#endregion
   /*************************************************************************************************** */
   /************************** RENDER *******************************************************/
@@ -200,23 +178,11 @@ export const FcmDogFormikNew = ({ ...props }) => {
 
                 <Grid item xs={12} md={6}>
                   <Typography mb="2rem">Pedigrí o CPR Frontal</Typography>
-                  <DragImageUpload
-                    files={filesPedigreeFront}
-                    setFiles={setfilesPedigreeFront}
-                    imgUrl={imgUrlPedigreeFront}
-                    setimgUrl={setImgUrlPedigreeFront}
-                    editable={isEditable}
-                  ></DragImageUpload>
+                  <DragImageUpload files={filesPedigreeFront} setFiles={setfilesPedigreeFront} imgUrl={imgUrlPedigreeFront} setimgUrl={setImgUrlPedigreeFront} editable={isEditable}></DragImageUpload>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography mb="2rem">Pedigrí o CPR Reverso</Typography>
-                  <DragImageUpload
-                    files={filesPedigreeBack}
-                    setFiles={setfilesPedigreeBack}
-                    imgUrl={imgUrlPedigreeBack}
-                    setimgUrl={setImgUrlPedigreeBack}
-                    editable={isEditable}
-                  ></DragImageUpload>
+                  <DragImageUpload files={filesPedigreeBack} setFiles={setfilesPedigreeBack} imgUrl={imgUrlPedigreeBack} setimgUrl={setImgUrlPedigreeBack} editable={isEditable}></DragImageUpload>
                 </Grid>
               </Grid>
             </Grid>
@@ -225,25 +191,13 @@ export const FcmDogFormikNew = ({ ...props }) => {
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="petName"
-                    label="Nombre"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="petName" label="Nombre" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="breed"
-                    label="Raza"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="breed" label="Raza" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="color"
-                    label="Color"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="color" label="Color" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <SelectWrapper
@@ -251,24 +205,16 @@ export const FcmDogFormikNew = ({ ...props }) => {
                     label="Sexo"
                     disabled={!isEditable}
                     options={{
-                      male: "Macho",
-                      female: "Hembra",
+                      MALE: "MACHO",
+                      FEMALE: "HEMBRA",
                     }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <DatePickerFieldWrapper
-                    name="birthDate"
-                    label="Fecha de nacimiento"
-                    disabled={!isEditable}
-                  />
+                  <DatePickerFieldWrapper name="birthDate" label="Fecha de nacimiento" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="registerNum"
-                    label="Número de registro"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="registerNum" label="Número de registro" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
                   <SelectWrapper
@@ -276,17 +222,13 @@ export const FcmDogFormikNew = ({ ...props }) => {
                     label="Tipo de registro"
                     disabled={!isEditable}
                     options={{
-                      pedigree: "Pedigrí",
-                      racePurity: "Certificado de pureza racial",
+                      PEDIGREE: "PEDIGRÍ",
+                      RACEPURITY: "CERTIFICADO DE PUREZA RACIAL",
                     }}
                   />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <CheckboxInputWrapper
-                    name="isTransferPending"
-                    label="Requiere cambio de propietario"
-                    disabled={!isEditable}
-                  />
+                  <CheckboxInputWrapper name="isTransferPending" label="Requiere cambio de propietario" disabled={!isEditable} />
                 </Grid>
               </Grid>
             </Grid>

@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-
 import { Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FcmPartnerFormWrapper } from "./FcmPartnerFormWrapper";
 import { FcmSelectPartnerOptions } from "./FcmSelectPartnerOptions";
 
@@ -31,23 +30,22 @@ export const FcmPartnerStepLayout = () => {
   }, [activeStep]);
 
   useEffect(() => {
-    if (needsConfirmation) {
-      handleStepProps({
-        isEditable: false,
-        formWrapperTitle: "Confirma el formulario",
-      });
-    }
-  }, [needsConfirmation]);
-
-  useEffect(() => {
     if (stepData) {
-      handleStepProps({
-        formWrapperTitle: "Socio seleccionado",
-        isEditable: false,
-      });
+      if(needsConfirmation){
+        handleStepProps({
+          isEditable: false,
+          formWrapperTitle: "Confirma el formulario",
+        });
+      } else {
+        handleStepProps({
+          isEditable: false,
+          formWrapperTitle: "Socio seleccionado",
+        });
+      } 
     }
-  }, [stepData, activeStep]);
+  }, [stepData, needsConfirmation]);
 
+  console.log('FcmPartnerStepLayout')
   return (
     <Fragment>
       <Typography variant="h4" component="h2" mb="3rem" mt="3rem">

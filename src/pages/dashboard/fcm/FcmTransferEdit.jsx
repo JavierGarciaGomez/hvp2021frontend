@@ -3,10 +3,7 @@ import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  createFcmtransfer,
-  updateFcmtransfer,
-} from "../../../actions/fcmActions";
+import { createFcmtransfer, updateFcmtransfer } from "../../../actions/fcmActions";
 import { FcmDogCard } from "../../../components/fcm/FcmDogCard";
 import { FcmPartnerCard } from "../../../components/fcm/FcmPartnerCard";
 
@@ -16,7 +13,6 @@ import { checkIfObjectsAreEmpty } from "../../../helpers/arrayUtilities";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import { fireSwalError, getFullNameOfObject } from "../../../helpers/utilities";
 import { FcmPrevOwnerFormik } from "../../clientsPages/components/FcmPrevOwnerFormik";
-import { FcmSelectDog } from "./components/FcmSelectDog";
 
 export const FcmTransferEdit = (props) => {
   const { fcmTransfer, onCancel, onSave } = props;
@@ -51,10 +47,7 @@ export const FcmTransferEdit = (props) => {
   const handleSubmit = async () => {
     fireSwalWait();
 
-    if (
-      checkIfObjectsAreEmpty([selectedDog, selectedNewOwner, selectedPrevOwner])
-    )
-      return fireSwalError("Tienes que llenar los datos completos");
+    if (checkIfObjectsAreEmpty([selectedDog, selectedNewOwner, selectedPrevOwner])) return fireSwalError("Tienes que llenar los datos completos");
     const newFcmTransfer = {
       ...fcmTransfer,
       dog: selectedDog,
@@ -92,36 +85,22 @@ export const FcmTransferEdit = (props) => {
           Perro a transferir
         </Typography>
         <Box mb="1rem">
-          <Typography sx={{ fontWeight: "bold" }}>
-            Perro seleccionado
-          </Typography>
+          <Typography sx={{ fontWeight: "bold" }}>Perro seleccionado</Typography>
 
           <Typography>Nombre: {selectedDog.petName}</Typography>
           <Typography>Número de registro: {selectedDog.registerNum}</Typography>
         </Box>
 
-        <SearchBox
-          onSelect={handleSelectDog}
-          searchData={allFcmDogs}
-          CardComponent={FcmDogCard}
-          searchParams={["registerNum", "petName"]}
-          searchFieldLabel="Nombre o número e regstro"
-        />
+        <SearchBox onSelect={handleSelectDog} searchData={allFcmDogs} CardComponent={FcmDogCard} searchParams={["registerNum", "petName"]} searchFieldLabel="Nombre o número e regstro" />
       </Box>
       <Box mb="3rem">
         <Typography component="h4" variant="h5" mb="1rem">
           Nuevo propietario
         </Typography>
         <Box mb="1rem">
-          <Typography sx={{ fontWeight: "bold" }}>
-            Socio seleccionado
-          </Typography>
-          <Typography>
-            Nombre: {getFullNameOfObject(selectedNewOwner)}
-          </Typography>
-          <Typography>
-            Número de registro: {selectedNewOwner.partnerNum || ""}
-          </Typography>
+          <Typography sx={{ fontWeight: "bold" }}>Socio seleccionado</Typography>
+          <Typography>Nombre: {getFullNameOfObject(selectedNewOwner)}</Typography>
+          <Typography>Número de registro: {selectedNewOwner.partnerNum || ""}</Typography>
         </Box>
         <SearchBox
           onSelect={handleSelectNewOwner}
@@ -137,12 +116,8 @@ export const FcmTransferEdit = (props) => {
         </Typography>
         <Box mb="2rem">
           <Box mb="1rem">
-            <Typography sx={{ fontWeight: "bold" }}>
-              Persona seleccionada
-            </Typography>
-            <Typography>
-              Nombre: {getFullNameOfObject(selectedPrevOwner)}
-            </Typography>
+            <Typography sx={{ fontWeight: "bold" }}>Persona seleccionada</Typography>
+            <Typography>Nombre: {getFullNameOfObject(selectedPrevOwner)}</Typography>
           </Box>
           <Box
             sx={{
@@ -208,12 +183,7 @@ export const FcmTransferEdit = (props) => {
         <Button variant="outlined" onClick={handleSubmit} size="large">
           Guardar
         </Button>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={handleCancel}
-          size="large"
-        >
+        <Button variant="outlined" color="error" onClick={handleCancel} size="large">
           Cancelar
         </Button>
       </Box>

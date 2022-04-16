@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setFcmCurrentStepEditable,
-  setFcmPackageCurrentProps,
+  
 } from "../../actions/fcmActions";
 import { SimpleSelectWrapper } from "../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../helpers/utilities";

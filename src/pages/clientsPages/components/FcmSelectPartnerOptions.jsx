@@ -1,6 +1,6 @@
-import { Box, Typography } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Box, } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import {  useSelector } from "react-redux";
 import { SimpleSelectWrapper } from "../../../components/formsUI/SimpleSelectWrapper";
 import { findObjectByProperty } from "../../../helpers/utilities";
 
@@ -13,7 +13,7 @@ export const FcmSelectPartnerOptions = ({ ...props }) => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-  const dispatch = useDispatch();
+  
   const [selectedCase, setselectedCase] = useState("");
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { handleResetStepProps, handleStepProps } = props;

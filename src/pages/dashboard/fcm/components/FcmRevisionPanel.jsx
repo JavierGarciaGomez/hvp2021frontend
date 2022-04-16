@@ -4,30 +4,19 @@ import dayjs from "dayjs";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import {
-  createFcmDog,
-  removeFcmPuppy,
-  removeFcmSteps,
-  setFcmStepProperty,
-  updateFcmDog,
-  updateStepReferencesByStep,
-} from "../../../../actions/fcmActions";
+import { createFcmDog, removeFcmPuppy, setFcmStepProperty, updateFcmDog, updateStepReferencesByStep } from "../../../../actions/fcmActions";
 import { FcmDogCard } from "../../../../components/fcm/FcmDogCard";
 import { FcmPartnerCard } from "../../../../components/fcm/FcmPartnerCard";
 import { SearchBox } from "../../../../components/searchBox/SearchBox";
 import { fireSwalWait } from "../../../../helpers/sweetAlertUtilities";
-import { fireSwalConfirmation } from "../../../../helpers/utilities";
+
 import { fcmStepTypes } from "../../../../types/types";
 import { FcmDog } from "../FcmDog";
 import { FcmPartner } from "../FcmPartner";
 import { FcmTransfer } from "../FcmTransfer";
 import { FcmBreedingFormWrapper } from "./FcmBreedingFormWrapper";
 
-export const FcmRevisionPanel = ({
-  stepIndex,
-  setShowRevisionPanel,
-  onCancel,
-}) => {
+export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) => {
   const dispatch = useDispatch();
   const { fcmPackage, allFcm } = useSelector((state) => state.fcm);
   const { allFcmPartners, allFcmDogs } = allFcm;
@@ -40,7 +29,6 @@ export const FcmRevisionPanel = ({
   });
   const [selectAnother, setSelectAnother] = useState(false);
 
-  const [searchData, setSearchData] = useState([]);
   const [selectAnotherProps, setSelectAnotherProps] = useState({});
 
   const [prevPuppies, setPrevPuppies] = useState([]);
@@ -99,9 +87,7 @@ export const FcmRevisionPanel = ({
       let fcmPuppy = null;
       puppy.birthDate = values.birthDate;
       puppy.breed = steps[2].stepData.breed;
-      puppy.registerNum = `En trámite - ${puppy.petName} - ${dayjs().format(
-        "DD-MM-YY HH:mm"
-      )}`;
+      puppy.registerNum = `En trámite - ${puppy.petName} - ${dayjs().format("DD-MM-YY HH:mm")}`;
 
       if (puppy._id) {
         fcmPuppy = await dispatch(updateFcmDog(puppy, false));
@@ -169,11 +155,7 @@ export const FcmRevisionPanel = ({
   console.log(prevPuppies);
 
   return (
-    <Paper
-      mb="4rem"
-      elevation={20}
-      sx={{ backgroundColor: "transparent", padding: "2rem" }}
-    >
+    <Paper mb="4rem" elevation={20} sx={{ backgroundColor: "transparent", padding: "2rem" }}>
       <Box>
         <Typography component="h3" variant="h5">
           Panel de revisión
@@ -184,13 +166,7 @@ export const FcmRevisionPanel = ({
           {selectAnother ? (
             <SearchBox {...selectAnotherProps} />
           ) : (
-            <FcmPartner
-              fcmPartnerid={reviewedStep.dataId}
-              extraProps={extraProps}
-              handleExtraProps={handleExtraProps}
-              onSave={handleSave}
-              onCancel={handleCancel}
-            />
+            <FcmPartner fcmPartnerid={reviewedStep.dataId} extraProps={extraProps} handleExtraProps={handleExtraProps} onSave={handleSave} onCancel={handleCancel} />
           )}
         </Fragment>
       )}
@@ -199,13 +175,7 @@ export const FcmRevisionPanel = ({
           {selectAnother ? (
             <SearchBox {...selectAnotherProps} />
           ) : (
-            <FcmDog
-              fcmDogId={reviewedStep.dataId}
-              extraProps={extraProps}
-              handleExtraProps={handleExtraProps}
-              onSave={handleSave}
-              onCancel={handleCancel}
-            />
+            <FcmDog fcmDogId={reviewedStep.dataId} extraProps={extraProps} handleExtraProps={handleExtraProps} onSave={handleSave} onCancel={handleCancel} />
           )}
         </Fragment>
       )}
@@ -220,13 +190,7 @@ export const FcmRevisionPanel = ({
         />
       )}
       {stepType === fcmStepTypes.fcmTransferStep && (
-        <FcmTransfer
-          fcmTransferId={reviewedStep.dataId}
-          extraProps={extraProps}
-          handleExtraProps={handleExtraProps}
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
+        <FcmTransfer fcmTransferId={reviewedStep.dataId} extraProps={extraProps} handleExtraProps={handleExtraProps} onSave={handleSave} onCancel={handleCancel} />
       )}
 
       {isValidated ? (
@@ -249,9 +213,7 @@ export const FcmRevisionPanel = ({
           <Button onClick={handleValidate}>Validar</Button>
 
           <Button onClick={handleEdit}>Editar</Button>
-          {showSelectAnother && (
-            <Button onClick={handleSelectAnother}>Seleccionar otro</Button>
-          )}
+          {showSelectAnother && <Button onClick={handleSelectAnother}>Seleccionar otro</Button>}
 
           <Button onClick={handleCancel} color="error">
             Cancelar

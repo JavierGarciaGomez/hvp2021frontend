@@ -1,38 +1,16 @@
 import React, { Fragment, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addAndRemoveFcmProcedures,
-  addNewFcmStep,
-  addOrRemoveFcmTransferSteps,
-  checkAndAddFcmTransferStep,
-  cleanFcmStep,
-  handleFcmCompleteStep,
-  removeFcmSteps,
-  setFcmCurrentStepConfig,
-  updateStepReferences,
-} from "../../../actions/fcmActions";
-import {
-  fireSwalConfirmation,
-  fireSwalError,
-} from "../../../helpers/utilities";
+import { addOrRemoveFcmTransferSteps, checkAndAddFcmTransferStep, cleanFcmStep, handleFcmCompleteStep, removeFcmSteps, updateStepReferences } from "../../../actions/fcmActions";
+import { fireSwalConfirmation, fireSwalError } from "../../../helpers/utilities";
 import { Box, Button, Typography } from "@mui/material";
-import dayjs from "dayjs";
-import { getTransferStepLabel } from "../../../helpers/fcmUtilities";
 import { FcmDogFormikNew } from "./FcmDogFormikNew";
 
 export const FcmDogFormWrapper = (props) => {
   /*************************************************************************************************** */
   /************************** hooks and props ******** ***************************************/
   /*************************************************************************************************** */
-  const {
-    handleCancel,
-    stepProps,
-    stepData,
-    handleResetStepProps,
-    handleStepProps,
-    requiredSex,
-  } = props;
+  const { handleCancel, stepProps, stepData, handleResetStepProps, handleStepProps, requiredSex } = props;
   const dispatch = useDispatch();
   const { isEditable, formWrapperTitle } = stepProps;
 
@@ -59,9 +37,7 @@ export const FcmDogFormWrapper = (props) => {
 
   const handleConfirmTransfer = async (values) => {
     if (values.isTransferPending) {
-      const confirmation = await fireSwalConfirmation(
-        "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
-      );
+      const confirmation = await fireSwalConfirmation("Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario.");
 
       if (!confirmation) {
         return false;
@@ -82,9 +58,7 @@ export const FcmDogFormWrapper = (props) => {
   const handleConfirmation = async () => {
     if (requiredSex) {
       if (stepData.sex !== requiredSex) {
-        return fireSwalError(
-          "El sexo del perro no concide. Edita la información o selecciona otro."
-        );
+        return fireSwalError("El sexo del perro no concide. Edita la información o selecciona otro.");
       }
     }
 
@@ -94,6 +68,8 @@ export const FcmDogFormWrapper = (props) => {
     dispatch(addOrRemoveFcmTransferSteps(stepData));
     dispatch(handleFcmCompleteStep());
   };
+
+  console.log({ ...stepProps });
 
   return (
     <Fragment>
@@ -110,11 +86,7 @@ export const FcmDogFormWrapper = (props) => {
           </Typography>
           <Box sx={{ display: "flex", width: "100%", gap: "3rem", mb: "3rem" }}>
             {needsConfirmation && (
-              <Button
-                fullWidth={true}
-                onClick={handleConfirmation}
-                color="primary"
-              >
+              <Button fullWidth={true} onClick={handleConfirmation} color="primary">
                 Confirmar
               </Button>
             )}
@@ -154,19 +126,10 @@ export const FcmDogFormWrapper = (props) => {
         <Typography component="h3" variant="h6" mb="1rem" fontWeight="bold">
           Notas:
         </Typography>
-        <Typography mb="1rem">
-          Las imágenes deben tener un tamaño máximo de 1mb.
-        </Typography>
-        <Typography mb="1rem">
-          Si el pedigrí o CPR está endosado, es necesario marcar que se requiere
-          transferencia, para que se incluya el formato en el paquete.
-        </Typography>
+        <Typography mb="1rem">Las imágenes deben tener un tamaño máximo de 1mb.</Typography>
+        <Typography mb="1rem">Si el pedigrí o CPR está endosado, es necesario marcar que se requiere transferencia, para que se incluya el formato en el paquete.</Typography>
       </Box>
-      <FcmDogFormikNew
-        handleSubmitForm={handleSubmit}
-        handleCancel={handleCancelFormWrapper}
-        {...props}
-      />
+      <FcmDogFormikNew handleSubmitForm={handleSubmit} handleCancel={handleCancelFormWrapper} {...props} />
     </Fragment>
   );
 };

@@ -1,19 +1,4 @@
-// 366
-
-import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
-import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
-import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
-import { fcmPackageStatus, fcmPackageStatusTypes, types } from "../types/types";
-
-const defaultConfig = {
-  isFirstRegister: false,
-  isCardLost: false,
-  packageProperty: "",
-  isEditable: true,
-  formTitle: "Llena el formulario",
-  showCancel: false,
-  needsConfirmation: false,
-};
+import { fcmPackageStatusTypes, types } from "../types/types";
 
 const initialState = {
   allFcm: {
@@ -34,6 +19,8 @@ const initialState = {
     documentation: [],
     status: fcmPackageStatusTypes.filling,
     creator: "",
+    packageType: "",
+    creationDate: "",
   },
 };
 
@@ -62,9 +49,7 @@ export const fcmReducer = (state = initialState, action) => {
         ...state,
         fcmPackage: {
           ...state.fcmPackage,
-          steps: state.fcmPackage.steps.map((element, index) =>
-            index === state.fcmPackage.activeStep ? action.payload : element
-          ),
+          steps: state.fcmPackage.steps.map((element, index) => (index === state.fcmPackage.activeStep ? action.payload : element)),
         },
       };
     }
@@ -139,6 +124,9 @@ export const fcmReducer = (state = initialState, action) => {
         fcmPackage: { ...state.fcmPackage, procedures: action.payload },
       };
     }
+
+    case types.fcmPackageSetType:
+      return { ...state, fcmPackage: { ...state.fcmPackage, packageType: action.payload } };
 
     default:
       return state;

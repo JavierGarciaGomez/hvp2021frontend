@@ -10,6 +10,7 @@ import { SelectWrapper } from "../../../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../../../components/formsUI/CheckboxInputWrapper";
 import { ButtonFormWrapper } from "../../../../components/formsUI/ButtonFormWrapper";
 import { fireSwalError, isObjectEmpty } from "../../../../helpers/utilities";
+import { propertiesToUpperCase } from "../../../../helpers/objectUtilities";
 
 // todo set breed by step data
 let emptyPuppy = {
@@ -55,14 +56,7 @@ let initialValidationParams = {
 };
 
 export const FcmBreedingForm = (props) => {
-  const {
-    breedingData,
-    showCancelButton = true,
-    extraProps,
-    onCancel,
-    onSave,
-    allowEditPuppiesTransfers,
-  } = props;
+  const { breedingData, showCancelButton = true, extraProps, onCancel, onSave, allowEditPuppiesTransfers } = props;
   useEffect(() => {
     if (!isObjectEmpty(extraProps)) {
       setIsEditable(extraProps.isEditable);
@@ -82,7 +76,8 @@ export const FcmBreedingForm = (props) => {
   }, [breedingData]);
 
   const handleSubmit = (values) => {
-    onSave(values);
+    const upperCaseValues = propertiesToUpperCase(values);
+    onSave(upperCaseValues);
   };
   const handleCancel = () => {
     onCancel();
@@ -105,49 +100,22 @@ export const FcmBreedingForm = (props) => {
               </Typography>
             </Grid>
             <Grid item xs={6} md={4}>
-              <DatePickerFieldWrapper
-                name="breedingDate"
-                label="Fecha de cruza"
-                disabled={!isEditable}
-              />
+              <DatePickerFieldWrapper name="breedingDate" label="Fecha de cruza" disabled={!isEditable} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <DatePickerFieldWrapper
-                name="birthDate"
-                label="Fecha de nacimiento"
-                disabled={!isEditable}
-              />
+              <DatePickerFieldWrapper name="birthDate" label="Fecha de nacimiento" disabled={!isEditable} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <TextFieldWrapper
-                name="birthPlace"
-                label="Lugar de nacimiento"
-                disabled={!isEditable}
-              />
+              <TextFieldWrapper name="birthPlace" label="Lugar de nacimiento" disabled={!isEditable} />
             </Grid>
             <Grid item xs={6} md={4}>
-              <TextFieldWrapper
-                name="malesAlive"
-                label="Machos vivos"
-                disabled={!isEditable}
-                type="number"
-              />
+              <TextFieldWrapper name="malesAlive" label="Machos vivos" disabled={!isEditable} type="number" />
             </Grid>
             <Grid item xs={6} md={4}>
-              <TextFieldWrapper
-                name="femalesAlive"
-                label="Hembras vivas"
-                disabled={!isEditable}
-                type="number"
-              />
+              <TextFieldWrapper name="femalesAlive" label="Hembras vivas" disabled={!isEditable} type="number" />
             </Grid>
             <Grid item xs={6} md={4}>
-              <TextFieldWrapper
-                name="death"
-                label="Muertos"
-                disabled={!isEditable}
-                type="number"
-              />
+              <TextFieldWrapper name="death" label="Muertos" disabled={!isEditable} type="number" />
             </Grid>
             <Grid item xs={12} mt="4rem">
               <Typography component="h4" variant="h5">
@@ -161,20 +129,12 @@ export const FcmBreedingForm = (props) => {
                   {values.puppies.map((_, index) => (
                     <Fragment key={index}>
                       <Grid item xs={12}>
-                        <Typography
-                          component="h5"
-                          variant="h6"
-                          textAlign={"center"}
-                        >
+                        <Typography component="h5" variant="h6" textAlign={"center"}>
                           {`Cachorro ${index + 1}`}
                         </Typography>
                       </Grid>
                       <Grid item xs={4} md={3}>
-                        <TextFieldWrapper
-                          name={`puppies.${index}.petName`}
-                          label="Nombre"
-                          disabled={!isEditable}
-                        />
+                        <TextFieldWrapper name={`puppies.${index}.petName`} label="Nombre" disabled={!isEditable} />
                       </Grid>
                       <Grid item xs={4} md={2}>
                         <SelectWrapper
@@ -182,31 +142,18 @@ export const FcmBreedingForm = (props) => {
                           label="Sexo"
                           disabled={!isEditable}
                           options={{
-                            male: "Macho",
-                            female: "Hembra",
+                            MALE: "MACHO",
+                            FEMALE: "HEMBRA",
                           }}
                         />
                       </Grid>
                       <Grid item xs={4} md={2}>
-                        <TextFieldWrapper
-                          name={`puppies.${index}.color`}
-                          label="Color"
-                          disabled={!isEditable}
-                        />
+                        <TextFieldWrapper name={`puppies.${index}.color`} label="Color" disabled={!isEditable} />
                       </Grid>
                       <Grid item xs={6} md={3}>
-                        <CheckboxInputWrapper
-                          name={`puppies.${index}.isTransferPending`}
-                          label="Se realizará cambio de propietario"
-                          disabled={!isEditable || !allowEditPuppiesTransfers}
-                        />
+                        <CheckboxInputWrapper name={`puppies.${index}.isTransferPending`} label="Se realizará cambio de propietario" disabled={!isEditable || !allowEditPuppiesTransfers} />
                       </Grid>
-                      <Grid
-                        item
-                        xs={6}
-                        md={2}
-                        sx={{ display: "flex", justifyContent: "center" }}
-                      >
+                      <Grid item xs={6} md={2} sx={{ display: "flex", justifyContent: "center" }}>
                         {isEditable && (
                           <Button
                             disabled={isSubmitting}
@@ -214,13 +161,8 @@ export const FcmBreedingForm = (props) => {
                               if (values.puppies.length === 1) {
                                 return;
                               }
-                              if (
-                                values.puppies[index].isTransferPending &&
-                                !allowEditPuppiesTransfers
-                              ) {
-                                return fireSwalError(
-                                  "No se puede eliminar un cachorro con una transferencia pendiente"
-                                );
+                              if (values.puppies[index].isTransferPending && !allowEditPuppiesTransfers) {
+                                return fireSwalError("No se puede eliminar un cachorro con una transferencia pendiente");
                               }
                               remove(index);
                             }}
@@ -242,12 +184,7 @@ export const FcmBreedingForm = (props) => {
                         mb: "4rem",
                       }}
                     >
-                      <Button
-                        disabled={isSubmitting}
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => push(emptyPuppy)}
-                      >
+                      <Button disabled={isSubmitting} variant="contained" color="secondary" onClick={() => push(emptyPuppy)}>
                         Agrega cachorro
                       </Button>
                     </Grid>

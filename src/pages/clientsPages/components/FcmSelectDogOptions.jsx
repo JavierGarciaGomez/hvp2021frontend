@@ -15,7 +15,6 @@ export const FcmSelectDogOptions = ({ ...props }) => {
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
-
   const [selectedCase, setselectedCase] = useState("");
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { handleResetStepProps } = props;
@@ -30,32 +29,19 @@ export const FcmSelectDogOptions = ({ ...props }) => {
     {
       label: "Perro vinculado previamente a mi cuenta",
       value: "previousLinked",
-      component: (
-        <SelectFcmDogFromAccount
-          handleCancelSelection={handleCancelSelection}
-          {...props}
-        />
-      ),
+      component: <SelectFcmDogFromAccount handleCancelSelection={handleCancelSelection} {...props} />,
       functions: async () => {},
     },
     {
-      label:
-        "Perro no vinculado a mi cuenta, pero registrado en esta plataforma",
+      label: "Perro no vinculado a mi cuenta, pero registrado en esta plataforma",
       value: "previousDataBase",
-      component: (
-        <SearchAndLinkDog
-          handleCancelSelection={handleCancelSelection}
-          {...props}
-        />
-      ),
+      component: <SearchAndLinkDog handleCancelSelection={handleCancelSelection} {...props} />,
       functions: async () => {},
     },
     {
       label: "Perro no registrado en esta plataforma",
       value: "newPartner",
-      component: (
-        <FcmDogFormWrapper handleCancel={handleCancelSelection} {...props} />
-      ),
+      component: <FcmDogFormWrapper handleCancel={handleCancelSelection} {...props} />,
       functions: async () => {},
     },
   ];
@@ -81,12 +67,7 @@ export const FcmSelectDogOptions = ({ ...props }) => {
   return (
     <Box>
       {selectedCase === "" ? (
-        <SimpleSelectWrapper
-          options={options}
-          label="Selecciona el caso"
-          value={selectedCase}
-          setValue={setselectedCase}
-        />
+        <SimpleSelectWrapper options={options} label="Selecciona el caso" value={selectedCase} setValue={setselectedCase} />
       ) : (
         findObjectByProperty(options, "value", selectedCase).component
       )}

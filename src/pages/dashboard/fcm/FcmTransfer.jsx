@@ -9,19 +9,9 @@ import { CheckboxInputWrapper } from "../../../components/formsUI/CheckboxInputW
 import { DatePickerFieldWrapper } from "../../../components/formsUI/DatePickerFieldWrapper";
 import { DragImageUpload } from "../../../components/formsUI/DragImageUpload";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
-import {
-  createFcmDog,
-  startLoadingAllFcm,
-  updateFcmDog,
-} from "../../../actions/fcmActions";
+import { createFcmDog, startLoadingAllFcm, updateFcmDog } from "../../../actions/fcmActions";
 import { transformDatePropertyToInput } from "../../../helpers/dateUtilities";
-import {
-  checkIfUrlOrFileExist,
-  fireSwalError,
-  getFullNameOfObject,
-  getImgUrlByFileOrUrl,
-  isObjectEmpty,
-} from "../../../helpers/utilities";
+import { checkIfUrlOrFileExist, fireSwalError, getFullNameOfObject, getImgUrlByFileOrUrl, isObjectEmpty } from "../../../helpers/utilities";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
 import dayjs from "dayjs";
 import { SelectWrapper } from "../../../components/formsUI/SelectWrapper";
@@ -65,9 +55,7 @@ export const FcmTransfer = (props) => {
   const [isEditable, setisEditable] = useState(false);
   const { id } = useParams();
 
-  const [heading, setHeading] = useState(
-    "Transferencia o cambio de propietario"
-  );
+  const [heading, setHeading] = useState("Transferencia o cambio de propietario");
   const [fcmTransfer, setfcmTransfer] = useState({});
   const [showButtons, setShowButtons] = useState(true);
 
@@ -98,9 +86,7 @@ export const FcmTransfer = (props) => {
       if (fcmTransferId) idToSearch = fcmTransferId;
       if (!idToSearch) return;
 
-      const fcmTransfer = allFcmTransfers.find(
-        (element) => element._id === idToSearch
-      );
+      const fcmTransfer = allFcmTransfers.find((element) => element._id === idToSearch);
       console.log(fcmTransfer);
       // setInitialFormValues({ ...fcmDogFormattedDate });
       setisEditable(false);
@@ -141,9 +127,7 @@ export const FcmTransfer = (props) => {
       values.urlBack = await getImgUrlByFileOrUrl(filesBack, urlBack);
     }
 
-    let newValues = isRegisterPending
-      ? emptyUnusedValues(values)
-      : { ...values };
+    let newValues = isRegisterPending ? emptyUnusedValues(values) : { ...values };
 
     if (newValues._id) {
       await dispatch(updateFcmDog(newValues));
@@ -164,24 +148,14 @@ export const FcmTransfer = (props) => {
     const newValues = { ...values };
     newValues.urlFront = "";
     newValues.urlBack = "";
-    newValues.registerNum = `En trámite - ${values.petName} - ${dayjs().format(
-      "DD-MM-YY HH:mm"
-    )}`;
+    newValues.registerNum = `En trámite - ${values.petName} - ${dayjs().format("DD-MM-YY HH:mm")}`;
 
     return newValues;
   };
 
   //#endregion
 
-  if (!isEditable)
-    return (
-      <FcmTransferShow
-        fcmTransfer={fcmTransfer}
-        setisEditable={setisEditable}
-        {...props}
-      />
-    );
+  if (!isEditable) return <FcmTransferShow fcmTransfer={fcmTransfer} setisEditable={setisEditable} {...props} />;
 
-  if (isEditable)
-    return <FcmTransferEdit fcmTransfer={fcmTransfer} {...props} />;
+  if (isEditable) return <FcmTransferEdit fcmTransfer={fcmTransfer} {...props} />;
 };

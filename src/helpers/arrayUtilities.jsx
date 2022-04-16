@@ -1,3 +1,4 @@
+import { propertiesToUpperCase } from "./objectUtilities";
 import { isObjectEmpty } from "./utilities";
 
 export const updateArrayElementById = (array = [], element) => {
@@ -31,4 +32,17 @@ export const checkIfObjectsAreEmpty = (objects = []) => {
   }
 
   return false;
+};
+
+export const elementsToUpperCase = (array = []) => {
+  return array.map((element) => {
+    if (typeof element === "string" && !element.includes("http")) {
+      return element.toUpperCase().trim();
+    } else if (Array.isArray(element)) {
+      return elementsToUpperCase(element);
+    } else if (typeof element === "object") {
+      return propertiesToUpperCase(element);
+    }
+    return element;
+  });
 };

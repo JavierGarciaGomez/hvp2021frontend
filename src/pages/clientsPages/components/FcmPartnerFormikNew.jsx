@@ -3,16 +3,8 @@ import React, { Fragment, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import {
-  createFcmPartner,
-  updateFcmPartner,
-} from "../../../actions/fcmActions";
-import {
-  fireSwalConfirmation,
-  fireSwalError,
-  isObjectEmpty,
-  setUrlValueOrRefreshImage,
-} from "../../../helpers/utilities";
+import { createFcmPartner, updateFcmPartner } from "../../../actions/fcmActions";
+import { fireSwalConfirmation, fireSwalError, isObjectEmpty, setUrlValueOrRefreshImage } from "../../../helpers/utilities";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { TextFieldWrapper } from "../../../components/formsUI/TextFieldWrapper";
 import { DatePickerFieldWrapper } from "../../../components/formsUI/DatePickerFieldWrapper";
@@ -22,14 +14,10 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
+import { propertiesToUpperCase } from "../../../helpers/objectUtilities";
 
 export const FcmPartnerFormikNew = ({ ...props }) => {
-  const {
-    stepData: fcmPartnerData,
-    stepProps,
-    handleSubmitForm,
-    handleCancel,
-  } = props;
+  const { stepData: fcmPartnerData, stepProps, handleSubmitForm, handleCancel } = props;
   const { isFirstRegister, isCardLost, isEditable } = stepProps;
   const dispatch = useDispatch();
 
@@ -65,8 +53,8 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       suburb: "",
       postalCode: "",
       city: "",
-      state: "Yucatán",
-      country: "México",
+      state: "YUCATÁN",
+      country: "MÉXICO",
     },
     homePhone: "",
     mobilePhone: "",
@@ -85,24 +73,15 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       street: Yup.string().trim().required("Es obligatorio"),
       number: Yup.string().trim().required("Es obligatorio"),
       suburb: Yup.string().trim().required("Es obligatorio"),
-      postalCode: Yup.string()
-        .trim()
-        .length(5, "El código postal debe contar con cinco carácteres")
-        .required("Es obligatorio"),
+      postalCode: Yup.string().trim().length(5, "El código postal debe contar con cinco carácteres").required("Es obligatorio"),
       city: Yup.string().trim().required("Es obligatorio"),
       state: Yup.string().trim().required("Es obligatorio"),
       country: Yup.string().trim().required("Es obligatorio"),
     }),
 
-    homePhone: Yup.string()
-      .trim()
-      .min(7, "Debe contar al menos con 7 carácteres"),
-    mobilePhone: Yup.string()
-      .trim()
-      .min(7, "Debe contar al menos con 7 carácteres"),
-    email: Yup.string()
-      .email("Debe ser una forma válida de email")
-      .required("Es obligatorio"),
+    homePhone: Yup.string().trim().min(7, "Debe contar al menos con 7 carácteres"),
+    mobilePhone: Yup.string().trim().min(7, "Debe contar al menos con 7 carácteres"),
+    email: Yup.string().email("Debe ser una forma válida de email").required("Es obligatorio"),
   };
 
   if (!isIncomplete) {
@@ -135,9 +114,10 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
     return true;
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values = []) => {
+    const upperCaseValues = propertiesToUpperCase(values);
     // if the date is going to expire in the next 2 weeks ask confirmatio
-    if (!(await handleConfirmRenewal(values))) {
+    if (!(await handleConfirmRenewal(upperCaseValues))) {
       return;
     }
     fireSwalWait();
@@ -149,9 +129,7 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       }
     }
     if (filesProofOfResidency.length === 0 && !imgUrlProofOfResidency) {
-      return fireSwalError(
-        "Se debe cargar la imagen del comprobante domicilario"
-      );
+      return fireSwalError("Se debe cargar la imagen del comprobante domicilario");
     }
     if (filesFrontINE.length === 0 && !imgUrlFrontIne) {
       return fireSwalError("Se debe cargar la imagen frontal del INE");
@@ -160,53 +138,29 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       return fireSwalError("Se debe cargar la imagen trasera del INE");
     }
 
-    let newValues = { ...values };
+    let newValues = { ...upperCaseValues };
     // if there is a new file refresh the image
 
     if (!isIncomplete) {
-      newValues = await setUrlValueOrRefreshImage(
-        newValues,
-        filesFcmPartner,
-        "urlPartnerCard",
-        imgUrlPartnerCard
-      );
+      newValues = await setUrlValueOrRefreshImage(newValues, filesFcmPartner, "urlPartnerCard", imgUrlPartnerCard);
       newValues.isPending = false;
     } else {
       // if is incomplete: or is a first register or is a cardLost
       newValues.expirationDate = null;
       if (isCardLost) {
-        newValues.partnerNum = `Extravío - ${newValues.firstName} ${
-          newValues.paternalSurname
-        } - ${dayjs().format("DD-MMM-YYYY HH:mm")}`;
+        newValues.partnerNum = `Extravío - ${newValues.firstName} ${newValues.paternalSurname} - ${dayjs().format("DD-MMM-YYYY HH:mm")}`;
         newValues.isCardLost = true;
         newValues.isPending = false;
       }
       if (isFirstRegister) {
-        newValues.partnerNum = `En trámite - ${newValues.firstName} ${
-          newValues.paternalSurname
-        } - ${dayjs()}`;
+        newValues.partnerNum = `En trámite - ${newValues.firstName} ${newValues.paternalSurname} - ${dayjs()}`;
         newValues.isCardLost = false;
         newValues.isPending = true;
       }
     }
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesProofOfResidency,
-      "urlProofOfResidency",
-      imgUrlProofOfResidency
-    );
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesFrontINE,
-      "urlFrontIne",
-      imgUrlFrontIne
-    );
-    newValues = await setUrlValueOrRefreshImage(
-      newValues,
-      filesBackINE,
-      "urlBackIne",
-      imgUrlBackIne
-    );
+    newValues = await setUrlValueOrRefreshImage(newValues, filesProofOfResidency, "urlProofOfResidency", imgUrlProofOfResidency);
+    newValues = await setUrlValueOrRefreshImage(newValues, filesFrontINE, "urlFrontIne", imgUrlFrontIne);
+    newValues = await setUrlValueOrRefreshImage(newValues, filesBackINE, "urlBackIne", imgUrlBackIne);
 
     Swal.close();
     let fcmPartner = null;
@@ -235,9 +189,7 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
       setImgUrlProofOfResidency(fcmPartnerData.urlProofOfResidency);
       setImgUrlFrontIne(fcmPartnerData.urlFrontIne);
       setImgUrlBackIne(fcmPartnerData.urlBackIne);
-      fcmPartnerData.expirationDate = dayjs(
-        fcmPartnerData.expirationDate
-      ).format("YYYY-MM-DD");
+      fcmPartnerData.expirationDate = dayjs(fcmPartnerData.expirationDate).format("YYYY-MM-DD");
 
       setformValues({ ...fcmPartnerData });
     } else {
@@ -286,13 +238,7 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                 {!isIncomplete && (
                   <Grid item xs={12} md={6}>
                     <Typography mb="2rem">Tarjeta de socio</Typography>
-                    <DragImageUpload
-                      files={filesFcmPartner}
-                      setFiles={setfilesFcmPartner}
-                      imgUrl={imgUrlPartnerCard}
-                      setimgUrl={setImgUrlPartnerCard}
-                      editable={isEditable}
-                    ></DragImageUpload>
+                    <DragImageUpload files={filesFcmPartner} setFiles={setfilesFcmPartner} imgUrl={imgUrlPartnerCard} setimgUrl={setImgUrlPartnerCard} editable={isEditable}></DragImageUpload>
                   </Grid>
                 )}
                 <Grid item xs={12} md={6}>
@@ -307,23 +253,11 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography mb="2rem">INE frente</Typography>
-                  <DragImageUpload
-                    files={filesFrontINE}
-                    setFiles={setfilesFrontINE}
-                    imgUrl={imgUrlFrontIne}
-                    setimgUrl={setImgUrlFrontIne}
-                    editable={isEditable}
-                  ></DragImageUpload>
+                  <DragImageUpload files={filesFrontINE} setFiles={setfilesFrontINE} imgUrl={imgUrlFrontIne} setimgUrl={setImgUrlFrontIne} editable={isEditable}></DragImageUpload>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Typography mb="2rem">INE reverso</Typography>
-                  <DragImageUpload
-                    files={filesBackINE}
-                    setFiles={setfilesBackINE}
-                    imgUrl={imgUrlBackIne}
-                    setimgUrl={setImgUrlBackIne}
-                    editable={isEditable}
-                  ></DragImageUpload>
+                  <DragImageUpload files={filesBackINE} setFiles={setfilesBackINE} imgUrl={imgUrlBackIne} setimgUrl={setImgUrlBackIne} editable={isEditable}></DragImageUpload>
                 </Grid>
               </Grid>
             </Grid>
@@ -337,41 +271,21 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="firstName"
-                    label="Nombre (s)"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="firstName" label="Nombre (s)" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="paternalSurname"
-                    label="Apellido paterno"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="paternalSurname" label="Apellido paterno" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="maternalSurname"
-                    label="Apellido materno"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="maternalSurname" label="Apellido materno" disabled={!isEditable} />
                 </Grid>
                 {!isIncomplete && (
                   <Fragment>
                     <Grid item xs={12} md={6}>
-                      <TextFieldWrapper
-                        name="partnerNum"
-                        label="Número de socio*"
-                        disabled={!isEditable}
-                      />
+                      <TextFieldWrapper name="partnerNum" label="Número de socio*" disabled={!isEditable} />
                     </Grid>{" "}
                     <Grid item xs={12} md={6}>
-                      <DatePickerFieldWrapper
-                        name="expirationDate"
-                        label="Fecha de expiración*"
-                        disabled={!isEditable}
-                      />
+                      <DatePickerFieldWrapper name="expirationDate" label="Fecha de expiración*" disabled={!isEditable} />
                     </Grid>
                   </Fragment>
                 )}
@@ -387,53 +301,25 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                  <TextFieldWrapper
-                    name="address.street"
-                    label="Calle"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.street" label="Calle" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={3}>
-                  <TextFieldWrapper
-                    name="address.number"
-                    label="Número"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.number" label="Número" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={3}>
-                  <TextFieldWrapper
-                    name="address.suburb"
-                    label="Colonia o fraccionamiento"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.suburb" label="Colonia o fraccionamiento" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={3}>
-                  <TextFieldWrapper
-                    name="address.postalCode"
-                    label="Código postal"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.postalCode" label="Código postal" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="address.city"
-                    label="Ciudad"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.city" label="Ciudad" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="address.state"
-                    label="Estado"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.state" label="Estado" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="address.country"
-                    label="País"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="address.country" label="País" disabled={!isEditable} />
                 </Grid>
               </Grid>
             </Grid>
@@ -447,25 +333,13 @@ export const FcmPartnerFormikNew = ({ ...props }) => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="homePhone"
-                    label="Teléfono"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="homePhone" label="Teléfono" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <TextFieldWrapper
-                    name="mobilePhone"
-                    label="Teléfono móvil"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="mobilePhone" label="Teléfono móvil" disabled={!isEditable} />
                 </Grid>
                 <Grid item xs={12} md={4} mb={2}>
-                  <TextFieldWrapper
-                    name="email"
-                    label="Correo electrónico"
-                    disabled={!isEditable}
-                  />
+                  <TextFieldWrapper name="email" label="Correo electrónico" disabled={!isEditable} />
                 </Grid>
               </Grid>
             </Grid>

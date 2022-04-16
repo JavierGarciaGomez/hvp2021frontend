@@ -72,7 +72,7 @@ export const MainPagesNavbar = () => {
                   className="dropdown-menu u-bgPrimaryLighter"
                   aria-labelledby="navbarDropdown"
                 >
-                  <li className="mb-1r">
+                  {/* <li className="mb-1r">
                     <NavLink to="/services/consultation">Consultas</NavLink>
                   </li>
 
@@ -81,11 +81,11 @@ export const MainPagesNavbar = () => {
                   </li>
                   <li className="mb-1r">
                     <NavLink to="/services/surgery">Cirugías</NavLink>
-                  </li>
+                  </li> */}
                   <li className="mb-1r">
                     <NavLink to="/services/FCM">Pedigrí y trámites FCM</NavLink>
                   </li>
-                  <li className="mb-1r">
+                  {/* <li className="mb-1r">
                     <NavLink to="/services/insemination">
                       Inseminación artificial
                     </NavLink>
@@ -94,7 +94,7 @@ export const MainPagesNavbar = () => {
                     <NavLink to="/services/cataractSurgery">
                       Cirugía de cataratas
                     </NavLink>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </li>

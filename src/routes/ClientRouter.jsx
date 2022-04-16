@@ -6,6 +6,8 @@ import { ClientSelectProcedure } from "../pages/clientsPages/ClientSelectProcedu
 import { ClientWelcome } from "../pages/clientsPages/ClientWelcome";
 import { FcmDogFormik } from "../pages/clientsPages/FcmDogFormik";
 import { FcmPartnerFormik } from "../pages/clientsPages/FcmPartnerFormik";
+import { FcmProcedureLayout } from "../pages/clientsPages/layouts/FcmProcedureLayout";
+
 import { ProcedurePedigree } from "../pages/clientsPages/ProcedurePedigree";
 
 export const ClientRouter = () => {
@@ -22,6 +24,8 @@ export const ClientRouter = () => {
       <Route path="clientProfile" element={<ClientProfile />} />
       <Route path="procedure/pedigree" element={<ProcedurePedigree />} />
       <Route path="procedure/pedigree/:id" element={<ProcedurePedigree />} />
+      <Route path="procedure/" element={<FcmProcedureLayout procedureType={2} />} />
+      <Route path="procedure/:id" element={<FcmProcedureLayout procedureType={2} />} />
 
       {/* Default */}
       <Route path="*" element={<Navigate to="home" />} />
