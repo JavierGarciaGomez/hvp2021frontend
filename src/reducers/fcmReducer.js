@@ -128,6 +128,9 @@ export const fcmReducer = (state = initialState, action) => {
     case types.fcmPackageSetType:
       return { ...state, fcmPackage: { ...state.fcmPackage, packageType: action.payload } };
 
+    case types.fcmPackageClean:
+      return { ...state, fcmPackage: initialState };
+
     default:
       return state;
   }

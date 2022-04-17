@@ -180,9 +180,15 @@ export const getGeneralData = (fcmPackage) => {
   if (packageType === fcmPackagesTypes.PEDIGREE || packageType === fcmPackagesTypes.PEDIGREE) {
     return getGeneralDataLitter(fcmPackage);
   }
-  if (packageType === fcmPackagesTypes.INITIALRACEPURITY) {
+  if (
+    packageType === fcmPackagesTypes.INITIALRACEPURITY ||
+    packageType === fcmPackagesTypes.INITIALREGISTER ||
+    packageType === fcmPackagesTypes.CONTESTCERTIFICATE
+  ) {
     return getGeneralDataSingleDog(fcmPackage);
   }
+  if (packageType === fcmPackagesTypes.PARTNERSHIP) return getGeneralDataPartner(fcmPackage);
+  if (packageType === fcmPackagesTypes.TRANSFER) return getGeneralDataTransfer(fcmPackage);
 };
 
 export const getGeneralDataLitter = (fcmPackage) => {
@@ -226,7 +232,7 @@ export const getGeneralDataLitter = (fcmPackage) => {
   return generalData;
 };
 
-export const getGeneralDataSingleDog = (fcmPackage, client, allFcm) => {
+export const getGeneralDataSingleDog = (fcmPackage) => {
   const { steps } = fcmPackage;
   const generalData = {
     ownerFullName: "",
@@ -242,6 +248,45 @@ export const getGeneralDataSingleDog = (fcmPackage, client, allFcm) => {
   }
   if (dog) {
     generalData.dogName = dog.petName;
+  }
+
+  return generalData;
+};
+
+export const getGeneralDataPartner = (fcmPackage) => {
+  const { steps } = fcmPackage;
+  const generalData = {
+    partnerFullName: "",
+    partnerPartnerNum: "",
+  };
+  const partnerFCM = steps[0].stepData;
+
+  if (partnerFCM) {
+    generalData.partnerFullName = `${partnerFCM.firstName} ${partnerFCM.paternalSurname} ${partnerFCM.maternalSurname} `;
+    generalData.partnerPartnerNum = partnerFCM.partnerNum;
+  }
+
+  return generalData;
+};
+
+export const getGeneralDataTransfer = (fcmPackage) => {
+  const { steps } = fcmPackage;
+  const generalData = {
+    ownerFullName: "",
+    ownerPartnerNum: "",
+    dogName: "",
+    dogRegisterNum: "",
+  };
+  const owner = steps[0].stepData;
+  const dog = steps[1].stepData;
+
+  if (owner) {
+    generalData.ownerFullName = `${owner.firstName} ${owner.paternalSurname} ${owner.maternalSurname} `;
+    generalData.ownerPartnerNum = owner.partnerNum;
+  }
+  if (dog) {
+    generalData.dogName = dog.petName;
+    generalData.dogRegisterNum = dog.registerNum;
   }
 
   return generalData;

@@ -20,7 +20,7 @@ import { startLogout } from "../../../actions/authActions";
 const pagesData = [
   { label: "Ver perfil", value: "clientProfile" },
   { label: "Iniciar trámite", value: "fcmSelectProcedure" },
-  { label: "Estado de trámites", value: "fcmDataProcedures" },
+  { label: "Estado de trámites", value: "fcmPendingProcedures" },
 ];
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -58,21 +58,14 @@ export const ClientsTopbar = () => {
   };
 
   return (
-    <AppBar
-      position="relative"
-      sx={{ position: { md: "fixed" }, zIndex: "100" }}
-    >
+    <AppBar position="relative" sx={{ position: { md: "fixed" }, zIndex: "100" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* LOGO BOX */}
           <Box noWrap sx={{ mr: 2, display: { xs: "none", md: "flex" } }}>
             {/* Logo */}
             <Link className="" to="/">
-              <img
-                className="topbar_imgLogo"
-                src="assets/imgs/Logo_HVP.png"
-                alt=""
-              />
+              <img className="topbar_imgLogo" src="assets/imgs/Logo_HVP.png" alt="" />
             </Link>
           </Box>
 
@@ -108,10 +101,7 @@ export const ClientsTopbar = () => {
               }}
             >
               {pagesData.map((page) => (
-                <MenuItem
-                  key={page.value}
-                  onClick={() => handleGoToPage(page.value)}
-                >
+                <MenuItem key={page.value} onClick={() => handleGoToPage(page.value)}>
                   <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
@@ -121,21 +111,13 @@ export const ClientsTopbar = () => {
           {/* LOGO BOX: Small */}
           <Box noWrap sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <Link className="" to="/">
-              <img
-                className="topbar_imgLogo"
-                src="assets/imgs/Logo_HVP.png"
-                alt=""
-              />
+              <img className="topbar_imgLogo" src="assets/imgs/Logo_HVP.png" alt="" />
             </Link>
           </Box>
           {/* PAGES BUTTONS */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pagesData.map((page) => (
-              <Button
-                key={page.value}
-                onClick={() => handleGoToPage(page.value)}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
+              <Button key={page.value} onClick={() => handleGoToPage(page.value)} sx={{ my: 2, color: "white", display: "block" }}>
                 {page.label}
               </Button>
             ))}

@@ -3,12 +3,11 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { getGeneralData } from "../../../helpers/fcmUtilities";
 import { isObjectEmpty } from "../../../helpers/utilities";
-
 import dayjs from "dayjs";
 import { FcmProceduresSummary } from "./FcmProceduresSummary";
 import { FcmPackageSummarySendButton } from "./FcmPackageSummarySendButton";
 
-export const FcmPackageSummarySingleDog = () => {
+export const FcmPackageSummaryPartner = () => {
   const { fcmPackage } = useSelector((state) => state.fcm);
 
   const { client } = useSelector((state) => state.clients);
@@ -17,7 +16,6 @@ export const FcmPackageSummarySingleDog = () => {
 
   useEffect(() => {
     setgeneralData(getGeneralData(fcmPackage, client));
-    console.log(getGeneralData(fcmPackage, client));
   }, []);
 
   if (isObjectEmpty(generalData)) return <CircularProgress />;
@@ -62,23 +60,14 @@ export const FcmPackageSummarySingleDog = () => {
         </Box>
         <Box mb="2rem">
           <Typography component="h3" variant="h5">
-            Propietario
+            Socio
           </Typography>
           <Box sx={{ display: "flex" }}>
             <Typography>Nombre completo: </Typography>
-            <Typography>{generalData.ownerFullName} </Typography>
+            <Typography>{generalData.partnerFullName} </Typography>
           </Box>
           <Box sx={{ display: "flex" }}>
-            <Typography>Número de socio: {generalData.ownerPartnerNum}</Typography>
-          </Box>
-        </Box>
-        <Box mb="2rem">
-          <Typography component="h3" variant="h5">
-            Perro a registrar
-          </Typography>
-          <Box sx={{ display: "flex" }}>
-            <Typography>Nombre: </Typography>
-            <Typography>{generalData.dogName} </Typography>
+            <Typography>Número de socio: {generalData.partnerPartnerNum}</Typography>
           </Box>
         </Box>
       </Box>

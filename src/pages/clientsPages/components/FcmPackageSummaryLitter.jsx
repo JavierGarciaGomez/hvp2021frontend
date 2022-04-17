@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { Box, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import { getGeneralData } from "../../../helpers/fcmUtilities";
-import { fireSwalConfirmation } from "../../../helpers/utilities";
-import { useNavigate, useParams } from "react-router-dom";
-import { createFcmPackage, setFcmPackageStatus, updateFcmPackage } from "../../../actions/fcmActions";
-import { fcmPackageStatusTypes, fcmPackagesTypes } from "../../../types/types";
+import { fcmPackagesTypes } from "../../../types/types";
 import { FcmProceduresSummary } from "./FcmProceduresSummary";
+import { FcmPackageSummarySendButton } from "./FcmPackageSummarySendButton";
 
 export const FcmPackageSummaryLitter = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { fcmPackage } = useSelector((state) => state.fcm);
   const { packageType } = fcmPackage;
   const { client } = useSelector((state) => state.clients);
@@ -21,21 +16,6 @@ export const FcmPackageSummaryLitter = () => {
   useEffect(() => {
     setgeneralData(getGeneralData(fcmPackage, client));
   }, []);
-
-  const handleSendData = async () => {
-    const confirmation = await fireSwalConfirmation("¿Estás seguro de enviar? Una vez enviado, no se podrá editar la información");
-    if (!confirmation) {
-      return;
-    }
-
-    dispatch(setFcmPackageStatus(fcmPackageStatusTypes.sentByClient));
-    if (id) {
-      await dispatch(updateFcmPackage(id));
-    } else {
-      await dispatch(createFcmPackage());
-    }
-    navigate("/clients");
-  };
 
   return (
     <Box mt="4rem">
@@ -127,10 +107,7 @@ export const FcmPackageSummaryLitter = () => {
       </Box>
       {/* Procedures container */}
       <FcmProceduresSummary />
-
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Button onClick={handleSendData}>Enviar información</Button>
-      </Box>
+      <FcmPackageSummarySendButton />
     </Box>
   );
 };

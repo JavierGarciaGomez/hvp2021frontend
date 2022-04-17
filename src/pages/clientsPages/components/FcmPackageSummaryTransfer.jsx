@@ -8,19 +8,18 @@ import dayjs from "dayjs";
 import { FcmProceduresSummary } from "./FcmProceduresSummary";
 import { FcmPackageSummarySendButton } from "./FcmPackageSummarySendButton";
 
-export const FcmPackageSummarySingleDog = () => {
+export const FcmPackageSummaryTransfer = () => {
   const { fcmPackage } = useSelector((state) => state.fcm);
-
-  const { client } = useSelector((state) => state.clients);
 
   const [generalData, setgeneralData] = useState({ puppies: [] });
 
   useEffect(() => {
-    setgeneralData(getGeneralData(fcmPackage, client));
-    console.log(getGeneralData(fcmPackage, client));
+    setgeneralData(getGeneralData(fcmPackage));
   }, []);
 
   if (isObjectEmpty(generalData)) return <CircularProgress />;
+
+  console.log({ ...generalData });
 
   return (
     <Box mt="4rem">

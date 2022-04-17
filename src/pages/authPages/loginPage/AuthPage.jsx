@@ -24,7 +24,6 @@ export const AuthPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log("***********role", role);
     if (checkAuthorization(role, roleTypes.collaborator)) {
       return navigate("/dashboard", { replace: true });
     }
@@ -40,9 +39,7 @@ export const AuthPage = () => {
 
         <div className="mt-5 d-flex justify-content-end">
           <Link to="/">
-            <button className="btn btn-lg btn-primary fs-2">
-              Regresar a la página principal
-            </button>
+            <button className="btn btn-lg btn-primary fs-2">Regresar a la página principal</button>
           </Link>
         </div>
       </div>

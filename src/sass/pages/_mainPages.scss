@@ -496,7 +496,8 @@
   }
 
   &_imgContainer {
-    flex-basis: 45%;
+    flex: 1
+    
   }
 
   &_img {
@@ -507,6 +508,7 @@
     flex-basis: 55%;
     font-size: 1.8rem;
     color: #fff;
+    flex-grow: 1;
   }
 }
 

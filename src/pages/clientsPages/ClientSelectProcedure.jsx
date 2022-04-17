@@ -24,7 +24,7 @@ const linksData = [
   },
   {
     label: "Certificado para concurso",
-    packageType: fcmPackagesTypes.INITIALREGISTER,
+    packageType: fcmPackagesTypes.CONTESTCERTIFICATE,
   },
   {
     label: "Alta o renovación de socio",
@@ -32,7 +32,7 @@ const linksData = [
   },
   {
     label: "Transferencia o cambio de propietario",
-    packageType: fcmPackagesTypes.PARTNERSHIP,
+    packageType: fcmPackagesTypes.TRANSFER,
   },
 ];
 
@@ -55,7 +55,7 @@ export const ClientSelectProcedure = () => {
 
       <Grid container>
         {linksData.map((link) => (
-          <Grid item xs={6} sx={{ padding: "1rem" }}>
+          <Grid key={link.packageType} item xs={6} sx={{ padding: "1rem" }}>
             <Button
               fullWidth
               onClick={() => {

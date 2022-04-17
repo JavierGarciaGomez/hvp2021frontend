@@ -1,7 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { addOrRemoveFcmTransferSteps, checkAndAddFcmTransferStep, cleanFcmStep, handleFcmCompleteStep, removeFcmSteps, updateStepReferences } from "../../../actions/fcmActions";
+import {
+  addOrRemoveFcmTransferSteps,
+  checkAndAddFcmTransferStep,
+  cleanFcmStep,
+  handleFcmCompleteStep,
+  removeFcmSteps,
+  updateStepReferences,
+} from "../../../actions/fcmActions";
 import { fireSwalConfirmation, fireSwalError } from "../../../helpers/utilities";
 import { Box, Button, Typography } from "@mui/material";
 import { FcmDogFormikNew } from "./FcmDogFormikNew";
@@ -37,7 +44,9 @@ export const FcmDogFormWrapper = (props) => {
 
   const handleConfirmTransfer = async (values) => {
     if (values.isTransferPending) {
-      const confirmation = await fireSwalConfirmation("Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario.");
+      const confirmation = await fireSwalConfirmation(
+        "Se ha marcado que se realizará una transferencia. Por lo que se agregará al paquete, si no es correcto, edite el formulario."
+      );
 
       if (!confirmation) {
         return false;
@@ -50,7 +59,6 @@ export const FcmDogFormWrapper = (props) => {
     dispatch(updateStepReferences(fcmDog));
     dispatch(removeFcmSteps());
     dispatch(checkAndAddFcmTransferStep(fcmDog));
-
     dispatch(handleFcmCompleteStep());
   };
 
@@ -127,7 +135,9 @@ export const FcmDogFormWrapper = (props) => {
           Notas:
         </Typography>
         <Typography mb="1rem">Las imágenes deben tener un tamaño máximo de 1mb.</Typography>
-        <Typography mb="1rem">Si el pedigrí o CPR está endosado, es necesario marcar que se requiere transferencia, para que se incluya el formato en el paquete.</Typography>
+        <Typography mb="1rem">
+          Si el pedigrí o CPR está endosado, es necesario marcar que se requiere transferencia, para que se incluya el formato en el paquete.
+        </Typography>
       </Box>
       <FcmDogFormikNew handleSubmitForm={handleSubmit} handleCancel={handleCancelFormWrapper} {...props} />
     </Fragment>

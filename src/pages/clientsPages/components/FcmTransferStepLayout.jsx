@@ -1,16 +1,21 @@
 import React, { Fragment, useEffect, useState } from "react";
-
 import { Box, Button, Card, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { FcmSelectDogOptions } from "./FcmSelectDogOptions";
-
 import { checkIfStepsAreCompleted } from "../../../helpers/fcmUtilities";
 import { FcmTransferTable } from "./FcmTransferTable";
 import { FcmPrevOwnerFormik } from "./FcmPrevOwnerFormik";
 import { fireSwalWait } from "../../../helpers/sweetAlertUtilities";
-import { handleFcmCompleteStep, setFcmActiveStepProperty, updateStepReferences, createFcmtransfer, updateFcmtransfer, addAndRemoveFcmTransfersProcedures } from "../../../actions/fcmActions";
+import {
+  handleFcmCompleteStep,
+  setFcmActiveStepProperty,
+  updateStepReferences,
+  createFcmtransfer,
+  updateFcmtransfer,
+  addAndRemoveFcmTransfersProcedures,
+} from "../../../actions/fcmActions";
 import { findElementBYId } from "../../../helpers/arrayUtilities";
 import { propertiesToUpperCase } from "../../../helpers/objectUtilities";
+import { fcmPackagesTypes } from "../../../types/types";
 
 const initialStepProps = {
   isEditable: true,
@@ -22,7 +27,7 @@ export const FcmTransferStepLayout = () => {
   /**************************props and hooks ***********************************************/
   const dispatch = useDispatch();
   const { fcmPackage, allFcm } = useSelector((state) => state.fcm);
-  const { steps, activeStep, completedSteps } = fcmPackage;
+  const { steps, activeStep, completedSteps, packageType } = fcmPackage;
 
   const [stepProps, setstepProps] = useState(initialStepProps);
   const [prevOwner, setprevOwner] = useState(null);
@@ -49,6 +54,8 @@ export const FcmTransferStepLayout = () => {
   useEffect(() => {
     if (isPuppy) {
       setAreprevStepsCompleted(checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4, activeStep - 1]));
+    } else if (packageType === fcmPackagesTypes.TRANSFER) {
+      setAreprevStepsCompleted(checkIfStepsAreCompleted(completedSteps, [0, 1]));
     } else {
       setAreprevStepsCompleted(checkIfStepsAreCompleted(completedSteps, [0, 1, 2, 4]));
     }
@@ -95,6 +102,13 @@ export const FcmTransferStepLayout = () => {
   useEffect(() => {
     if (arePrevStepsCompleted) {
       if (!isDataFull) {
+        if (packageType === fcmPackagesTypes.TRANSFER) {
+          if (stepFromOrigin === 1) {
+            setnewOwner(steps[0].stepData);
+            return setdog(steps[1].stepData);
+          }
+        }
+
         if (stepFromOrigin === 2) {
           setnewOwner(steps[0].stepData);
           return setdog(steps[2].stepData);
@@ -233,7 +247,9 @@ export const FcmTransferStepLayout = () => {
             </Fragment>
           )}
 
-          {isEditable && (stepFromOrigin === 2 || stepFromOrigin === 3) && <FcmPrevOwnerFormik handleSubmitForm={handleSubmitForm} prevOwner={prevOwner} handleCancel={handleShowEdit} />}
+          {isEditable && (stepFromOrigin === 1 || stepFromOrigin === 2 || stepFromOrigin === 3) && (
+            <FcmPrevOwnerFormik handleSubmitForm={handleSubmitForm} prevOwner={prevOwner} handleCancel={handleShowEdit} />
+          )}
         </Fragment>
       )}
 

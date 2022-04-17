@@ -103,6 +103,7 @@ export const types = {
   fcmSetStepProperties: "[fcm] package set step properties",
 
   fcmPackageSetType: "[fcm] package set type",
+  fcmPackageClean: "[fcm] package clean",
 };
 
 export const genderTypes = {
@@ -398,5 +399,7 @@ export const fcmPackagesTypes = {
 
 export const fcmPackageGroupTypes = {
   litter: "Litter",
-  singleDog: "oneDog",
+  singleDog: "OneDog",
+  partner: "Partner",
+  transfer: "Transfer",
 };

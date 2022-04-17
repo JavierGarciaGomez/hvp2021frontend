@@ -491,6 +491,9 @@ export const updateFcmPackage = (id) => {
   };
 };
 
+export const cleanFcmPackage = () => ({
+  type: types.fcmPackageClean,
+});
 /**************HANDLING PACKAGES*********************/
 
 export const setFcmPackageType = (fcmPackageType = "") => ({
@@ -777,7 +780,8 @@ export const handleNextFcmPackageStep = () => {
 
     // It's the last step, but not all steps have been completed,
     // find the first step that hasnt been completed
-    const newActiveStep = isLastStep(activeStep, steps) && !areAllStepsCompleted(completedSteps, steps) ? steps.findIndex((step, i) => !(i in completedSteps)) : activeStep + 1;
+    const newActiveStep =
+      isLastStep(activeStep, steps) && !areAllStepsCompleted(completedSteps, steps) ? steps.findIndex((step, i) => !(i in completedSteps)) : activeStep + 1;
 
     // set active step to 2
     dispatch(setFcmPackageStep(newActiveStep));
