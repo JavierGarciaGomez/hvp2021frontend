@@ -169,7 +169,8 @@ export const procedureTypes = {
       {
         name: "transfersNum",
         question: "Cantidad de transferencias o cambios de propietario",
-        tooltip: "En caso de que existan endosos en los pedigríes de los padres deberán haberse formalizado ante la FCM. En caso contrario, deberá abonarse también la transferencia.",
+        tooltip:
+          "En caso de que existan endosos en los pedigríes de los padres deberán haberse formalizado ante la FCM. En caso contrario, deberá abonarse también la transferencia.",
         type: "number",
       },
       {
@@ -206,7 +207,8 @@ export const procedureTypes = {
       {
         name: "transfersNum",
         question: "Cantidad de transferencias o cambios de propietario",
-        tooltip: "En caso de que existan endosos en los pedigríes de los padres deberán haberse formalizado ante la FCM. En caso contrario, deberá abonarse también la transferencia.",
+        tooltip:
+          "En caso de que existan endosos en los pedigríes de los padres deberán haberse formalizado ante la FCM. En caso contrario, deberá abonarse también la transferencia.",
         type: "number",
       },
       {
@@ -305,7 +307,8 @@ export const procedureTypes = {
       {
         name: "transfersNum",
         question: "Cantidad de transferencias o cambios de propietario",
-        tooltip: "En caso de que existan endosos en los pedigríes de los padres deberán haberse formalizado ante la FCM. En caso contrario, deberá abonarse también la transferencia.",
+        tooltip:
+          "En caso de que existan endosos en los pedigríes de los padres deberán haberse formalizado ante la FCM. En caso contrario, deberá abonarse también la transferencia.",
         type: "number",
       },
     ],
@@ -357,6 +360,7 @@ export const fcmStepTypes = {
   fcmBreedingStep: "FcmBreedingStep",
   fcmTransferStep: "FcmTransferStep",
   fcmSummaryStep: "FcmSummaryStep",
+  fcmNewDogStep: "FcmNewDogStep",
 };
 
 export const fcmPackageStatusTypes = {
@@ -388,4 +392,11 @@ export const fcmPackagesTypes = {
   INITIALRACEPURITY: "CERTIFICADO DE PUREZA RACIAL INICIAL",
   INITIALREGISTER: "REGISTRO INICIAL",
   CONTESTCERTIFICATE: "CERTIFICADO PARA CONCURSO",
+  PARTNERSHIP: "ALTA O RENOVACIÓN DE SOCIO",
+  TRANSFER: "TRANSFERENCIA O CAMBIO DE PROPIETARIO",
+};
+
+export const fcmPackageGroupTypes = {
+  litter: "Litter",
+  singleDog: "oneDog",
 };

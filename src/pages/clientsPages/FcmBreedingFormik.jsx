@@ -21,7 +21,7 @@ import { DatePickerFieldWrapper } from "../../components/formsUI/DatePickerField
 import { ButtonFormWrapper } from "../../components/formsUI/ButtonFormWrapper";
 
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { SelectWrapper } from "../../components/formsUI/SelectWrapper";
 import { CheckboxInputWrapper } from "../../components/formsUI/CheckboxInputWrapper";
@@ -32,13 +32,13 @@ import { propertiesToUpperCase } from "../../helpers/objectUtilities";
 
 export const FcmBreedingFormik = ({ label }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   /*************************************************************************************************** */
   /**************************usestates and useselectors ******** ***************************************/
   /*************************************************************************************************** */
 
   const { fcmPackage } = useSelector((state) => state.fcm);
-  const { activeStep, steps, breedingForm, completedSteps } = fcmPackage;
+  const { activeStep, steps, completedSteps } = fcmPackage;
   const currentStep = steps[activeStep];
   const { stepData, stepLabel } = currentStep;
 

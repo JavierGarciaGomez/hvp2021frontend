@@ -4,14 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
-import {
-  createFcmPackage,
-  fcmPackageLoaded,
-  setFcmPackageStatus,
-  startLoadingAllFcm,
-  updateFcmPackage,
-  updateFcmPackageProperty,
-} from "../../../actions/fcmActions";
+import { createFcmPackage, fcmPackageLoaded, setFcmPackageStatus, startLoadingAllFcm, updateFcmPackage, updateFcmPackageProperty } from "../../../actions/fcmActions";
 import { checkProcedureStatus } from "../../../helpers/fcmUtilities";
 import { fireSwalError } from "../../../helpers/utilities";
 import { fcmPackageStatusTypes } from "../../../types/types";
@@ -32,8 +25,7 @@ export const FcmPackage = () => {
   // todo. change it to false
 
   const [showRevisionPanel, setShowRevisionPanel] = useState(false);
-  const [selectedStepIndexToReview, setSelectedStepIndexToReview] =
-    useState("");
+  const [selectedStepIndexToReview, setSelectedStepIndexToReview] = useState("");
   const [stepsToValidate, setStepsToValidate] = useState([]);
 
   const { fcmPackageId } = useParams();
@@ -52,9 +44,7 @@ export const FcmPackage = () => {
 
   useEffect(() => {
     if (fcmPackageId && allFcmPackages.length > 0) {
-      const fcmPackage = allFcmPackages.find(
-        (element) => element._id === fcmPackageId
-      );
+      const fcmPackage = allFcmPackages.find((element) => element._id === fcmPackageId);
 
       dispatch(fcmPackageLoaded(fcmPackage));
 
@@ -67,10 +57,7 @@ export const FcmPackage = () => {
     setStepsToValidate(steps.slice(0, steps.length - 1));
 
     // check if are not all validated. set to send by user
-    if (
-      status === fcmPackageStatusTypes.preliminarilyReviewed ||
-      status === fcmPackageStatusTypes.inspectionDone
-    ) {
+    if (status === fcmPackageStatusTypes.preliminarilyReviewed || status === fcmPackageStatusTypes.inspectionDone) {
       const validatedSteps = steps.reduce((acc, obj) => {
         if (obj.isValidated) {
           return (acc = acc + 1);
@@ -130,7 +117,7 @@ export const FcmPackage = () => {
   return (
     <Box>
       <Typography component="h2" variant="h4" mb="2rem">
-        Paquete FCM. Pedigrí.
+        Paquete FCM. {fcmPackage.packageType}
       </Typography>
       <Typography component="h2" variant="h5" mb="2rem">
         Estado del paquete: {status}
@@ -149,15 +136,10 @@ export const FcmPackage = () => {
           Notas:
         </Typography>
         <Typography mb="1rem">
-          Se debe validar cada uno de los formatos, y, una vez validados,
-          concluir la revisión o bien regresar al estado de llenado por el
-          cliente, para que este haga las correcciones; sin embargo, de ser
-          posible, es mejor hacer las correcciones en esta etapa.
+          Se debe validar cada uno de los formatos, y, una vez validados, concluir la revisión o bien regresar al estado de llenado por el cliente, para que este haga las correcciones; sin embargo, de
+          ser posible, es mejor hacer las correcciones en esta etapa.
         </Typography>
-        <Typography mb="1rem">
-          Para que el estado de avance de la revisión y los ajustes realizados
-          se conserven, es necesario guardar los avances.
-        </Typography>
+        <Typography mb="1rem">Para que el estado de avance de la revisión y los ajustes realizados se conserven, es necesario guardar los avances.</Typography>
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}>
         <Button onClick={handleSave} size="large">
@@ -172,22 +154,11 @@ export const FcmPackage = () => {
         </Box>
 
         {stepsToValidate.map((step, index) => (
-          <FormatItem
-            key={step.stepLabel}
-            step={step || {}}
-            onSelect={handleSelect}
-            stepIndex={index}
-          ></FormatItem>
+          <FormatItem key={step.stepLabel} step={step || {}} onSelect={handleSelect} stepIndex={index}></FormatItem>
         ))}
       </Box>
 
-      {showRevisionPanel && (
-        <FcmRevisionPanel
-          stepIndex={selectedStepIndexToReview}
-          setShowRevisionPanel={setShowRevisionPanel}
-          onCancel={() => setShowRevisionPanel(false)}
-        />
-      )}
+      {showRevisionPanel && <FcmRevisionPanel stepIndex={selectedStepIndexToReview} setShowRevisionPanel={setShowRevisionPanel} onCancel={() => setShowRevisionPanel(false)} />}
 
       <Box sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}>
         <Button onClick={handleValidatePackage} size="large">
@@ -195,18 +166,12 @@ export const FcmPackage = () => {
         </Button>
       </Box>
 
-      {checkProcedureStatus(
-        fcmPackageStatusTypes.preliminarilyReviewed,
-        status
-      ) && (
+      {checkProcedureStatus(fcmPackageStatusTypes.preliminarilyReviewed, status) && (
         <Box>
           <Typography component="h2" variant="h4" mb="2rem">
             Revisión médica
           </Typography>
-          <FcmMedicalInspectionForm
-            onSave={handleSaveInspection}
-            medicalInspectionData={medicalInspection}
-          />
+          <FcmMedicalInspectionForm onSave={handleSaveInspection} medicalInspectionData={medicalInspection} />
         </Box>
       )}
 
@@ -215,13 +180,8 @@ export const FcmPackage = () => {
           <Typography component="h2" variant="h4" mb="2rem">
             Imprimir paquete
           </Typography>
-          <Box
-            sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}
-          >
-            <Link
-              to={`/other/print/fcmPackage/${fcmPackageId}`}
-              target="_blank"
-            >
+          <Box sx={{ display: "flex", justifyContent: "space-evenly", mb: "3rem" }}>
+            <Link to={`/other/print/fcmPackage/${fcmPackageId}`} target="_blank">
               <Button onClick={() => {}} size="large">
                 Imprimir paquete
               </Button>

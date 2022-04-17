@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -15,6 +16,18 @@ const defaultStep = {
 };
 
 const initialFcmPackage = {
+  steps: [],
+  activeStep: 0,
+  completedSteps: { 0: false },
+  procedures: [],
+  documentation: [],
+  status: null,
+  creator: "",
+  creationDate: new Date(),
+};
+
+const initialFcmPackagePedigree = {
+  ...initialFcmPackage,
   steps: [
     {
       ...defaultStep,
@@ -48,14 +61,31 @@ const initialFcmPackage = {
       stepType: fcmStepTypes.fcmSummaryStep,
     },
   ],
-  activeStep: 0,
-  completedSteps: { 0: false },
-  procedures: [],
-  documentation: [],
-  status: null,
-  creator: "",
-  creationDate: new Date(),
-  // todo: delete
+};
+
+const initialFcmPackageRacePurity = {
+  ...initialFcmPackagePedigree,
+};
+
+const initialFcmPackageInitialRacePurity = {
+  ...initialFcmPackage,
+  steps: [
+    {
+      ...defaultStep,
+      stepLabel: "Datos del propietario",
+      stepType: fcmStepTypes.fcmPartnerStep,
+    },
+    {
+      ...defaultStep,
+      stepLabel: "Datos del perro",
+      stepType: fcmStepTypes.fcmNewDogStep,
+    },
+    {
+      ...defaultStep,
+      stepLabel: "Resumen",
+      stepType: fcmStepTypes.fcmSummaryStep,
+    },
+  ],
 };
 
 export const FcmProcedureLayout = (props) => {
@@ -71,23 +101,32 @@ export const FcmProcedureLayout = (props) => {
 
   useEffect(() => {
     const executeAsync = async () => {
+      console.log("use effect", { id, fcmPackageType, ...fcmPackage });
       await dispatch(startLoadingAllFcm());
       if (id) {
         // todo: change. check the package in
         await dispatch(startLoadingFcmPackage(id));
       } else {
-        await dispatch(setFcmPackage({ ...fcmPackage, initialFcmPackage }));
+        if (fcmPackageType) {
+          if (fcmPackageType === fcmPackagesTypes.PEDIGREE) {
+            await dispatch(setFcmPackage({ ...fcmPackage, ...initialFcmPackagePedigree }));
+          }
+          if (fcmPackageType === fcmPackagesTypes.RACEPURITY) {
+            await dispatch(setFcmPackage({ ...fcmPackage, ...initialFcmPackageRacePurity }));
+          }
+          if (fcmPackageType === fcmPackagesTypes.INITIALRACEPURITY) {
+            await dispatch(setFcmPackage({ ...fcmPackage, ...initialFcmPackageInitialRacePurity }));
+          }
+          setisLoading(false);
+        }
       }
-      setisLoading(false);
     };
     executeAsync();
-  }, []);
+  }, [fcmPackageType]);
 
-  console.log({ id, fcmPackageType, ...fcmPackage });
-
-  if (fcmPackageType === fcmPackagesTypes.RACEPURITY) {
-    return <FcmStepper />;
+  if (isLoading) {
+    return <CircularProgress />;
   }
 
-  return <Fragment>{}</Fragment>;
+  return <FcmStepper />;
 };

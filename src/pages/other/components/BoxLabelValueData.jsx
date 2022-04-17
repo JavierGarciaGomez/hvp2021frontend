@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import React from "react";
 import { transformBooleanToString } from "../../../helpers/utilities";
 
-export const BoxLabelValueData = ({ label, value, vertical = false }) => {
+export const BoxLabelValueData = ({ label, value, vertical = false, ...props }) => {
   if (vertical) {
     return (
       <Box
@@ -11,6 +11,7 @@ export const BoxLabelValueData = ({ label, value, vertical = false }) => {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
+          ...props.sx,
         }}
       >
         <Typography sx={{ fontWeight: "bold" }}>{`${label}:`}&nbsp;</Typography>
@@ -19,7 +20,7 @@ export const BoxLabelValueData = ({ label, value, vertical = false }) => {
     );
   }
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center", ...props.sx }}>
       <Typography sx={{ fontWeight: "bold" }}>{`${label}:`}&nbsp; </Typography>
       <Typography>{value} </Typography>
     </Box>

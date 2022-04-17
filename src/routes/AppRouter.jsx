@@ -11,7 +11,7 @@ import { DashboardLayout } from "../pages/dashboard/DashboardLayout";
 import { checkAuthorization } from "../helpers/utilities";
 import { ClientLayout } from "../pages/clientsPages/ClientLayout";
 import { FcmTransferFormikNew } from "../pages/clientsPages/FcmTransferFormikNew";
-import { PackagePdf } from "../pages/other/PackagePdf";
+import { PackagePrint } from "../pages/other/PackagePrint";
 
 export const AppRouter = () => {
   const theme = createTheme({
@@ -22,7 +22,7 @@ export const AppRouter = () => {
   });
   const dispatch = useDispatch();
   const { checking, role } = useSelector((state) => state.auth);
-  
+
   useEffect(() => {
     dispatch(startChecking());
   }, [dispatch]);
@@ -35,21 +35,14 @@ export const AppRouter = () => {
     <ThemeProvider theme={theme}>
       <HashRouter>
         <Routes>
-          {checkAuthorization(role, roleTypes.collaborator) && (
-            <Route path="/dashboard/*" element={<DashboardLayout />}></Route>
-          )}
+          {checkAuthorization(role, roleTypes.collaborator) && <Route path="/dashboard/*" element={<DashboardLayout />}></Route>}
           <Route path="/auth" element={<AuthPage />}></Route>
           <Route path="/auth/:token" element={<AuthPage />}></Route>
-          {role === "User" && (
-            <Route path="/clients/*" element={<ClientLayout />}></Route>
-          )}
+          {role === "User" && <Route path="/clients/*" element={<ClientLayout />}></Route>}
 
           <Route path="/*" element={<MainPageLayout />}></Route>
           <Route path="/test" element={<FcmTransferFormikNew />}></Route>
-          <Route
-            path="/other/print/fcmPackage/:fcmPackageId"
-            element={<PackagePdf />}
-          ></Route>
+          <Route path="/other/print/fcmPackage/:fcmPackageId" element={<PackagePrint />}></Route>
           {/* <Route path="*" element={<LoginPage />} /> */}
           {/* <Route path="/auth/register" element={<LoginPage />} /> */}
         </Routes>

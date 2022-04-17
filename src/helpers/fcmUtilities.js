@@ -3,16 +3,10 @@ import * as Yup from "yup";
 import { FcmDogStepLayout } from "../pages/clientsPages/components/FcmDogStepLayout";
 import { FcmPackageSummary } from "../pages/clientsPages/components/FcmPackageSummary";
 import { FcmPartnerStepLayout } from "../pages/clientsPages/components/FcmPartnerStepLayout";
-import { FcmSelectPartnerOptions } from "../pages/clientsPages/components/FcmSelectPartnerOptions";
-import { FcmTransferPuppy } from "../pages/clientsPages/components/FcmTransferPuppy";
+import { FcmSingleDogFormWrapper, FcmUnregisteredDogStep } from "../pages/clientsPages/components/FcmUnregisteredDogStep";
 import { FcmTransferStepLayout } from "../pages/clientsPages/components/FcmTransferStepLayout";
 import { FcmBreedingFormik } from "../pages/clientsPages/FcmBreedingFormik";
-import { FcmStepperDogSelector } from "../pages/clientsPages/FcmStepperDogSelector";
-import { FcmStepperPartnerSelector } from "../pages/clientsPages/FcmStepperPartnerSelector";
-import { FcmTransferFormik } from "../pages/clientsPages/FcmTransferFormik";
-
-import { FcmTransferFormWrapper } from "../pages/clientsPages/FcmTransferFormWrapper";
-import { fcmPackageStatusTypes, fcmStepTypes } from "../types/types";
+import { fcmPackageStatusTypes, fcmPackagesTypes, fcmStepTypes } from "../types/types";
 
 import { isObjectEmpty, objectContainsObjectProperties } from "./utilities";
 
@@ -106,14 +100,14 @@ export const getComponent = (stepType, props) => {
     case fcmStepTypes.fcmBreedingStep:
       return <FcmBreedingFormik {...props} />;
 
-    case fcmStepTypes.fcmBreedingStep:
-      return <FcmBreedingFormik {...props} />;
-
     case fcmStepTypes.fcmTransferStep:
       return <FcmTransferStepLayout {...props} />;
 
     case fcmStepTypes.fcmSummaryStep:
       return <FcmPackageSummary />;
+
+    case fcmStepTypes.fcmNewDogStep:
+      return <FcmUnregisteredDogStep {...props} />;
 
     default:
       return null;
@@ -180,9 +174,19 @@ export const checkIfPreviousStepsAreFilled = (fcmPackage, activeStep) => {
   }
 };
 
-export const getGeneralData = (fcmPackage, client, allFcm) => {
-  const { fatherOwnerId, motherOwnerId, dogFatherId, dogMotherId, breedingForm, steps } = fcmPackage;
+export const getGeneralData = (fcmPackage) => {
+  const { packageType } = fcmPackage;
 
+  if (packageType === fcmPackagesTypes.PEDIGREE || packageType === fcmPackagesTypes.PEDIGREE) {
+    return getGeneralDataLitter(fcmPackage);
+  }
+  if (packageType === fcmPackagesTypes.INITIALRACEPURITY) {
+    return getGeneralDataSingleDog(fcmPackage);
+  }
+};
+
+export const getGeneralDataLitter = (fcmPackage) => {
+  const { steps } = fcmPackage;
   const generalData = {
     fatherOwnerFullName: "",
     fatherOwnerPartnerNum: "",
@@ -222,6 +226,27 @@ export const getGeneralData = (fcmPackage, client, allFcm) => {
   return generalData;
 };
 
+export const getGeneralDataSingleDog = (fcmPackage, client, allFcm) => {
+  const { steps } = fcmPackage;
+  const generalData = {
+    ownerFullName: "",
+    ownerPartnerNum: "",
+    dogName: "",
+  };
+  const fatherOwnerFcm = steps[0].stepData;
+  const dog = steps[1].stepData;
+
+  if (fatherOwnerFcm) {
+    generalData.ownerFullName = `${fatherOwnerFcm.firstName} ${fatherOwnerFcm.paternalSurname} ${fatherOwnerFcm.maternalSurname} `;
+    generalData.ownerPartnerNum = fatherOwnerFcm.partnerNum;
+  }
+  if (dog) {
+    generalData.dogName = dog.petName;
+  }
+
+  return generalData;
+};
+
 export const getProcedures = (fcmPackage, client) => {
   const procedures = {
     partnersRegistrations: [],
@@ -256,7 +281,11 @@ export const generateProcedureData = (fcmPackage) => {
 
   let partnerRenewalsProcedures = [];
   fcmPartnerSteps.forEach((step) => {
-    if (step.stepData?.expirationDate && dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days")) && !partnerRenewalsProcedures.find((element) => element._id === step.dataId)) {
+    if (
+      step.stepData?.expirationDate &&
+      dayjs(step.stepData?.expirationDate).isBefore(dayjs().add(14, "days")) &&
+      !partnerRenewalsProcedures.find((element) => element._id === step.dataId)
+    ) {
       partnerRenewalsProcedures.push({ ...step.stepData });
     }
   });
@@ -283,7 +312,14 @@ export const generateProcedureData = (fcmPackage) => {
 
   let transfersProcedures = steps.filter((step) => step.stepType === fcmStepTypes.fcmTransferStep);
 
-  let certificateProcedures = steps[4].stepData?.puppies ? [...steps[4].stepData.puppies] : [];
+  let certificateProcedures = [];
+  console.log("fcmutilities", { ...fcmPackage });
+  if (fcmPackage.packageType === fcmPackagesTypes.PEDIGREE || fcmPackage.packageType === fcmPackagesTypes.RACEPURITY) {
+    certificateProcedures = steps[4].stepData?.puppies ? [...steps[4].stepData.puppies] : [];
+  }
+  if (fcmPackage.packageType === fcmPackagesTypes.INITIALRACEPURITY) {
+    certificateProcedures = [steps[1].stepData];
+  }
 
   return {
     partnerRegistrationsProcedures,

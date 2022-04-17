@@ -15,6 +15,7 @@ import { FcmDog } from "../FcmDog";
 import { FcmPartner } from "../FcmPartner";
 import { FcmTransfer } from "../FcmTransfer";
 import { FcmBreedingFormWrapper } from "./FcmBreedingFormWrapper";
+import { FcmUnregisteredDogFormWrapper } from "./FcmUnregisteredDogFormWrapper";
 
 export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) => {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) 
   };
 
   const handleSave = (values) => {
+    console.log("im in handling save");
     handleExtraProps({ isEditable: false, showButtons: false });
     if (stepType === fcmStepTypes.fcmBreedingStep) {
       handleSaveBreedingForm(values);
@@ -128,6 +130,7 @@ export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) 
           searchParams: ["partnerNum", "paternalSurname", "maternalSurname"],
           searchFieldLabel: "Número de socio o apellidos",
         });
+        break;
 
       case fcmStepTypes.fcmDogStep:
         setShowSelectAnother(true);
@@ -138,21 +141,25 @@ export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) 
           searchParams: ["registerNum", "petName"],
           searchFieldLabel: "Número de registro o nombre",
         });
+        break;
 
       case fcmStepTypes.fcmBreedingStep:
         setShowSelectAnother(false);
         setPrevPuppies(steps[stepIndex].stepData.puppies);
+        break;
 
       case fcmStepTypes.fcmTransferStep:
         setShowSelectAnother(false);
+        break;
+
+      case fcmStepTypes.fcmNewDogStep:
+        setShowSelectAnother(false);
+        break;
 
       default:
         break;
     }
   }, [reviewedStep]);
-
-  console.log(stepType);
-  console.log(prevPuppies);
 
   return (
     <Paper mb="4rem" elevation={20} sx={{ backgroundColor: "transparent", padding: "2rem" }}>
@@ -166,7 +173,13 @@ export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) 
           {selectAnother ? (
             <SearchBox {...selectAnotherProps} />
           ) : (
-            <FcmPartner fcmPartnerid={reviewedStep.dataId} extraProps={extraProps} handleExtraProps={handleExtraProps} onSave={handleSave} onCancel={handleCancel} />
+            <FcmPartner
+              fcmPartnerid={reviewedStep.dataId}
+              extraProps={extraProps}
+              handleExtraProps={handleExtraProps}
+              onSave={handleSave}
+              onCancel={handleCancel}
+            />
           )}
         </Fragment>
       )}
@@ -190,7 +203,24 @@ export const FcmRevisionPanel = ({ stepIndex, setShowRevisionPanel, onCancel }) 
         />
       )}
       {stepType === fcmStepTypes.fcmTransferStep && (
-        <FcmTransfer fcmTransferId={reviewedStep.dataId} extraProps={extraProps} handleExtraProps={handleExtraProps} onSave={handleSave} onCancel={handleCancel} />
+        <FcmTransfer
+          fcmTransferId={reviewedStep.dataId}
+          extraProps={extraProps}
+          handleExtraProps={handleExtraProps}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      )}
+
+      {stepType === fcmStepTypes.fcmNewDogStep && (
+        <FcmUnregisteredDogFormWrapper
+          formValues={reviewedStep.stepData}
+          handleExtraProps={handleExtraProps}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          stepIndex={stepIndex}
+          {...extraProps}
+        />
       )}
 
       {isValidated ? (

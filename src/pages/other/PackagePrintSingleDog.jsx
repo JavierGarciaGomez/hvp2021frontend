@@ -1,4 +1,3 @@
-import { CollectionsOutlined } from "@mui/icons-material";
 import { Box, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import React, { Fragment, useEffect, useState } from "react";
@@ -11,26 +10,24 @@ import { FcmPrintPackageBreedForm } from "./FcmPrintPackageBreedForm";
 import { FcmPrintPackageFcmDog } from "./FcmPrintPackageFcmDog";
 import { FcmPrintPackageFcmPartnerData } from "./FcmPrintPackageFcmPartnerData";
 import { FcmPrintPackageFcmPrevOwner } from "./FcmPrintPackageFcmPrevOwner";
+import { FcmPrintPackageSingleDog } from "./FcmPrintPackageSingleDog";
 import { FcmPrintPackageSummary } from "./FcmPrintPackageSummary";
+
 import { FcmPrintResponsiveLetter } from "./FcmPrintResponsiveLetter";
 
-export const PackagePdf = () => {
+export const PackagePrintSingleDog = () => {
   const { fcmPackageId } = useParams();
   const { allFcm, fcmPackage } = useSelector((state) => state.fcm);
 
   const { steps } = fcmPackage;
-  const {
-    allFcmPackages = [],
-    allFcmDogs,
-    allFcmTransfers,
-    allFcmPartners,
-  } = allFcm;
+  const { allFcmPackages = [], allFcmDogs, allFcmTransfers, allFcmPartners } = allFcm;
   const dispatch = useDispatch();
   const [fcmPartners, setFcmPartners] = useState([]);
   const [fcmDogs, setFcmDogs] = useState([]);
   const [prevOwners, setPrevOwners] = useState([]);
   const [responsiveLetters, setResponsiveLetters] = useState([]);
   const [breedingFullData, setBreedingFullData] = useState({});
+  const [singleDogData, setSingleDogData] = useState({});
   const [summaryData, setSummaryData] = useState({});
 
   /*************************************************************************************************** */
@@ -47,9 +44,7 @@ export const PackagePdf = () => {
 
   useEffect(() => {
     if (fcmPackageId && allFcmPackages.length > 0) {
-      const fcmPackage = allFcmPackages.find(
-        (element) => element._id === fcmPackageId
-      );
+      const fcmPackage = allFcmPackages.find((element) => element._id === fcmPackageId);
 
       dispatch(fcmPackageLoaded(fcmPackage));
     } else {
@@ -67,9 +62,7 @@ export const PackagePdf = () => {
 
     steps.forEach((step) => {
       if (step.stepType === fcmStepTypes.fcmPartnerStep) {
-        const foundFcmPartner = allFcmPartners.find(
-          (fcmPartner) => fcmPartner._id === step.dataId
-        );
+        const foundFcmPartner = allFcmPartners.find((fcmPartner) => fcmPartner._id === step.dataId);
         tempFcmPartners.push(foundFcmPartner);
 
         if (foundFcmPartner.isCardLost) {
@@ -80,53 +73,33 @@ export const PackagePdf = () => {
           newRegisters.push(foundFcmPartner);
         }
 
-        if (
-          dayjs(foundFcmPartner.expirationDate).isBefore(
-            dayjs().add(14, "days")
-          )
-        ) {
+        if (dayjs(foundFcmPartner.expirationDate).isBefore(dayjs().add(14, "days"))) {
           renewals.push(foundFcmPartner);
         }
       }
 
       if (step.stepType === fcmStepTypes.fcmDogStep) {
-        const foundFcmDog = allFcmDogs.find(
-          (element) => element._id === step.dataId
-        );
+        const foundFcmDog = allFcmDogs.find((element) => element._id === step.dataId);
         tempFcmDogs.push(foundFcmDog);
       }
 
       // transfers that the pervOwner are not the same owner of parent and mothers
       if (step.stepType === fcmStepTypes.fcmTransferStep) {
-        const foundFcmTransfer = allFcmTransfers.find(
-          (element) => element._id === step.dataId
-        );
+        const foundFcmTransfer = allFcmTransfers.find((element) => element._id === step.dataId);
 
-        transfers.push(
-          allFcmTransfers.find((element) => element._id === step.dataId)
-        );
+        transfers.push(allFcmTransfers.find((element) => element._id === step.dataId));
 
         if (foundFcmTransfer) {
           let dataIsFoundInAnotherStep = false;
           // check if the fcmTransferNewOwnerName is not the same from the others
           steps.forEach((step) => {
             if (step.stepType === fcmStepTypes.fcmPartnerStep) {
-              const foundFcmPartner = allFcmPartners.find(
-                (fcmPartner) => fcmPartner._id === step.dataId
-              );
-              if (
-                getFullNameOfObject(foundFcmPartner).toLowerCase() ===
-                getFullNameOfObject(foundFcmTransfer.prevOwner).toLowerCase()
-              ) {
+              const foundFcmPartner = allFcmPartners.find((fcmPartner) => fcmPartner._id === step.dataId);
+              if (getFullNameOfObject(foundFcmPartner).toLowerCase() === getFullNameOfObject(foundFcmTransfer.prevOwner).toLowerCase()) {
                 dataIsFoundInAnotherStep = true;
               } else {
                 tempPrevOwners.forEach((tempPrevOwner) => {
-                  if (
-                    getFullNameOfObject(tempPrevOwner).toLowerCase() ===
-                    getFullNameOfObject(
-                      foundFcmTransfer.prevOwner
-                    ).toLowerCase()
-                  ) {
+                  if (getFullNameOfObject(tempPrevOwner).toLowerCase() === getFullNameOfObject(foundFcmTransfer.prevOwner).toLowerCase()) {
                     dataIsFoundInAnotherStep = true;
                   }
                 });
@@ -140,38 +113,19 @@ export const PackagePdf = () => {
       }
     });
 
-    const fcmPartnerMaleOwner = allFcmPartners.find(
-      (element) => element._id === steps[0].dataId
-    );
-    const fcmPartnerFemaleOwner = allFcmPartners.find(
-      (element) => element._id === steps[1].dataId
-    );
-    const fcmDogMale = allFcmDogs.find(
-      (element) => element._id === steps[2].dataId
-    );
-    const fcmDogFemale = allFcmDogs.find(
-      (element) => element._id === steps[3].dataId
-    );
+    const fcmOwner = allFcmPartners.find((element) => element._id === steps[0].dataId);
+    const newDog = { ...steps[1].stepData };
+    setSingleDogData({ newDog, fcmOwner });
 
-    if (steps[4]?.stepData) {
-      setBreedingFullData({
-        ...steps[4].stepData,
-        fcmPartnerMaleOwner,
-        fcmPartnerFemaleOwner,
-        fcmDogMale,
-        fcmDogFemale,
-        ...fcmPackage.medicalInspection,
-      });
-      setSummaryData({
-        user: fcmPackage.creator.email,
-        applicationDate: fcmPackage.applicationDate,
-        inspectionDate: fcmPackage.medicalInspection.inspectionDate,
-        certificates: [...steps[4]?.stepData?.puppies],
-        newRegisters,
-        renewals,
-        transfers,
-      });
-    }
+    setSummaryData({
+      user: fcmPackage.creator.email,
+      applicationDate: fcmPackage.applicationDate,
+      inspectionDate: fcmPackage.medicalInspection.inspectionDate,
+      certificates: [{ ...steps[1]?.stepData }],
+      newRegisters,
+      renewals,
+      transfers,
+    });
 
     setFcmPartners(tempFcmPartners);
     setFcmDogs(tempFcmDogs);
@@ -187,13 +141,11 @@ export const PackagePdf = () => {
     //   all
     <Box sx={{ padding: "3rem" }}>
       {/* breeding */}
-      {!isObjectEmpty(summaryData) && (
-        <FcmPrintPackageSummary summaryData={summaryData} />
-      )}
+      {!isObjectEmpty(summaryData) && <FcmPrintPackageSummary summaryData={summaryData} />}
       <div className="u-pagebreak" />
-      {!isObjectEmpty(breedingFullData) && (
-        <FcmPrintPackageBreedForm breedingData={breedingFullData} />
-      )}
+
+      {/* XXXXXXXXX */}
+      {!isObjectEmpty(singleDogData) && <FcmPrintPackageSingleDog {...singleDogData} packageType={fcmPackage.packageType} />}
       <div className="u-pagebreak" />
 
       {fcmPartners.map((element) => (
@@ -202,18 +154,7 @@ export const PackagePdf = () => {
           <div className="u-pagebreak" />
         </Fragment>
       ))}
-      {fcmDogs.map((element) => (
-        <Fragment key={element._id}>
-          <FcmPrintPackageFcmDog fcmDog={element} />
-          <div className="u-pagebreak" />
-        </Fragment>
-      ))}
-      {prevOwners.map((element) => (
-        <Fragment key={getFullNameOfObject(element)}>
-          <FcmPrintPackageFcmPrevOwner prevOwner={element} />
-          <div className="u-pagebreak" />
-        </Fragment>
-      ))}
+
       {responsiveLetters.map((element) => (
         <Fragment key={`${element._id}`}>
           <FcmPrintResponsiveLetter responsiveLetter={element} />
